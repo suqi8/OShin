@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = property.project.app.packageName
-    compileSdk = property.project.android.compileSdk
+    compileSdk = 34
 
     defaultConfig {
         applicationId = property.project.app.packageName
@@ -40,6 +40,8 @@ android {
         viewBinding = true
     }
     lint { checkReleaseBuilds = false }
+    ndkVersion = "27.0.11718014 rc1"
+    buildToolsVersion = "34.0.0"
     // TODO Please visit https://highcapable.github.io/YukiHookAPI/en/api/special-features/host-inject
     // TODO 请参考 https://highcapable.github.io/YukiHookAPI/zh-cn/api/special-features/host-inject
     // androidResources.additionalParameters += listOf("--allow-reserved-package-id", "--package-id", "0x64")
