@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">OPatch</string>
+    <string name="xposed_desc">Make ColorOS Great Again!</string>
+    <string name="about_module">此模块使用 YukiHookAPI 构建。\n了解更多 https://github.com/HighCapable/YuKiHookAPI</string>
+    <string name="module_version">模块版本：%1$s</string>
+    <string name="module_not_activated">模块未激活</string>
+    <string name="module_is_activated">模块已激活</string>
+    <string name="display_settings">显示设置</string>
+    <string name="hide_app_icon_on_launcher">在桌面隐藏模块图标</string>
+    <string name="hide_app_icon_on_launcher_tip">隐藏模块图标后界面可能会被关闭，将不会再在桌面显示，你可以在 EdXposed、LSPosed 中找到模块设置并打开。</string>
+    <string name="hide_app_icon_on_launcher_notice">注意：请务必在 LSPosed 中关闭“强制显示桌面图标”功能</string>
+</resources>
