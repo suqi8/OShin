@@ -10,6 +10,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppDefault"
+        android:enableOnBackInvokedCallback="true"
         tools:targetApi="31">
 
         <meta-data
