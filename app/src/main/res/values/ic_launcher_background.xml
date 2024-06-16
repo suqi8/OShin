@@ -1,4 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#FFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="textview_black">#FF000000</color>
+    <color name="textview_white">#F1FFFFFF</color>
+    <color name="textview_blue">#0D84FF</color>
+
+    <color name="navigation_divider">#1A000000</color>
+    <color name="navigation_icon_dark">#FF000000</color>
+    <color name="navigation_icon_light">#FFFFFFFF</color>
+    <color name="transparent_background">#50000000</color>
+
+    <color name="miuix_blurdrawable_view_fg_dark">#80000000</color>
+    <color name="miuix_blurdrawable_view_fg_light">#ccffffff</color>
+
+    <color name="light_mode_icon_color_single_tone">#e6ffffff</color>
+    <color name="light_mode_icon_transparent_color_single_tone">#5cffffff</color>
+    <color name="dark_mode_icon_color_single_tone">#bf000000</color>
+    <color name="dark_mode_icon_transparent_color_single_tone">#4c000000</color>
+    <color name="color_surface_variant">#DC9A9B9D</color>
+    <color name="color_on_surface_variant">#FAFCFCFC</color>
+    <color name="ic_launcher_background">#FC5B8D</color>
+
+    <color name="preference_recommend_region_color">#fff0f0f0</color>
+    <color name="preference_recommend_title_color">#66000000</color>
+
+    <color name="preference_recommend_item_link">#ff0d84ff</color>
+    <color name="preference_recommend_item_link_pressed">#990d84ff</color>
+
+    <color name="card_tile_disabled_color_legacy">#9E9E9E</color>
 </resources>
