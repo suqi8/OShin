@@ -13,12 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import io.github.suqi8.opatch.ui.theme.OPatchTheme
 
-class Main_About : ComponentActivity() {
-    @Composable
-    fun Main_About() {
-        Text(
-            text = "Hello2"
-        )
-    }
+@Composable
+fun Main_About() {
+    Text(
+        text = "Hello2"
+    )
 }
-
