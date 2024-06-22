@@ -69,7 +69,12 @@ fun Main(modifier: Modifier) {
                 },
                 label = { Text(item) },
                 selected = selectedItem == index,
-                onClick = { selectedItem = index }
+                onClick = { selectedItem = index
+                    navController.navigate(when (index) {
+                        0 -> "Main_Function"
+                        1 -> "Main_Home"
+                        else -> "Main_About"
+                    })}
             )
         }
     } }) {
@@ -78,7 +83,5 @@ fun Main(modifier: Modifier) {
             composable("Main_Home") { Main_Home() }
             composable("Main_About") { Main_About() }
         }
-        Main_Home()
-
     }
 }
