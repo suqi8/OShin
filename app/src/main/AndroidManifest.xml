@@ -9,6 +9,11 @@
             android:label="@string/app_name"
             android:supportsRtl="true"
             android:theme="@style/Theme.AppDefault">
+        <activity
+                android:name=".mainui.home"
+                android:exported="false"
+                android:label="@string/title_activity_home"
+                android:theme="@style/Theme.AppDefault" />
 
         <meta-data
                 android:name="xposedmodule"

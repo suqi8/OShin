@@ -10,4 +10,7 @@
     <string name="hide_app_icon_on_launcher_tip">After hiding the app icon, the interface may be closed and will no longer be displayed on the launcher. You can find and open the module settings in EdXposed or LSPosed.</string>
     <string name="hide_app_icon_on_launcher_notice">Note: Be sure to turn off the \"Force apps to show launcher icons\" feature in LSPosed</string>
     <string name="title_activity_main" translatable="false">MainActivity</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_home">home</string>
 </resources>

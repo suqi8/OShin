@@ -12,6 +12,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHost
+import androidx.navigation.NavHostController
 import io.github.suqi8.opatch.ui.theme.OPatchTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,6 +33,14 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Main() {
 
+}
+
+@Composable
+fun SetupNavGraph(navController: NavHostController) {
+    /*NavHost(navController = navController, startDestination = Screen.Home.route) {
+        composable(Screen.Home.route) { Home(navController) }
+        // 添加其他页面的composable
+    }*/
 }
 
 data class BottomNavigationItem(
