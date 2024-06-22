@@ -36,10 +36,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Main() {
-}
-
-@Composable
-fun SetupNavGraph(navController: NavHostController) {
+    val navController = rememberNavController()
     Column {
         NavHost(navController = navController, startDestination = "Main_Home") {
             composable("Main_Function") { Main_Function() }
