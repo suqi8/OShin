@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
@@ -14,6 +15,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHost
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import io.github.suqi8.opatch.ui.theme.OPatchTheme
 
 class MainActivity : ComponentActivity() {
@@ -32,22 +36,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Main() {
-
 }
 
 @Composable
 fun SetupNavGraph(navController: NavHostController) {
-    /*NavHost(navController = navController, startDestination = Screen.Home.route) {
-        composable(Screen.Home.route) { Home(navController) }
-        // 添加其他页面的composable
-    }*/
+    Column {
+        NavHost(navController = navController, startDestination = "Main_Home") {
+            composable("Main_Function") { Main_Function() }
+            composable("Main_Home") { Main_Home() }
+            composable("Main_About") { Main_About() }
+        }
+    }
 }
-
-data class BottomNavigationItem(
-    val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector
-)
 
 @Preview(showBackground = true)
 @Composable

@@ -10,6 +10,11 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppDefault">
         <activity
+                android:name=".Main_Home"
+                android:exported="false"
+                android:label="@string/title_activity_main_home"
+                android:theme="@style/Theme.AppDefault" />
+        <activity
                 android:name=".mainui.home"
                 android:exported="false"
                 android:label="@string/title_activity_home"
