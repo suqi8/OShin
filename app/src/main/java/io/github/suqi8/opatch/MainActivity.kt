@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -55,7 +56,7 @@ fun Main(modifier: Modifier) {
     val navController = rememberNavController()
     var selectedItem by remember { mutableIntStateOf(1) }
     val items = listOf("功能", "主页", "关于")
-    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
     Scaffold(bottomBar = { NavigationBar() {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
@@ -88,22 +89,31 @@ fun Main(modifier: Modifier) {
                     })}
             )
         }
-    } }, topBar = { LargeTopAppBar(colors = TopAppBarDefaults.topAppBarColors(
+    } }, topBar = { LargeTopAppBar(scrollBehavior = scrollBehavior,colors = TopAppBarDefaults.topAppBarColors(
         containerColor = MaterialTheme.colorScheme.primaryContainer,
         titleContentColor = MaterialTheme.colorScheme.primary,
-    ),title = { Text(when (selectedItem) {
-        0 -> "功能"
-        1 -> "主页"
-        else -> "关于"
-    },overflow = TextOverflow.Ellipsis) },navigationIcon = {
+    ),title = { Column {
+        Text(when (selectedItem) {
+            0 -> "功能"
+            1 -> "主页"
+            else -> "关于"
+        },overflow = TextOverflow.Ellipsis)
+        Text(
+            text = "我要玩原神",
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    } },navigationIcon = {
         IconButton(onClick = { /* do something */ }) {
             Image(painter = painterResource(id = R.drawable.icon), contentDescription = null)
         }
-    },scrollBehavior = scrollBehavior)}) { innerPadding ->
-        NavHost(navController = navController, startDestination = "Main_Home", modifier = Modifier.padding(innerPadding)) {
-            composable("Main_Function") { Main_Function() }
-            composable("Main_Home") { Main_Home() }
-            composable("Main_About") { Main_About() }
+    })}) { innerPadding ->
+        Column(modifier = Modifier.padding(innerPadding)) {
+            NavHost(navController = navController, startDestination = "Main_Home") {
+                composable("Main_Function") { Main_Function() }
+                composable("Main_Home") { Main_Home() }
+                composable("Main_About") { Main_About() }
+            }
         }
     }
 }
