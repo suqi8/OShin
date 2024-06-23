@@ -5,13 +5,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LargeTopAppBar
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -20,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -39,13 +48,15 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun Main(modifier: Modifier) {
     val navController = rememberNavController()
     var selectedItem by remember { mutableIntStateOf(1) }
     val items = listOf("功能", "主页", "关于")
-    Scaffold(modifier = modifier, bottomBar = { NavigationBar {
+    val scrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(rememberTopAppBarState())
+    Scaffold(bottomBar = { NavigationBar() {
         items.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = {
@@ -77,8 +88,19 @@ fun Main(modifier: Modifier) {
                     })}
             )
         }
-    } }) {
-        NavHost(navController = navController, startDestination = "Main_Home") {
+    } }, topBar = { LargeTopAppBar(colors = TopAppBarDefaults.topAppBarColors(
+        containerColor = MaterialTheme.colorScheme.primaryContainer,
+        titleContentColor = MaterialTheme.colorScheme.primary,
+    ),title = { Text(when (selectedItem) {
+        0 -> "功能"
+        1 -> "主页"
+        else -> "关于"
+    },overflow = TextOverflow.Ellipsis) },navigationIcon = {
+        IconButton(onClick = { /* do something */ }) {
+            Image(painter = painterResource(id = R.drawable.icon), contentDescription = null)
+        }
+    },scrollBehavior = scrollBehavior)}) { innerPadding ->
+        NavHost(navController = navController, startDestination = "Main_Home", modifier = Modifier.padding(innerPadding)) {
             composable("Main_Function") { Main_Function() }
             composable("Main_Home") { Main_Home() }
             composable("Main_About") { Main_About() }
