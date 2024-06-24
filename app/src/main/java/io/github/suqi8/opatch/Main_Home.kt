@@ -1,5 +1,6 @@
 package io.github.suqi8.opatch
 
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,9 +23,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat.requestPermissions
+import androidx.core.content.PermissionChecker
+import androidx.core.content.PermissionChecker.checkSelfPermission
+import androidx.core.graphics.drawable.toBitmap
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.param.PackageParam
 
@@ -48,7 +55,8 @@ fun Main_Home() {
                 }
             }
         }
-        OutlinedCard(modifier = Modifier.padding(start = 20.dp, top = 20.dp, end = 20.dp ,bottom = 20.dp)
+        OutlinedCard(modifier = Modifier
+            .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 20.dp)
             .fillMaxWidth()) {
             Column(modifier = Modifier.padding(start = 30.dp, end = 30.dp, top = 30.dp, bottom = 30.dp)) {
                 Text(text = "SOC 型号")
@@ -78,6 +86,32 @@ fun Main_Home() {
                 Text(text = "设备指纹", modifier = Modifier.padding(top = 10.dp))
                 Text(text = Build.FINGERPRINT, fontSize = 13.sp, color = Color.Gray)
             }
+        }
+        AppIconAndName(packageName = "android")
+    }
+}
+
+@Composable
+fun AppIconAndName(packageName: String) {
+    val context = LocalContext.current
+    val packageManager = context.packageManager
+    val applicationInfo = try {
+        packageManager.getApplicationInfo(packageName, 0)
+    } catch (e: PackageManager.NameNotFoundException) {
+        null
+    }
+
+    applicationInfo?.let {
+        val icon = it.loadIcon(packageManager)
+        val appName = packageManager.getApplicationLabel(it).toString()
+
+        Column {
+            Image(
+                bitmap = icon.toBitmap().asImageBitmap(),
+                contentDescription = "App Icon",
+                modifier = Modifier.size(48.dp)
+            )
+            Text(text = appName)
         }
     }
 }
