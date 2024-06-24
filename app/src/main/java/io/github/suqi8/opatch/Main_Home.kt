@@ -20,9 +20,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -87,31 +91,27 @@ fun Main_Home() {
                 Text(text = Build.FINGERPRINT, fontSize = 13.sp, color = Color.Gray)
             }
         }
-        AppIconAndName(packageName = "android")
     }
 }
 
 @Composable
-fun AppIconAndName(packageName: String) {
+fun GetAppIconAndName(packageName: String, onAppInfoLoaded: @Composable (String, ImageBitmap) -> Unit) {
     val context = LocalContext.current
     val packageManager = context.packageManager
-    val applicationInfo = try {
-        packageManager.getApplicationInfo(packageName, 0)
-    } catch (e: PackageManager.NameNotFoundException) {
-        null
+    val applicationInfo = remember { mutableStateOf<android.content.pm.ApplicationInfo?>(null) }
+
+    LaunchedEffect(packageName) {
+        try {
+            applicationInfo.value = packageManager.getApplicationInfo(packageName, 0)
+        } catch (e: PackageManager.NameNotFoundException) {
+            // 应用未找到，可以处理异常情况
+        }
     }
 
-    applicationInfo?.let {
-        val icon = it.loadIcon(packageManager)
-        val appName = packageManager.getApplicationLabel(it).toString()
+    applicationInfo.value?.let { info ->
+        val icon = info.loadIcon(packageManager)
+        val appName = packageManager.getApplicationLabel(info).toString()
 
-        Column {
-            Image(
-                bitmap = icon.toBitmap().asImageBitmap(),
-                contentDescription = "App Icon",
-                modifier = Modifier.size(48.dp)
-            )
-            Text(text = appName)
-        }
+        onAppInfoLoaded(appName, icon.toBitmap().asImageBitmap())
     }
 }
