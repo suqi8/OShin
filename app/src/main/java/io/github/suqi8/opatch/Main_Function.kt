@@ -1,21 +1,32 @@
 package io.github.suqi8.opatch
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import android.content.pm.PackageManager
+import android.graphics.drawable.Drawable
+import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import io.github.suqi8.opatch.ui.theme.OPatchTheme
 
 @Composable
 fun Main_Function() {
-    Text(
-        text = "Hello0"
-    )
+    Column {
+
+    }
+}
+
+private fun getIcon(pakgename: String): Drawable? {
+    val pm: PackageManager = getPackageManager()
+    try {
+        appInfo = pm.getApplicationInfo(pakgename, PackageManager.GET_META_DATA)
+
+        //
+//
+// 应用名称
+// pm.getApplicationLabel(appInfo)
+
+//应用图标
+        appIcon = pm.getApplicationIcon(appInfo)
+        return appIcon
+    } catch (e: PackageManager.NameNotFoundException) {
+        e.printStackTrace()
+    }
+    return null
 }
