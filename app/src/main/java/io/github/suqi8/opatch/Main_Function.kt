@@ -17,17 +17,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat.startActivity
+import androidx.navigation.NavController
 
 const val PACKAGE_android = "android"
 
 @Composable
-fun Main_Function() {
+fun Main_Function(navController: NavController) {
     val context = LocalContext.current
     Column {
         GetAppIconAndName(packageName = PACKAGE_android) { appName, icon ->
             Row(modifier = Modifier
                 .clickable { //跳转到Fun_android页面
-                    startActivity(context, Intent(context, Fun_android::class.java), null)
+                    navController.navigate("Fun_android")
+                    //startActivity(context, Intent(context, Fun_android::class.java), null)
                      }
                 .fillMaxWidth(),verticalAlignment =  Alignment.CenterVertically) {
                 Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp))

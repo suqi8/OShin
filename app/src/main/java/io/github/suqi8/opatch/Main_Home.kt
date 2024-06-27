@@ -52,7 +52,7 @@ fun Main_Home() {
             colors = CardDefaults.cardColors(containerColor = if (YukiHookAPI.Status.isModuleActive) MaterialTheme.colorScheme.inversePrimary else MaterialTheme.colorScheme.errorContainer),
             elevation = CardDefaults.cardElevation(defaultElevation = 10.dp),) {
             Row(verticalAlignment =  Alignment.CenterVertically,modifier = Modifier.padding(start = 30.dp, end = 30.dp, top = 30.dp, bottom = 30.dp)) {
-                Image(painter = painterResource(id = R.drawable.twotone_unpublished_24), contentDescription = null)
+                Image(painter = painterResource(id = if (YukiHookAPI.Status.isModuleActive) R.drawable.twotone_check_circle_24 else R.drawable.twotone_unpublished_24), contentDescription = null)
                 Column(verticalArrangement =  Arrangement.Center,modifier = Modifier.padding(start = 30.dp)) {
                 Text(text = if (YukiHookAPI.Status.isModuleActive) "模块已激活" else "模块未激活")
                     Text(text = if (YukiHookAPI.Status.isModuleActive) "${YukiHookAPI.Status.Executor.name}-v${YukiHookAPI.Status.Executor.apiLevel}" else "请到LSPosed中激活本模块  ")

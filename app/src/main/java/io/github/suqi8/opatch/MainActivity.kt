@@ -30,8 +30,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import io.github.suqi8.opatch.ui.theme.OPatchTheme
 
@@ -42,9 +44,23 @@ class MainActivity : ComponentActivity() {
         setContent {
             OPatchTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Main(modifier = Modifier.padding(innerPadding))
+                    Main0(modifier = Modifier.padding(innerPadding))
                 }
             }
+        }
+    }
+}
+
+@Composable
+fun Main0(modifier: Modifier) {
+    val navController = rememberNavController()
+    val backstackEntry = navController.currentBackStackEntryAsState()
+    val route = backstackEntry.value?.destination?.route
+    Column {
+        NavHost(navController = navController, startDestination = "Main") {
+            composable("Main") { Main1(modifier = modifier,navController) }
+            composable("Fun_android") { Fun_android(navController) }
+            composable("Fun_android_package_manager_services") { Fun_android_package_manager_services(navController = navController)}
         }
     }
 }
@@ -52,8 +68,8 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Main(modifier: Modifier) {
-    val navController = rememberNavController()
+fun Main1(modifier: Modifier,navController: NavController) {
+    val navController1 = rememberNavController()
     var selectedItem by remember { mutableIntStateOf(1) }
     val items = listOf("功能", "主页", "关于")
     val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
@@ -82,7 +98,7 @@ fun Main(modifier: Modifier) {
                 label = { Text(item) },
                 selected = selectedItem == index,
                 onClick = { selectedItem = index
-                    navController.navigate(when (index) {
+                    navController1.navigate(when (index) {
                         0 -> "Main_Function"
                         1 -> "Main_Home"
                         else -> "Main_About"
@@ -109,8 +125,8 @@ fun Main(modifier: Modifier) {
         }
     })}) { innerPadding ->
         Column(modifier = Modifier.padding(innerPadding)) {
-            NavHost(navController = navController, startDestination = "Main_Home") {
-                composable("Main_Function") { Main_Function() }
+            NavHost(navController = navController1, startDestination = "Main_Home") {
+                composable("Main_Function") { Main_Function(navController) }
                 composable("Main_Home") { Main_Home() }
                 composable("Main_About") { Main_About() }
             }
