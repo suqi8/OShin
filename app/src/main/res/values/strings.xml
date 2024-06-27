@@ -10,10 +10,27 @@
     <string name="hide_app_icon_on_launcher_tip">After hiding the app icon, the interface may be closed and will no longer be displayed on the launcher. You can find and open the module settings in EdXposed or LSPosed.</string>
     <string name="hide_app_icon_on_launcher_notice">Note: Be sure to turn off the \"Force apps to show launcher icons\" feature in LSPosed</string>
     <string name="title_activity_main" translatable="false">MainActivity</string>
+    <string name="package_manager_services" >Package Management Services</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_home">home</string>
     <string name="title_activity_main_home">Main_Home</string>
     <string name="title_activity_main2">MainActivity2</string>
     <string name="title_activity_fun_android">Fun_android</string>
+    <string name="downgr">Allow downgrade</string>
+    <string name="downgr_summary">Allow downgrade applications.</string>
+    <string name="authcreak">Disable digest verify</string>
+    <string name="authcreak_summary">Allows install apps after modify file in apk\n(ignore invalid digest error).</string>
+    <string name="digestCreak">Disable compare signatures</string>
+    <string name="digestCreak_summary">Allow re-install app with different signatures.</string>
+    <string name="UsePreSig">Use installed signatures</string>
+    <string name="UsePreSig_summary">Always use signatures from already installed apps when\ninstalling.\n This is extremely <b>dangerous</b>.\n Only enable when really needed!</string>
+    <string name="enhancedMode">Enhanced Mode</string>
+    <string name="enhancedMode_summary">Pass some validation in the application</string>
+    <string name="bypassBlock">Bypass block</string>
+    <string name="bypassBlock_summary">Bypass blocklist in some devices like Nothing Phone</string>
+    <string name="shared_user_title">Bypass shared user verify</string>
+    <string name="shared_user_summary">Allow install app with signature differ from its shared user\n(<b>\'Disable compare signatures\' must be enabled too</b>)</string>
+    <string name="disable_verification_agent_title">Disable Package Verification Agent</string>
+    <string name="disable_verification_agent_summary">e.g. Google Play Protection</string>
 </resources>

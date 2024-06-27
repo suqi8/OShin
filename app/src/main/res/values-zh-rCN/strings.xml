@@ -10,4 +10,21 @@
     <string name="hide_app_icon_on_launcher">在桌面隐藏模块图标</string>
     <string name="hide_app_icon_on_launcher_tip">隐藏模块图标后界面可能会被关闭，将不会再在桌面显示，你可以在 EdXposed、LSPosed 中找到模块设置并打开。</string>
     <string name="hide_app_icon_on_launcher_notice">注意：请务必在 LSPosed 中关闭“强制显示桌面图标”功能</string>
+    <string name="package_manager_services">包管理服务</string>
+    <string name="downgr">允许降级安装应用</string>
+    <string name="downgr_summary">允许应用在安装新版本的情况下直接覆盖安装旧版本</string>
+    <string name="authcreak">禁用软件包管理器签名验证</string>
+    <string name="authcreak_summary">关闭安装应用时的签名验证，可以安装被篡改的应用</string>
+    <string name="digestCreak">禁用 APK 签名验证</string>
+    <string name="digestCreak_summary">允许直接覆盖安装同包名不同签名的应用</string>
+    <string name="UsePreSig">安装时始终使用已装 APP 的签名</string>
+    <string name="UsePreSig_summary">不是一般的<b>危险</b>，仅在绝对需要时启用</string>
+    <string name="enhancedMode">增强模式</string>
+    <string name="enhancedMode_summary">可以解决一些 APP 内部的完整性校验，一般不需要开启</string>
+    <string name="bypassBlock">绕过黑名单</string>
+    <string name="bypassBlock_summary">绕过某些设备如 Nothing Phone 上的黑名单</string>
+    <string name="shared_user_title">绕过共享用户签名验证</string>
+    <string name="shared_user_summary">允许安装与其共享用户签名不同的 app\n（<b>需要同时打开“禁用APK签名验证”</b>）</string>
+    <string name="disable_verification_agent_title">禁用安装包验证代理</string>
+    <string name="disable_verification_agent_summary">如 Play 商店的保护机制</string>
 </resources>
