@@ -16,6 +16,7 @@ import android.view.WindowInsets;
 import io.github.suqi8.opatch.R;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 
 @SuppressWarnings("deprecation")
 public class SettingsActivity extends Activity {
@@ -61,38 +62,33 @@ public class SettingsActivity extends Activity {
             view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
             view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
                 Insets insets = null;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    insets = windowInsets.getInsets(WindowInsets.Type.systemBars());
-                } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.Q) {
-                    insets = windowInsets.getSystemWindowInsets();
-                }
+                insets = windowInsets.getInsets(WindowInsets.Type.systemBars());
                 ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                if (insets != null) {
                     mlp.leftMargin = insets.left;
+                }
+                if (insets != null) {
                     mlp.bottomMargin = insets.bottom;
+                }
+                if (insets != null) {
                     mlp.rightMargin = insets.right;
+                }
+                if (insets != null) {
                     mlp.topMargin = insets.top;
-                } else {
-                    mlp.leftMargin = windowInsets.getSystemWindowInsetLeft();
-                    mlp.bottomMargin = windowInsets.getSystemWindowInsetBottom();
-                    mlp.rightMargin = windowInsets.getSystemWindowInsetRight();
-                    mlp.topMargin = windowInsets.getSystemWindowInsetTop();
                 }
                 v.setLayoutParams(mlp);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                    return WindowInsets.CONSUMED;
-                } else return windowInsets.consumeSystemWindowInsets();
+                return WindowInsets.CONSUMED;
             });
             super.onViewCreated(view, savedInstanceState);
         }
 
         @Override
         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key.equals("UsePreSig") && sharedPreferences.getBoolean(key, false)) {
+            if (key != null && key.equals("UsePreSig") && sharedPreferences.getBoolean(key, false)) {
                 try {
                     @SuppressLint("PrivateApi") Class<?> c = Class.forName("android.os.SystemProperties");
                     Method get = c.getMethod("get", String.class);
-                    if (!((String) get.invoke(c, "ro.miui.ui.version.code")).isEmpty()) {
+                    if (!((String) Objects.requireNonNull(get.invoke(c, "ro.miui.ui.version.code"))).isEmpty()) {
                         new AlertDialog.Builder(getActivity()).setMessage(R.string.miui_usepresig_warn).setPositiveButton(android.R.string.ok, null).show();
                     }
                 } catch (Exception ignored) {
