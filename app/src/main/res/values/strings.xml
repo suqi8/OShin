@@ -12,6 +12,9 @@
     <string name="title_activity_main" translatable="false">MainActivity</string>
     <string name="package_manager_services" >Package Management Services</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="ignore">Ignore</string>
+    <string name="config_error">Configuration initialization failed</string>
+    <string name="not_supported">It seems that you are using an out dated version of LSPosed or LSPosed is not activated, please update LSPosed or try again after activated.</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_home">home</string>
     <string name="title_activity_main_home">Main_Home</string>
