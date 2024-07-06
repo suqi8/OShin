@@ -54,6 +54,11 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    namespace = "io.github.suqi8.opatch"
+    buildFeatures {
+        buildConfig = true
+    }
+
     // TODO Please visit https://highcapable.github.io/YukiHookAPI/en/api/special-features/host-inject
     // TODO 请参考 https://highcapable.github.io/YukiHookAPI/zh-cn/api/special-features/host-inject
     // androidResources.additionalParameters += listOf("--allow-reserved-package-id", "--package-id", "0x64")
