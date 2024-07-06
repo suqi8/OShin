@@ -64,18 +64,10 @@ public class SettingsActivity extends Activity {
                 Insets insets = null;
                 insets = windowInsets.getInsets(WindowInsets.Type.systemBars());
                 ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-                if (insets != null) {
-                    mlp.leftMargin = insets.left;
-                }
-                if (insets != null) {
-                    mlp.bottomMargin = insets.bottom;
-                }
-                if (insets != null) {
-                    mlp.rightMargin = insets.right;
-                }
-                if (insets != null) {
-                    mlp.topMargin = insets.top;
-                }
+                mlp.leftMargin = insets.left;
+                mlp.bottomMargin = insets.bottom;
+                mlp.rightMargin = insets.right;
+                mlp.topMargin = insets.top;
                 v.setLayoutParams(mlp);
                 return WindowInsets.CONSUMED;
             });
