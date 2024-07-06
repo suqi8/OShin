@@ -1,9 +1,9 @@
-package io.github.suqi8.opatch.hook;
+package io.github.suqi8.opatch.hook.corepatch;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.Signature;
 
-import com.coderstory.toolkit.BuildConfig;
+import io.github.suqi8.opatch.BuildConfig;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

@@ -1,4 +1,4 @@
-package io.github.suqi8.opatch.hook;
+package io.github.suqi8.opatch.hook.corepatch;
 
 import android.annotation.TargetApi;
 import android.app.AndroidAppHelper;
@@ -9,7 +9,7 @@ import android.content.pm.Signature;
 import android.os.Build;
 import android.util.Log;
 
-import com.coderstory.toolkit.BuildConfig;
+import io.github.suqi8.opatch.BuildConfig;
 
 import java.io.PrintWriter;
 import java.lang.reflect.Constructor;

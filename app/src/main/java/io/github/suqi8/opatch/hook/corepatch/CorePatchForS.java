@@ -1,4 +1,4 @@
-package io.github.suqi8.opatch.hook;
+package io.github.suqi8.opatch.hook.corepatch;
 
 import java.lang.reflect.InvocationTargetException;
 
