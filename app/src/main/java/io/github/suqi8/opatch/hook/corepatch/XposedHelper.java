@@ -1,8 +1,8 @@
-package io.github.suqi8.opatch.hook;
+package io.github.suqi8.opatch.hook.corepatch;
 
 import android.util.Log;
 
-import com.coderstory.toolkit.BuildConfig;
+import io.github.suqi8.opatch.BuildConfig;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XposedBridge;
