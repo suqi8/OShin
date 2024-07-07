@@ -52,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
+import io.github.suqi8.opatch.hook.corepatch.SettingsActivity
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -59,7 +60,7 @@ import java.io.File
 fun Fun_android(navController: NavController) {
     val context = LocalContext.current
 
-    Scaffold(topBar = { GetAppIconAndName(packageName = PACKAGE_android) { appName, icon ->
+    Scaffold(topBar = { GetAppIconAndName(packageName = "android") { appName, icon ->
         LargeTopAppBar(
             title = { Text(text = appName) },
             colors = TopAppBarDefaults.topAppBarColors(
@@ -84,7 +85,8 @@ fun Fun_android(navController: NavController) {
             .fillMaxSize()) {
             Column {
                 Row(modifier = Modifier
-                    .clickable { navController.navigate("Fun_android_package_manager_services") }
+                    .clickable { navController.navigate("Fun_android_package_manager_services")
+                         }
                     .fillMaxWidth()) {
                     // 你的文本列
                     Column(modifier = Modifier
