@@ -82,6 +82,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                     Switch(
                         checked = Global.downgr, onCheckedChange = {
                             Global.downgr = it
+
                         }, modifier = Modifier
                             .align(Alignment.CenterVertically) // 垂直居中对齐
                             .padding(end = 20.dp)
