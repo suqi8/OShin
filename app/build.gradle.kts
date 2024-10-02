@@ -10,7 +10,7 @@ android {
 
     defaultConfig {
         applicationId = property.project.app.packageName
-        minSdk = property.project.android.minSdk
+        minSdkVersion(rootProject.extra["defaultMinSdkVersion"] as Int)
         targetSdk = property.project.android.targetSdk
         versionName = property.project.app.versionName
         versionCode = property.project.app.versionCode
@@ -54,10 +54,6 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
-    namespace = "io.github.suqi8.opatch"
-    buildFeatures {
-        buildConfig = true
-    }
 
     // TODO Please visit https://highcapable.github.io/YukiHookAPI/en/api/special-features/host-inject
     // TODO 请参考 https://highcapable.github.io/YukiHookAPI/zh-cn/api/special-features/host-inject
@@ -65,6 +61,17 @@ android {
 }
 
 dependencies {
+    // https://mvnrepository.com/artifact/dev.chrisbanes.haze/haze-jetpack-compose
+    implementation("dev.chrisbanes.haze:haze:0.9.0-beta01")
+    implementation(libs.androidx.datastore.core.android)
+    implementation(libs.androidx.datastore.preferences.core.jvm)
+    // https://mvnrepository.com/artifact/androidx.datastore/datastore-preferences
+    implementation("androidx.datastore:datastore-preferences:1.1.1")
+    implementation("top.yukonga.miuix.kmp:miuix:0.2.2")
+    implementation("com.google.code.gson:gson:2.11.0")
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.0")
+    implementation("com.github.st235:expandablebottombar:1.5.3")
+    implementation("me.nikhilchaudhari:composeNeumorphism:1.0.0-alpha02")
     implementation("androidx.navigation:navigation-compose:2.7.7")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.2")
     implementation("androidx.activity:activity-compose:1.9.0")
@@ -74,6 +81,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.navigation:navigation-runtime-ktx:2.7.7")
+    implementation(libs.firebase.crashlytics.buildtools)
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.06.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     compileOnly(de.robv.android.xposed.api)

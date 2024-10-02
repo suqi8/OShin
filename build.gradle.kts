@@ -3,3 +3,4 @@ plugins {
     autowire(libs.plugins.kotlin.android) apply false
     autowire(libs.plugins.kotlin.ksp) apply false
 }
+val defaultMinSdkVersion by extra(31)
