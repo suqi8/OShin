@@ -12,6 +12,11 @@
     <string name="hide_app_icon_on_launcher_notice">注意：请务必在 LSPosed 中关闭“强制显示桌面图标”功能</string>
     <string name="package_manager_services">包管理服务</string>
     <string name="downgr">允许降级安装应用</string>
+    <string name="Device_Name">设备昵称</string>
+    <string name="ok">确定</string>
+    <string name="Device_Memory">储存空间</string>
+    <string name="Search">搜索</string>
+    <string name="cancel">取消</string>
     <string name="Color_Mode">颜色模式</string>
     <string name="Night_Mode">夜间模式</string>
     <string name="Light_Mode">白天模式</string>
