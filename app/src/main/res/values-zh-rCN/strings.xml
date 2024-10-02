@@ -12,6 +12,10 @@
     <string name="hide_app_icon_on_launcher_notice">注意：请务必在 LSPosed 中关闭“强制显示桌面图标”功能</string>
     <string name="package_manager_services">包管理服务</string>
     <string name="downgr">允许降级安装应用</string>
+    <string name="Color_Mode">颜色模式</string>
+    <string name="Night_Mode">夜间模式</string>
+    <string name="Light_Mode">白天模式</string>
+    <string name="Auto_Mode">跟随系统</string>
     <string name="downgr_summary">允许应用在安装新版本的情况下直接覆盖安装旧版本</string>
     <string name="authcreak">禁用软件包管理器签名验证</string>
     <string name="authcreak_summary">关闭安装应用时的签名验证，可以安装被篡改的应用</string>
@@ -27,4 +31,7 @@
     <string name="shared_user_summary">允许安装与其共享用户签名不同的 app\n（<b>需要同时打开“禁用APK签名验证”</b>）</string>
     <string name="disable_verification_agent_title">禁用安装包验证代理</string>
     <string name="disable_verification_agent_summary">如 Play 商店的保护机制</string>
+    <string name="func">功能</string>
+    <string name="home">主页</string>
+    <string name="about">关于</string>
 </resources>

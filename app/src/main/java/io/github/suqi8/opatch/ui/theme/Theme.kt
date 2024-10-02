@@ -8,6 +8,7 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 private val DarkColorScheme = darkColorScheme(
     primary = Purple80,
@@ -51,6 +52,22 @@ fun OPatchTheme(
     MaterialTheme(
         colorScheme = colorScheme,
         typography = Typography,
+        content = content
+    )
+}
+
+@Composable
+fun AppTheme(
+    colorMode: Int = 0,
+    content: @Composable () -> Unit
+) {
+    val darkTheme = isSystemInDarkTheme()
+    return MiuixTheme(
+        colorScheme = when (colorMode) {
+            1 -> top.yukonga.miuix.kmp.theme.lightColorScheme()
+            2 -> top.yukonga.miuix.kmp.theme.darkColorScheme()
+            else -> if (darkTheme) top.yukonga.miuix.kmp.theme.darkColorScheme() else top.yukonga.miuix.kmp.theme.lightColorScheme()
+        },
         content = content
     )
 }

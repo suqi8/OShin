@@ -12,6 +12,10 @@
     <string name="title_activity_main" translatable="false">MainActivity</string>
     <string name="package_manager_services" >Package Management Services</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="Color_Mode">Color Mode</string>
+    <string name="Night_Mode">Night Mode</string>
+    <string name="Light_Mode">Light Mode</string>
+    <string name="Auto_Mode">Auto Mode</string>
     <string name="ignore">Ignore</string>
     <string name="config_error">Configuration initialization failed</string>
     <string name="not_supported">It seems that you are using an out dated version of LSPosed or LSPosed is not activated, please update LSPosed or try again after activated.</string>
@@ -40,4 +44,7 @@
     <string name="shared_user_summary">Allow install app with signature differ from its shared user\n(<b>\'Disable compare signatures\' must be enabled too</b>)</string>
     <string name="disable_verification_agent_title">Disable Package Verification Agent</string>
     <string name="disable_verification_agent_summary">e.g. Google Play Protection</string>
+    <string name="func">Function</string>
+    <string name="home">Home</string>
+    <string name="about">About</string>
 </resources>
