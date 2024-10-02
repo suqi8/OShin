@@ -3,4 +3,5 @@
     <color name="colorThemeBackground">#FFFFFFFF</color>
     <color name="colorTextDark">#FF777777</color>
     <color name="colorTextGray">#FF323B42</color>
+    <color name="public_color_D3DBF9">#D3DBF9</color>
 </resources>
