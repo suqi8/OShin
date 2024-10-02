@@ -16,6 +16,11 @@
     <string name="Night_Mode">Night Mode</string>
     <string name="Light_Mode">Light Mode</string>
     <string name="Auto_Mode">Auto Mode</string>
+    <string name="Device_Name">Device Name</string>
+    <string name="ok">OK</string>
+    <string name="Device_Memory">Device Memory</string>
+    <string name="Search">Search</string>
+    <string name="cancel">Cancel</string>
     <string name="ignore">Ignore</string>
     <string name="config_error">Configuration initialization failed</string>
     <string name="not_supported">It seems that you are using an out dated version of LSPosed or LSPosed is not activated, please update LSPosed or try again after activated.</string>
