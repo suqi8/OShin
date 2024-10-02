@@ -1,135 +1,300 @@
 package io.github.suqi8.opatch
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.core.CubicBezierEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import io.github.suqi8.opatch.ui.theme.OPatchTheme
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
+import io.github.suqi8.opatch.ui.theme.AppTheme
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
+import top.yukonga.miuix.kmp.basic.Box
+import top.yukonga.miuix.kmp.basic.HorizontalPager
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.NavigationBar
+import top.yukonga.miuix.kmp.basic.NavigationItem
+import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.ScrollBehavior
+import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.getWindowSize
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            OPatchTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Main0(modifier = Modifier.padding(innerPadding))
+            val colorMode = remember { mutableIntStateOf(0) }
+            val darkMode = colorMode.intValue == 2 || (isSystemInDarkTheme() && colorMode.intValue == 0)
+            val context = LocalContext.current
+            // 读取存储的 colorMode
+            LaunchedEffect(Unit) {
+                getColorMode(context).collect { savedIndex ->
+                    colorMode.intValue = savedIndex
                 }
             }
+            DisposableEffect(darkMode) {
+                enableEdgeToEdge(
+                    statusBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT) { darkMode },
+                    navigationBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT) { darkMode },
+                )
+
+                window.isNavigationBarContrastEnforced = false  // Xiaomi moment, this code must be here
+
+                onDispose {}
+            }
+            AppTheme(colorMode = colorMode.intValue) {
+                Main0(colorMode = colorMode, context = context, modifier = Modifier)
+            }
+
         }
     }
 }
 
 @Composable
-fun Main0(modifier: Modifier) {
+fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = remember { mutableIntStateOf(0) }) {
     val navController = rememberNavController()
-    val backstackEntry = navController.currentBackStackEntryAsState()
-    val route = backstackEntry.value?.destination?.route
+    val windowWidth = getWindowSize().width
+    val easing = CubicBezierEasing(0.12f, 0.88f, 0.2f, 1f)
     Column {
-        NavHost(navController = navController, startDestination = "Main") {
-            composable("Main") { Main1(modifier = modifier,navController) }
+        NavHost(navController = navController, startDestination = "Main",enterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { windowWidth },
+                    animationSpec = tween(durationMillis = 500, easing = easing)
+                )
+            },
+            exitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { -windowWidth / 5 },
+                    animationSpec = tween(durationMillis = 500, easing = easing)
+                )
+            },
+            popEnterTransition = {
+                slideInHorizontally(
+                    initialOffsetX = { -windowWidth / 5 },
+                    animationSpec = tween(durationMillis = 500, easing = easing)
+                )
+            },
+            popExitTransition = {
+                slideOutHorizontally(
+                    targetOffsetX = { windowWidth },
+                    animationSpec = tween(durationMillis = 500, easing = easing)
+                )
+            }) {
+            composable("Main") { Main1(modifier = modifier, context = context,navController,colorMode) }
             composable("Fun_android") { Fun_android(navController) }
             composable("Fun_android_package_manager_services") { Fun_android_package_manager_services(navController = navController)}
         }
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@OptIn(FlowPreview::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "InflateParams", "ResourceType")
 @Composable
-fun Main1(modifier: Modifier,navController: NavController) {
-    val navController1 = rememberNavController()
-    var selectedItem by remember { mutableIntStateOf(1) }
-    val items = listOf("功能", "主页", "关于")
-    val scrollBehavior = TopAppBarDefaults.enterAlwaysScrollBehavior(rememberTopAppBarState())
-    Scaffold(bottomBar = { NavigationBar() {
-        items.forEachIndexed { index, item ->
-            NavigationBarItem(
-                icon = {
-                    val icon: Painter
-                    if (selectedItem == index) {
-                        // 启用状态的图标
-                        when (index) {
-                            0 -> icon = painterResource(id = R.drawable.twotone_widgets_24)
-                            1 -> icon = painterResource(id = R.drawable.twotone_home_24)
-                            else -> icon = painterResource(id = R.drawable.twotone_pending_24)
-                        }
-                    } else {
-                        // 未启用状态的图标
-                        when (index) {
-                            0 -> icon = painterResource(id = R.drawable.outline_widgets_24)
-                            1 -> icon = painterResource(id = R.drawable.outline_home_24)
-                            else -> icon = painterResource(id = R.drawable.outline_pending_24)
+fun Main1(modifier: Modifier,context: Context,navController: NavController,colorMode: MutableState<Int>) {
+    val alpha = 0.75f
+    val blurRadius: Dp = 25.dp
+    val noiseFactor = 0f
+    val containerColor: Color = MiuixTheme.colorScheme.background
+    val hazeState = remember { HazeState() }
+    val hazeStyle = remember(containerColor, alpha, blurRadius, noiseFactor) {
+        HazeStyle(
+            backgroundColor = containerColor,
+            tint = HazeTint.Color(containerColor.copy(alpha)),
+            blurRadius = blurRadius,
+            noiseFactor = noiseFactor
+        )
+    }
+    //val items = listOf("功能", "主页", "关于")
+    val topAppBarScrollBehavior0 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
+    val topAppBarScrollBehavior1 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
+    val topAppBarScrollBehavior2 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
+
+    val topAppBarScrollBehaviorList = listOf(
+        topAppBarScrollBehavior0, topAppBarScrollBehavior1, topAppBarScrollBehavior2
+    )
+
+    val pagerState = rememberPagerState(pageCount = { 3 },initialPage = 1)
+    var targetPage by remember { mutableIntStateOf(pagerState.currentPage) }
+    val coroutineScope = rememberCoroutineScope()
+    val currentScrollBehavior = when (pagerState.currentPage) {
+        0 -> topAppBarScrollBehaviorList[0]
+        1 -> topAppBarScrollBehaviorList[1]
+        else -> topAppBarScrollBehaviorList[2]
+    }
+
+    val items = listOf(
+        NavigationItem("功能", ImageVector.vectorResource(id = R.drawable.twotone_widgets_24)),
+        NavigationItem("主页", ImageVector.vectorResource(id = R.drawable.twotone_home_24)),
+        NavigationItem("关于", ImageVector.vectorResource(id = R.drawable.twotone_pending_24))
+    )
+
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.debounce(150).collectLatest {
+            targetPage = pagerState.currentPage
+        }
+    }
+    Scaffold(modifier = Modifier.fillMaxSize(),/*enableBottomBarBlur = true,
+        enableTopBarBlur = true, alpha = 0.2f, */bottomBar = {
+        /*Box(modifier = Modifier.hazeChild(state = hazeState)) {
+
+        }*/
+            Box(modifier = Modifier.hazeChild(
+                state = hazeState,
+                style = hazeStyle)) {
+                NavigationBar(
+                    items = items,
+                    color = Color.Transparent,
+                    modifier = Modifier,
+                    selected = targetPage,
+                    onClick = { index ->
+                        targetPage = index
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
                         }
                     }
-                    Icon(painter = icon, contentDescription = item)
-                },
-                label = { Text(item) },
-                selected = selectedItem == index,
-                onClick = { selectedItem = index
-                    navController1.navigate(when (index) {
-                        0 -> "Main_Function"
-                        1 -> "Main_Home"
-                        else -> "Main_About"
-                    })}
+                )
+            }
+    }, topBar = {
+        Box(modifier = Modifier.hazeChild(
+            state = hazeState,
+            style = hazeStyle)) {
+            TopAppBar(scrollBehavior = currentScrollBehavior,color = Color.Transparent,title = when (pagerState.currentPage) {
+                0 -> "功能"
+                1 -> "主页"
+                else -> "关于"
+            },navigationIcon = {
+                IconButton(onClick = { /* do something */ }) {
+                    Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null)
+                }
+            })
+        }
+    }) { padding ->
+        Box(modifier = Modifier.haze(
+            state = hazeState,
+            style = hazeStyle)) {
+            AppHorizontalPager(
+                modifier = Modifier.imePadding(),
+                pagerState = pagerState,
+                topAppBarScrollBehaviorList = topAppBarScrollBehaviorList,
+                padding = padding,
+                navController = navController,
+                colorMode = colorMode,
+                context = context
             )
         }
-    } }, topBar = { LargeTopAppBar(scrollBehavior = scrollBehavior,colors = TopAppBarDefaults.topAppBarColors(
-        containerColor = MaterialTheme.colorScheme.primaryContainer,
-        titleContentColor = MaterialTheme.colorScheme.primary,
-    ),title = { Column {
-        Text(when (selectedItem) {
-            0 -> "功能"
-            1 -> "主页"
-            else -> "关于"
-        },overflow = TextOverflow.Ellipsis)
-        Text(
-            text = "我要玩原神",
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    } },navigationIcon = {
-        IconButton(onClick = { /* do something */ }) {
-            Image(painter = painterResource(id = R.drawable.icon), contentDescription = null)
-        }
-    })}) { innerPadding ->
-        Column(modifier = Modifier.padding(innerPadding)) {
+        /*Column(modifier = Modifier.padding(Padding)) {
             NavHost(navController = navController1, startDestination = "Main_Home") {
                 composable("Main_Function") { Main_Function(navController) }
                 composable("Main_Home") { Main_Home() }
-                composable("Main_About") { Main_About() }
+                composable("Main_About") { Main_About(navController) }
             }
-        }
+        }*/
     }
 }
+
+@Composable
+fun AppHorizontalPager(
+    modifier: Modifier = Modifier,
+    pagerState: PagerState,
+    topAppBarScrollBehaviorList: List<ScrollBehavior>,
+    padding: PaddingValues,
+    navController: NavController,
+    colorMode: MutableState<Int>,
+    context: Context
+) {
+    HorizontalPager(
+        modifier = modifier,
+        pagerState = pagerState,
+        userScrollEnabled = true,
+        pageContent = { page ->
+            when (page) {
+                0 -> Main_Function(
+                    topAppBarScrollBehavior = topAppBarScrollBehaviorList[0],
+                    padding = padding,
+                    navController = navController
+                )
+
+                1 -> Main_Home(
+                    topAppBarScrollBehavior = topAppBarScrollBehaviorList[1],
+                    padding = padding
+                )
+
+                else -> Main_About(
+                    topAppBarScrollBehavior = topAppBarScrollBehaviorList[2],
+                    padding = padding,
+                    colorMode = colorMode,
+                    context = context,
+                    navController
+                )
+            }
+        }
+    )
+}
+
+suspend fun saveColorMode(context: Context, selectedIndex: Int) {
+    val colorModeKey = intPreferencesKey("color_mode")
+    context.dataStore.edit { preferences ->
+        preferences[colorModeKey] = selectedIndex
+    }
+}
+
+fun getColorMode(context: Context): Flow<Int> {
+    val colorModeKey = intPreferencesKey("color_mode")
+    return context.dataStore.data.map { preferences ->
+        preferences[colorModeKey] ?: 0 // 默认值为 0（Auto_Mode）
+    }
+}
+
+val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
