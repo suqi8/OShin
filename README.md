@@ -6,7 +6,7 @@
 OPatch是一个专为ColorOS系统设计的辅助模块，旨在增强和定制用户的操作系统体验。该模块允许用户轻松地应用补丁，以实现特定的功能或优化。
 
 ## 名称的由来
-仓库的名称"OPatch"来源于"OPPO OnePlus Patch"，这表明了模块的主要应用场景是OPPO和OnePlus设备上的ColorOS系统。
+仓库的名称"OPatch"来源于"OPPO OnePlus Patch"，主要应用场景是OPPO和OnePlus设备上的ColorOS系统。
 
 ## 特点
 - **兼容性**：专为OPPO和OnePlus设备设计，确保与ColorOS系统的兼容性。
