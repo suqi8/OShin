@@ -17,8 +17,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LargeTopAppBar
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -32,6 +32,7 @@ import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -53,61 +54,51 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import io.github.suqi8.opatch.hook.corepatch.SettingsActivity
+import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.LazyColumn
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.extra.SuperArrow
+import top.yukonga.miuix.kmp.icon.MiuixIcons
+import top.yukonga.miuix.kmp.icon.icons.ArrowBack
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Fun_android(navController: NavController) {
     val context = LocalContext.current
-
+    val one = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     Scaffold(topBar = { GetAppIconAndName(packageName = "android") { appName, icon ->
-        LargeTopAppBar(
-            title = { Text(text = appName) },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.primary,
-            ),
+        TopAppBar(
+            title = appName,
+            scrollBehavior = one,
             navigationIcon = {
                 IconButton(onClick = {
                     navController.popBackStack()
-                    //startActivity(context, Intent(context, MainActivity::class.java), null)
-                }) {
+                },
+                    modifier = Modifier.padding(start = 18.dp)) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Localized description"
+                        imageVector = MiuixIcons.ArrowBack,
+                        contentDescription = null,
+                        tint = MiuixTheme.colorScheme.onBackground
                     )
                 }
             },
         )
-    } }) {innerPadding ->
-        Column(modifier = Modifier
-            .padding(innerPadding)
-            .fillMaxSize()) {
-            Column {
-                Row(modifier = Modifier
-                    .clickable { navController.navigate("Fun_android_package_manager_services")
-                         }
-                    .fillMaxWidth()) {
-                    // 你的文本列
-                    Column(modifier = Modifier
-                        .weight(1f) // 让这个列占据剩余空间
-                        .padding(start = 20.dp, top = 20.dp, bottom = 20.dp)) {
-                        Text(text = stringResource(id = R.string.package_manager_services), fontSize = 19.sp)
-                    }
-                    // 用于推挤图标到最右边的Spacer
-                    Spacer(modifier = Modifier
-                        .weight(1f) // 这个Spacer也占据剩余空间
-                    )
-                    // 箭头图标
-                    Icon(
-                        painter = painterResource(id = R.drawable.round_arrow_forward_ios_24), // 确保你有这个资源
-                        contentDescription = null, // 为图标添加描述
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically) // 垂直居中对齐
-                            .padding(end = 20.dp)
-                            .alpha(0.8f)
-                    )
-
+    } }) {padding ->
+        LazyColumn(contentPadding = PaddingValues(top = padding.calculateTopPadding()),
+            topAppBarScrollBehavior = one, modifier = Modifier.fillMaxSize()) {
+            item {
+                Card(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 12.dp)
+                        .padding(bottom = 6.dp)
+                ) {
+                    SuperArrow(title = stringResource(id = R.string.package_manager_services),
+                        onClick = {
+                            navController.navigate("Fun_android_package_manager_services")
+                        })
                 }
             }
         }
