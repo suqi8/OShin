@@ -1,259 +1,187 @@
 package io.github.suqi8.opatch
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
+import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.LargeTopAppBar
+import top.yukonga.miuix.kmp.basic.TopAppBar
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-
-object Global {
-    var downgr = false
-    var authcreak = false
-    var digestCreak = false
-    var UsePreSig = false
-    var enhancedMode = false
-    var bypassBlock = false
-    var shared_user = false
-    var disable_verification_agent = false
-}
+import io.github.suqi8.opatch.application.RestartApp
+import me.nikhilchaudhari.library.neumorphic
+import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.LazyColumn
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.extra.SuperSwitch
+import top.yukonga.miuix.kmp.icon.MiuixIcons
+import top.yukonga.miuix.kmp.icon.icons.ArrowBack
+import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Fun_android_package_manager_services(navController: NavController) {
+    var downgr by remember { mutableStateOf(false) }
+    var authcreak by remember { mutableStateOf(false) }
+    var digestCreak by remember { mutableStateOf(false) }
+    var UsePreSig by remember { mutableStateOf(false) }
+    var enhancedMode by remember { mutableStateOf(false) }
+    var bypassBlock by remember { mutableStateOf(false) }
+    var shared_user by remember { mutableStateOf(false) }
+    var disable_verification_agent by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val topappbarzt = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     Scaffold(topBar = {
-        LargeTopAppBar(
-            title = { Text(text = stringResource(id = R.string.package_manager_services)) },
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                titleContentColor = MaterialTheme.colorScheme.primary,
-            ),
+        TopAppBar(
+            scrollBehavior = topappbarzt,
+            title = stringResource(id = R.string.package_manager_services),
             navigationIcon = {
                 IconButton(onClick = {
                     navController.popBackStack()
-                }) {
+                },
+                    modifier = Modifier.padding(start = 18.dp)) {
                     Icon(
-                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                        contentDescription = "Localized description"
+                        imageVector = MiuixIcons.ArrowBack,
+                        contentDescription = null,
+                        tint = MiuixTheme.colorScheme.onBackground
                     )
                 }
             },
+            actions = {
+                // 如果你有其他操作按钮，这里可以添加
+                IconButton(onClick = {
+                    RestartApp(context,"com.tencent.mobileqq")
+                },
+                    modifier = Modifier.padding(end = 18.dp)) {
+                    Icon(
+                        imageVector = Icons.Outlined.Refresh,
+                        contentDescription = null,
+                        tint = MiuixTheme.colorScheme.onBackground
+                    )
+                }
+            }
         )
-    }) { innerPadding ->
-        Column(
+    }) { padding ->
+        LazyColumn(
             modifier = Modifier
-                .padding(innerPadding)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .background(MiuixTheme.colorScheme.background)
+                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
+            contentPadding = PaddingValues(top = padding.calculateTopPadding()),
+            topAppBarScrollBehavior = topappbarzt
         ) {
-            Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // 你的文本列
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
-                    ) {
-                        Text(text = stringResource(id = R.string.downgr), fontSize = 19.sp)
-                        Text(text = stringResource(id = R.string.downgr_summary), fontSize = 12.sp)
-                    }
-                    Switch(
-                        checked = Global.downgr, onCheckedChange = {
-                            Global.downgr = it
-
-                        }, modifier = Modifier
-                            .align(Alignment.CenterVertically) // 垂直居中对齐
-                            .padding(end = 20.dp)
+            item {
+                Column {
+                    SmallTitle(
+                        text = "常用设置"
                     )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // 你的文本列
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
+                    Card(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp)
                     ) {
-                        Text(text = stringResource(id = R.string.authcreak), fontSize = 19.sp)
-                        Text(
-                            text = stringResource(id = R.string.authcreak_summary),
-                            fontSize = 12.sp
+                        SuperSwitch(
+                            title = stringResource(R.string.downgr),
+                            summary = stringResource(R.string.downgr_summary),
+                            onCheckedChange = {
+                                downgr = it
+                            },
+                            checked = downgr
                         )
-                    }
-                    Switch(
-                        checked = Global.authcreak,
-                        onCheckedChange = { Global.authcreak = it },
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically) // 垂直居中对齐
-                            .padding(end = 20.dp)
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // 你的文本列
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
-                    ) {
-                        Text(text = stringResource(id = R.string.digestCreak), fontSize = 19.sp)
-                        Text(
-                            text = stringResource(id = R.string.digestCreak_summary),
-                            fontSize = 12.sp
+                        SuperSwitch(
+                            title = stringResource(R.string.authcreak),
+                            summary = stringResource(R.string.authcreak_summary),
+                            onCheckedChange = {
+                                authcreak = it
+                            },
+                            checked = authcreak
+                        )
+                        SuperSwitch(
+                            title = stringResource(R.string.digestCreak),
+                            summary = stringResource(R.string.digestCreak_summary),
+                            onCheckedChange = {
+                                digestCreak = it
+                            },
+                            checked = digestCreak
+                        )
+                        SuperSwitch(
+                            title = stringResource(R.string.UsePreSig),
+                            summary = stringResource(R.string.UsePreSig_summary),
+                            onCheckedChange = {
+                                UsePreSig = it
+                            },
+                            checked = UsePreSig
+                        )
+                        SuperSwitch(
+                            title = stringResource(R.string.enhancedMode),
+                            summary = stringResource(R.string.enhancedMode_summary),
+                            onCheckedChange = {
+                                enhancedMode = it
+                            },
+                            checked = enhancedMode
                         )
                     }
-                    Switch(
-                        checked = Global.digestCreak,
-                        onCheckedChange = { Global.digestCreak = it },
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically) // 垂直居中对齐
-                            .padding(end = 20.dp)
+                    SmallTitle(
+                        text = "其他设置"
                     )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // 你的文本列
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
+                    Card(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp)
                     ) {
-                        Text(text = stringResource(id = R.string.UsePreSig), fontSize = 19.sp)
-                        Text(
-                            text = stringResource(id = R.string.UsePreSig_summary),
-                            fontSize = 12.sp
+                        SuperSwitch(
+                            title = stringResource(R.string.bypassBlock),
+                            summary = stringResource(R.string.bypassBlock_summary),
+                            onCheckedChange = {
+                                bypassBlock = it
+                            },
+                            checked = bypassBlock
+                        )
+                        SuperSwitch(
+                            title = stringResource(R.string.disable_verification_agent_title),
+                            summary = stringResource(R.string.disable_verification_agent_summary),
+                            onCheckedChange = {
+                                disable_verification_agent = it
+                            },
+                            checked = disable_verification_agent
                         )
                     }
-                    Switch(
-                        checked = Global.UsePreSig,
-                        onCheckedChange = { Global.UsePreSig = it },
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically) // 垂直居中对齐
-                            .padding(end = 20.dp)
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // 你的文本列
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
-                    ) {
-                        Text(text = stringResource(id = R.string.enhancedMode), fontSize = 19.sp)
-                        Text(
-                            text = stringResource(id = R.string.enhancedMode_summary),
-                            fontSize = 12.sp
-                        )
-                    }
-                    Switch(
-                        checked = Global.enhancedMode,
-                        onCheckedChange = { Global.enhancedMode = it },
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically) // 垂直居中对齐
-                            .padding(end = 20.dp)
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // 你的文本列
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
-                    ) {
-                        Text(text = stringResource(id = R.string.bypassBlock), fontSize = 19.sp)
-                        Text(
-                            text = stringResource(id = R.string.bypassBlock_summary),
-                            fontSize = 12.sp
-                        )
-                    }
-                    Switch(
-                        checked = Global.bypassBlock,
-                        onCheckedChange = { Global.bypassBlock = it },
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically) // 垂直居中对齐
-                            .padding(end = 20.dp)
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // 你的文本列
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.shared_user_title),
-                            fontSize = 19.sp
-                        )
-                        Text(
-                            text = stringResource(id = R.string.shared_user_summary),
-                            fontSize = 12.sp
-                        )
-                    }
-                    Switch(
-                        checked = Global.shared_user,
-                        onCheckedChange = { Global.shared_user = it },
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically) // 垂直居中对齐
-                            .padding(end = 20.dp)
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    // 你的文本列
-                    Column(
-                        modifier = Modifier
-                            .padding(start = 20.dp, top = 20.dp, bottom = 20.dp)
-                    ) {
-                        Text(
-                            text = stringResource(id = R.string.disable_verification_agent_title),
-                            fontSize = 19.sp
-                        )
-                        Text(
-                            text = stringResource(id = R.string.disable_verification_agent_summary),
-                            fontSize = 12.sp
-                        )
-                    }
-                    Switch(
-                        checked = Global.disable_verification_agent,
-                        onCheckedChange = { Global.disable_verification_agent = it },
-                        modifier = Modifier
-                            .align(Alignment.CenterVertically) // 垂直居中对齐
-                            .padding(end = 20.dp)
-                    )
                 }
             }
         }
