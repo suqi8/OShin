@@ -1,7 +1,45 @@
+import java.io.ByteArrayOutputStream
+import java.util.Properties
+import java.io.FileInputStream
+import java.io.FileOutputStream
+
 plugins {
     autowire(libs.plugins.android.application)
     autowire(libs.plugins.kotlin.android)
     autowire(libs.plugins.kotlin.ksp)
+}
+
+fun getGitCommitHash(): String {
+    val stdout = ByteArrayOutputStream()
+    exec {
+        commandLine = "git rev-parse --short HEAD".split(" ")
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}
+
+fun getAndIncrementBuildNumber(): String {
+    val propertiesFile = file("version.properties")
+    val properties = Properties()
+
+    // Load existing properties
+    if (propertiesFile.exists()) {
+        properties.load(FileInputStream(propertiesFile))
+    } else {
+        // If file doesn't exist, create a new one
+        properties["BUILD_NUMBER"] = "1"
+    }
+
+    // Get the current build number
+    val buildNumber = properties["BUILD_NUMBER"].toString().toInt()
+
+    // Increment the build number
+    properties["BUILD_NUMBER"] = (buildNumber + 1).toString()
+
+    // Save the updated build number back to the properties file
+    properties.store(FileOutputStream(propertiesFile), null)
+
+    return buildNumber.toString()
 }
 
 android {
@@ -12,7 +50,7 @@ android {
         applicationId = property.project.app.packageName
         minSdkVersion(rootProject.extra["defaultMinSdkVersion"] as Int)
         targetSdk = property.project.android.targetSdk
-        versionName = property.project.app.versionName
+        versionName = property.project.app.versionName+".b"+getAndIncrementBuildNumber()+"."+getGitCommitHash()
         versionCode = property.project.app.versionCode
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -61,13 +99,17 @@ android {
 }
 
 dependencies {
+    val room_version = "2.6.1"
+    implementation("androidx.room:room-runtime:$room_version")
+    annotationProcessor("androidx.room:room-compiler:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
     // https://mvnrepository.com/artifact/dev.chrisbanes.haze/haze-jetpack-compose
     implementation("dev.chrisbanes.haze:haze:0.9.0-beta01")
     implementation(libs.androidx.datastore.core.android)
     implementation(libs.androidx.datastore.preferences.core.jvm)
     // https://mvnrepository.com/artifact/androidx.datastore/datastore-preferences
     implementation("androidx.datastore:datastore-preferences:1.1.1")
-    implementation("top.yukonga.miuix.kmp:miuix:0.2.2")
+    implementation("top.yukonga.miuix.kmp:miuix:0.2.4")
     implementation("com.google.code.gson:gson:2.11.0")
     implementation("com.valentinilk.shimmer:compose-shimmer:1.3.0")
     implementation("com.github.st235:expandablebottombar:1.5.3")
