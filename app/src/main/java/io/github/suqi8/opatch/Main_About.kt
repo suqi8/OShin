@@ -76,8 +76,6 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
     val showDeviceNameDialog = remember { mutableStateOf(false) }
     val deviceName: MutableState<String> = remember { mutableStateOf("未设置设备昵称") }
     val deviceNameCache: MutableState<String> = remember { mutableStateOf(deviceName.value) }
-    val totalStorage = formatSize(getTotalStorage())
-    val availableStorage = formatSize(getAvailableStorage())
     val physicalTotalStorage = formatSize(getPhysicalTotalStorage(context))
     val usedStorage = formatSize(getUsedStorage())
     val focusManager = LocalFocusManager.current
