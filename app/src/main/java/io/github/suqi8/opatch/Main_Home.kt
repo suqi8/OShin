@@ -114,7 +114,7 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
         topAppBarScrollBehavior = topAppBarScrollBehavior
     ) {
         item {
-            var cardVisible = remember { mutableStateOf(false) }
+            val cardVisible = remember { mutableStateOf(false) }
 
             // 首次加载时触发动画
             LaunchedEffect(Unit) {
