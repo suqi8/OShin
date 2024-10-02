@@ -1,8 +1,8 @@
 [versions]
-kotlin = "2.0.0"
-lifecycleRuntimeKtx = "2.8.4"
-activityCompose = "1.9.1"
-composeBom = "2024.06.00"
+kotlin = "2.0.20"
+lifecycleRuntimeKtx = "2.8.6"
+activityCompose = "1.9.2"
+composeBom = "2024.09.02"
 firebaseCrashlyticsBuildtools = "3.0.2"
 datastoreCoreAndroid = "1.1.1"
 datastorePreferencesCoreJvm = "1.1.1"
