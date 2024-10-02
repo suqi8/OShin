@@ -1,5 +1,7 @@
 # OPatch - ColorOS辅助模块
 
+![OPatch](https://github.com/suqi8/OPatch/blob/e9cb9e2af53b728e5e2d2d00429a90f10a3384dc/app/src/main/ic_launcher1-playstore.png?raw=true)
+
 ## 简介
 OPatch是一个专为ColorOS系统设计的辅助模块，旨在增强和定制用户的操作系统体验。该模块允许用户轻松地应用补丁，以实现特定的功能或优化。
 
