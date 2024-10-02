@@ -6,7 +6,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Insets;
-import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceFragment;
 import android.view.View;
@@ -19,7 +18,7 @@ import java.lang.reflect.Method;
 import java.util.Objects;
 
 @SuppressWarnings("deprecation")
-public class SettingsActivity extends Activity {
+public class SettingsActivity1 extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
