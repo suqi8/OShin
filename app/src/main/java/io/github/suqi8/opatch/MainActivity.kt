@@ -42,6 +42,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -57,6 +58,7 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.Box
@@ -94,8 +96,11 @@ class MainActivity : ComponentActivity() {
 
                 onDispose {}
             }
+
             AppTheme(colorMode = colorMode.intValue) {
                 Main0(colorMode = colorMode, context = context, modifier = Modifier)
+                val settingsManager = SettingsManager(context)
+
             }
 
         }
@@ -135,6 +140,8 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("Main") { Main1(modifier = modifier, context = context,navController,colorMode) }
             composable("Fun_android") { Fun_android(navController) }
             composable("Fun_android_package_manager_services") { Fun_android_package_manager_services(navController = navController)}
+            composable("Fun_com_android_systemui") { Fun_com_android_systemui(navController = navController)}
+            composable("Fun_com_android_systemui_status_bar_clock") { Fun_com_android_systemui_status_bar_clock(navController = navController) }
         }
     }
 }
@@ -295,6 +302,19 @@ fun getColorMode(context: Context): Flow<Int> {
     return context.dataStore.data.map { preferences ->
         preferences[colorModeKey] ?: 0 // 默认值为 0（Auto_Mode）
     }
+}
+
+suspend fun saveSetting(context: Context, name: String, data: String) {
+    context.dataStore.edit { preferences ->
+        val KEY = stringPreferencesKey(name)
+        preferences[KEY] = data
+    }
+}
+
+suspend fun getSetting(context: Context, name: String): String? {
+    val preferences = context.dataStore.data.first()
+    val KEY = stringPreferencesKey(name)
+    return preferences[KEY]
 }
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
