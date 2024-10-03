@@ -52,4 +52,11 @@
     <string name="func">Function</string>
     <string name="home">Home</string>
     <string name="about">About</string>
+    <string name="status_bar_clock">Status bar clock</string>
+    <string name="no_start_func">This function is not enabled~</string>
+    <string name="clock_style">Clock style</string>
+    <string name="preset">Preset</string>
+    <string name="geek">Geek</string>
+    <string name="clock_size">Clock size</string>
+    <string name="clock_size_summary">Adjust the size of the status bar clock; 0 means no size setting</string>
 </resources>
