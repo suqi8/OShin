@@ -39,4 +39,11 @@
     <string name="func">功能</string>
     <string name="home">主页</string>
     <string name="about">关于</string>
+    <string name="status_bar_clock">状态栏时钟</string>
+    <string name="no_start_func">还未开启此项功能~</string>
+    <string name="clock_style">时钟样式</string>
+    <string name="preset">预设</string>
+    <string name="geek">极客</string>
+    <string name="clock_size">时钟大小</string>
+    <string name="clock_size_summary">调整状态栏时钟大小，0为不设置大小</string>
 </resources>
