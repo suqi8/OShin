@@ -7,6 +7,7 @@ plugins {
     autowire(libs.plugins.android.application)
     autowire(libs.plugins.kotlin.android)
     autowire(libs.plugins.kotlin.ksp)
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.20"
 }
 
 fun getGitCommitHash(): String {
@@ -18,7 +19,7 @@ fun getGitCommitHash(): String {
     return stdout.toString().trim()
 }
 
-fun getAndIncrementBuildNumber(): String {
+fun getAndIncrementBuildNumber(): Int? {
     val propertiesFile = file("version.properties")
     val properties = Properties()
 
@@ -39,19 +40,20 @@ fun getAndIncrementBuildNumber(): String {
     // Save the updated build number back to the properties file
     properties.store(FileOutputStream(propertiesFile), null)
 
-    return buildNumber.toString()
+    return buildNumber
 }
 
 android {
     namespace = property.project.app.packageName
     compileSdk = 34
 
+    val number = getAndIncrementBuildNumber()
     defaultConfig {
         applicationId = property.project.app.packageName
         minSdkVersion(rootProject.extra["defaultMinSdkVersion"] as Int)
         targetSdk = property.project.android.targetSdk
-        versionName = property.project.app.versionName+".b"+getAndIncrementBuildNumber()+"."+getGitCommitHash()
-        versionCode = property.project.app.versionCode
+        versionName = property.project.app.versionName+".b"+number+"."+getGitCommitHash()
+        versionCode = number
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
