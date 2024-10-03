@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.BlendModeColorFilter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -49,6 +50,7 @@ fun Main_Function(
     navController: NavController,
     padding: PaddingValues
 ) {
+    val context = LocalContext.current
     val features = listOf(
         Feature(stringResource(R.string.downgr), stringResource(R.string.downgr_summary), "Fun_android_package_manager_services"),
         Feature(stringResource(R.string.authcreak), stringResource(R.string.authcreak_summary), "Fun_android_package_manager_services"),
@@ -114,7 +116,7 @@ fun Main_Function(
                 modifier = Modifier.fillMaxWidth()
                     .padding(bottom = 6.dp, top = 6.dp)
             ) {
-                LazyColumn {
+                LazyColumn(topAppBarScrollBehavior = topAppBarScrollBehavior) {
                     if (filteredFeatures.isEmpty()) {
                         item {
                             Box(
@@ -156,19 +158,22 @@ fun Main_Function(
             // 如果 expanded 为 true，则显示搜索结果
 
         } else {
+
             // 如果 expanded 为 false，则显示 Card
-            Column(Modifier.fillMaxSize()) {
-                Card(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 12.dp)
-                        .padding(bottom = 6.dp)
-                ) {
-                    Column {
-                        FunctionApp("android", "Fun_android", navController)
-                        FunctionApp("com.android.systemui", "Fun_com_android_systemui", navController)
+            LazyColumn(Modifier.fillMaxSize(),topAppBarScrollBehavior = topAppBarScrollBehavior) {
+                item {
+                    Card(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp)
+                    ) {
+                        Column() {
+                            FunctionApp("android", "Fun_android", navController)
+                            FunctionApp("com.android.systemui", "Fun_com_android_systemui", navController)
+                        }
                     }
+                    Spacer(Modifier.size(65.dp))
                 }
-                Spacer(Modifier.size(65.dp))
             }
         }
     }
