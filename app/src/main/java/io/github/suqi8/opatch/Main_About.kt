@@ -69,6 +69,7 @@ import java.lang.reflect.Method
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import android.content.ActivityNotFoundException
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -162,7 +163,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                         }
                     }
                 }
-                SmallTitle(text = showDeviceNameDialog.value.toString())
+                SmallTitle(text = "软件设置")
                 Card(modifier = Modifier.fillMaxWidth()
                     .padding(horizontal = 12.dp)
                     .padding(bottom = 6.dp)) {
@@ -183,6 +184,27 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                         }
                     )
                 }
+                SmallTitle(text = "题外话")
+                Card(modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = 12.dp)
+                        .padding(bottom = 6.dp)) {
+                    Card(Modifier.padding(10.dp)) {
+                        Image(painter = painterResource(R.drawable.qq_pic_merged_1727926207595), contentDescription = null, modifier = Modifier.fillMaxWidth())
+                    }
+                    SuperArrow(title = "前往他的主页", onClick = {
+                        val coolApkUri = Uri.parse("coolmarket://u/894238")
+                        val intent = Intent(Intent.ACTION_VIEW, coolApkUri)
+
+                        try {
+                            // 尝试启动酷安应用
+                            context.startActivity(intent)
+                        } catch (e: ActivityNotFoundException) {
+                            // 如果酷安未安装，则提示用户
+                            Toast.makeText(context, "请先安装酷安应用", Toast.LENGTH_SHORT).show()
+                        }
+                    })
+                }
+                SmallTitle(text = stringResource(R.string.about))
                 Card(modifier = Modifier.fillMaxWidth()
                     .padding(horizontal = 12.dp)
                     .padding(bottom = 6.dp)) {
