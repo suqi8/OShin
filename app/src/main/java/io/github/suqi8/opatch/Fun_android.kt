@@ -93,7 +93,7 @@ fun Fun_android(navController: NavController) {
                 Card(
                     modifier = Modifier.fillMaxWidth()
                         .padding(horizontal = 12.dp)
-                        .padding(bottom = 6.dp)
+                        .padding(bottom = 6.dp,top = 15.dp)
                 ) {
                     SuperArrow(title = stringResource(id = R.string.package_manager_services),
                         onClick = {
