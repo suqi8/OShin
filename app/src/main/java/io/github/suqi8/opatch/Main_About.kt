@@ -70,6 +70,8 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import android.content.ActivityNotFoundException
+import com.highcapable.yukihookapi.hook.factory.prefs
+import top.yukonga.miuix.kmp.extra.SuperSwitch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -79,6 +81,8 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
     val deviceNameCache: MutableState<String> = remember { mutableStateOf(deviceName.value) }
     val physicalTotalStorage = formatSize(getPhysicalTotalStorage(context))
     val usedStorage = formatSize(getUsedStorage())
+    val context = LocalContext.current
+    var isDebug = context.prefs("settings").getBoolean("Debug", false)
     val focusManager = LocalFocusManager.current
     LaunchedEffect(Unit) {
         val cachedName = getDeviceName(context) // 获取保存的设备名称
@@ -175,6 +179,14 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                             CoroutineScope(Dispatchers.IO).launch {
                                 saveColorMode(context, it)
                             }
+                        }
+                    )
+                    SuperSwitch(
+                        title = "Debug",
+                        checked = isDebug,
+                        onCheckedChange = {
+                            isDebug = it
+                            context.prefs("settings").edit { putBoolean("Debug", it) }
                         }
                     )
                 }

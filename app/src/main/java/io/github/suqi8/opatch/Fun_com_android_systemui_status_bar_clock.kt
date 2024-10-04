@@ -101,6 +101,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
     val customClockCache = remember { mutableStateOf("HH:mm") }
     val customClock = remember { mutableStateOf("HH:mm") }
     val focusManager = LocalFocusManager.current
+    var isDebug = context.prefs("settings").getBoolean("Debug", false)
 
     LaunchedEffect(Unit) {
         ClockStyleSelectedOption.value = context.prefs("settings").getInt("ClockStyleSelectedOption", 0)

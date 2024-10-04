@@ -35,7 +35,7 @@ class StatusBarClock : YukiBaseHooker() {
     val HideSpace = prefs("settings").getBoolean("Status_Bar_Time_HideSpace", false)
     val DualRow = prefs("settings").getBoolean("Status_Bar_Time_DualRow", false)
     var nowTime: Date? = null
-    var FontSize = prefs("settings").getInt("Status_Bar_Time_fontsize", 0)
+    var FontSize = prefs("settings").getInt("Status_Bar_Time_ClockSize", 0)
     var updateSpeed = prefs("settings").getInt("Status_Bar_Time_ClockUpdateSpeed", 0)
     var newline = ""
     var customClockStyle = prefs("settings").getString("Status_Bar_Time_CustomClockStyle", "HH:mm")
