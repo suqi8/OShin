@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -30,7 +31,10 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
@@ -38,6 +42,7 @@ import com.highcapable.yukihookapi.YukiHookAPI
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
@@ -161,14 +166,14 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                         ) {
                             Text(
                                 text = if (YukiHookAPI.Status.isModuleActive)
-                                    "模块已激活"
-                                else "模块未激活",
+                                    stringResource(R.string.module_is_activated)
+                                else stringResource(R.string.module_not_activated),
                                 color = Color.Black
                             )
                             Text(
                                 text = if (YukiHookAPI.Status.isModuleActive)
                                     "${YukiHookAPI.Status.Executor.name}-v${YukiHookAPI.Status.Executor.apiLevel}"
-                                else "请到LSPosed中激活本模块",
+                                else stringResource(R.string.please_activate),
                                 color = Color.Black
                             )
                         }
@@ -188,33 +193,49 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                     .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 20.dp)
                     .fillMaxWidth()
                 ) {
-                    Column(modifier = Modifier.padding(start = 30.dp, end = 30.dp, top = 30.dp, bottom = 30.dp)) {
-                        Text(text = "SOC 型号")
-                        Text(text = Build.SOC_MODEL, fontSize = 13.sp, color = Color.Gray)
+                    Column(modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 20.dp)) {
+                        Text(text = stringResource(id = R.string.soc_model))
+                        SmallTitle(text = Build.SOC_MODEL, insideMargin = DpSize(0.dp,0.dp))
 
-                        Text(text = "Android 版本", modifier = Modifier.padding(top = 10.dp))
-                        Text(text = Build.VERSION.RELEASE, fontSize = 13.sp, color = Color.Gray)
+                        Spacer(modifier = Modifier.height(10.dp))
 
-                        Text(text = "Android API 版本", modifier = Modifier.padding(top = 10.dp))
-                        Text(text = Build.VERSION.SDK_INT.toString(), fontSize = 13.sp, color = Color.Gray)
+                        Text(text = stringResource(id = R.string.android_version))
+                        SmallTitle(text = Build.VERSION.RELEASE, insideMargin = DpSize(0.dp,0.dp))
 
-                        Text(text = "系统版本", modifier = Modifier.padding(top = 10.dp))
-                        Text(text = Build.DISPLAY, fontSize = 13.sp, color = Color.Gray)
+                        Spacer(modifier = Modifier.height(10.dp))
 
-                        Text(text = "CPU 代号", modifier = Modifier.padding(top = 10.dp))
-                        Text(text = Build.BOARD.substringAfter("_"), fontSize = 13.sp, color = Color.Gray)
+                        Text(text = stringResource(id = R.string.android_api_version))
+                        SmallTitle(text = Build.VERSION.SDK_INT.toString(), insideMargin = DpSize(0.dp,0.dp))
 
-                        Text(text = "设备制造商", modifier = Modifier.padding(top = 10.dp))
-                        Text(text = Build.MANUFACTURER, fontSize = 13.sp, color = Color.Gray)
+                        Spacer(modifier = Modifier.height(10.dp))
 
-                        Text(text = "支持的 Abi", modifier = Modifier.padding(top = 10.dp))
-                        Text(text = Build.SUPPORTED_ABIS.joinToString(), fontSize = 13.sp, color = Color.Gray)
+                        Text(text = stringResource(id = R.string.system_version))
+                        SmallTitle(text = Build.DISPLAY, insideMargin = DpSize(0.dp,0.dp))
 
-                        Text(text = "Android 安全补丁", modifier = Modifier.padding(top = 10.dp))
-                        Text(text = Build.VERSION.SECURITY_PATCH, fontSize = 13.sp, color = Color.Gray)
+                        Spacer(modifier = Modifier.height(10.dp))
 
-                        Text(text = "设备指纹", modifier = Modifier.padding(top = 10.dp))
-                        Text(text = Build.FINGERPRINT, fontSize = 13.sp, color = Color.Gray)
+                        Text(text = stringResource(id = R.string.cpu_codename))
+                        SmallTitle(text = Build.BOARD.substringAfter("_"), insideMargin = DpSize(0.dp,0.dp))
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(text = stringResource(id = R.string.device_manufacturer))
+                        SmallTitle(text = Build.MANUFACTURER, insideMargin = DpSize(0.dp,0.dp))
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(text = stringResource(id = R.string.supported_abi))
+                        SmallTitle(text = Build.SUPPORTED_ABIS.joinToString(), insideMargin = DpSize(0.dp,0.dp))
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(text = stringResource(id = R.string.android_security_patch))
+                        SmallTitle(text = Build.VERSION.SECURITY_PATCH, insideMargin = DpSize(0.dp,0.dp))
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        Text(text = stringResource(id = R.string.device_fingerprint))
+                        SmallTitle(text = Build.FINGERPRINT, insideMargin = DpSize(0.dp,0.dp))
                     }
                 }
             }

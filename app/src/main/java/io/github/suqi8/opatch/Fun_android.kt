@@ -40,6 +40,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.*
@@ -54,6 +55,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.navigation.NavController
 import io.github.suqi8.opatch.hook.corepatch.SettingsActivity
+import io.github.suqi8.opatch.ui.tools.resetApp
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -69,6 +71,10 @@ import java.io.File
 fun Fun_android(navController: NavController) {
     val context = LocalContext.current
     val one = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
+    val appList = listOf("android")
+    val RestartAPP = remember { mutableStateOf(false) }
+    val resetApp = resetApp()
+    resetApp.AppRestartScreen(appList,RestartAPP)
     Scaffold(topBar = { GetAppIconAndName(packageName = "android") { appName, icon ->
         TopAppBar(
             title = appName,
@@ -84,7 +90,18 @@ fun Fun_android(navController: NavController) {
                         tint = MiuixTheme.colorScheme.onBackground
                     )
                 }
-            },
+            }, actions = {
+                IconButton(onClick = {
+                    RestartAPP.value = true
+                },
+                    modifier = Modifier.padding(end = 18.dp)) {
+                    Icon(
+                        imageVector = Icons.Outlined.Refresh,
+                        contentDescription = null,
+                        tint = MiuixTheme.colorScheme.onBackground
+                    )
+                }
+            }
         )
     } }) {padding ->
         LazyColumn(contentPadding = PaddingValues(top = padding.calculateTopPadding()),

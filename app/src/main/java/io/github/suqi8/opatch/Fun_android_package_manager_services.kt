@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import io.github.suqi8.opatch.application.RestartApp
+import io.github.suqi8.opatch.ui.tools.resetApp
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -51,6 +52,11 @@ fun Fun_android_package_manager_services(navController: NavController) {
     var disable_verification_agent by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val topappbarzt = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
+    val appList = listOf("android")
+    val RestartAPP = remember { mutableStateOf(false) }
+    val resetApp = resetApp()
+    resetApp.AppRestartScreen(appList,RestartAPP)
+
     Scaffold(topBar = {
         TopAppBar(
             scrollBehavior = topappbarzt,
@@ -70,7 +76,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
             actions = {
                 // 如果你有其他操作按钮，这里可以添加
                 IconButton(onClick = {
-                    RestartApp(context,"com.tencent.mobileqq")
+                    RestartAPP.value = true
                 },
                     modifier = Modifier.padding(end = 18.dp)) {
                     Icon(
@@ -94,7 +100,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
             item {
                 Column {
                     SmallTitle(
-                        text = "常用设置"
+                        text = stringResource(R.string.common_settings)
                     )
                     Card(
                         modifier = Modifier.fillMaxWidth()
@@ -104,6 +110,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                         SuperSwitch(
                             title = stringResource(R.string.downgr),
                             summary = stringResource(R.string.downgr_summary),
+                            enabled = false,
                             onCheckedChange = {
                                 downgr = it
                             },
@@ -112,6 +119,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                         SuperSwitch(
                             title = stringResource(R.string.authcreak),
                             summary = stringResource(R.string.authcreak_summary),
+                            enabled = false,
                             onCheckedChange = {
                                 authcreak = it
                             },
@@ -120,6 +128,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                         SuperSwitch(
                             title = stringResource(R.string.digestCreak),
                             summary = stringResource(R.string.digestCreak_summary),
+                            enabled = false,
                             onCheckedChange = {
                                 digestCreak = it
                             },
@@ -128,6 +137,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                         SuperSwitch(
                             title = stringResource(R.string.UsePreSig),
                             summary = stringResource(R.string.UsePreSig_summary),
+                            enabled = false,
                             onCheckedChange = {
                                 UsePreSig = it
                             },
@@ -136,6 +146,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                         SuperSwitch(
                             title = stringResource(R.string.enhancedMode),
                             summary = stringResource(R.string.enhancedMode_summary),
+                            enabled = false,
                             onCheckedChange = {
                                 enhancedMode = it
                             },
@@ -143,7 +154,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                         )
                     }
                     SmallTitle(
-                        text = "其他设置"
+                        text = stringResource(R.string.other_settings)
                     )
                     Card(
                         modifier = Modifier.fillMaxWidth()
@@ -153,6 +164,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                         SuperSwitch(
                             title = stringResource(R.string.bypassBlock),
                             summary = stringResource(R.string.bypassBlock_summary),
+                            enabled = false,
                             onCheckedChange = {
                                 bypassBlock = it
                             },
@@ -161,6 +173,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                         SuperSwitch(
                             title = stringResource(R.string.disable_verification_agent_title),
                             summary = stringResource(R.string.disable_verification_agent_summary),
+                            enabled = false,
                             onCheckedChange = {
                                 disable_verification_agent = it
                             },

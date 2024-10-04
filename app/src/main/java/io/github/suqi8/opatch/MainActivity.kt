@@ -35,6 +35,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -163,7 +164,6 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
             noiseFactor = noiseFactor
         )
     }
-    //val items = listOf("功能", "主页", "关于")
     val topAppBarScrollBehavior0 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val topAppBarScrollBehavior1 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val topAppBarScrollBehavior2 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
@@ -182,9 +182,9 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
     }
 
     val items = listOf(
-        NavigationItem("功能", ImageVector.vectorResource(id = R.drawable.twotone_widgets_24)),
-        NavigationItem("主页", ImageVector.vectorResource(id = R.drawable.twotone_home_24)),
-        NavigationItem("关于", ImageVector.vectorResource(id = R.drawable.twotone_pending_24))
+        NavigationItem(stringResource(R.string.func), ImageVector.vectorResource(id = R.drawable.func)),
+        NavigationItem(stringResource(R.string.home), ImageVector.vectorResource(id = R.drawable.home)),
+        NavigationItem(stringResource(R.string.about), ImageVector.vectorResource(id = R.drawable.about))
     )
 
     LaunchedEffect(pagerState) {
@@ -218,9 +218,9 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
             state = hazeState,
             style = hazeStyle)) {
             TopAppBar(scrollBehavior = currentScrollBehavior,color = Color.Transparent,title = when (pagerState.currentPage) {
-                0 -> "功能"
-                1 -> "主页"
-                else -> "关于"
+                0 -> stringResource(R.string.func)
+                1 -> stringResource(R.string.home)
+                else -> stringResource(R.string.about)
             },navigationIcon = {
                 IconButton(onClick = { /* do something */ }) {
                     Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null)

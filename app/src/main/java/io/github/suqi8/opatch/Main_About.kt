@@ -111,7 +111,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                 Button(
                     modifier = Modifier.padding(start = 20.dp, end = 20.dp)
                         .fillMaxWidth(),
-                    text = "有新版本",
+                    text = stringResource(R.string.check_update),
                     submit = true,
                     onClick = {
                     }
@@ -151,28 +151,22 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                         }
                         Column(Modifier.padding( bottom = 10.dp)) {
                             Text(YukiHookAPI.VERSION, fontSize = 14.sp)
-                            Text("YukiHookAPI版本", fontSize = 12.sp, color = Color.Gray)
+                            Text(stringResource(R.string.yuki_hook_api_version), fontSize = 12.sp, color = Color.Gray)
                         }
                         Column(Modifier.padding( bottom = 10.dp)) {
                             Text(YukiHookAPI_Impl.compiledTimestamp.toString(), fontSize = 14.sp)
-                            Text("编译时间戳", fontSize = 12.sp, color = Color.Gray)
+                            Text(stringResource(R.string.compiled_timestamp), fontSize = 12.sp, color = Color.Gray)
                         }
                         Column(Modifier.padding( bottom = 10.dp)) {
                             Text(timestampToDateTime(YukiHookAPI_Impl.compiledTimestamp), fontSize = 14.sp)
-                            Text("编译时间", fontSize = 12.sp, color = Color.Gray)
+                            Text(stringResource(R.string.compiled_time), fontSize = 12.sp, color = Color.Gray)
                         }
                     }
                 }
-                SmallTitle(text = "软件设置")
+                SmallTitle(text = stringResource(R.string.app_settings))
                 Card(modifier = Modifier.fillMaxWidth()
                     .padding(horizontal = 12.dp)
                     .padding(bottom = 6.dp)) {
-                    SuperArrow(
-                        title = "神隐模式",
-                        onClick = {
-                            navController.navigate("fuzhu")
-                        }
-                    )
                     SuperDropdown(
                         title = stringResource(R.string.Color_Mode),
                         items = listOf(stringResource(R.string.Auto_Mode),stringResource(R.string.Light_Mode), stringResource(R.string.Night_Mode)),
@@ -184,14 +178,15 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                         }
                     )
                 }
-                SmallTitle(text = "题外话")
+                SmallTitle(text = stringResource(R.string.by_the_way))
                 Card(modifier = Modifier.fillMaxWidth()
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp)) {
                     Card(Modifier.padding(10.dp)) {
                         Image(painter = painterResource(R.drawable.qq_pic_merged_1727926207595), contentDescription = null, modifier = Modifier.fillMaxWidth())
                     }
-                    SuperArrow(title = "前往他的主页", onClick = {
+                    val toastMessage = stringResource(R.string.please_install_cool_apk)
+                    SuperArrow(title = stringResource(R.string.go_to_his_homepage), onClick = {
                         val coolApkUri = Uri.parse("coolmarket://u/894238")
                         val intent = Intent(Intent.ACTION_VIEW, coolApkUri)
 
@@ -200,7 +195,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                             context.startActivity(intent)
                         } catch (e: ActivityNotFoundException) {
                             // 如果酷安未安装，则提示用户
-                            Toast.makeText(context, "请先安装酷安应用", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
                         }
                     })
                 }
@@ -217,7 +212,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                         }
                     )
                     SuperArrow(
-                        title = "官方频道",
+                        title = stringResource(R.string.official_channel),
                         summary = "Telegram、QQ",
                         onClick = {
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/OPatch"))
@@ -225,8 +220,8 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                         }
                     )
                     SuperArrow(
-                        title = "参与翻译",
-                        summary = "前往 Crowdin 贡献您的语言翻译",
+                        title = stringResource(R.string.contribute_translation),
+                        summary = stringResource(R.string.crowdin_contribute_summary),
                         onClick = {
                         }
                     )

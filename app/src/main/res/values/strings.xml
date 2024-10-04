@@ -50,6 +50,23 @@
     <string name="disable_verification_agent_title">Disable Package Verification Agent</string>
     <string name="disable_verification_agent_summary">e.g. Google Play Protection</string>
     <string name="func">Function</string>
+    <string name="soc_model">SOC Model</string>
+    <string name="android_version">Android Version</string>
+    <string name="android_api_version">Android API Version</string>
+    <string name="system_version">System Version</string>
+    <string name="cpu_codename">CPU Codename</string>
+    <string name="device_manufacturer">Device Manufacturer</string>
+    <string name="supported_abi">Supported ABI</string>
+    <string name="android_security_patch">Android Security Patch</string>
+    <string name="device_fingerprint">Device Fingerprint</string>
+    <string name="yuki_hook_api_version">YukiHookAPI Version</string>
+    <string name="compiled_timestamp">Compiled Timestamp</string>
+    <string name="compiled_time">Compiled Time</string>
+    <string name="official_channel">Official Channel</string>
+    <string name="contribute_translation">Contribute to Translation</string>
+    <string name="crowdin_contribute_summary">Go to Crowdin to contribute your language translation</string>
+    <string name="go_to_his_homepage">Go to His Homepage</string>
+    <string name="please_install_cool_apk">Please install the CoolAPK app first</string>
     <string name="home">Home</string>
     <string name="about">About</string>
     <string name="status_bar_clock">Status bar clock</string>
@@ -59,4 +76,66 @@
     <string name="geek">Geek</string>
     <string name="clock_size">Clock size</string>
     <string name="clock_size_summary">Adjust the size of the status bar clock; 0 means no size setting</string>
+    <string name="clock_update_time">Clock update time</string>
+    <!-- Clock Style -->
+    <string name="clock_style_title">Clock Style</string>
+    <string name="clock_style_summary">Choose the display style of the clock</string>
+
+    <!-- Clock Size -->
+
+    <!-- Clock Update Time -->
+    <string name="clock_update_time_title">Clock Update Time</string>
+    <string name="clock_update_time_summary">Set the clock update frequency in milliseconds; 0 means no update frequency is set</string>
+
+    <!-- Show Years -->
+    <string name="show_years_title">Show Years</string>
+    <string name="show_years_summary">e.g., 2023</string>
+
+    <!-- Show Month -->
+    <string name="show_month_title">Show Month</string>
+    <string name="show_month_summary">e.g., April</string>
+
+    <!-- Show Day -->
+    <string name="show_day_title">Show Day</string>
+    <string name="show_day_summary">e.g., 5th</string>
+
+    <!-- Show Week -->
+    <string name="show_week_title">Show Week</string>
+    <string name="show_week_summary">e.g., Monday</string>
+
+    <!-- Show Chinese Hour -->
+    <string name="show_cn_hour_title">Show Chinese Hour</string>
+    <string name="show_cn_hour_summary">e.g., Yin Hour</string>
+
+    <!-- Show Time Period -->
+    <string name="showtime_period_title">Show Time Period</string>
+    <string name="showtime_period_summary">e.g., Morning</string>
+
+    <!-- Show Seconds -->
+    <string name="show_seconds_title">Show Seconds</string>
+    <string name="show_seconds_summary">e.g., xx:xx:41</string>
+
+    <!-- Show Milliseconds -->
+    <string name="show_millisecond_title">Show Milliseconds</string>
+    <string name="show_millisecond_summary">e.g., xx:xx:xx.919</string>
+
+    <!-- Hide Space -->
+    <string name="hide_space_title">Hide Space</string>
+    <string name="hide_space_summary">Hide spaces within the time display</string>
+
+    <!-- Dual Row Display -->
+    <string name="dual_row_title">Dual Row Display</string>
+    <string name="dual_row_summary">Display time in two rows</string>
+    <string name="Researt_app">Researt app</string>
+    <string name="confirm_restart_applications">Confirm to restart the following applications?</string>
+    <string name="common_settings">Common Settings</string>
+    <string name="other_settings">Other Settings</string>
+    <string name="module_activated">Module Activated</string>
+    <string name="please_activate">Please activate this module in LSPosed</string>
+    <string name="app_settings">App settings</string>
+    <string name="check_update">Check for Updates</string>
+    <string name="by_the_way">By the way</string>
+    <string name="alignment">Alignment</string>
+    <string name="status_bar_clock_custom_tips">Year, Month, Day:\n y Year\n yy Two-digit year (e.g., 23 for 2023)\n yyyy Four-digit year (e.g., 2023)\n  M Month\n MM Two-digit month (01-12)\n MMM Month abbreviation (e.g., Jan)\n MMMM Full month name (e.g., January)\n  d Day of the month (1-31)\n  D Day of the year (1-366)\n  E Day of the week\n E Abbreviated day of the week (e.g., Tue)\n EEEE Full day of the week (e.g., Tuesday)\n  F Day of the week in the month (1-7)\n  w Week of the year (1-53)\n  W Week of the month (1-5)\n  ---\n  Hour, Minute, Second:\n h Hour in 12-hour format (1-12)\n  H Hour in 24-hour format (0-23)\n  m Minute (0-59)\n  s Second (0-59)\n  S Millisecond (0-999)\n  K Hour in 12-hour format (0-11)\n  k Hour in 24-hour format (1-24)\n  ---\n  AM/PM:\n a AM/PM marker (e.g., AM or PM)\n  ---\n  Time Zone:\n z Time zone\n z Time zone abbreviation (e.g., PST)\n zzzz Full time zone name (e.g., Pacific Standard Time)\n  Z RFC 822 time zone format (e.g., -0800)\n  X ISO 8601 time zone\n X -08 or +08\n XX -0800 or +0800\n XXX -08:00 or +08:00</string>
+    <string name="clock_format">Clock format</string>
 </resources>

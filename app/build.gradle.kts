@@ -47,6 +47,30 @@ android {
     namespace = property.project.app.packageName
     compileSdk = 34
 
+    splits {
+        abi {
+            isEnable = true
+            reset()
+            include("arm64-v8a", "armeabi-v7a", "x86", "x86_64")
+            isUniversalApk = true
+        }
+    }
+
+    applicationVariants.all {
+        val variant = this
+        variant.outputs
+            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
+            .forEach { output ->
+                val name = "OPatch"
+                var abi = output.getFilter(com.android.build.OutputFile.ABI)
+                if (abi == null) abi = "all" //兼容
+                val version = variant.versionName
+                val versionCode = variant.versionCode
+                val outputFileName = "${name}_${abi}_${"v"}${version}(${versionCode}).apk"
+                output.outputFileName = outputFileName
+            }
+    }
+
     val number = getAndIncrementBuildNumber()
     defaultConfig {
         applicationId = property.project.app.packageName

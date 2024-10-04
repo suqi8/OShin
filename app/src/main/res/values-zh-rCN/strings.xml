@@ -46,4 +46,80 @@
     <string name="geek">极客</string>
     <string name="clock_size">时钟大小</string>
     <string name="clock_size_summary">调整状态栏时钟大小，0为不设置大小</string>
+    <string name="clock_update_time">时钟更新频率</string>
+    <!-- Clock Style -->
+    <string name="clock_style_title">时钟样式</string>
+    <string name="clock_style_summary">选择时钟的显示样式</string>
+    <string name="soc_model">SOC 型号</string>
+    <string name="android_version">Android 版本</string>
+    <string name="android_api_version">Android API 版本</string>
+    <string name="system_version">系统版本</string>
+    <string name="cpu_codename">CPU 代号</string>
+    <string name="device_manufacturer">设备制造商</string>
+    <string name="supported_abi">支持的 Abi</string>
+    <string name="android_security_patch">Android 安全补丁</string>
+    <string name="device_fingerprint">设备指纹</string>
+    <string name="yuki_hook_api_version">YukiHookAPI版本</string>
+    <string name="compiled_timestamp">编译时间戳</string>
+    <string name="compiled_time">编译时间</string>
+    <string name="official_channel">官方频道</string>
+    <string name="contribute_translation">参与翻译</string>
+    <string name="crowdin_contribute_summary">前往 Crowdin 贡献您的语言翻译</string>
+    <string name="go_to_his_homepage">前往他的主页</string>
+    <string name="please_install_cool_apk">请先安装酷安应用</string>
+    <!-- Clock Update Time -->
+    <string name="clock_update_time_title">时钟更新时间</string>
+    <string name="clock_update_time_summary">设置时钟更新的频率，单位毫秒，0为不设置更新频率</string>
+
+    <!-- Show Years -->
+    <string name="show_years_title">显示年份</string>
+    <string name="show_years_summary">例如: 24年</string>
+
+    <!-- Show Month -->
+    <string name="show_month_title">显示月份</string>
+    <string name="show_month_summary">例如: 4月</string>
+
+    <!-- Show Day -->
+    <string name="show_day_title">显示日期</string>
+    <string name="show_day_summary">例如: 5日</string>
+
+    <!-- Show Week -->
+    <string name="show_week_title">显示星期</string>
+    <string name="show_week_summary">例如: 周一</string>
+
+    <!-- Show Chinese Hour -->
+    <string name="show_cn_hour_title">显示时辰</string>
+    <string name="show_cn_hour_summary">例如: 寅时</string>
+
+    <!-- Show Time Period -->
+    <string name="showtime_period_title">显示时段</string>
+    <string name="showtime_period_summary">例如: 上午</string>
+
+    <!-- Show Seconds -->
+    <string name="show_seconds_title">显示秒数</string>
+    <string name="show_seconds_summary">例如: xx:xx:41</string>
+
+    <!-- Show Milliseconds -->
+    <string name="show_millisecond_title">显示毫秒</string>
+    <string name="show_millisecond_summary">例如: xx:xx:xx.919</string>
+
+    <!-- Hide Space -->
+    <string name="hide_space_title">隐藏间隔</string>
+    <string name="hide_space_summary">隐藏时间内的空格</string>
+
+    <!-- Dual Row Display -->
+    <string name="dual_row_title">双排显示</string>
+    <string name="dual_row_summary">双排显示时间</string>
+    <string name="Researt_app">重启应用</string>
+    <string name="confirm_restart_applications">确认重启以下应用吗？</string>
+    <string name="common_settings">常用设置</string>
+    <string name="other_settings">其他设置</string>
+    <string name="module_activated">模块已激活</string>
+    <string name="please_activate">请到LSPosed中激活本模块</string>
+    <string name="app_settings">软件设置</string>
+    <string name="check_update">检查更新</string>
+    <string name="by_the_way">题外话</string>
+    <string name="alignment">对齐方式</string>
+    <string name="status_bar_clock_custom_tips">年、月、日：\n y 年\n yy 两位数年份（例如 23 表示 2023 年）\n yyyy 四位数年份（例如 2023）\n  M 月\n MM 两位数的月份（01-12）\n MMM 月份缩写（如 Jan）\n MMMM 月份全称（如 January）\n  d 月中的天数（1-31）\n  D 年中的天数（1-366）\n  E 星期\n E 星期的缩写（如 Tue）\n EEEE 星期的全称（如 Tuesday）\n  F 月中的第几周的星期几（1-7）\n  w 年中的周数（1-53）\n  W 月中的周数（1-5）\n  ---\n  时、分、秒：\n h 12 小时制的小时数（1-12）\n  H 24 小时制的小时数（0-23）\n  m 分钟数（0-59）\n  s 秒数（0-59）\n  S 毫秒数（0-999）\n  K 12 小时制的小时数（0-11）\n  k 24 小时制的小时数（1-24）\n  ---\n  上午/下午：\n a AM/PM 标记（如 AM 或 PM）\n  ---\n  时区：\n z 时区\n z 时区缩写（如 PST）\n zzzz 时区全称（如 Pacific Standard Time）\n  Z RFC 822 时区格式（如 -0800）\n  X ISO 8601 时区\n X -08 或 +08\n XX -0800 或 +0800\n XXX -08:00 或 +08:00</string>
+    <string name="clock_format">时钟格式</string>
 </resources>

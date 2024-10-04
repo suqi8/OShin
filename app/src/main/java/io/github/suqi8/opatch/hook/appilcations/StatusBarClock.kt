@@ -4,12 +4,17 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Handler
 import android.provider.Settings
+import android.text.TextUtils.replace
 import android.util.TypedValue
 import android.view.Gravity
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.factory.field
+import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.CharSequenceType
+import com.highcapable.yukihookapi.hook.type.java.IntClass
+import com.highcapable.yukihookapi.hook.type.java.StringClass
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -26,35 +31,113 @@ class StatusBarClock : YukiBaseHooker() {
     val ShowCNHour = prefs("settings").getBoolean("Status_Bar_Time_ShowCNHour", false)
     val Showtime_period = prefs("settings").getBoolean("Status_Bar_Time_Showtime_period", false)
     val ShowSeconds = prefs("settings").getBoolean("Status_Bar_Time_ShowSeconds", false)
+    val ShowMillisecond = prefs("settings").getBoolean("Status_Bar_Time_ShowMillisecond", false)
     val HideSpace = prefs("settings").getBoolean("Status_Bar_Time_HideSpace", false)
     val DualRow = prefs("settings").getBoolean("Status_Bar_Time_DualRow", false)
     var nowTime: Date? = null
     var FontSize = prefs("settings").getInt("Status_Bar_Time_fontsize", 0)
+    var updateSpeed = prefs("settings").getInt("Status_Bar_Time_ClockUpdateSpeed", 0)
     var newline = ""
+    var customClockStyle = prefs("settings").getString("Status_Bar_Time_CustomClockStyle", "HH:mm")
+    var customAlignment = prefs("settings").getInt("Status_Bar_Time_alignment", 0)
 
     @OptIn(LegacyHookApi::class)
     override fun onHook() {
         var context: Context? = null
-        "com.android.systemui.statusbar.policy.Clock".toClass().hook {
-            if (ClockStyleSelectedOption == 0) {
-                injectMember {
-                    constructor {
-                        paramCount = 3
+        "com.android.systemui.statusbar.policy.Clock".toClass().apply {
+            hook {
+                if (ClockStyleSelectedOption == 0) {
+                    injectMember {
+                        constructor {
+                            paramCount = 3
+                        }
+                        afterHook {
+                            context = args(0).cast<Context>()
+                            val clockView = instance<TextView>()
+                            clockView.apply {
+                                if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
+                                isSingleLine = false
+                                gravity = Gravity.CENTER
+                                if (DualRow) {
+                                    newline = "\n"
+                                    var defaultSize = 8F
+                                    if (FontSize != 0) defaultSize = FontSize.toFloat()
+                                    setTextSize(TypedValue.COMPLEX_UNIT_DIP, defaultSize)
+                                    setLineSpacing(0F, 0.8F)
+                                } else {
+                                    if (FontSize != 0) {
+                                        setTextSize(
+                                            TypedValue.COMPLEX_UNIT_DIP,
+                                            FontSize.toFloat()
+                                        )
+                                    }
+                                }
+                            }
+
+                            if (updateSpeed != 0) {
+                                // 获取 updateClock 方法并设置定时器
+                                val updateClockMethod: Method = clockView.javaClass.superclass.getDeclaredMethod("updateClock")
+                                val runnable = Runnable {
+                                    updateClockMethod.isAccessible = true
+                                    updateClockMethod.invoke(clockView)
+                                }
+
+                                // 自定义定时器任务
+                                class CustomTimerTask : TimerTask() {
+                                    override fun run() {
+                                        Handler(clockView.context.mainLooper).post(runnable)
+                                    }
+                                }
+
+                                // 使用 Timer 控制刷新频率，改为 500 毫秒
+                                Timer().schedule(CustomTimerTask(), 1000 - System.currentTimeMillis() % 1000, updateSpeed.toLong())
+                            }
+                        }
                     }
-                    afterHook {
-                        context = args(0).cast<Context>()
-                        val clockView = instance<TextView>()
-                        clockView.apply {
-                            if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
-                            isSingleLine = false
-                            gravity = Gravity.CENTER
-                            if (DualRow) {
-                                newline = "\n"
-                                var defaultSize = 8F
-                                if (FontSize != 0) defaultSize = FontSize.toFloat()
-                                setTextSize(TypedValue.COMPLEX_UNIT_DIP, defaultSize)
-                                setLineSpacing(0F, 0.8F)
-                            } else {
+
+                    // Hook getSmallTime 方法自定义显示格式
+                    injectMember {
+                        method {
+                            name = "getSmallTime"
+                            returnType = CharSequenceType
+                        }
+                        afterHook {
+                            instance<TextView>().apply {
+                                if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
+                            }
+                            nowTime = Calendar.getInstance().time
+                            result = getDate(context!!) + newline + getTime(context!!)
+                        }
+                    }
+
+                } else {
+                    // 其他样式选择逻辑
+                    injectMember {
+                        constructor {
+                            paramCount = 3
+                        }
+                        afterHook {
+                            context = args(0).cast<Context>()
+                            val clockView = instance<TextView>()
+                            clockView.apply {
+                                isSingleLine = false
+                                if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
+                                gravity = when (customAlignment) {
+                                    0 -> Gravity.CENTER        // 居中对齐
+                                    1 -> Gravity.TOP           // 顶部对齐
+                                    2 -> Gravity.BOTTOM        // 底部对齐
+                                    3 -> Gravity.LEFT          // 左侧对齐
+                                    4 -> Gravity.RIGHT         // 右侧对齐
+                                    5 -> Gravity.START         // 起始位置对齐
+                                    6 -> Gravity.END           // 结束位置对齐
+                                    7 -> Gravity.CENTER_HORIZONTAL  // 水平居中
+                                    8 -> Gravity.CENTER_VERTICAL    // 垂直居中
+                                    9 -> Gravity.FILL               // 填满整个空间
+                                    10 -> Gravity.FILL_HORIZONTAL   // 水平填满
+                                    11 -> Gravity.FILL_VERTICAL     // 垂直填满
+                                    else -> Gravity.CENTER         // 默认居中对齐
+                                }
+
                                 if (FontSize != 0) {
                                     setTextSize(
                                         TypedValue.COMPLEX_UNIT_DIP,
@@ -62,41 +145,51 @@ class StatusBarClock : YukiBaseHooker() {
                                     )
                                 }
                             }
-                        }
 
-                        val d: Method = clockView.javaClass.superclass.getDeclaredMethod("updateClock")
-                        val r = Runnable {
-                            d.isAccessible = true
-                            d.invoke(clockView)
-                        }
+                            if (updateSpeed != 0) {
+                                // 获取 updateClock 方法并设置定时器
+                                val updateClockMethod: Method = clockView.javaClass.superclass.getDeclaredMethod("updateClock")
+                                val runnable = Runnable {
+                                    updateClockMethod.isAccessible = true
+                                    updateClockMethod.invoke(clockView)
+                                }
 
-                        class T : TimerTask() {
-                            override fun run() {
-                                Handler(clockView.context.mainLooper).post(r)
+                                // 自定义定时器任务
+                                class CustomTimerTask : TimerTask() {
+                                    override fun run() {
+                                        Handler(clockView.context.mainLooper).post(runnable)
+                                    }
+                                }
+
+                                // 使用 Timer 控制刷新频率，改为 500 毫秒
+                                Timer().schedule(CustomTimerTask(), 1000 - System.currentTimeMillis() % 1000, updateSpeed.toLong())
                             }
                         }
-                        Timer().scheduleAtFixedRate(T(), 1000 - System.currentTimeMillis() % 1000, 1000)
                     }
-                }
-                injectMember {
-                    method {
-                        name = "getSmallTime"
-                        returnType = CharSequenceType
-                    }
-                    afterHook {
-                        instance<TextView>().apply {
-                            if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
+                    injectMember {
+                        method {
+                            name = "getSmallTime"
+                            returnType = CharSequenceType
                         }
-                        nowTime = Calendar.getInstance().time
-                        result = getDate(context!!) + newline + getTime(context!!)
+                        afterHook {
+                            instance<TextView>().apply {
+                                if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
+                            }
+                            nowTime = Calendar.getInstance().time
+                            result = getCustomDate(context!!, customClockStyle).replace("\\n", "\n")
+                        }
                     }
                 }
-            } else {
-
             }
         }
     }
 
+    @SuppressLint("SimpleDateFormat")
+    private fun getCustomDate(context: Context,format: String): String {
+        return SimpleDateFormat(format).format(nowTime!!)
+    }
+
+    @SuppressLint("SimpleDateFormat")
     private fun getDate(context: Context): String {
         var dateFormat = ""
         if (isZh(context)) {
@@ -122,10 +215,12 @@ class StatusBarClock : YukiBaseHooker() {
         return SimpleDateFormat(dateFormat).format(nowTime!!)
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun getTime(context: Context): String {
         var timeFormat = ""
         timeFormat += if (is24(context)) "HH:mm" else "hh:mm"
         if (ShowSeconds) timeFormat += ":ss"
+        if (ShowMillisecond) timeFormat += ":SSS"
         timeFormat = SimpleDateFormat(timeFormat).format(nowTime!!)
         if (isZh(context)) timeFormat =
             getPeriod(context) + timeFormat else timeFormat += getPeriod(context)
@@ -180,6 +275,7 @@ class StatusBarClock : YukiBaseHooker() {
         return doubleHour
     }
 
+    @SuppressLint("SimpleDateFormat")
     private fun getPeriod(context: Context): String {
         var period = ""
         if (Showtime_period) {

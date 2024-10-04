@@ -21,6 +21,26 @@ OPatch是一个专为ColorOS系统设计的辅助模块，旨在增强和定制�
 >
 > 该应用需要 Magisk、KernelSU 和 APatch 来获取 root 权限，并且需要 XPosed/LSPosed 框架。任何替代方法都将无效。
 
+## TODO
+
+- **功耗显示器**
+    - [ ] 电流 (进行中)
+    - [ ] 功率 (进行中)
+- **温度显示器**
+    - [ ] 电池
+    - [ ] CPU
+- **调整桌面 APP 图标间距**
+    - [ ] 完成
+- **一键移除 60/90，强制 120**
+  - [ ] 完成
+- **状态栏双排信号**
+  - [ ] 完成
+- **调整桌面 APP 图标大小**
+  - [ ] 完成
+- **插帧助手**
+  - [ ] 完成
+  - [ ] 竖屏插帧
+
 ## 许可
 本项目采用[GPL许可证](LICENSE)，详情请参阅LICENSE文件。
 
@@ -43,7 +63,6 @@ OPatch是一个专为ColorOS系统设计的辅助模块，旨在增强和定制�
 - [「Compose」 by JetBrains](https://github.com/JetBrains/compose)
 - [「Miuix」 by YuKongA](https://github.com/miuix-kotlin-multiplatform/miuix)
 - [「LuckyTool」 by luckyzyx](https://github.com/Xposed-Modules-Repo/com.luckyzyx.luckytool)
-- 
 
 ---
 

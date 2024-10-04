@@ -28,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import io.github.suqi8.opatch.application.RestartApp
+import io.github.suqi8.opatch.ui.tools.resetApp
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -44,6 +45,10 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 fun Fun_com_android_systemui(navController: NavController) {
     val context = LocalContext.current
     val one = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
+    val appList = listOf("com.android.systemui")
+    val RestartAPP = remember { mutableStateOf(false) }
+    val resetApp = resetApp()
+
     Scaffold(topBar = { GetAppIconAndName(packageName = "com.android.systemui") { appName, icon ->
         TopAppBar(
             title = appName,
@@ -59,7 +64,18 @@ fun Fun_com_android_systemui(navController: NavController) {
                         tint = MiuixTheme.colorScheme.onBackground
                     )
                 }
-            },
+            }, actions = {
+                IconButton(onClick = {
+                    RestartAPP.value = true
+                },
+                    modifier = Modifier.padding(end = 18.dp)) {
+                    Icon(
+                        imageVector = Icons.Outlined.Refresh,
+                        contentDescription = null,
+                        tint = MiuixTheme.colorScheme.onBackground
+                    )
+                }
+            }
         )
     } }) {padding ->
         LazyColumn(contentPadding = PaddingValues(top = padding.calculateTopPadding()),
@@ -78,4 +94,5 @@ fun Fun_com_android_systemui(navController: NavController) {
             }
         }
     }
+    resetApp.AppRestartScreen(appList,RestartAPP)
 }
