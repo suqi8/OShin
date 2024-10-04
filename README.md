@@ -17,8 +17,9 @@ OPatch是一个专为ColorOS系统设计的辅助模块，旨在增强和定制�
 ## 名称的由来
 仓库的名称"OPatch"来源于"OPPO OnePlus Patch"，主要应用场景是OPPO和OnePlus设备上的ColorOS系统。
 
-## 贡献
-我们欢迎社区的贡献，如果您有改进意见或想要添加新功能，请提交Pull Request或创建Issue。
+> [!警告]
+>
+> 该应用需要 Magisk、KernelSU 和 APatch 来获取 root 权限，并且需要 XPosed/LSPosed 框架。任何替代方法都将无效。
 
 ## 许可
 本项目采用[GPL许可证](LICENSE)，详情请参阅LICENSE文件。
@@ -39,9 +40,10 @@ OPatch是一个专为ColorOS系统设计的辅助模块，旨在增强和定制�
 - [「Kotlin」 by JetBrains](https://github.com/JetBrains/kotlin)
 - [「Xposed」 by rovo89, Tungstwenty](https://github.com/rovo89/XposedBridge)
 - [「YukiHookAPI」 by HighCapable](https://github.com/HighCapable/YukiHookAPI)
-- [「Compose」 by JetBrains](https://github.com/JetBrains/compose)]
+- [「Compose」 by JetBrains](https://github.com/JetBrains/compose)
 - [「Miuix」 by YuKongA](https://github.com/miuix-kotlin-multiplatform/miuix)
 - [「LuckyTool」 by luckyzyx](https://github.com/Xposed-Modules-Repo/com.luckyzyx.luckytool)
+- 
 
 ---
 
