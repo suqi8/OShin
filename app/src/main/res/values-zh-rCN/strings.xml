@@ -16,6 +16,12 @@
     <string name="ok">确定</string>
     <string name="Device_Memory">储存空间</string>
     <string name="Search">搜索</string>
+    <string name="ignore">忽略</string>
+    <string name="config_error">配置初始化失败</string>
+    <string name="not_supported">您似乎正在使用过时版本的 LSPosed，或者 LSPosed 未激活，请更新 LSPosed 或在激活后重试。</string>
+    <string name="usepresig_warn">!! 任何 APK 都可以覆盖已安装的 APK !!\n安装未知 APK 时请小心</string>
+    <string name="settings">设置</string>
+    <string name="corepatch">此版本仅适用于 Android 9–14。\n请使用最新版本的 LSPosed。</string>
     <string name="hide_unit">隐藏单位</string>
     <string name="cancel">取消</string>
     <string name="Color_Mode">颜色模式</string>

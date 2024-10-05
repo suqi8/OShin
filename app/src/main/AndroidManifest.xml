@@ -29,12 +29,6 @@
             android:supportsRtl="true"
             android:theme="@style/Theme.AppDefault"
             tools:targetApi="tiramisu">
-        <activity
-                android:name=".MainActivity2"
-                android:exported="false"
-                android:label="@string/title_activity_main2"
-                android:theme="@style/Theme.AppDefault" />
-
         <meta-data
                 android:name="xposedmodule"
                 android:value="true" />

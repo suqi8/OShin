@@ -79,9 +79,6 @@ public class SettingsActivity1 extends Activity {
                 try {
                     @SuppressLint("PrivateApi") Class<?> c = Class.forName("android.os.SystemProperties");
                     Method get = c.getMethod("get", String.class);
-                    if (!((String) Objects.requireNonNull(get.invoke(c, "ro.miui.ui.version.code"))).isEmpty()) {
-                        new AlertDialog.Builder(getActivity()).setMessage(R.string.miui_usepresig_warn).setPositiveButton(android.R.string.ok, null).show();
-                    }
                 } catch (Exception ignored) {
                 }
 
