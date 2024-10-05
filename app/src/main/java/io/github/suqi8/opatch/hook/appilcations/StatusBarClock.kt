@@ -71,6 +71,10 @@ class StatusBarClock : YukiBaseHooker() {
                                 if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
                                 isSingleLine = false
                                 gravity = Gravity.CENTER
+                                setPadding(if (ClockLeftPadding!=0) ClockLeftPadding else paddingLeft,
+                                    if (ClockTopPadding!=0) ClockTopPadding else paddingTop,
+                                    if (ClockRightPadding!=0) ClockRightPadding else paddingRight,
+                                    if (ClockBottomPadding!=0) ClockBottomPadding else paddingBottom)
 
                                 if (DualRow) {
                                     newline = "\n"
