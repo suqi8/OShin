@@ -30,28 +30,9 @@
             android:theme="@style/Theme.AppDefault"
             tools:targetApi="tiramisu">
         <activity
-                android:name=".Fun_android"
-                android:exported="false"
-                android:label="@string/title_activity_fun_android"
-                android:theme="@style/Theme.AppDefault">
-            <intent-filter>
-                <action android:name="android.intent.action.Fun_android" />
-            </intent-filter>
-        </activity>
-        <activity
                 android:name=".MainActivity2"
                 android:exported="false"
                 android:label="@string/title_activity_main2"
-                android:theme="@style/Theme.AppDefault" />
-        <activity
-                android:name=".Main_Home"
-                android:exported="false"
-                android:label="@string/title_activity_main_home"
-                android:theme="@style/Theme.AppDefault" />
-        <activity
-                android:name=".mainui.home"
-                android:exported="false"
-                android:label="@string/title_activity_home"
                 android:theme="@style/Theme.AppDefault" />
 
         <meta-data
