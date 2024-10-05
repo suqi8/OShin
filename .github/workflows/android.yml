@@ -24,9 +24,8 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build
-    - name: List APK files
-      run: |
-        echo "Debug APKs:"
-        ls app/build/outputs/apk/debug/
-        echo "Release APKs:"
-        ls app/build/outputs/apk/release/
+    - name: Upload APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: APK Files
+        path: app/build/outputs/apk/
