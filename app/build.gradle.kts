@@ -47,6 +47,10 @@ android {
     namespace = property.project.app.packageName
     compileSdk = 34
 
+    lint {
+        baseline = file("lint-baseline.xml")
+    }
+
     splits {
         abi {
             isEnable = true
