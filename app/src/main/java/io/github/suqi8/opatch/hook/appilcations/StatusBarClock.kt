@@ -7,6 +7,8 @@ import android.provider.Settings
 import android.text.TextUtils.replace
 import android.util.TypedValue
 import android.view.Gravity
+import android.view.View
+import android.widget.LinearLayout
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
@@ -177,6 +179,35 @@ class StatusBarClock : YukiBaseHooker() {
                             }
                             nowTime = Calendar.getInstance().time
                             result = getCustomDate(context!!, customClockStyle).replace("\\n", "\n")
+                        }
+                    }
+                    injectMember {
+                        method {
+                            name = "updateClock"
+                        }
+
+                        beforeHook {
+                            val clockView = instance<View>()
+                            val parentLayout = clockView.parent as LinearLayout
+
+                            // 检查是否已经添加了自定义 TextView，避免重复添加
+                            val customTextView = parentLayout.findViewWithTag<TextView>("customText")
+
+                            if (customTextView == null) {
+                                // 创建新的 TextView
+                                val newTextView = TextView(clockView.context).apply {
+                                    text = "新的文本" // 显示的文本
+                                    textSize = 13f
+                                    tag = "customText" // 用标签标识
+                                    layoutParams = LinearLayout.LayoutParams(
+                                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                                        LinearLayout.LayoutParams.WRAP_CONTENT
+                                    ).apply {
+                                        marginStart = 8 // 与时间的距离
+                                    }
+                                }
+                                parentLayout.addView(newTextView)
+                            }
                         }
                     }
                 }

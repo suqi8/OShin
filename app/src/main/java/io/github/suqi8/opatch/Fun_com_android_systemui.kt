@@ -1,34 +1,31 @@
 package io.github.suqi8.opatch
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
+import android.app.Activity
+import android.content.Intent
+import android.util.Log
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.navigation.NavController
-import io.github.suqi8.opatch.application.RestartApp
+import com.highcapable.yukihookapi.hook.factory.prefs
 import io.github.suqi8.opatch.ui.tools.resetApp
+import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -36,10 +33,11 @@ import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperArrow
-import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import java.io.FileInputStream
+import java.util.Properties
 
 @Composable
 fun Fun_com_android_systemui(navController: NavController) {
@@ -48,8 +46,8 @@ fun Fun_com_android_systemui(navController: NavController) {
     val appList = listOf("com.android.systemui")
     val RestartAPP = remember { mutableStateOf(false) }
     val resetApp = resetApp()
-
-    Scaffold(topBar = { GetAppIconAndName(packageName = "com.android.systemui") { appName, icon ->
+    var isDebug = context.prefs("settings").getBoolean("Debug", false)
+        Scaffold(topBar = { GetAppIconAndName(packageName = "com.android.systemui") { appName, icon ->
         TopAppBar(
             title = appName,
             scrollBehavior = one,
@@ -82,14 +80,61 @@ fun Fun_com_android_systemui(navController: NavController) {
             topAppBarScrollBehavior = one, modifier = Modifier.fillMaxSize()) {
             item {
                 Card(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
                         .padding(horizontal = 12.dp)
-                        .padding(bottom = 6.dp,top = 15.dp)
+                        .padding(bottom = 6.dp, top = 15.dp)
                 ) {
                     SuperArrow(title = stringResource(id = R.string.status_bar_clock),
                         onClick = {
                             navController.navigate("Fun_com_android_systemui_status_bar_clock")
                         })
+                    SuperArrow(title = stringResource(id = R.string.hardware_indicator),
+                        onClick = {
+                            navController.navigate("Fun_com_android_systemui_hardware_indicator")
+                        })
+                }
+
+                if (isDebug) {
+                    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                        if (result.resultCode == Activity.RESULT_OK) {
+                            result.data?.data?.let { uri ->
+                                // 在这里处理返回的 URI，例如读取文件
+                                Log.d("FilePicker", "Selected file URI: $uri")
+                            }
+                        }
+                    }
+                    var fis: FileInputStream? = null
+                    var currentNow = remember { mutableStateOf(0.0) }
+                    var errorMessage = remember { mutableStateOf<String?>(null) }
+                    Button(onClick = {
+                        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+                            addCategory(Intent.CATEGORY_OPENABLE)
+                            type = "*/*" // 可以指定特定类型，例如 "image/*" 或 "video/*"
+                        }
+                        launcher.launch(intent)
+                    },
+                        text = "a")
+
+                    LaunchedEffect(Unit) {
+                        try {
+                            val fis = FileInputStream("/sys/class/power_supply/battery/uevent")
+                            val props = Properties()
+                            props.load(fis)
+                            val currentNowString = props.getProperty("POWER_SUPPLY_CURRENT_NOW")
+                            currentNow.value = currentNowString?.toDoubleOrNull() ?: 0.0
+                        } catch (e: Exception) {
+                            errorMessage.value = e.message // 捕获异常并保存错误信息
+                        } finally {
+                            fis?.close()
+                        }
+                    }
+                    var rawCurr = 0
+                    /*
+                                    rawCurr =
+                                        (-1 * Math.round(props.getProperty("POWER_SUPPLY_CURRENT_NOW").toInt() / 1000f)).toInt()*/
+                    // UI 组件
+                    SmallTitle("Error: ${errorMessage.value} ${currentNow.value}")
                 }
             }
         }

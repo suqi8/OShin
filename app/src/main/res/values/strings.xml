@@ -20,6 +20,7 @@
     <string name="ok">OK</string>
     <string name="Device_Memory">Device Memory</string>
     <string name="Search">Search</string>
+    <string name="hide_unit">Hide Unit</string>
     <string name="cancel">Cancel</string>
     <string name="ignore">Ignore</string>
     <string name="config_error">Configuration initialization failed</string>
@@ -138,4 +139,11 @@
     <string name="alignment">Alignment</string>
     <string name="status_bar_clock_custom_tips">Year, Month, Day:\n y Year\n yy Two-digit year (e.g., 23 for 2023)\n yyyy Four-digit year (e.g., 2023)\n  M Month\n MM Two-digit month (01-12)\n MMM Month abbreviation (e.g., Jan)\n MMMM Full month name (e.g., January)\n  d Day of the month (1-31)\n  D Day of the year (1-366)\n  E Day of the week\n E Abbreviated day of the week (e.g., Tue)\n EEEE Full day of the week (e.g., Tuesday)\n  F Day of the week in the month (1-7)\n  w Week of the year (1-53)\n  W Week of the month (1-5)\n  ---\n  Hour, Minute, Second:\n h Hour in 12-hour format (1-12)\n  H Hour in 24-hour format (0-23)\n  m Minute (0-59)\n  s Second (0-59)\n  S Millisecond (0-999)\n  K Hour in 12-hour format (0-11)\n  k Hour in 24-hour format (1-24)\n  ---\n  AM/PM:\n a AM/PM marker (e.g., AM or PM)\n  ---\n  Time Zone:\n z Time zone\n z Time zone abbreviation (e.g., PST)\n zzzz Full time zone name (e.g., Pacific Standard Time)\n  Z RFC 822 time zone format (e.g., -0800)\n  X ISO 8601 time zone\n X -08 or +08\n XX -0800 or +0800\n XXX -08:00 or +08:00</string>
     <string name="clock_format">Clock format</string>
+    <string name="both">Both</string>
+    <string name="power">Power</string>
+    <string name="current">Current</string>
+    <string name="hardware_indicator">Hardware Indicator</string>
+    <string name="power_consumption_indicator">Power Consumption Indicator</string>
+    <string name="temperature_indicator">Temperature Indicator</string>
+    <string name="display_content">Display Content</string>
 </resources>

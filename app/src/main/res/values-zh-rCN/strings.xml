@@ -16,6 +16,7 @@
     <string name="ok">确定</string>
     <string name="Device_Memory">储存空间</string>
     <string name="Search">搜索</string>
+    <string name="hide_unit">隐藏单位</string>
     <string name="cancel">取消</string>
     <string name="Color_Mode">颜色模式</string>
     <string name="Night_Mode">夜间模式</string>
@@ -121,5 +122,12 @@
     <string name="by_the_way">题外话</string>
     <string name="alignment">对齐方式</string>
     <string name="status_bar_clock_custom_tips">年、月、日：\n y 年\n yy 两位数年份（例如 23 表示 2023 年）\n yyyy 四位数年份（例如 2023）\n  M 月\n MM 两位数的月份（01-12）\n MMM 月份缩写（如 Jan）\n MMMM 月份全称（如 January）\n  d 月中的天数（1-31）\n  D 年中的天数（1-366）\n  E 星期\n E 星期的缩写（如 Tue）\n EEEE 星期的全称（如 Tuesday）\n  F 月中的第几周的星期几（1-7）\n  w 年中的周数（1-53）\n  W 月中的周数（1-5）\n  ---\n  时、分、秒：\n h 12 小时制的小时数（1-12）\n  H 24 小时制的小时数（0-23）\n  m 分钟数（0-59）\n  s 秒数（0-59）\n  S 毫秒数（0-999）\n  K 12 小时制的小时数（0-11）\n  k 24 小时制的小时数（1-24）\n  ---\n  上午/下午：\n a AM/PM 标记（如 AM 或 PM）\n  ---\n  时区：\n z 时区\n z 时区缩写（如 PST）\n zzzz 时区全称（如 Pacific Standard Time）\n  Z RFC 822 时区格式（如 -0800）\n  X ISO 8601 时区\n X -08 或 +08\n XX -0800 或 +0800\n XXX -08:00 或 +08:00</string>
+    <string name="both">两者</string>
+    <string name="power">功率</string>
+    <string name="current">电流</string>
     <string name="clock_format">时钟格式</string>
+    <string name="hardware_indicator">硬件指示器</string>
+    <string name="power_consumption_indicator">功耗指示器</string>
+    <string name="temperature_indicator">温度指示器</string>
+    <string name="display_content">显示内容</string>
 </resources>

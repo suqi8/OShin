@@ -70,6 +70,8 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import android.content.ActivityNotFoundException
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import com.highcapable.yukihookapi.hook.factory.prefs
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 
@@ -82,7 +84,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
     val physicalTotalStorage = formatSize(getPhysicalTotalStorage(context))
     val usedStorage = formatSize(getUsedStorage())
     val context = LocalContext.current
-    var isDebug = context.prefs("settings").getBoolean("Debug", false)
+    var isDebug = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     LaunchedEffect(Unit) {
         val cachedName = getDeviceName(context) // 获取保存的设备名称
@@ -90,6 +92,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
             deviceName.value = cachedName
             deviceNameCache.value = cachedName
         }
+        isDebug.value = context.prefs("settings").getBoolean("Debug", false)
     }
     Scaffold() {
         LazyColumn(contentPadding = PaddingValues(top = padding.calculateTopPadding()),
@@ -183,9 +186,9 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                     )
                     SuperSwitch(
                         title = "Debug",
-                        checked = isDebug,
+                        checked = isDebug.value,
                         onCheckedChange = {
-                            isDebug = it
+                            isDebug.value = it
                             context.prefs("settings").edit { putBoolean("Debug", it) }
                         }
                     )
