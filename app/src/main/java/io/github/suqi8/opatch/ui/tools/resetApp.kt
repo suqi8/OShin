@@ -55,10 +55,11 @@ class resetApp {
                 show = show,
                 onDismissRequest = {
                     onDismiss()
-                }) {
-                Text(text = """${stringResource(R.string.confirm_restart_applications)}
+                }, summary = """${stringResource(R.string.confirm_restart_applications)}
+                    |$appPackage""".trimMargin()) {
+                /*Text(text = """${stringResource(R.string.confirm_restart_applications)}
                     |$appPackage""".trimMargin())
-                Spacer(Modifier.height(12.dp))
+                Spacer(Modifier.height(12.dp))*/
                 Row(
                     modifier = Modifier
                         .fillMaxWidth(),

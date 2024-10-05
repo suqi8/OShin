@@ -100,8 +100,6 @@ class MainActivity : ComponentActivity() {
 
             AppTheme(colorMode = colorMode.intValue) {
                 Main0(colorMode = colorMode, context = context, modifier = Modifier)
-                val settingsManager = SettingsManager(context)
-
             }
 
         }
@@ -198,36 +196,32 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
         /*Box(modifier = Modifier.hazeChild(state = hazeState)) {
 
         }*/
-            Box(modifier = Modifier.hazeChild(
+        NavigationBar(
+            items = items,
+            color = Color.Transparent,
+            modifier = Modifier.hazeChild(
                 state = hazeState,
-                style = hazeStyle)) {
-                NavigationBar(
-                    items = items,
-                    color = Color.Transparent,
-                    modifier = Modifier,
-                    selected = targetPage,
-                    onClick = { index ->
-                        targetPage = index
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
-                    }
-                )
-            }
-    }, topBar = {
-        Box(modifier = Modifier.hazeChild(
-            state = hazeState,
-            style = hazeStyle)) {
-            TopAppBar(scrollBehavior = currentScrollBehavior,color = Color.Transparent,title = when (pagerState.currentPage) {
-                0 -> stringResource(R.string.func)
-                1 -> stringResource(R.string.home)
-                else -> stringResource(R.string.about)
-            },navigationIcon = {
-                IconButton(onClick = { /* do something */ }) {
-                    Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null)
+                style = hazeStyle),
+            selected = targetPage,
+            onClick = { index ->
+                targetPage = index
+                coroutineScope.launch {
+                    pagerState.animateScrollToPage(index)
                 }
-            })
-        }
+            }
+        )
+    }, topBar = {
+        TopAppBar(scrollBehavior = currentScrollBehavior,color = Color.Transparent,title = when (pagerState.currentPage) {
+            0 -> stringResource(R.string.func)
+            1 -> stringResource(R.string.home)
+            else -> stringResource(R.string.about)
+        }, modifier = Modifier.hazeChild(
+            state = hazeState,
+            style = hazeStyle), navigationIcon = {
+            IconButton(onClick = { /* do something */ }) {
+                Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null)
+            }
+        })
     }) { padding ->
         Box(modifier = Modifier.haze(
             state = hazeState,

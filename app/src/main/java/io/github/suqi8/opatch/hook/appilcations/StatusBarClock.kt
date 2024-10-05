@@ -1,19 +1,25 @@
 package io.github.suqi8.opatch.hook.appilcations
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Handler
 import android.provider.Settings
 import android.text.TextUtils.replace
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.method
+import com.highcapable.yukihookapi.hook.factory.prefs
 import com.highcapable.yukihookapi.hook.type.java.CharSequenceType
 import com.highcapable.yukihookapi.hook.type.java.IntClass
 import com.highcapable.yukihookapi.hook.type.java.StringClass
@@ -42,7 +48,12 @@ class StatusBarClock : YukiBaseHooker() {
     var newline = ""
     var customClockStyle = prefs("settings").getString("Status_Bar_Time_CustomClockStyle", "HH:mm")
     var customAlignment = prefs("settings").getInt("Status_Bar_Time_alignment", 0)
+    var ClockLeftPadding = prefs("settings").getInt("Status_Bar_Time_LeftPadding", 0)
+    var ClockRightPadding = prefs("settings").getInt("Status_Bar_Time_RightPadding", 0)
+    var ClockTopPadding = prefs("settings").getInt("Status_Bar_Time_TopPadding", 0)
+    var ClockBottomPadding = prefs("settings").getInt("Status_Bar_Time_BottomPadding", 0)
 
+    @SuppressLint("SetTextI18n")
     @OptIn(LegacyHookApi::class)
     override fun onHook() {
         var context: Context? = null
@@ -60,6 +71,7 @@ class StatusBarClock : YukiBaseHooker() {
                                 if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
                                 isSingleLine = false
                                 gravity = Gravity.CENTER
+
                                 if (DualRow) {
                                     newline = "\n"
                                     var defaultSize = 8F
@@ -122,21 +134,24 @@ class StatusBarClock : YukiBaseHooker() {
                             context = args(0).cast<Context>()
                             val clockView = instance<TextView>()
                             clockView.apply {
+                                setPadding(if (ClockLeftPadding!=0) ClockLeftPadding else paddingLeft,
+                                    if (ClockTopPadding!=0) ClockTopPadding else paddingTop,
+                                    if (ClockRightPadding!=0) ClockRightPadding else paddingRight,
+                                    if (ClockBottomPadding!=0) ClockBottomPadding else paddingBottom)
+
                                 isSingleLine = false
                                 if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
                                 gravity = when (customAlignment) {
                                     0 -> Gravity.CENTER        // 居中对齐
                                     1 -> Gravity.TOP           // 顶部对齐
                                     2 -> Gravity.BOTTOM        // 底部对齐
-                                    3 -> Gravity.LEFT          // 左侧对齐
-                                    4 -> Gravity.RIGHT         // 右侧对齐
-                                    5 -> Gravity.START         // 起始位置对齐
-                                    6 -> Gravity.END           // 结束位置对齐
-                                    7 -> Gravity.CENTER_HORIZONTAL  // 水平居中
-                                    8 -> Gravity.CENTER_VERTICAL    // 垂直居中
-                                    9 -> Gravity.FILL               // 填满整个空间
-                                    10 -> Gravity.FILL_HORIZONTAL   // 水平填满
-                                    11 -> Gravity.FILL_VERTICAL     // 垂直填满
+                                    3 -> Gravity.START         // 起始位置对齐
+                                    4 -> Gravity.END           // 结束位置对齐
+                                    5 -> Gravity.CENTER_HORIZONTAL  // 水平居中
+                                    6 -> Gravity.CENTER_VERTICAL    // 垂直居中
+                                    7 -> Gravity.FILL               // 填满整个空间
+                                    8 -> Gravity.FILL_HORIZONTAL   // 水平填满
+                                    9 -> Gravity.FILL_VERTICAL     // 垂直填满
                                     else -> Gravity.CENTER         // 默认居中对齐
                                 }
 
@@ -181,22 +196,64 @@ class StatusBarClock : YukiBaseHooker() {
                             result = getCustomDate(context!!, customClockStyle).replace("\\n", "\n")
                         }
                     }
-                    injectMember {
+                    /*injectMember {
                         method {
-                            name = "updateClock"
+                            name = "onAttachedToWindow"
                         }
 
                         beforeHook {
-                            val clockView = instance<View>()
-                            val parentLayout = clockView.parent as LinearLayout
+                            // 获取 Clock（时间显示的 TextView 控件）
+                            val clockTextView = instance as TextView
+
+                            // 获取状态栏父布局
+                            val parentViewGroup = clockTextView.parent as LinearLayout
+                            var parentLayout = parentViewGroup.parent as ViewGroup
+
+                            // 获取 Clock 的索引
+                            val clockIndex = parentViewGroup.indexOfChild(clockTextView)
+
+                            // 获取状态栏的背景颜色
+                            val statusBarColor = (clockTextView.context as Activity).window.decorView.rootView.background
+                            val color = (statusBarColor as ColorDrawable).color
+
+                            // 创建一个新的 TextView 控件
+                            val newTextView = TextView(clockTextView.context).apply {
+                                text = "文本" + clockIndex
+                                textSize = 12f
+                                // 设置反色
+                                setTextColor(if (Color.red(color) + Color.green(color) + Color.blue(color) < 382) Color.WHITE else Color.BLACK)
+                            }
+
+                            // 在 Clock 后面插入新控件
+                            parentViewGroup.addView(newTextView)
+                            clockTextView.post {
+                                newTextView.x = clockTextView.x + clockTextView.width + 8 // 添加8个像素的间距
+                            }
+                        }
+                        *//*beforeHook {
+                            val clockView = instance<View>() // 获取时间View
+                            val parentLayout = clockView.parent as LinearLayout // 获取父布局
 
                             // 检查是否已经添加了自定义 TextView，避免重复添加
                             val customTextView = parentLayout.findViewWithTag<TextView>("customText")
 
                             if (customTextView == null) {
                                 // 创建新的 TextView
+
+                                // 获取通知图标的索引，假设通知图标在时间的后面
+                                val clockIndex = parentLayout.indexOfChild(clockView)
+                                var notificationIconIndex = -1
+
+                                // 遍历子布局，找到通知图标的位置
+                                for (i in clockIndex + 1 until parentLayout.childCount) {
+                                    val child = parentLayout.getChildAt(i)
+                                    if (child is ImageView) { // 假设通知图标是ImageView
+                                        notificationIconIndex = i
+                                        break
+                                    }
+                                }
                                 val newTextView = TextView(clockView.context).apply {
-                                    text = "新的文本" // 显示的文本
+                                    text = "新的文本"+notificationIconIndex // 自定义文本
                                     textSize = 13f
                                     tag = "customText" // 用标签标识
                                     layoutParams = LinearLayout.LayoutParams(
@@ -206,10 +263,11 @@ class StatusBarClock : YukiBaseHooker() {
                                         marginStart = 8 // 与时间的距离
                                     }
                                 }
-                                parentLayout.addView(newTextView)
+                                // 如果找到通知图标，将TextView插入到时间后面、通知图标前面
+                                parentLayout.addView(newTextView, notificationIconIndex)
                             }
-                        }
-                    }
+                        }*//*
+                    }*/
                 }
             }
         }

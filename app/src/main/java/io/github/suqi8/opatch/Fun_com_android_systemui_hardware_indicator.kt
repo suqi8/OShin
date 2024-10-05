@@ -135,6 +135,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
         ) {
             item {
                 Column {
+                    SmallTitle("不会写，咕咕中")
                     Card(
                         modifier = Modifier.fillMaxWidth()
                             .padding(horizontal = 12.dp)

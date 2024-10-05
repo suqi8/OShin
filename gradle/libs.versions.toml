@@ -46,7 +46,7 @@ androidx-datastore-preferences-core-jvm = { group = "androidx.datastore", name =
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
 material3 = { module = "androidx.compose.material3:material3" }
-miuix = { module = "top.yukonga.miuix.kmp:miuix", version.ref = "miuix" }
+miuix = { module = "top.yukonga.miuix.kmp:miuix-android", version.ref = "miuix" }
 ui = { module = "androidx.compose.ui:ui" }
 ui-graphics = { module = "androidx.compose.ui:ui-graphics" }
 ui-test-junit4 = { module = "androidx.compose.ui:ui-test-junit4" }

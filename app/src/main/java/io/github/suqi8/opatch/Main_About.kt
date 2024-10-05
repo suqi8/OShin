@@ -83,8 +83,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
     val deviceNameCache: MutableState<String> = remember { mutableStateOf(deviceName.value) }
     val physicalTotalStorage = formatSize(getPhysicalTotalStorage(context))
     val usedStorage = formatSize(getUsedStorage())
-    val context = LocalContext.current
-    var isDebug = remember { mutableStateOf(false) }
+    val isDebug = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     LaunchedEffect(Unit) {
         val cachedName = getDeviceName(context) // 获取保存的设备名称

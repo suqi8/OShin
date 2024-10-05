@@ -136,4 +136,9 @@
     <string name="power_consumption_indicator">功耗指示器</string>
     <string name="temperature_indicator">温度指示器</string>
     <string name="display_content">显示内容</string>
+    <string name="content_not_empty">该内容不可为空</string>
+    <string name="clock_top_margin">时钟上边距</string>
+    <string name="clock_bottom_margin">时钟下边距</string>
+    <string name="clock_left_margin">时钟左边距</string>
+    <string name="clock_right_margin">时钟右边距</string>
 </resources>

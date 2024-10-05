@@ -140,4 +140,9 @@
     <string name="power_consumption_indicator">Power Consumption Indicator</string>
     <string name="temperature_indicator">Temperature Indicator</string>
     <string name="display_content">Display Content</string>
+    <string name="content_not_empty">Content cannot be empty</string>
+    <string name="clock_top_margin">Clock Top Margin</string>
+    <string name="clock_bottom_margin">Clock Bottom Margin</string>
+    <string name="clock_left_margin">Clock Left Margin</string>
+    <string name="clock_right_margin">Clock Right Margin</string>
 </resources>

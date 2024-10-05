@@ -35,6 +35,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -69,6 +70,7 @@ import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
+import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @SuppressLint("RtlHardcoded")
 @Composable
@@ -91,8 +93,8 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
     var com_android_systemui_status_bar_clock by remember {
         mutableStateOf(false)
     }
-    var ClockSize by remember { mutableStateOf(0) }
-    var ClockUpdateSpeed by remember { mutableStateOf(0) }
+    var ClockSize = remember { mutableStateOf(0) }
+    var ClockUpdateSpeed = remember { mutableStateOf(0) }
     val appList = listOf("com.android.systemui")
     val RestartAPP = remember { mutableStateOf(false) }
     val resetApp = resetApp()
@@ -100,10 +102,31 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
     val showCustomClockDialog = remember { mutableStateOf(false) }
     val customClockCache = remember { mutableStateOf("HH:mm") }
     val customClock = remember { mutableStateOf("HH:mm") }
+    val ClockLeftPadding = remember { mutableStateOf(0) }
+    val ClockRightPadding = remember { mutableStateOf(0) }
+    val ClockTopPadding = remember { mutableStateOf(0) }
+    val ClockBottomPadding = remember { mutableStateOf(0) }
+    val showclock_update_timeDialog = remember { mutableStateOf(false) }
+    val showClockSizeDialog = remember { mutableStateOf(false) }
+    val showClockLeftPaddingDialog = remember { mutableStateOf(false) }
+    val showClockRightPaddingDialog = remember { mutableStateOf(false) }
+    val showClockTopPaddingDialog = remember { mutableStateOf(false) }
+    val showClockBottomPaddingDialog = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+    val ClockSizeTitle = stringResource(R.string.clock_size)
+    val ClockUpdateSpeedTitle = stringResource(R.string.clock_update_time_title)
+    val ClockLeftPaddingTitle = stringResource(R.string.clock_left_margin)
+    val ClockRightPaddingTitle = stringResource(R.string.clock_right_margin)
+    val ClockTopPaddingTitle = stringResource(R.string.clock_top_margin)
+    val ClockBottomPaddingTitle = stringResource(R.string.clock_bottom_margin)
+
     var isDebug = context.prefs("settings").getBoolean("Debug", false)
 
     LaunchedEffect(Unit) {
+        ClockLeftPadding.value = context.prefs("settings").getInt("Status_Bar_Time_LeftPadding", 0)
+        ClockRightPadding.value = context.prefs("settings").getInt("Status_Bar_Time_RightPadding", 0)
+        ClockTopPadding.value = context.prefs("settings").getInt("Status_Bar_Time_TopPadding", 0)
+        ClockBottomPadding.value = context.prefs("settings").getInt("Status_Bar_Time_BottomPadding", 0)
         ClockStyleSelectedOption.value = context.prefs("settings").getInt("ClockStyleSelectedOption", 0)
         com_android_systemui_status_bar_clock = context.prefs("settings").getBoolean("com_android_systemui_status_bar_clock", false)
         ShowYears.value = context.prefs("settings").getBoolean("Status_Bar_Time_ShowYears", false)
@@ -116,8 +139,8 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
         ShowMillisecond.value = context.prefs("settings").getBoolean("Status_Bar_Time_ShowMillisecond", false)
         HideSpace.value = context.prefs("settings").getBoolean("Status_Bar_Time_"+"HideSpace", false)
         DualRow.value = context.prefs("settings").getBoolean("Status_Bar_Time_"+"DualRow", false)
-        ClockSize = context.prefs("settings").getInt("Status_Bar_Time_ClockSize",0)
-        ClockUpdateSpeed = context.prefs("settings").getInt("Status_Bar_Time_ClockUpdateSpeed",0)
+        ClockSize.value = context.prefs("settings").getInt("Status_Bar_Time_ClockSize",0)
+        ClockUpdateSpeed.value = context.prefs("settings").getInt("Status_Bar_Time_ClockUpdateSpeed",0)
         Status_Bar_Time_gravitySelectedOption.value = context.prefs("settings").getInt("Status_Bar_Time_alignment", 0)
         customClock.value = context.prefs("settings").getString("Status_Bar_Time_CustomClockStyle", "HH:mm")
         customClockCache.value = context.prefs("settings").getString("Status_Bar_Time_CustomClockStyle", "HH:mm")
@@ -167,10 +190,12 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .height(getWindowSize().height.dp)
                 .background(MiuixTheme.colorScheme.background)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
             contentPadding = PaddingValues(top = padding.calculateTopPadding()),
+            enableOverScroll = true,
             topAppBarScrollBehavior = topappbarzt
         ) {
             item {
@@ -230,15 +255,17 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                 )
                                 Column {
                                     SuperArrow(
-                                        title = stringResource(R.string.clock_size),
+                                        title = ClockSizeTitle,
                                         summary = stringResource(R.string.clock_size_summary),
-                                        onClick = {},
-                                        rightText = "${ClockSize}dp"
+                                        onClick = {
+                                            showClockSizeDialog.value = true
+                                        },
+                                        rightText = "${ClockSize.value}dp"
                                     )
                                     Slider(
-                                        progress = (ClockSize / 20.0).toFloat(),
+                                        progress = (ClockSize.value / 20.0).toFloat(),
                                         onProgressChange = { newProgress ->
-                                            ClockSize = (newProgress * 20.0).toInt()
+                                            ClockSize.value = (newProgress * 20.0).toInt()
                                             context.prefs("settings").edit { putInt("Status_Bar_Time_ClockSize", (newProgress * 20.0).toInt()) }
                                         },
                                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
@@ -248,14 +275,84 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                     SuperArrow(
                                         title = stringResource(R.string.clock_update_time_title),
                                         summary = stringResource(R.string.clock_update_time_summary),
-                                        onClick = {},
-                                        rightText = "${ClockUpdateSpeed}ms"
+                                        onClick = {
+                                            showclock_update_timeDialog.value = true
+                                        },
+                                        rightText = "${ClockUpdateSpeed.value}ms"
                                     )
                                     Slider(
-                                        progress = (ClockUpdateSpeed / 2000.000).toFloat(),
+                                        progress = (ClockUpdateSpeed.value / 2000.000).toFloat(),
                                         onProgressChange = { newProgress ->
-                                            ClockUpdateSpeed = (newProgress * 2000).toInt()
+                                            ClockUpdateSpeed.value = (newProgress * 2000).toInt()
                                             context.prefs("settings").edit { putInt("Status_Bar_Time_ClockUpdateSpeed", (newProgress * 2000).toInt()) }
+                                        },
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+                                    )
+                                }
+                                Column {
+                                    SuperArrow(
+                                        title = stringResource(R.string.clock_top_margin),
+                                        onClick = {
+                                            showClockTopPaddingDialog.value = true
+                                        },
+                                        rightText = "${ClockTopPadding.value}px"
+                                    )
+                                    Slider(
+                                        progress = (ClockTopPadding.value / 100.000).toFloat(),
+                                        onProgressChange = { newProgress ->
+                                            ClockTopPadding.value = (newProgress * 100).toInt()
+                                            context.prefs("settings").edit { putInt("Status_Bar_Time_TopPadding", (newProgress * 100).toInt()) }
+                                        },
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+                                    )
+                                }
+                                Column {
+                                    SuperArrow(
+                                        title = stringResource(R.string.clock_bottom_margin),
+                                        onClick = {
+                                            showClockBottomPaddingDialog.value = true
+                                        },
+                                        rightText = "${ClockBottomPadding.value}px"
+                                    )
+                                    Slider(
+                                        progress = (ClockBottomPadding.value / 100.000).toFloat(),
+                                        onProgressChange = { newProgress ->
+                                            ClockBottomPadding.value = (newProgress * 100).toInt()
+                                            context.prefs("settings").edit { putInt("Status_Bar_Time_BottomPadding", (newProgress * 100).toInt()) }
+                                        },
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+                                    )
+                                }
+                                Column {
+                                    SuperArrow(
+                                        title = stringResource(R.string.clock_left_margin),
+                                        onClick = {
+                                            showClockLeftPaddingDialog.value = true
+                                        },
+                                        rightText = "${ClockLeftPadding.value}px"
+                                    )
+                                    Slider(
+                                        progress = (ClockLeftPadding.value / 100.000).toFloat(),
+                                        onProgressChange = { newProgress ->
+                                            ClockLeftPadding.value = (newProgress * 100).toInt()
+                                            context.prefs("settings").edit { putInt("Status_Bar_Time_LeftPadding", (newProgress * 100).toInt()) }
+                                        },
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+                                    )
+                                }
+                                Column {
+                                    SuperArrow(
+                                        title = stringResource(R.string.clock_right_margin),
+                                        onClick = {
+                                            showClockRightPaddingDialog.value = true
+                                        },
+                                        rightText = "${ClockRightPadding.value}px"
+                                    )
+                                    Slider(
+                                        progress = (ClockRightPadding.value / 100.000).toFloat(),
+                                        onProgressChange = { newProgress ->
+                                            ClockRightPadding.value = (newProgress * 100).toInt()
+                                            context.prefs("settings").edit { putInt("Status_Bar_Time_RightPadding", (newProgress * 100).toInt()) }
                                         },
                                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
                                     )
@@ -418,6 +515,12 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
     }
     resetApp.AppRestartScreen(appList,RestartAPP)
     CustomClockDialog(showCustomClockDialog,customClockCache,customClock,focusManager)
+    SettingIntDialog(context,showClockSizeDialog,ClockSizeTitle,ClockSize,focusManager,"Status_Bar_Time_ClockSize")
+    SettingIntDialog(context,showclock_update_timeDialog,ClockUpdateSpeedTitle,ClockUpdateSpeed,focusManager,"Status_Bar_Time_ClockUpdateSpeed")
+    SettingIntDialog(context,showClockTopPaddingDialog,ClockTopPaddingTitle,ClockTopPadding,focusManager,"Status_Bar_Time_TopPadding")
+    SettingIntDialog(context,showClockBottomPaddingDialog,ClockBottomPaddingTitle,ClockBottomPadding,focusManager,"Status_Bar_Time_BottomPadding")
+    SettingIntDialog(context,showClockLeftPaddingDialog,ClockLeftPaddingTitle,ClockLeftPadding,focusManager,"Status_Bar_Time_LeftPadding")
+    SettingIntDialog(context,showClockRightPaddingDialog,ClockRightPaddingTitle,ClockRightPadding,focusManager,"Status_Bar_Time_RightPadding")
 }
 
 @Composable
@@ -433,9 +536,6 @@ fun CustomClockDialog(showCustomClockDialog: MutableState<Boolean>, customClockC
             TextField(
                 value = customClockCache.value,
                 onValueChange = { customClockCache.value = it },
-                backgroundColor = MiuixTheme.colorScheme.secondaryContainer,
-                label = "",
-                modifier = Modifier.padding(),
                 keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
                 singleLine = false
@@ -464,6 +564,63 @@ fun CustomClockDialog(showCustomClockDialog: MutableState<Boolean>, customClockC
                         CustomClock.value = customClockCache.value
                         context.prefs("settings").edit { putString("Status_Bar_Time_CustomClockStyle", customClockCache.value) }
                         showCustomClockDialog.value = false
+                    }
+                )
+            }
+        }
+    })
+
+}
+
+@Composable
+fun SettingIntDialog(context: Context,
+                     show: MutableState<Boolean>,
+                     title: String,
+                     set: MutableState<Int>,
+                     focusManager: FocusManager,
+                     saveName: String) {
+    if (!show.value) return
+    val cache = remember { mutableStateOf(set.value.toString()) }
+    showDialog(content = {
+        SuperDialog(title = stringResource(R.string.settings)+" "+title,
+            show = show,
+            onDismissRequest = {
+                show.value = false
+            }) {
+            TextField(
+                value = cache.value,
+                onValueChange = { cache.value = it },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+            )
+            AnimatedVisibility((cache.value.isEmpty())) {
+                SmallTitle(stringResource(R.string.content_not_empty), textColor = Color.Red,
+                    insideMargin = DpSize(0.dp, 8.dp))
+            }
+            Spacer(Modifier.height(12.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.cancel),
+                    onClick = {
+                        dismissDialog()
+                        show.value = false
+                    }
+                )
+                Spacer(Modifier.width(12.dp))
+                Button(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.ok),
+                    submit = true,
+                    enabled = (cache.value.isNotEmpty()),
+                    onClick = {
+                        dismissDialog()
+                        set.value = cache.value.toInt()
+                        context.prefs("settings").edit { putInt(saveName, cache.value.toInt()) }
+                        show.value = false
                     }
                 )
             }
