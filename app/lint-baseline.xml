@@ -1,0 +1,1388 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 8.5.0" type="baseline" client="gradle" dependencies="false" name="AGP (8.5.0)" variant="all" version="8.5.0">
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Library lint checks reference invalid APIs; these checks **will be skipped**!&#xA;&#xA;Lint found an issue registry (`androidx.navigation.common.lint.NavigationCommonIssueRegistry`)&#xA;which contains some references to invalid API:&#xA;com.android.tools.lint.checks.infrastructure.TestFiles: com.android.tools.lint.checks.infrastructure.TestFile bytecode(java.lang.String,com.android.tools.lint.checks.infrastructure.TestFile,long,java.lang.String[])&#xA;(Referenced from androidx/navigation/lint/common/LintUtilKt.class)&#xA;&#xA;Therefore, this lint check library is **not** included&#xA;in analysis. This affects the following lint checks:&#xA;`EmptyNavDeepLink`,`WrongStartDestinationType`&#xA;&#xA;To use this lint check, upgrade to a more recent version&#xA;of the library.">
+        <location
+            file="C:/Users/pc/.gradle/caches/8.8/transforms/76d1171162570e39fb6366d309a17c62/transformed/navigation-common-2.8.1/jars/lint.jar"/>
+    </issue>
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Library lint checks reference invalid APIs; these checks **will be skipped**!&#xA;&#xA;Lint found an issue registry (`androidx.navigation.compose.lint.NavigationComposeIssueRegistry`)&#xA;which contains some references to invalid API:&#xA;com.android.tools.lint.checks.infrastructure.TestFiles: com.android.tools.lint.checks.infrastructure.TestFile bytecode(java.lang.String,com.android.tools.lint.checks.infrastructure.TestFile,long,java.lang.String[])&#xA;(Referenced from androidx/navigation/lint/common/LintUtilKt.class)&#xA;&#xA;Therefore, this lint check library is **not** included&#xA;in analysis. This affects the following lint checks:&#xA;`ComposableDestinationInComposeScope`,`ComposableNavGraphInComposeScope`,`UnrememberedGetBackStackEntry`,`WrongStartDestinationType`&#xA;&#xA;To use this lint check, upgrade to a more recent version&#xA;of the library.">
+        <location
+            file="C:/Users/pc/.gradle/caches/8.8/transforms/2f488d840f529d8eb19b685c9bd2ef86/transformed/navigation-compose-2.8.1/jars/lint.jar"/>
+    </issue>
+
+    <issue
+        id="ObsoleteLintCustomCheck"
+        message="Library lint checks reference invalid APIs; these checks **will be skipped**!&#xA;&#xA;Lint found an issue registry (`androidx.navigation.runtime.lint.NavigationRuntimeIssueRegistry`)&#xA;which contains some references to invalid API:&#xA;com.android.tools.lint.checks.infrastructure.TestFiles: com.android.tools.lint.checks.infrastructure.TestFile bytecode(java.lang.String,com.android.tools.lint.checks.infrastructure.TestFile,long,java.lang.String[])&#xA;(Referenced from androidx/navigation/lint/common/LintUtilKt.class)&#xA;&#xA;Therefore, this lint check library is **not** included&#xA;in analysis. This affects the following lint checks:&#xA;`DeepLinkInActivityDestination`,`WrongStartDestinationType`,`WrongNavigateRouteType`&#xA;&#xA;To use this lint check, upgrade to a more recent version&#xA;of the library.">
+        <location
+            file="C:/Users/pc/.gradle/caches/8.8/transforms/6e5a7bb49f023f360f99fd55a2f5cd68/transformed/navigation-runtime-2.8.1/jars/lint.jar"/>
+    </issue>
+
+    <issue
+        id="ScopedStorage"
+        message="WRITE_EXTERNAL_STORAGE no longer provides write access when targeting Android 10+"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.WRITE_EXTERNAL_STORAGE&quot;"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="16"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="SelectedPhotoAccess"
+        message="Your app is currently not handling Selected Photos Access introduced in Android 14+"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.READ_MEDIA_IMAGES&quot;/>"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="11"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="SelectedPhotoAccess"
+        message="Your app is currently not handling Selected Photos Access introduced in Android 14+"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.READ_MEDIA_VIDEO&quot; />"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="12"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="VectorRaster"
+        message="Limit vector icons sizes to 200×200 to keep icon drawing fast; see https://developer.android.com/studio/write/vector-asset-studio#when for more"
+        errorLine1="    android:width=&quot;1920dp&quot;"
+        errorLine2="                   ~~~~~~">
+        <location
+            file="src/main/res/drawable/icon.xml"
+            line="2"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="VectorRaster"
+        message="Limit vector icons sizes to 200×200 to keep icon drawing fast; see https://developer.android.com/studio/write/vector-asset-studio#when for more"
+        errorLine1="    android:width=&quot;1920dp&quot;"
+        errorLine2="                   ~~~~~~">
+        <location
+            file="src/main/res/drawable/icon2.xml"
+            line="2"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2024.09.02 is available: 2024.09.03"
+        errorLine1="composeBomVersion = &quot;2024.09.02&quot;"
+        errorLine2="                    ~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="3"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2024.09.02 is available: 2024.09.03"
+        errorLine1="composeBomVersion = &quot;2024.09.02&quot;"
+        errorLine2="                    ~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="3"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2024.09.02 is available: 2024.09.03"
+        errorLine1="composeBomVersion = &quot;2024.09.02&quot;"
+        errorLine2="                    ~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="3"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2024.09.02 is available: 2024.09.03"
+        errorLine1="composeBom = &quot;2024.09.02&quot;"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="13"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2024.09.02 is available: 2024.09.03"
+        errorLine1="composeBom = &quot;2024.09.02&quot;"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="13"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.compose:compose-bom than 2024.09.02 is available: 2024.09.03"
+        errorLine1="composeBom = &quot;2024.09.02&quot;"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="13"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-compose than 2.8.1 is available: 2.8.2"
+        errorLine1="navigationCompose = &quot;2.8.1&quot;"
+        errorLine2="                    ~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="19"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-compose than 2.8.1 is available: 2.8.2"
+        errorLine1="navigationCompose = &quot;2.8.1&quot;"
+        errorLine2="                    ~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="19"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-compose than 2.8.1 is available: 2.8.2"
+        errorLine1="navigationCompose = &quot;2.8.1&quot;"
+        errorLine2="                    ~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="19"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-runtime-ktx than 2.8.1 is available: 2.8.2"
+        errorLine1="navigationCompose = &quot;2.8.1&quot;"
+        errorLine2="                    ~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="19"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-runtime-ktx than 2.8.1 is available: 2.8.2"
+        errorLine1="navigationCompose = &quot;2.8.1&quot;"
+        errorLine2="                    ~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="19"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.navigation:navigation-runtime-ktx than 2.8.1 is available: 2.8.2"
+        errorLine1="navigationCompose = &quot;2.8.1&quot;"
+        errorLine2="                    ~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="19"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.activity:activity-compose but with different version"
+        errorLine1="androidx-activity-compose-v190 = { module = &quot;androidx.activity:activity-compose&quot;, version.ref = &quot;activityComposeVersion&quot; }"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="22"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.activity:activity-compose but with different version"
+        errorLine1="androidx-activity-compose-v190 = { module = &quot;androidx.activity:activity-compose&quot;, version.ref = &quot;activityComposeVersion&quot; }"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="22"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.activity:activity-compose but with different version"
+        errorLine1="androidx-activity-compose-v190 = { module = &quot;androidx.activity:activity-compose&quot;, version.ref = &quot;activityComposeVersion&quot; }"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="22"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.compose:compose-bom but with different version"
+        errorLine1="androidx-compose-bom-v20240600 = { module = &quot;androidx.compose:compose-bom&quot;, version.ref = &quot;composeBomVersion&quot; }"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="23"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.compose:compose-bom but with different version"
+        errorLine1="androidx-compose-bom-v20240600 = { module = &quot;androidx.compose:compose-bom&quot;, version.ref = &quot;composeBomVersion&quot; }"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="23"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.compose:compose-bom but with different version"
+        errorLine1="androidx-compose-bom-v20240600 = { module = &quot;androidx.compose:compose-bom&quot;, version.ref = &quot;composeBomVersion&quot; }"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="23"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.lifecycle:lifecycle-runtime-ktx but with different version"
+        errorLine1="androidx-lifecycle-runtime-ktx = { group = &quot;androidx.lifecycle&quot;, name = &quot;lifecycle-runtime-ktx&quot;, version.ref = &quot;lifecycleRuntimeKtx&quot; }"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="25"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.lifecycle:lifecycle-runtime-ktx but with different version"
+        errorLine1="androidx-lifecycle-runtime-ktx = { group = &quot;androidx.lifecycle&quot;, name = &quot;lifecycle-runtime-ktx&quot;, version.ref = &quot;lifecycleRuntimeKtx&quot; }"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="25"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.lifecycle:lifecycle-runtime-ktx but with different version"
+        errorLine1="androidx-lifecycle-runtime-ktx = { group = &quot;androidx.lifecycle&quot;, name = &quot;lifecycle-runtime-ktx&quot;, version.ref = &quot;lifecycleRuntimeKtx&quot; }"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="25"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.activity:activity-compose but with different version"
+        errorLine1="androidx-activity-compose = { group = &quot;androidx.activity&quot;, name = &quot;activity-compose&quot;, version.ref = &quot;activityCompose&quot; }"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="26"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.activity:activity-compose but with different version"
+        errorLine1="androidx-activity-compose = { group = &quot;androidx.activity&quot;, name = &quot;activity-compose&quot;, version.ref = &quot;activityCompose&quot; }"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="26"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.activity:activity-compose but with different version"
+        errorLine1="androidx-activity-compose = { group = &quot;androidx.activity&quot;, name = &quot;activity-compose&quot;, version.ref = &quot;activityCompose&quot; }"
+        errorLine2="                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="26"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.compose:compose-bom but with different version"
+        errorLine1="androidx-compose-bom = { group = &quot;androidx.compose&quot;, name = &quot;compose-bom&quot;, version.ref = &quot;composeBom&quot; }"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="27"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.compose:compose-bom but with different version"
+        errorLine1="androidx-compose-bom = { group = &quot;androidx.compose&quot;, name = &quot;compose-bom&quot;, version.ref = &quot;composeBom&quot; }"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="27"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.compose:compose-bom but with different version"
+        errorLine1="androidx-compose-bom = { group = &quot;androidx.compose&quot;, name = &quot;compose-bom&quot;, version.ref = &quot;composeBom&quot; }"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="27"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.lifecycle:lifecycle-runtime-ktx but with different version"
+        errorLine1="androidx-lifecycle-runtime-ktx-v282 = { module = &quot;androidx.lifecycle:lifecycle-runtime-ktx&quot;, version.ref = &quot;lifecycleRuntimeKtxVersion&quot; }"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="28"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.lifecycle:lifecycle-runtime-ktx but with different version"
+        errorLine1="androidx-lifecycle-runtime-ktx-v282 = { module = &quot;androidx.lifecycle:lifecycle-runtime-ktx&quot;, version.ref = &quot;lifecycleRuntimeKtxVersion&quot; }"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="28"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.lifecycle:lifecycle-runtime-ktx but with different version"
+        errorLine1="androidx-lifecycle-runtime-ktx-v282 = { module = &quot;androidx.lifecycle:lifecycle-runtime-ktx&quot;, version.ref = &quot;lifecycleRuntimeKtxVersion&quot; }"
+        errorLine2="                                       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="../gradle/libs.versions.toml"
+            line="28"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="DiscouragedApi"
+        message="Should not restrict activity to fixed orientation. This may not be suitable for different form factors, causing the app to be letterboxed."
+        errorLine1="                android:screenOrientation=&quot;behind&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="61"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="InsecureBaseConfiguration"
+        message="Insecure Base Configuration"
+        errorLine1="    &lt;base-config cleartextTrafficPermitted=&quot;true&quot;>"
+        errorLine2="                                            ~~~~">
+        <location
+            file="src/main/res/xml/network_security_config.xml"
+            line="3"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 31"
+        errorLine1="            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) window?.navigationBarDividerColor = it"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/ui/activity/base/BaseActivity.kt"
+            line="49"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 30"
+        errorLine1="@TargetApi(Build.VERSION_CODES.R)"
+        errorLine2="~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/hook/corepatch/CorePatchForR.java"
+            line="38"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 31"
+        errorLine1="    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/Main_About.kt"
+            line="295"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="Unnecessary; SDK_INT is always >= 31"
+        errorLine1="    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {"
+        errorLine2="               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/Main_About.kt"
+            line="304"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v24`) is unnecessary; `minSdkVersion` is 31. Merge all the resources in this folder into `drawable`.">
+        <location
+            file="src/main/res/drawable-v24"/>
+    </issue>
+
+    <issue
+        id="ObsoleteSdkInt"
+        message="This folder configuration (`v26`) is unnecessary; `minSdkVersion` is 31. Merge all the resources in this folder into `mipmap-anydpi`.">
+        <location
+            file="src/main/res/mipmap-anydpi-v26"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (3008 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="        android:pathData=&quot;M191.3,1048.8c-3,-9.2 -3.7,-18.9 -6.3,-28.1 -0.7,-2.5 -1.1,-4.9 -1.1,-7.3 -0.2,-8 -1.7,-15.8 -3.1,-23.6 -0.3,-1.8 -0.5,-3.7 -0.5,-5.6 -0.1,-15.6 -1,-31.3 0.2,-46.8 1.2,-15 3,-29.9 6.1,-44.8 1.6,-7.7 3.9,-15.3 5,-23.2 0.8,-5.3 2.8,-10.6 4.4,-15.6 6.3,-19.1 13.6,-38 23,-55.9 6.3,-12.1 13.4,-23.8 20.8,-35.3 19.1,-29.9 44.2,-54.4 69.3,-79 3.3,-3.3 6.5,-6.7 9.7,-10.1 1.5,-1.2 2.8,-2.5 3.8,-4.2 2.1,-3.7 5,-6.8 8,-9.7 27.6,-27.4 55,-55 82.6,-82.4 17.8,-17.7 35.5,-35.6 53.3,-53.3 22.3,-22.1 44.2,-44.5 66.6,-66.6 20.3,-20.1 40.3,-40.5 60.6,-60.6 16,-15.8 31.7,-31.8 47.7,-47.7 10.9,-10.8 21.8,-21.5 33.6,-31.4 10.3,-8.7 19.6,-18.7 28.7,-28.7 10.7,-10.4 21.6,-20.6 33.2,-30 11.1,-9 22.8,-17.1 34.9,-24.8 12.8,-8.1 26,-15.3 39.8,-21.5 11.7,-5.3 23.5,-10.4 35.9,-14.1 5,-1.5 10,-3.3 15.1,-4.6 9.1,-2.4 18.4,-4.5 27.5,-6.7 13.1,-3.2 26.6,-3.1 39.6,-6.3 1.8,-0.4 3.7,-0.5 5.6,-0.5 16.4,-0.4 32.9,-1.4 49.2,0.3 14.5,1.4 29,2.9 43.4,6 7.7,1.6 15.3,3.9 23.2,5.1 5.3,0.8 10.5,2.7 15.6,4.4 16,5.3 31.9,11.1 47.1,18.5 9.9,4.8 19.7,10 29.1,15.8 14.4,8.9 28.3,18.4 41.6,29 16.3,13.1 30.8,28.1 45.5,42.9 0.6,0.6 1.2,1 1.8,1.5 7,7.7 14.1,15.3 22.9,21.2 5.5,3.7 9.6,9.2 14.4,13.9 43.5,43.5 87,87 130.5,130.5 45.5,45.5 91,91 136.5,136.4 18.4,18.4 36.8,37 55.4,55.2 4.2,4.2 6.7,9.6 11,13.7 9.7,9.5 19.1,19.3 29.1,28.6 10.3,10.8 20.7,21.6 30,33.3 13.5,16.9 25.5,34.8 35.8,53.8 5.6,10.2 10.8,20.7 15.1,31.5 5,12.3 9.6,24.8 13.2,37.6 2,7 3.5,14.1 5.7,21.1 2.3,7.2 3.5,14.9 4.6,22.3 3.9,26.9 6.1,54 3.7,81.1 -1.2,14.2 -2.3,28.5 -6,42.4 -0.6,2.4 -0.7,4.9 -1.1,7.4 -2.1,8.4 -3.9,16.8 -6.5,25.1 -3.7,11.7 -7.2,23.5 -12.2,34.8 -1.8,4 -3.7,8.4 -5.3,12.6 -1.6,3.9 -3.5,8 -5.5,11.9 -2.8,5.4 -5.8,10.8 -8.6,16.1 -2.9,5.5 -5.9,10.9 -9.3,16.1 -3.1,4.9 -6.4,9.9 -9.9,14.6 -3.1,4.2 -6.2,8.4 -9.3,12.6 -19.1,24.9 -42.5,45.8 -64.4,68 -3.5,3.5 -4.9,8.3 -8.6,11.4 -6.2,5.3 -11.4,11.6 -17.1,17.3 -17.5,17.4 -35,34.8 -52.4,52.3 -18.4,18.5 -36.9,36.8 -55.4,55.2 -25.3,25.3 -50.4,50.8 -75.8,75.9 -13.7,13.5 -27.4,26.9 -40.9,40.5 -24.8,24.8 -49.3,50 -74.3,74.6 -6.6,6.5 -12.3,13.9 -19.5,19.5 -23.5,18.1 -41.6,41.7 -64,60.8 -11.1,9.4 -22.5,18.6 -34.8,26.5 -4.7,3 -9.2,6.4 -14,9 -5.9,3.1 -11.2,7.3 -17.6,9.5 -2.6,0.9 -5.1,2.7 -7.4,4.2 -6.6,4.1 -13.8,6.7 -20.7,9.7 -11,4.7 -22.4,8.6 -33.9,12.2 -10.2,3.2 -20.6,5.3 -30.8,8.2 -14.4,3.4 -29.2,4 -43.7,6.8 -1.5,0.3 -3.1,0.5 -4.6,0.5 -17.2,0.5 -34.5,1.5 -51.5,-0.3 -13.7,-1.5 -27.5,-2.7 -41,-5.8 -7.8,-1.8 -15.6,-4 -23.6,-5.2 -5.2,-0.8 -10.3,-2.7 -15.2,-4.3 -27.1,-8.8 -53.2,-20 -77.6,-34.9 -25.7,-15.7 -49.4,-33.9 -70.3,-55.6 -0.9,-0.9 -1.9,-1.6 -2.8,-2.4 -8,-8.8 -16.2,-17.4 -25,-25.3 -38.2,-33.6 -72.7,-71 -108.8,-106.7 -41.8,-41.3 -83.1,-82.9 -124.7,-124.4 -38.3,-38.3 -76.6,-76.7 -115,-114.9 -5.4,-5.4 -9.1,-12 -14.6,-17.4 -13.5,-13.1 -26.8,-26.5 -39.8,-40 -6.4,-6.6 -12.2,-13.7 -18,-20.8 -5.3,-6.5 -10.3,-13.2 -15,-20.1 -4.6,-6.8 -9,-13.8 -13.2,-20.9 -3.4,-5.6 -6.5,-11.4 -9.5,-17.2 -1.8,-3.6 -4.6,-6.7 -5.4,-11.1 -0.7,-3.5 -3.1,-6.9 -4.8,-10.3 -3.6,-7.4 -6.8,-15.1 -9.3,-22.7 -3.3,-10.1 -7.2,-20 -9,-30.5Z&quot;"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/ic_launcher1_foreground.xml"
+            line="11"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (1321 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="        android:pathData=&quot;M1033.9,1732.4c2.3,-2 4.9,-3.5 8,-3.6 8.7,-0.5 16.6,-4.1 24.8,-6.4 13.1,-3.7 25.6,-8.9 38,-14.4 8,-3.5 15.7,-7.6 23.4,-11.5 13.2,-6.7 25.6,-14.7 37.7,-23.1 12.4,-8.6 24,-18.5 35,-28.8 15.7,-14.6 30.3,-30.2 45.6,-45.2 20,-19.5 39.8,-39.2 59.6,-58.9 17.5,-17.4 34.7,-35 52.2,-52.5 31.2,-31.3 62.5,-62.5 93.8,-93.7 19.1,-19.1 38.1,-38.3 57.2,-57.3 17.1,-17.1 34.5,-34 51.5,-51.1 27,-27.1 54.1,-54.1 80.7,-81.6 13.8,-14.2 26.1,-29.7 37.1,-46.3 9.3,-14 17.7,-28.5 25,-43.6 8.2,-17 15.5,-34.4 20.4,-52.6 1.8,-6.8 5.2,-13.4 5.1,-20.8 -0.1,-2.6 1.6,-5 3.5,-7 0.5,4.3 -0.2,8.2 -1.7,12.3 -2.3,6.7 -3.8,13.7 -5.8,20.5 -1.5,5.2 -3.2,10.4 -5.1,15.4 -3.2,8.3 -6.6,16.6 -10.1,24.8 -2.6,6.1 -5.5,12.1 -8.6,17.9 -4.3,8.1 -8.8,16.1 -13.7,23.8 -6.8,10.8 -14.3,21.1 -22.1,31.3 -18.6,24.3 -41.5,44.4 -62.7,66.1 -3.7,3.8 -5.2,7.7 -5.2,12.9 0.1,39.8 0.3,79.7 -0.3,119.5 -0.2,11.6 -3.1,23 -5.8,34.4 -1.6,6.7 -3.8,13.1 -5.3,19.8 -0.9,4.1 -2.8,7.9 -4.3,11.8 -9.2,22.9 -21.3,44.1 -36.7,63.5 -18.1,22.9 -40,41.4 -65.1,56.3 -12.6,7.5 -26,13.6 -39.7,18.9 -10.9,4.3 -22.2,7.5 -33.4,9.8 -10.4,2.1 -21,4.7 -31.8,4.7 -38.6,-0 -77.2,0.2 -115.8,-0 -6.1,-0 -10.3,2.2 -14.3,6.3 -16.5,16.6 -32.3,33.9 -50,49.2 -16.7,14.5 -34.3,27.8 -53.7,38.8 -10.8,6.1 -21.6,12.1 -32.8,17.2 -7.4,3.3 -15.1,6.3 -22.7,9.2 -9.1,3.5 -18.3,6.8 -27.6,9.3 -7.9,2.1 -15.7,6.4 -24.5,5Z&quot;"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/ic_launcher1_foreground.xml"
+            line="16"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (930 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="        android:pathData=&quot;M191.3,1048.8c4.6,6.1 4.9,13.8 7.2,20.6 4.7,13.7 10.2,27 16.1,40.3 6.9,15.5 15.2,30.3 24.3,44.5 14.4,22.5 32,42.6 50.8,61.6 46.5,46.5 92.8,93.2 139.3,139.7 37.2,37.2 74.6,74.3 111.8,111.5 41.5,41.5 82.9,83.2 124.4,124.7 11.8,11.8 23.7,23.5 35.6,35.2 1.3,1.2 2.5,2.4 2.6,4.3 -6.6,-4 -11.1,-10.3 -16.7,-15.5 -4.6,-4.2 -9,-8.6 -13.2,-13.3 -3.3,-3.7 -7.1,-5 -12,-4.9 -33.7,0.1 -67.5,-0.1 -101.2,0.2 -18.8,0.2 -37.1,-2.7 -55.4,-7 -13.4,-3.1 -26.3,-7.4 -38.8,-12.8 -13.2,-5.7 -25.8,-12.8 -37.8,-21 -16.6,-11.3 -31.9,-24 -45.2,-39 -13.1,-14.9 -24.7,-30.9 -33.7,-48.7 -4.8,-9.5 -9.1,-19.2 -12.9,-29.3 -4,-10.8 -7.6,-21.8 -9.6,-33 -2,-10.6 -4.7,-21.3 -4.7,-32.3 0.1,-38.3 -0.2,-76.5 0,-114.8 0,-6.3 -2.2,-10.8 -6.6,-15.2 -16.5,-16.3 -33.6,-32.2 -48.9,-49.6 -14.4,-16.4 -27.3,-34 -38.3,-52.9 -4.8,-8.3 -9.6,-16.7 -13.8,-25.2 -3.3,-6.7 -6.3,-13.7 -9.1,-20.7 -2,-4.8 -3,-10.1 -5.8,-14.6 -2,-3.3 -2.6,-7.4 -3.5,-11 -1.9,-7.3 -6.6,-14 -5.1,-22Z&quot;"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/ic_launcher1_foreground.xml"
+            line="21"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (3008 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="        android:pathData=&quot;M191.3,1048.8c-3,-9.2 -3.7,-18.9 -6.3,-28.1 -0.7,-2.5 -1.1,-4.9 -1.1,-7.3 -0.2,-8 -1.7,-15.8 -3.1,-23.6 -0.3,-1.8 -0.5,-3.7 -0.5,-5.6 -0.1,-15.6 -1,-31.3 0.2,-46.8 1.2,-15 3,-29.9 6.1,-44.8 1.6,-7.7 3.9,-15.3 5,-23.2 0.8,-5.3 2.8,-10.6 4.4,-15.6 6.3,-19.1 13.6,-38 23,-55.9 6.3,-12.1 13.4,-23.8 20.8,-35.3 19.1,-29.9 44.2,-54.4 69.3,-79 3.3,-3.3 6.5,-6.7 9.7,-10.1 1.5,-1.2 2.8,-2.5 3.8,-4.2 2.1,-3.7 5,-6.8 8,-9.7 27.6,-27.4 55,-55 82.6,-82.4 17.8,-17.7 35.5,-35.6 53.3,-53.3 22.3,-22.1 44.2,-44.5 66.6,-66.6 20.3,-20.1 40.3,-40.5 60.6,-60.6 16,-15.8 31.7,-31.8 47.7,-47.7 10.9,-10.8 21.8,-21.5 33.6,-31.4 10.3,-8.7 19.6,-18.7 28.7,-28.7 10.7,-10.4 21.6,-20.6 33.2,-30 11.1,-9 22.8,-17.1 34.9,-24.8 12.8,-8.1 26,-15.3 39.8,-21.5 11.7,-5.3 23.5,-10.4 35.9,-14.1 5,-1.5 10,-3.3 15.1,-4.6 9.1,-2.4 18.4,-4.5 27.5,-6.7 13.1,-3.2 26.6,-3.1 39.6,-6.3 1.8,-0.4 3.7,-0.5 5.6,-0.5 16.4,-0.4 32.9,-1.4 49.2,0.3 14.5,1.4 29,2.9 43.4,6 7.7,1.6 15.3,3.9 23.2,5.1 5.3,0.8 10.5,2.7 15.6,4.4 16,5.3 31.9,11.1 47.1,18.5 9.9,4.8 19.7,10 29.1,15.8 14.4,8.9 28.3,18.4 41.6,29 16.3,13.1 30.8,28.1 45.5,42.9 0.6,0.6 1.2,1 1.8,1.5 7,7.7 14.1,15.3 22.9,21.2 5.5,3.7 9.6,9.2 14.4,13.9 43.5,43.5 87,87 130.5,130.5 45.5,45.5 91,91 136.5,136.4 18.4,18.4 36.8,37 55.4,55.2 4.2,4.2 6.7,9.6 11,13.7 9.7,9.5 19.1,19.3 29.1,28.6 10.3,10.8 20.7,21.6 30,33.3 13.5,16.9 25.5,34.8 35.8,53.8 5.6,10.2 10.8,20.7 15.1,31.5 5,12.3 9.6,24.8 13.2,37.6 2,7 3.5,14.1 5.7,21.1 2.3,7.2 3.5,14.9 4.6,22.3 3.9,26.9 6.1,54 3.7,81.1 -1.2,14.2 -2.3,28.5 -6,42.4 -0.6,2.4 -0.7,4.9 -1.1,7.4 -2.1,8.4 -3.9,16.8 -6.5,25.1 -3.7,11.7 -7.2,23.5 -12.2,34.8 -1.8,4 -3.7,8.4 -5.3,12.6 -1.6,3.9 -3.5,8 -5.5,11.9 -2.8,5.4 -5.8,10.8 -8.6,16.1 -2.9,5.5 -5.9,10.9 -9.3,16.1 -3.1,4.9 -6.4,9.9 -9.9,14.6 -3.1,4.2 -6.2,8.4 -9.3,12.6 -19.1,24.9 -42.5,45.8 -64.4,68 -3.5,3.5 -4.9,8.3 -8.6,11.4 -6.2,5.3 -11.4,11.6 -17.1,17.3 -17.5,17.4 -35,34.8 -52.4,52.3 -18.4,18.5 -36.9,36.8 -55.4,55.2 -25.3,25.3 -50.4,50.8 -75.8,75.9 -13.7,13.5 -27.4,26.9 -40.9,40.5 -24.8,24.8 -49.3,50 -74.3,74.6 -6.6,6.5 -12.3,13.9 -19.5,19.5 -23.5,18.1 -41.6,41.7 -64,60.8 -11.1,9.4 -22.5,18.6 -34.8,26.5 -4.7,3 -9.2,6.4 -14,9 -5.9,3.1 -11.2,7.3 -17.6,9.5 -2.6,0.9 -5.1,2.7 -7.4,4.2 -6.6,4.1 -13.8,6.7 -20.7,9.7 -11,4.7 -22.4,8.6 -33.9,12.2 -10.2,3.2 -20.6,5.3 -30.8,8.2 -14.4,3.4 -29.2,4 -43.7,6.8 -1.5,0.3 -3.1,0.5 -4.6,0.5 -17.2,0.5 -34.5,1.5 -51.5,-0.3 -13.7,-1.5 -27.5,-2.7 -41,-5.8 -7.8,-1.8 -15.6,-4 -23.6,-5.2 -5.2,-0.8 -10.3,-2.7 -15.2,-4.3 -27.1,-8.8 -53.2,-20 -77.6,-34.9 -25.7,-15.7 -49.4,-33.9 -70.3,-55.6 -0.9,-0.9 -1.9,-1.6 -2.8,-2.4 -8,-8.8 -16.2,-17.4 -25,-25.3 -38.2,-33.6 -72.7,-71 -108.8,-106.7 -41.8,-41.3 -83.1,-82.9 -124.7,-124.4 -38.3,-38.3 -76.6,-76.7 -115,-114.9 -5.4,-5.4 -9.1,-12 -14.6,-17.4 -13.5,-13.1 -26.8,-26.5 -39.8,-40 -6.4,-6.6 -12.2,-13.7 -18,-20.8 -5.3,-6.5 -10.3,-13.2 -15,-20.1 -4.6,-6.8 -9,-13.8 -13.2,-20.9 -3.4,-5.6 -6.5,-11.4 -9.5,-17.2 -1.8,-3.6 -4.6,-6.7 -5.4,-11.1 -0.7,-3.5 -3.1,-6.9 -4.8,-10.3 -3.6,-7.4 -6.8,-15.1 -9.3,-22.7 -3.3,-10.1 -7.2,-20 -9,-30.5Z&quot;"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/ic_launcher_foreground.xml"
+            line="11"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (1321 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="        android:pathData=&quot;M1033.9,1732.4c2.3,-2 4.9,-3.5 8,-3.6 8.7,-0.5 16.6,-4.1 24.8,-6.4 13.1,-3.7 25.6,-8.9 38,-14.4 8,-3.5 15.7,-7.6 23.4,-11.5 13.2,-6.7 25.6,-14.7 37.7,-23.1 12.4,-8.6 24,-18.5 35,-28.8 15.7,-14.6 30.3,-30.2 45.6,-45.2 20,-19.5 39.8,-39.2 59.6,-58.9 17.5,-17.4 34.7,-35 52.2,-52.5 31.2,-31.3 62.5,-62.5 93.8,-93.7 19.1,-19.1 38.1,-38.3 57.2,-57.3 17.1,-17.1 34.5,-34 51.5,-51.1 27,-27.1 54.1,-54.1 80.7,-81.6 13.8,-14.2 26.1,-29.7 37.1,-46.3 9.3,-14 17.7,-28.5 25,-43.6 8.2,-17 15.5,-34.4 20.4,-52.6 1.8,-6.8 5.2,-13.4 5.1,-20.8 -0.1,-2.6 1.6,-5 3.5,-7 0.5,4.3 -0.2,8.2 -1.7,12.3 -2.3,6.7 -3.8,13.7 -5.8,20.5 -1.5,5.2 -3.2,10.4 -5.1,15.4 -3.2,8.3 -6.6,16.6 -10.1,24.8 -2.6,6.1 -5.5,12.1 -8.6,17.9 -4.3,8.1 -8.8,16.1 -13.7,23.8 -6.8,10.8 -14.3,21.1 -22.1,31.3 -18.6,24.3 -41.5,44.4 -62.7,66.1 -3.7,3.8 -5.2,7.7 -5.2,12.9 0.1,39.8 0.3,79.7 -0.3,119.5 -0.2,11.6 -3.1,23 -5.8,34.4 -1.6,6.7 -3.8,13.1 -5.3,19.8 -0.9,4.1 -2.8,7.9 -4.3,11.8 -9.2,22.9 -21.3,44.1 -36.7,63.5 -18.1,22.9 -40,41.4 -65.1,56.3 -12.6,7.5 -26,13.6 -39.7,18.9 -10.9,4.3 -22.2,7.5 -33.4,9.8 -10.4,2.1 -21,4.7 -31.8,4.7 -38.6,-0 -77.2,0.2 -115.8,-0 -6.1,-0 -10.3,2.2 -14.3,6.3 -16.5,16.6 -32.3,33.9 -50,49.2 -16.7,14.5 -34.3,27.8 -53.7,38.8 -10.8,6.1 -21.6,12.1 -32.8,17.2 -7.4,3.3 -15.1,6.3 -22.7,9.2 -9.1,3.5 -18.3,6.8 -27.6,9.3 -7.9,2.1 -15.7,6.4 -24.5,5Z&quot;"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/ic_launcher_foreground.xml"
+            line="15"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (930 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="        android:pathData=&quot;M191.3,1048.8c4.6,6.1 4.9,13.8 7.2,20.6 4.7,13.7 10.2,27 16.1,40.3 6.9,15.5 15.2,30.3 24.3,44.5 14.4,22.5 32,42.6 50.8,61.6 46.5,46.5 92.8,93.2 139.3,139.7 37.2,37.2 74.6,74.3 111.8,111.5 41.5,41.5 82.9,83.2 124.4,124.7 11.8,11.8 23.7,23.5 35.6,35.2 1.3,1.2 2.5,2.4 2.6,4.3 -6.6,-4 -11.1,-10.3 -16.7,-15.5 -4.6,-4.2 -9,-8.6 -13.2,-13.3 -3.3,-3.7 -7.1,-5 -12,-4.9 -33.7,0.1 -67.5,-0.1 -101.2,0.2 -18.8,0.2 -37.1,-2.7 -55.4,-7 -13.4,-3.1 -26.3,-7.4 -38.8,-12.8 -13.2,-5.7 -25.8,-12.8 -37.8,-21 -16.6,-11.3 -31.9,-24 -45.2,-39 -13.1,-14.9 -24.7,-30.9 -33.7,-48.7 -4.8,-9.5 -9.1,-19.2 -12.9,-29.3 -4,-10.8 -7.6,-21.8 -9.6,-33 -2,-10.6 -4.7,-21.3 -4.7,-32.3 0.1,-38.3 -0.2,-76.5 0,-114.8 0,-6.3 -2.2,-10.8 -6.6,-15.2 -16.5,-16.3 -33.6,-32.2 -48.9,-49.6 -14.4,-16.4 -27.3,-34 -38.3,-52.9 -4.8,-8.3 -9.6,-16.7 -13.8,-25.2 -3.3,-6.7 -6.3,-13.7 -9.1,-20.7 -2,-4.8 -3,-10.1 -5.8,-14.6 -2,-3.3 -2.6,-7.4 -3.5,-11 -1.9,-7.3 -6.6,-14 -5.1,-22Z&quot;"
+        errorLine2="                          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/ic_launcher_foreground.xml"
+            line="19"
+            column="27"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (3008 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="      android:pathData=&quot;M191.3,1048.8c-3,-9.2 -3.7,-18.9 -6.3,-28.1 -0.7,-2.5 -1.1,-4.9 -1.1,-7.3 -0.2,-8 -1.7,-15.8 -3.1,-23.6 -0.3,-1.8 -0.5,-3.7 -0.5,-5.6 -0.1,-15.6 -1,-31.3 0.2,-46.8 1.2,-15 3,-29.9 6.1,-44.8 1.6,-7.7 3.9,-15.3 5,-23.2 0.8,-5.3 2.8,-10.6 4.4,-15.6 6.3,-19.1 13.6,-38 23,-55.9 6.3,-12.1 13.4,-23.8 20.8,-35.3 19.1,-29.9 44.2,-54.4 69.3,-79 3.3,-3.3 6.5,-6.7 9.7,-10.1 1.5,-1.2 2.8,-2.5 3.8,-4.2 2.1,-3.7 5,-6.8 8,-9.7 27.6,-27.4 55,-55 82.6,-82.4 17.8,-17.7 35.5,-35.6 53.3,-53.3 22.3,-22.1 44.2,-44.5 66.6,-66.6 20.3,-20.1 40.3,-40.5 60.6,-60.6 16,-15.8 31.7,-31.8 47.7,-47.7 10.9,-10.8 21.8,-21.5 33.6,-31.4 10.3,-8.7 19.6,-18.7 28.7,-28.7 10.7,-10.4 21.6,-20.6 33.2,-30 11.1,-9 22.8,-17.1 34.9,-24.8 12.8,-8.1 26,-15.3 39.8,-21.5 11.7,-5.3 23.5,-10.4 35.9,-14.1 5,-1.5 10,-3.3 15.1,-4.6 9.1,-2.4 18.4,-4.5 27.5,-6.7 13.1,-3.2 26.6,-3.1 39.6,-6.3 1.8,-0.4 3.7,-0.5 5.6,-0.5 16.4,-0.4 32.9,-1.4 49.2,0.3 14.5,1.4 29,2.9 43.4,6 7.7,1.6 15.3,3.9 23.2,5.1 5.3,0.8 10.5,2.7 15.6,4.4 16,5.3 31.9,11.1 47.1,18.5 9.9,4.8 19.7,10 29.1,15.8 14.4,8.9 28.3,18.4 41.6,29 16.3,13.1 30.8,28.1 45.5,42.9 0.6,0.6 1.2,1 1.8,1.5 7,7.7 14.1,15.3 22.9,21.2 5.5,3.7 9.6,9.2 14.4,13.9 43.5,43.5 87,87 130.5,130.5 45.5,45.5 91,91 136.5,136.4 18.4,18.4 36.8,37 55.4,55.2 4.2,4.2 6.7,9.6 11,13.7 9.7,9.5 19.1,19.3 29.1,28.6 10.3,10.8 20.7,21.6 30,33.3 13.5,16.9 25.5,34.8 35.8,53.8 5.6,10.2 10.8,20.7 15.1,31.5 5,12.3 9.6,24.8 13.2,37.6 2,7 3.5,14.1 5.7,21.1 2.3,7.2 3.5,14.9 4.6,22.3 3.9,26.9 6.1,54 3.7,81.1 -1.2,14.2 -2.3,28.5 -6,42.4 -0.6,2.4 -0.7,4.9 -1.1,7.4 -2.1,8.4 -3.9,16.8 -6.5,25.1 -3.7,11.7 -7.2,23.5 -12.2,34.8 -1.8,4 -3.7,8.4 -5.3,12.6 -1.6,3.9 -3.5,8 -5.5,11.9 -2.8,5.4 -5.8,10.8 -8.6,16.1 -2.9,5.5 -5.9,10.9 -9.3,16.1 -3.1,4.9 -6.4,9.9 -9.9,14.6 -3.1,4.2 -6.2,8.4 -9.3,12.6 -19.1,24.9 -42.5,45.8 -64.4,68 -3.5,3.5 -4.9,8.3 -8.6,11.4 -6.2,5.3 -11.4,11.6 -17.1,17.3 -17.5,17.4 -35,34.8 -52.4,52.3 -18.4,18.5 -36.9,36.8 -55.4,55.2 -25.3,25.3 -50.4,50.8 -75.8,75.9 -13.7,13.5 -27.4,26.9 -40.9,40.5 -24.8,24.8 -49.3,50 -74.3,74.6 -6.6,6.5 -12.3,13.9 -19.5,19.5 -23.5,18.1 -41.6,41.7 -64,60.8 -11.1,9.4 -22.5,18.6 -34.8,26.5 -4.7,3 -9.2,6.4 -14,9 -5.9,3.1 -11.2,7.3 -17.6,9.5 -2.6,0.9 -5.1,2.7 -7.4,4.2 -6.6,4.1 -13.8,6.7 -20.7,9.7 -11,4.7 -22.4,8.6 -33.9,12.2 -10.2,3.2 -20.6,5.3 -30.8,8.2 -14.4,3.4 -29.2,4 -43.7,6.8 -1.5,0.3 -3.1,0.5 -4.6,0.5 -17.2,0.5 -34.5,1.5 -51.5,-0.3 -13.7,-1.5 -27.5,-2.7 -41,-5.8 -7.8,-1.8 -15.6,-4 -23.6,-5.2 -5.2,-0.8 -10.3,-2.7 -15.2,-4.3 -27.1,-8.8 -53.2,-20 -77.6,-34.9 -25.7,-15.7 -49.4,-33.9 -70.3,-55.6 -0.9,-0.9 -1.9,-1.6 -2.8,-2.4 -8,-8.8 -16.2,-17.4 -25,-25.3 -38.2,-33.6 -72.7,-71 -108.8,-106.7 -41.8,-41.3 -83.1,-82.9 -124.7,-124.4 -38.3,-38.3 -76.6,-76.7 -115,-114.9 -5.4,-5.4 -9.1,-12 -14.6,-17.4 -13.5,-13.1 -26.8,-26.5 -39.8,-40 -6.4,-6.6 -12.2,-13.7 -18,-20.8 -5.3,-6.5 -10.3,-13.2 -15,-20.1 -4.6,-6.8 -9,-13.8 -13.2,-20.9 -3.4,-5.6 -6.5,-11.4 -9.5,-17.2 -1.8,-3.6 -4.6,-6.7 -5.4,-11.1 -0.7,-3.5 -3.1,-6.9 -4.8,-10.3 -3.6,-7.4 -6.8,-15.1 -9.3,-22.7 -3.3,-10.1 -7.2,-20 -9,-30.5Z&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/icon.xml"
+            line="7"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (1321 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="      android:pathData=&quot;M1033.9,1732.4c2.3,-2 4.9,-3.5 8,-3.6 8.7,-0.5 16.6,-4.1 24.8,-6.4 13.1,-3.7 25.6,-8.9 38,-14.4 8,-3.5 15.7,-7.6 23.4,-11.5 13.2,-6.7 25.6,-14.7 37.7,-23.1 12.4,-8.6 24,-18.5 35,-28.8 15.7,-14.6 30.3,-30.2 45.6,-45.2 20,-19.5 39.8,-39.2 59.6,-58.9 17.5,-17.4 34.7,-35 52.2,-52.5 31.2,-31.3 62.5,-62.5 93.8,-93.7 19.1,-19.1 38.1,-38.3 57.2,-57.3 17.1,-17.1 34.5,-34 51.5,-51.1 27,-27.1 54.1,-54.1 80.7,-81.6 13.8,-14.2 26.1,-29.7 37.1,-46.3 9.3,-14 17.7,-28.5 25,-43.6 8.2,-17 15.5,-34.4 20.4,-52.6 1.8,-6.8 5.2,-13.4 5.1,-20.8 -0.1,-2.6 1.6,-5 3.5,-7 0.5,4.3 -0.2,8.2 -1.7,12.3 -2.3,6.7 -3.8,13.7 -5.8,20.5 -1.5,5.2 -3.2,10.4 -5.1,15.4 -3.2,8.3 -6.6,16.6 -10.1,24.8 -2.6,6.1 -5.5,12.1 -8.6,17.9 -4.3,8.1 -8.8,16.1 -13.7,23.8 -6.8,10.8 -14.3,21.1 -22.1,31.3 -18.6,24.3 -41.5,44.4 -62.7,66.1 -3.7,3.8 -5.2,7.7 -5.2,12.9 0.1,39.8 0.3,79.7 -0.3,119.5 -0.2,11.6 -3.1,23 -5.8,34.4 -1.6,6.7 -3.8,13.1 -5.3,19.8 -0.9,4.1 -2.8,7.9 -4.3,11.8 -9.2,22.9 -21.3,44.1 -36.7,63.5 -18.1,22.9 -40,41.4 -65.1,56.3 -12.6,7.5 -26,13.6 -39.7,18.9 -10.9,4.3 -22.2,7.5 -33.4,9.8 -10.4,2.1 -21,4.7 -31.8,4.7 -38.6,-0 -77.2,0.2 -115.8,-0 -6.1,-0 -10.3,2.2 -14.3,6.3 -16.5,16.6 -32.3,33.9 -50,49.2 -16.7,14.5 -34.3,27.8 -53.7,38.8 -10.8,6.1 -21.6,12.1 -32.8,17.2 -7.4,3.3 -15.1,6.3 -22.7,9.2 -9.1,3.5 -18.3,6.8 -27.6,9.3 -7.9,2.1 -15.7,6.4 -24.5,5Z&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/icon.xml"
+            line="11"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (930 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="      android:pathData=&quot;M191.3,1048.8c4.6,6.1 4.9,13.8 7.2,20.6 4.7,13.7 10.2,27 16.1,40.3 6.9,15.5 15.2,30.3 24.3,44.5 14.4,22.5 32,42.6 50.8,61.6 46.5,46.5 92.8,93.2 139.3,139.7 37.2,37.2 74.6,74.3 111.8,111.5 41.5,41.5 82.9,83.2 124.4,124.7 11.8,11.8 23.7,23.5 35.6,35.2 1.3,1.2 2.5,2.4 2.6,4.3 -6.6,-4 -11.1,-10.3 -16.7,-15.5 -4.6,-4.2 -9,-8.6 -13.2,-13.3 -3.3,-3.7 -7.1,-5 -12,-4.9 -33.7,0.1 -67.5,-0.1 -101.2,0.2 -18.8,0.2 -37.1,-2.7 -55.4,-7 -13.4,-3.1 -26.3,-7.4 -38.8,-12.8 -13.2,-5.7 -25.8,-12.8 -37.8,-21 -16.6,-11.3 -31.9,-24 -45.2,-39 -13.1,-14.9 -24.7,-30.9 -33.7,-48.7 -4.8,-9.5 -9.1,-19.2 -12.9,-29.3 -4,-10.8 -7.6,-21.8 -9.6,-33 -2,-10.6 -4.7,-21.3 -4.7,-32.3 0.1,-38.3 -0.2,-76.5 0,-114.8 0,-6.3 -2.2,-10.8 -6.6,-15.2 -16.5,-16.3 -33.6,-32.2 -48.9,-49.6 -14.4,-16.4 -27.3,-34 -38.3,-52.9 -4.8,-8.3 -9.6,-16.7 -13.8,-25.2 -3.3,-6.7 -6.3,-13.7 -9.1,-20.7 -2,-4.8 -3,-10.1 -5.8,-14.6 -2,-3.3 -2.6,-7.4 -3.5,-11 -1.9,-7.3 -6.6,-14 -5.1,-22Z&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/icon.xml"
+            line="15"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (3008 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="      android:pathData=&quot;M191.3,1048.8c-3,-9.2 -3.7,-18.9 -6.3,-28.1 -0.7,-2.5 -1.1,-4.9 -1.1,-7.3 -0.2,-8 -1.7,-15.8 -3.1,-23.6 -0.3,-1.8 -0.5,-3.7 -0.5,-5.6 -0.1,-15.6 -1,-31.3 0.2,-46.8 1.2,-15 3,-29.9 6.1,-44.8 1.6,-7.7 3.9,-15.3 5,-23.2 0.8,-5.3 2.8,-10.6 4.4,-15.6 6.3,-19.1 13.6,-38 23,-55.9 6.3,-12.1 13.4,-23.8 20.8,-35.3 19.1,-29.9 44.2,-54.4 69.3,-79 3.3,-3.3 6.5,-6.7 9.7,-10.1 1.5,-1.2 2.8,-2.5 3.8,-4.2 2.1,-3.7 5,-6.8 8,-9.7 27.6,-27.4 55,-55 82.6,-82.4 17.8,-17.7 35.5,-35.6 53.3,-53.3 22.3,-22.1 44.2,-44.5 66.6,-66.6 20.3,-20.1 40.3,-40.5 60.6,-60.6 16,-15.8 31.7,-31.8 47.7,-47.7 10.9,-10.8 21.8,-21.5 33.6,-31.4 10.3,-8.7 19.6,-18.7 28.7,-28.7 10.7,-10.4 21.6,-20.6 33.2,-30 11.1,-9 22.8,-17.1 34.9,-24.8 12.8,-8.1 26,-15.3 39.8,-21.5 11.7,-5.3 23.5,-10.4 35.9,-14.1 5,-1.5 10,-3.3 15.1,-4.6 9.1,-2.4 18.4,-4.5 27.5,-6.7 13.1,-3.2 26.6,-3.1 39.6,-6.3 1.8,-0.4 3.7,-0.5 5.6,-0.5 16.4,-0.4 32.9,-1.4 49.2,0.3 14.5,1.4 29,2.9 43.4,6 7.7,1.6 15.3,3.9 23.2,5.1 5.3,0.8 10.5,2.7 15.6,4.4 16,5.3 31.9,11.1 47.1,18.5 9.9,4.8 19.7,10 29.1,15.8 14.4,8.9 28.3,18.4 41.6,29 16.3,13.1 30.8,28.1 45.5,42.9 0.6,0.6 1.2,1 1.8,1.5 7,7.7 14.1,15.3 22.9,21.2 5.5,3.7 9.6,9.2 14.4,13.9 43.5,43.5 87,87 130.5,130.5 45.5,45.5 91,91 136.5,136.4 18.4,18.4 36.8,37 55.4,55.2 4.2,4.2 6.7,9.6 11,13.7 9.7,9.5 19.1,19.3 29.1,28.6 10.3,10.8 20.7,21.6 30,33.3 13.5,16.9 25.5,34.8 35.8,53.8 5.6,10.2 10.8,20.7 15.1,31.5 5,12.3 9.6,24.8 13.2,37.6 2,7 3.5,14.1 5.7,21.1 2.3,7.2 3.5,14.9 4.6,22.3 3.9,26.9 6.1,54 3.7,81.1 -1.2,14.2 -2.3,28.5 -6,42.4 -0.6,2.4 -0.7,4.9 -1.1,7.4 -2.1,8.4 -3.9,16.8 -6.5,25.1 -3.7,11.7 -7.2,23.5 -12.2,34.8 -1.8,4 -3.7,8.4 -5.3,12.6 -1.6,3.9 -3.5,8 -5.5,11.9 -2.8,5.4 -5.8,10.8 -8.6,16.1 -2.9,5.5 -5.9,10.9 -9.3,16.1 -3.1,4.9 -6.4,9.9 -9.9,14.6 -3.1,4.2 -6.2,8.4 -9.3,12.6 -19.1,24.9 -42.5,45.8 -64.4,68 -3.5,3.5 -4.9,8.3 -8.6,11.4 -6.2,5.3 -11.4,11.6 -17.1,17.3 -17.5,17.4 -35,34.8 -52.4,52.3 -18.4,18.5 -36.9,36.8 -55.4,55.2 -25.3,25.3 -50.4,50.8 -75.8,75.9 -13.7,13.5 -27.4,26.9 -40.9,40.5 -24.8,24.8 -49.3,50 -74.3,74.6 -6.6,6.5 -12.3,13.9 -19.5,19.5 -23.5,18.1 -41.6,41.7 -64,60.8 -11.1,9.4 -22.5,18.6 -34.8,26.5 -4.7,3 -9.2,6.4 -14,9 -5.9,3.1 -11.2,7.3 -17.6,9.5 -2.6,0.9 -5.1,2.7 -7.4,4.2 -6.6,4.1 -13.8,6.7 -20.7,9.7 -11,4.7 -22.4,8.6 -33.9,12.2 -10.2,3.2 -20.6,5.3 -30.8,8.2 -14.4,3.4 -29.2,4 -43.7,6.8 -1.5,0.3 -3.1,0.5 -4.6,0.5 -17.2,0.5 -34.5,1.5 -51.5,-0.3 -13.7,-1.5 -27.5,-2.7 -41,-5.8 -7.8,-1.8 -15.6,-4 -23.6,-5.2 -5.2,-0.8 -10.3,-2.7 -15.2,-4.3 -27.1,-8.8 -53.2,-20 -77.6,-34.9 -25.7,-15.7 -49.4,-33.9 -70.3,-55.6 -0.9,-0.9 -1.9,-1.6 -2.8,-2.4 -8,-8.8 -16.2,-17.4 -25,-25.3 -38.2,-33.6 -72.7,-71 -108.8,-106.7 -41.8,-41.3 -83.1,-82.9 -124.7,-124.4 -38.3,-38.3 -76.6,-76.7 -115,-114.9 -5.4,-5.4 -9.1,-12 -14.6,-17.4 -13.5,-13.1 -26.8,-26.5 -39.8,-40 -6.4,-6.6 -12.2,-13.7 -18,-20.8 -5.3,-6.5 -10.3,-13.2 -15,-20.1 -4.6,-6.8 -9,-13.8 -13.2,-20.9 -3.4,-5.6 -6.5,-11.4 -9.5,-17.2 -1.8,-3.6 -4.6,-6.7 -5.4,-11.1 -0.7,-3.5 -3.1,-6.9 -4.8,-10.3 -3.6,-7.4 -6.8,-15.1 -9.3,-22.7 -3.3,-10.1 -7.2,-20 -9,-30.5Z&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/icon2.xml"
+            line="7"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (1321 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="      android:pathData=&quot;M1033.9,1732.4c2.3,-2 4.9,-3.5 8,-3.6 8.7,-0.5 16.6,-4.1 24.8,-6.4 13.1,-3.7 25.6,-8.9 38,-14.4 8,-3.5 15.7,-7.6 23.4,-11.5 13.2,-6.7 25.6,-14.7 37.7,-23.1 12.4,-8.6 24,-18.5 35,-28.8 15.7,-14.6 30.3,-30.2 45.6,-45.2 20,-19.5 39.8,-39.2 59.6,-58.9 17.5,-17.4 34.7,-35 52.2,-52.5 31.2,-31.3 62.5,-62.5 93.8,-93.7 19.1,-19.1 38.1,-38.3 57.2,-57.3 17.1,-17.1 34.5,-34 51.5,-51.1 27,-27.1 54.1,-54.1 80.7,-81.6 13.8,-14.2 26.1,-29.7 37.1,-46.3 9.3,-14 17.7,-28.5 25,-43.6 8.2,-17 15.5,-34.4 20.4,-52.6 1.8,-6.8 5.2,-13.4 5.1,-20.8 -0.1,-2.6 1.6,-5 3.5,-7 0.5,4.3 -0.2,8.2 -1.7,12.3 -2.3,6.7 -3.8,13.7 -5.8,20.5 -1.5,5.2 -3.2,10.4 -5.1,15.4 -3.2,8.3 -6.6,16.6 -10.1,24.8 -2.6,6.1 -5.5,12.1 -8.6,17.9 -4.3,8.1 -8.8,16.1 -13.7,23.8 -6.8,10.8 -14.3,21.1 -22.1,31.3 -18.6,24.3 -41.5,44.4 -62.7,66.1 -3.7,3.8 -5.2,7.7 -5.2,12.9 0.1,39.8 0.3,79.7 -0.3,119.5 -0.2,11.6 -3.1,23 -5.8,34.4 -1.6,6.7 -3.8,13.1 -5.3,19.8 -0.9,4.1 -2.8,7.9 -4.3,11.8 -9.2,22.9 -21.3,44.1 -36.7,63.5 -18.1,22.9 -40,41.4 -65.1,56.3 -12.6,7.5 -26,13.6 -39.7,18.9 -10.9,4.3 -22.2,7.5 -33.4,9.8 -10.4,2.1 -21,4.7 -31.8,4.7 -38.6,-0 -77.2,0.2 -115.8,-0 -6.1,-0 -10.3,2.2 -14.3,6.3 -16.5,16.6 -32.3,33.9 -50,49.2 -16.7,14.5 -34.3,27.8 -53.7,38.8 -10.8,6.1 -21.6,12.1 -32.8,17.2 -7.4,3.3 -15.1,6.3 -22.7,9.2 -9.1,3.5 -18.3,6.8 -27.6,9.3 -7.9,2.1 -15.7,6.4 -24.5,5Z&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/icon2.xml"
+            line="12"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="VectorPath"
+        message="Very long vector path (930 characters), which is bad for performance. Considering reducing precision, removing minor details or rasterizing vector."
+        errorLine1="      android:pathData=&quot;M191.3,1048.8c4.6,6.1 4.9,13.8 7.2,20.6 4.7,13.7 10.2,27 16.1,40.3 6.9,15.5 15.2,30.3 24.3,44.5 14.4,22.5 32,42.6 50.8,61.6 46.5,46.5 92.8,93.2 139.3,139.7 37.2,37.2 74.6,74.3 111.8,111.5 41.5,41.5 82.9,83.2 124.4,124.7 11.8,11.8 23.7,23.5 35.6,35.2 1.3,1.2 2.5,2.4 2.6,4.3 -6.6,-4 -11.1,-10.3 -16.7,-15.5 -4.6,-4.2 -9,-8.6 -13.2,-13.3 -3.3,-3.7 -7.1,-5 -12,-4.9 -33.7,0.1 -67.5,-0.1 -101.2,0.2 -18.8,0.2 -37.1,-2.7 -55.4,-7 -13.4,-3.1 -26.3,-7.4 -38.8,-12.8 -13.2,-5.7 -25.8,-12.8 -37.8,-21 -16.6,-11.3 -31.9,-24 -45.2,-39 -13.1,-14.9 -24.7,-30.9 -33.7,-48.7 -4.8,-9.5 -9.1,-19.2 -12.9,-29.3 -4,-10.8 -7.6,-21.8 -9.6,-33 -2,-10.6 -4.7,-21.3 -4.7,-32.3 0.1,-38.3 -0.2,-76.5 0,-114.8 0,-6.3 -2.2,-10.8 -6.6,-15.2 -16.5,-16.3 -33.6,-32.2 -48.9,-49.6 -14.4,-16.4 -27.3,-34 -38.3,-52.9 -4.8,-8.3 -9.6,-16.7 -13.8,-25.2 -3.3,-6.7 -6.3,-13.7 -9.1,-20.7 -2,-4.8 -3,-10.1 -5.8,-14.6 -2,-3.3 -2.6,-7.4 -3.5,-11 -1.9,-7.3 -6.6,-14 -5.1,-22Z&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/drawable/icon2.xml"
+            line="17"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableDoubleStateOf` instead of `mutableStateOf`"
+        errorLine1="                    var currentNow = remember { mutableStateOf(0.0) }"
+        errorLine2="                                                ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/Fun_com_android_systemui.kt"
+            line="111"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    val powerDisplaySelect = remember { mutableStateOf(0) }"
+        errorLine2="                                        ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/Fun_com_android_systemui_hardware_indicator.kt"
+            line="86"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    val ClockStyleSelectedOption = remember { mutableStateOf(0) }"
+        errorLine2="                                              ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/Fun_com_android_systemui_status_bar_clock.kt"
+            line="80"
+            column="47"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    var ClockSize by remember { mutableStateOf(0) }"
+        errorLine2="                                ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/Fun_com_android_systemui_status_bar_clock.kt"
+            line="94"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    var ClockUpdateSpeed by remember { mutableStateOf(0) }"
+        errorLine2="                                       ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/Fun_com_android_systemui_status_bar_clock.kt"
+            line="95"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="AutoboxingStateCreation"
+        message="Prefer `mutableIntStateOf` instead of `mutableStateOf`"
+        errorLine1="    val Status_Bar_Time_gravitySelectedOption = remember { mutableStateOf(0) }"
+        errorLine2="                                                           ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/Fun_com_android_systemui_status_bar_clock.kt"
+            line="99"
+            column="60"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.baseline_monitor_heart_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;24dp&quot; android:tint=&quot;#000000&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;24dp&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/baseline_monitor_heart_24.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.bg_dark_round` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/bg_dark_round.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.bg_green_round` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/bg_green_round.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.bg_orange_round` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/bg_orange_round.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.bg_permotion_ripple` appears to be unused"
+        errorLine1="&lt;ripple xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/bg_permotion_ripple.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.bg_permotion_round` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/bg_permotion_round.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.bottom_bar` appears to be unused"
+        errorLine1="&lt;menu xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/bottom_bar.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.menu.bottom_bar` appears to be unused"
+        errorLine1="&lt;menu xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/menu/bottom_bar.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.colorTextDark` appears to be unused"
+        errorLine1="    &lt;color name=&quot;colorTextDark&quot;>#FF777777&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/color.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.colorTextGray` appears to be unused"
+        errorLine1="    &lt;color name=&quot;colorTextGray&quot;>#FF323B42&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/color.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.public_color_D3DBF9` appears to be unused"
+        errorLine1="    &lt;color name=&quot;public_color_D3DBF9&quot;>#D3DBF9&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/color.xml"
+            line="6"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.trans` appears to be unused"
+        errorLine1="    &lt;color name=&quot;trans&quot;>#00000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="4"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.ic_launcher_foreground` appears to be unused"
+        errorLine1="    &lt;color name=&quot;ic_launcher_foreground&quot;>#555555&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="5"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.ic_launcher1_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;ic_launcher1_background&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher1_background.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.textview_black` appears to be unused"
+        errorLine1="    &lt;color name=&quot;textview_black&quot;>#FF000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="6"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.textview_white` appears to be unused"
+        errorLine1="    &lt;color name=&quot;textview_white&quot;>#F1FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="7"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.textview_blue` appears to be unused"
+        errorLine1="    &lt;color name=&quot;textview_blue&quot;>#0D84FF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="8"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.navigation_divider` appears to be unused"
+        errorLine1="    &lt;color name=&quot;navigation_divider&quot;>#1A000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="10"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.navigation_icon_dark` appears to be unused"
+        errorLine1="    &lt;color name=&quot;navigation_icon_dark&quot;>#FF000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="11"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.navigation_icon_light` appears to be unused"
+        errorLine1="    &lt;color name=&quot;navigation_icon_light&quot;>#FFFFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="12"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.transparent_background` appears to be unused"
+        errorLine1="    &lt;color name=&quot;transparent_background&quot;>#50000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="13"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.miuix_blurdrawable_view_fg_dark` appears to be unused"
+        errorLine1="    &lt;color name=&quot;miuix_blurdrawable_view_fg_dark&quot;>#80000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="15"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.miuix_blurdrawable_view_fg_light` appears to be unused"
+        errorLine1="    &lt;color name=&quot;miuix_blurdrawable_view_fg_light&quot;>#ccffffff&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="16"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.light_mode_icon_color_single_tone` appears to be unused"
+        errorLine1="    &lt;color name=&quot;light_mode_icon_color_single_tone&quot;>#e6ffffff&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="18"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.light_mode_icon_transparent_color_single_tone` appears to be unused"
+        errorLine1="    &lt;color name=&quot;light_mode_icon_transparent_color_single_tone&quot;>#5cffffff&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="19"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.dark_mode_icon_color_single_tone` appears to be unused"
+        errorLine1="    &lt;color name=&quot;dark_mode_icon_color_single_tone&quot;>#bf000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="20"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.dark_mode_icon_transparent_color_single_tone` appears to be unused"
+        errorLine1="    &lt;color name=&quot;dark_mode_icon_transparent_color_single_tone&quot;>#4c000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="21"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.color_surface_variant` appears to be unused"
+        errorLine1="    &lt;color name=&quot;color_surface_variant&quot;>#DC9A9B9D&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="22"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.color_on_surface_variant` appears to be unused"
+        errorLine1="    &lt;color name=&quot;color_on_surface_variant&quot;>#FAFCFCFC&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="23"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.preference_recommend_region_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;preference_recommend_region_color&quot;>#fff0f0f0&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="26"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.preference_recommend_title_color` appears to be unused"
+        errorLine1="    &lt;color name=&quot;preference_recommend_title_color&quot;>#66000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="27"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.preference_recommend_item_link` appears to be unused"
+        errorLine1="    &lt;color name=&quot;preference_recommend_item_link&quot;>#ff0d84ff&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="29"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.preference_recommend_item_link_pressed` appears to be unused"
+        errorLine1="    &lt;color name=&quot;preference_recommend_item_link_pressed&quot;>#990d84ff&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="30"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.card_tile_disabled_color_legacy` appears to be unused"
+        errorLine1="    &lt;color name=&quot;card_tile_disabled_color_legacy&quot;>#9E9E9E&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/ic_launcher_background.xml"
+            line="32"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.mipmap.ic_launcher_round` appears to be unused"
+        errorLine1="&lt;adaptive-icon xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.icon` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/icon.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.icon1` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/icon1.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.icon2` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/icon2.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.outline_home_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;24dp&quot; android:tint=&quot;#000000&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;24dp&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/outline_home_24.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.outline_pending_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;24dp&quot; android:tint=&quot;#000000&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;24dp&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/outline_pending_24.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.outline_widgets_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;24dp&quot; android:tint=&quot;#000000&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;24dp&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/outline_widgets_24.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.round_arrow_forward_ios_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:autoMirrored=&quot;true&quot; android:height=&quot;24dp&quot; android:tint=&quot;#000000&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;24dp&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/round_arrow_forward_ios_24.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.about_module` appears to be unused"
+        errorLine1="    &lt;string name=&quot;about_module&quot;>This module is made by YukiHookAPI. \nLearn more https://github.com/HighCapable/YuKiHookAPI&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="4"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.module_version` appears to be unused"
+        errorLine1="    &lt;string name=&quot;module_version&quot;>Module version: %1$s&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="5"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.display_settings` appears to be unused"
+        errorLine1="    &lt;string name=&quot;display_settings&quot;>Display settings&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.hide_app_icon_on_launcher` appears to be unused"
+        errorLine1="    &lt;string name=&quot;hide_app_icon_on_launcher&quot;>Hide app icons on launcher&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="9"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.hide_app_icon_on_launcher_tip` appears to be unused"
+        errorLine1="    &lt;string name=&quot;hide_app_icon_on_launcher_tip&quot;>After hiding the app icon, the interface may be closed and will no longer be displayed on the launcher. You can find and open the module settings in EdXposed or LSPosed.&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="10"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.hide_app_icon_on_launcher_notice` appears to be unused"
+        errorLine1="    &lt;string name=&quot;hide_app_icon_on_launcher_notice&quot;>Note: Be sure to turn off the \&quot;Force apps to show launcher icons\&quot; feature in LSPosed&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="11"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.title_activity_main` appears to be unused"
+        errorLine1="    &lt;string name=&quot;title_activity_main&quot; translatable=&quot;false&quot;>MainActivity&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="12"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.clock_update_time` appears to be unused"
+        errorLine1="    &lt;string name=&quot;clock_update_time&quot;>Clock update time&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="74"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.string.module_activated` appears to be unused"
+        errorLine1="    &lt;string name=&quot;module_activated&quot;>Module Activated&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="128"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.twotone_home_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;24dp&quot; android:tint=&quot;#000000&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;24dp&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/twotone_home_24.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.twotone_pending_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;24dp&quot; android:tint=&quot;#000000&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;24dp&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/twotone_pending_24.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.twotone_widgets_24` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:height=&quot;24dp&quot; android:tint=&quot;#000000&quot; android:viewportHeight=&quot;24&quot; android:viewportWidth=&quot;24&quot; android:width=&quot;24dp&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/twotone_widgets_24.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="TypographyDashes"
+        message="Replace &quot;-&quot; with an &quot;en dash&quot; character (–, &amp;#8211;) ?"
+        errorLine1="    &lt;string name=&quot;status_bar_clock_custom_tips&quot;>年、月、日：\n y 年\n yy 两位数年份（例如 23 表示 2023 年）\n yyyy 四位数年份（例如 2023）\n  M 月\n MM 两位数的月份（01-12）\n MMM 月份缩写（如 Jan）\n MMMM 月份全称（如 January）\n  d 月中的天数（1-31）\n  D 年中的天数（1-366）\n  E 星期\n E 星期的缩写（如 Tue）\n EEEE 星期的全称（如 Tuesday）\n  F 月中的第几周的星期几（1-7）\n  w 年中的周数（1-53）\n  W 月中的周数（1-5）\n  ---\n  时、分、秒：\n h 12 小时制的小时数（1-12）\n  H 24 小时制的小时数（0-23）\n  m 分钟数（0-59）\n  s 秒数（0-59）\n  S 毫秒数（0-999）\n  K 12 小时制的小时数（0-11）\n  k 24 小时制的小时数（1-24）\n  ---\n  上午/下午：\n a AM/PM 标记（如 AM 或 PM）\n  ---\n  时区：\n z 时区\n z 时区缩写（如 PST）\n zzzz 时区全称（如 Pacific Standard Time）\n  Z RFC 822 时区格式（如 -0800）\n  X ISO 8601 时区\n X -08 或 +08\n XX -0800 或 +0800\n XXX -08:00 或 +08:00&lt;/string>"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-zh-rCN/strings.xml"
+            line="130"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="TypographyDashes"
+        message="Replace &quot;-&quot; with an &quot;en dash&quot; character (–, &amp;#8211;) ?"
+        errorLine1="    &lt;string name=&quot;status_bar_clock_custom_tips&quot;>Year, Month, Day:\n y Year\n yy Two-digit year (e.g., 23 for 2023)\n yyyy Four-digit year (e.g., 2023)\n  M Month\n MM Two-digit month (01-12)\n MMM Month abbreviation (e.g., Jan)\n MMMM Full month name (e.g., January)\n  d Day of the month (1-31)\n  D Day of the year (1-366)\n  E Day of the week\n E Abbreviated day of the week (e.g., Tue)\n EEEE Full day of the week (e.g., Tuesday)\n  F Day of the week in the month (1-7)\n  w Week of the year (1-53)\n  W Week of the month (1-5)\n  ---\n  Hour, Minute, Second:\n h Hour in 12-hour format (1-12)\n  H Hour in 24-hour format (0-23)\n  m Minute (0-59)\n  s Second (0-59)\n  S Millisecond (0-999)\n  K Hour in 12-hour format (0-11)\n  k Hour in 24-hour format (1-24)\n  ---\n  AM/PM:\n a AM/PM marker (e.g., AM or PM)\n  ---\n  Time Zone:\n z Time zone\n z Time zone abbreviation (e.g., PST)\n zzzz Full time zone name (e.g., Pacific Standard Time)\n  Z RFC 822 time zone format (e.g., -0800)\n  X ISO 8601 time zone\n X -08 or +08\n XX -0800 or +0800\n XXX -08:00 or +08:00&lt;/string>"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/strings.xml"
+            line="134"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="IconLocation"
+        message="Found bitmap drawable `res/drawable/qq_pic_merged_1727926207595.jpg` in densityless folder">
+        <location
+            file="src/main/res/drawable/qq_pic_merged_1727926207595.jpg"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;功能&quot;, should use `@string` resource"
+        errorLine1="            android:title=&quot;功能&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/bottom_bar.xml"
+            line="8"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;主页&quot;, should use `@string` resource"
+        errorLine1="            android:title=&quot;主页&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/bottom_bar.xml"
+            line="13"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;关于&quot;, should use `@string` resource"
+        errorLine1="            android:title=&quot;关于&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/bottom_bar.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`Gravity.START`&quot; instead of &quot;`Gravity.LEFT`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="                                    3 -> Gravity.LEFT          // 左侧对齐"
+        errorLine2="                                                 ~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/hook/appilcations/StatusBarClock.kt"
+            line="134"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`Gravity.START`&quot; instead of &quot;`Gravity.LEFT`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="                                    3 -> Gravity.LEFT          // 左侧对齐"
+        errorLine2="                                                 ~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/hook/appilcations/StatusBarClock.kt"
+            line="134"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`Gravity.END`&quot; instead of &quot;`Gravity.RIGHT`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="                                    4 -> Gravity.RIGHT         // 右侧对齐"
+        errorLine2="                                                 ~~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/hook/appilcations/StatusBarClock.kt"
+            line="135"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="RtlHardcoded"
+        message="Use &quot;`Gravity.END`&quot; instead of &quot;`Gravity.RIGHT`&quot; to ensure correct behavior in right-to-left locales"
+        errorLine1="                                    4 -> Gravity.RIGHT         // 右侧对齐"
+        errorLine2="                                                 ~~~~~">
+        <location
+            file="src/main/java/io/github/suqi8/opatch/hook/appilcations/StatusBarClock.kt"
+            line="135"
+            column="50"/>
+    </issue>
+
+</issues>
