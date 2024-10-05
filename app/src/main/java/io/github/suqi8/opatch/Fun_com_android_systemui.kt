@@ -1,5 +1,6 @@
 package io.github.suqi8.opatch
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.util.Log
@@ -39,6 +40,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import java.io.FileInputStream
 import java.util.Properties
 
+@SuppressLint("SuspiciousIndentation")
 @Composable
 fun Fun_com_android_systemui(navController: NavController) {
     val context = LocalContext.current
@@ -46,8 +48,8 @@ fun Fun_com_android_systemui(navController: NavController) {
     val appList = listOf("com.android.systemui")
     val RestartAPP = remember { mutableStateOf(false) }
     val resetApp = resetApp()
-    var isDebug = context.prefs("settings").getBoolean("Debug", false)
-        Scaffold(topBar = { GetAppIconAndName(packageName = "com.android.systemui") { appName, icon ->
+    val isDebug = context.prefs("settings").getBoolean("Debug", false)
+    Scaffold(topBar = { GetAppIconAndName(packageName = "com.android.systemui") { appName, icon ->
         TopAppBar(
             title = appName,
             scrollBehavior = one,
