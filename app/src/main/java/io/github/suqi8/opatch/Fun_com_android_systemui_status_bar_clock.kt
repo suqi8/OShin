@@ -2,6 +2,7 @@ package io.github.suqi8.opatch
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.TypedValue
 import android.view.Gravity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -59,6 +60,7 @@ import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperArrow
@@ -290,6 +292,15 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         },
                                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
                                     )
+                                }
+                                addline()
+                                Text("dp To px", modifier = Modifier.padding(start = 15.dp, top = 16.dp))
+                                val px = remember { mutableStateOf("0") }
+                                TextField(value = px.value, onValueChange = { px.value = it }, modifier = Modifier.padding(start = 12.dp, end = 12.dp))
+                                if (px.value.isNotEmpty()) {
+                                    AnimatedVisibility(visible = px.value.isNotEmpty()) {
+                                        SmallTitle("${px.value}dp = ${dpToPx(px.value.toFloat(),context)}px")
+                                    }
                                 }
                                 addline()
                                 Column {
@@ -537,6 +548,22 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
     SettingIntDialog(context,showClockBottomPaddingDialog,ClockBottomPaddingTitle,ClockBottomPadding,focusManager,"Status_Bar_Time_BottomPadding")
     SettingIntDialog(context,showClockLeftPaddingDialog,ClockLeftPaddingTitle,ClockLeftPadding,focusManager,"Status_Bar_Time_LeftPadding")
     SettingIntDialog(context,showClockRightPaddingDialog,ClockRightPaddingTitle,ClockRightPadding,focusManager,"Status_Bar_Time_RightPadding")
+}
+
+fun pxToDp(px: Float, context: Context): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        px,
+        context.resources.displayMetrics
+    ) / context.resources.displayMetrics.density
+}
+
+fun dpToPx(dp: Float, context: Context): Float {
+    return TypedValue.applyDimension(
+        TypedValue.COMPLEX_UNIT_DIP,
+        dp,
+        context.resources.displayMetrics
+    )
 }
 
 @Composable

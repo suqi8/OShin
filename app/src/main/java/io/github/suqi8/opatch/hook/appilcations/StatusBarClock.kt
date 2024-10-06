@@ -276,7 +276,7 @@ class StatusBarClock : YukiBaseHooker() {
                 }
             }
         }
-        "com.android.systemui.statusbar.phone.PhoneStatusBarView".toClass().apply {
+        /*"com.android.systemui.statusbar.phone.PhoneStatusBarView".toClass().apply {
             hook {
                 injectMember {
                     method {
@@ -292,7 +292,7 @@ class StatusBarClock : YukiBaseHooker() {
                     }
                 }
             }
-        }
+        }*/
     }
 
     @SuppressLint("SimpleDateFormat")
