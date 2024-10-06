@@ -24,31 +24,26 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew assembleDebug
-    - name: Upload All APKs and output-metadata.json
-      id: upload-artifacts
+    - name: Upload All APK
       uses: actions/upload-artifact@v3
       with:
         name: OPatch_all
-        path: app/build/outputs/apk/debug/OPatch_all_v*.apk
-      if: success() && startsWith(github.event_name, 'push')
+        path: app/build/outputs/apk/debug/OPatch_all_v1.0.0.apk
 
     - name: Upload Arm64 APK
       uses: actions/upload-artifact@v3
       with:
         name: OPatch_arm64
-        path: app/build/outputs/apk/debug/OPatch_arm64-v8a_v*.apk
-      if: success() && startsWith(github.event_name, 'push')
+        path: app/build/outputs/apk/debug/OPatch_arm64-v8a_v1.0.0.apk
 
     - name: Upload Armeabi APK
       uses: actions/upload-artifact@v3
       with:
         name: OPatch_armeabi
-        path: app/build/outputs/apk/debug/OPatch_armeabi-v7a_v*.apk
-      if: success() && startsWith(github.event_name, 'push')
+        path: app/build/outputs/apk/debug/OPatch_armeabi-v7a_v1.0.0.apk
 
     - name: Upload Metadata
       uses: actions/upload-artifact@v3
       with:
         name: output-metadata
         path: app/build/outputs/apk/debug/output-metadata.json
-      if: success() && startsWith(github.event_name, 'push')
