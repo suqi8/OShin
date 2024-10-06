@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -39,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
 import com.highcapable.yukihookapi.YukiHookAPI
+import com.highcapable.yukihookapi.hook.factory.prefs
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -113,7 +115,20 @@ fun Modifier.drawColoredShadow(
 }
 
 @Composable
+fun addline(mode: Boolean = true) {
+    val context = LocalContext.current
+    if (context.prefs("settings").getBoolean("addline", false))
+        if (mode) {
+            HorizontalDivider(modifier = Modifier.padding(start = 25.dp, end = 25.dp), thickness = 0.5.dp, color = Color.Gray.copy(alpha = 0.2f))
+        } else {
+            HorizontalDivider(modifier = Modifier.padding(start = 5.dp, end = 5.dp), thickness = 0.5.dp, color = Color.Gray.copy(alpha = 0.2f))
+        }
+    else {}
+}
+
+@Composable
 fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
+
     LazyColumn(
         contentPadding = PaddingValues(top = padding.calculateTopPadding()),
         topAppBarScrollBehavior = topAppBarScrollBehavior
@@ -194,48 +209,32 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                     .fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 20.dp)) {
-                        Text(text = stringResource(id = R.string.soc_model))
-                        SmallTitle(text = Build.SOC_MODEL, insideMargin = DpSize(0.dp,0.dp))
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(text = stringResource(id = R.string.android_version))
-                        SmallTitle(text = Build.VERSION.RELEASE, insideMargin = DpSize(0.dp,0.dp))
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(text = stringResource(id = R.string.android_api_version))
-                        SmallTitle(text = Build.VERSION.SDK_INT.toString(), insideMargin = DpSize(0.dp,0.dp))
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(text = stringResource(id = R.string.system_version))
-                        SmallTitle(text = Build.DISPLAY, insideMargin = DpSize(0.dp,0.dp))
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(text = stringResource(id = R.string.cpu_codename))
-                        SmallTitle(text = Build.BOARD.substringAfter("_"), insideMargin = DpSize(0.dp,0.dp))
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(text = stringResource(id = R.string.device_manufacturer))
-                        SmallTitle(text = Build.MANUFACTURER, insideMargin = DpSize(0.dp,0.dp))
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(text = stringResource(id = R.string.supported_abi))
-                        SmallTitle(text = Build.SUPPORTED_ABIS.joinToString(), insideMargin = DpSize(0.dp,0.dp))
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(text = stringResource(id = R.string.android_security_patch))
-                        SmallTitle(text = Build.VERSION.SECURITY_PATCH, insideMargin = DpSize(0.dp,0.dp))
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(text = stringResource(id = R.string.device_fingerprint))
-                        SmallTitle(text = Build.FINGERPRINT, insideMargin = DpSize(0.dp,0.dp))
+                        Text(text = stringResource(id = R.string.soc_model),modifier = Modifier.padding(bottom=5.dp))
+                        SmallTitle(text = Build.SOC_MODEL, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        addline(false)
+                        Text(text = stringResource(id = R.string.android_version),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = Build.VERSION.RELEASE, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        addline(false)
+                        Text(text = stringResource(id = R.string.android_api_version),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = Build.VERSION.SDK_INT.toString(), insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        addline(false)
+                        Text(text = stringResource(id = R.string.system_version),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = Build.DISPLAY, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        addline(false)
+                        Text(text = stringResource(id = R.string.cpu_codename),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = Build.BOARD.substringAfter("_"), insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        addline(false)
+                        Text(text = stringResource(id = R.string.device_manufacturer),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = Build.MANUFACTURER, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        addline(false)
+                        Text(text = stringResource(id = R.string.supported_abi),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = Build.SUPPORTED_ABIS.joinToString(), insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        addline(false)
+                        Text(text = stringResource(id = R.string.android_security_patch),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = Build.VERSION.SECURITY_PATCH, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        addline(false)
+                        Text(text = stringResource(id = R.string.device_fingerprint),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = Build.FINGERPRINT, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
                     }
                 }
             }

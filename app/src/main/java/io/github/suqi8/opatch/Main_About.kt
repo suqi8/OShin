@@ -70,6 +70,11 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import android.content.ActivityNotFoundException
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import com.highcapable.yukihookapi.hook.factory.prefs
@@ -85,6 +90,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
     val usedStorage = formatSize(getUsedStorage())
     val isDebug = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
+    val addline = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         val cachedName = getDeviceName(context) // 获取保存的设备名称
         if (cachedName != null) {
@@ -92,6 +98,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
             deviceNameCache.value = cachedName
         }
         isDebug.value = context.prefs("settings").getBoolean("Debug", false)
+        addline.value = context.prefs("settings").getBoolean("addline", false)
     }
     Scaffold() {
         LazyColumn(contentPadding = PaddingValues(top = padding.calculateTopPadding()),
@@ -129,6 +136,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                     SuperArrow(title = stringResource(R.string.Device_Name), onClick = {
                         showDeviceNameDialog.value = true
                     }, rightText = deviceName.value)
+                    addline()
                     //设备内存容量
                     SuperArrow(title = stringResource(R.string.Device_Memory), rightText = "$usedStorage / $physicalTotalStorage",
                         onClick = {
@@ -183,6 +191,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                             }
                         }
                     )
+                    addline()
                     SuperSwitch(
                         title = "Debug",
                         checked = isDebug.value,
@@ -191,6 +200,13 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                             context.prefs("settings").edit { putBoolean("Debug", it) }
                         }
                     )
+                    addline()
+                    SuperSwitch(title = stringResource(R.string.addline),
+                        checked = addline.value,
+                        onCheckedChange = {
+                            addline.value = it
+                            context.prefs("settings").edit { putBoolean("addline", it) }
+                        })
                 }
                 SmallTitle(text = stringResource(R.string.by_the_way))
                 Card(modifier = Modifier.fillMaxWidth()
@@ -225,6 +241,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                             context.startActivity(intent)
                         }
                     )
+                    addline()
                     SuperArrow(
                         title = stringResource(R.string.official_channel),
                         summary = "Telegram、QQ",
@@ -233,6 +250,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                             context.startActivity(intent)
                         }
                     )
+                    addline()
                     SuperArrow(
                         title = stringResource(R.string.contribute_translation),
                         summary = stringResource(R.string.crowdin_contribute_summary),

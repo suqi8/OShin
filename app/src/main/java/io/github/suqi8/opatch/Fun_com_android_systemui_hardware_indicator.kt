@@ -201,6 +201,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                     },
                                     checked = hidePowerUnit.value
                                 )
+                                addline()
                                 SuperSwitch(
                                     title = stringResource(R.string.current),
                                     onCheckedChange = {

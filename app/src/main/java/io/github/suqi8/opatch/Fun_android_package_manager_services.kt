@@ -116,6 +116,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                             },
                             checked = downgr
                         )
+                        addline()
                         SuperSwitch(
                             title = stringResource(R.string.authcreak),
                             summary = stringResource(R.string.authcreak_summary),
@@ -125,6 +126,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                             },
                             checked = authcreak
                         )
+                        addline()
                         SuperSwitch(
                             title = stringResource(R.string.digestCreak),
                             summary = stringResource(R.string.digestCreak_summary),
@@ -134,6 +136,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                             },
                             checked = digestCreak
                         )
+                        addline()
                         SuperSwitch(
                             title = stringResource(R.string.UsePreSig),
                             summary = stringResource(R.string.UsePreSig_summary),
@@ -143,6 +146,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                             },
                             checked = UsePreSig
                         )
+                        addline()
                         SuperSwitch(
                             title = stringResource(R.string.enhancedMode),
                             summary = stringResource(R.string.enhancedMode_summary),
@@ -170,6 +174,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
                             },
                             checked = bypassBlock
                         )
+                        addline()
                         SuperSwitch(
                             title = stringResource(R.string.disable_verification_agent_title),
                             summary = stringResource(R.string.disable_verification_agent_summary),

@@ -3,6 +3,7 @@ package io.github.suqi8.opatch.hook.appilcations
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Handler
@@ -272,6 +273,23 @@ class StatusBarClock : YukiBaseHooker() {
                             }
                         }*//*
                     }*/
+                }
+            }
+        }
+        "com.android.systemui.statusbar.phone.PhoneStatusBarView".toClass().apply {
+            hook {
+                injectMember {
+                    method {
+                        name = "onCreate" // 钩住创建方法
+                    }
+                    afterHook {
+                        // 获取状态栏视图的 ID
+                        val statusBarView = instance<ViewGroup>().findViewById<View>(Resources.getSystem().getIdentifier("status_bar", "id", "android"))
+                        // 你可以在这里对状态栏进行其他操作
+                        if (statusBarView != null) {
+                            statusBarView.setPadding(100,0,100,0)
+                        }
+                    }
                 }
             }
         }

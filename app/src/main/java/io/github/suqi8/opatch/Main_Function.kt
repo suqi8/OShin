@@ -23,6 +23,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -53,6 +55,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.YukiHookAPI
+import com.highcapable.yukihookapi.hook.factory.prefs
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Card
@@ -160,7 +163,6 @@ fun Main_Function(
     var miuixSearchValue by remember { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(false) }
     var isKeyboardVisible by remember { mutableStateOf(false) }
-
     DisposableEffect(context) {
         val rootView = (context as MainActivity).window.decorView
         val listener = ViewTreeObserver.OnGlobalLayoutListener {
@@ -242,7 +244,7 @@ fun Main_Function(
                         }
                     }
 
-                    filteredFeatures.forEach { feature ->
+                    filteredFeatures.forEachIndexed { index, feature ->
                         item {
                             AnimatedVisibility(
                                 visible = true,
@@ -261,6 +263,12 @@ fun Main_Function(
                                 )
                             }
                         }
+                        // 在最后一项后面不添加分割线
+                            if (index < filteredFeatures.size - 1) {
+                                item {
+                                    addline()
+                                }
+                            }
                     }
                 }
             }
@@ -279,6 +287,7 @@ fun Main_Function(
                     ) {
                         Column() {
                             FunctionApp("android", "Fun_android", navController)
+                            addline()
                             FunctionApp("com.android.systemui", "Fun_com_android_systemui", navController)
                         }
                     }
@@ -328,7 +337,7 @@ fun BasicComponent(
 ) {
     val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
     val indication = indication ?: createRipple()
-    val insideMargin = remember { insideMargin } ?: remember { DpSize(16.dp, 16.dp) }
+    val insideMargin = remember { insideMargin } ?: remember { DpSize(16.dp, 9.dp) }
     val paddingModifier = remember(insideMargin) {
         Modifier.padding(horizontal = insideMargin.width, vertical = insideMargin.height)
     }

@@ -91,6 +91,7 @@ fun Fun_com_android_systemui(navController: NavController) {
                         onClick = {
                             navController.navigate("Fun_com_android_systemui_status_bar_clock")
                         })
+                    addline()
                     SuperArrow(title = stringResource(id = R.string.hardware_indicator),
                         onClick = {
                             navController.navigate("Fun_com_android_systemui_hardware_indicator")

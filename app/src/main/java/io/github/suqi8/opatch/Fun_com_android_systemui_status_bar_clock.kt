@@ -253,6 +253,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         }
                                     }
                                 )
+                                addline()
                                 Column {
                                     SuperArrow(
                                         title = ClockSizeTitle,
@@ -271,6 +272,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
                                     )
                                 }
+                                addline()
                                 Column {
                                     SuperArrow(
                                         title = stringResource(R.string.clock_update_time_title),
@@ -289,6 +291,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
                                     )
                                 }
+                                addline()
                                 Column {
                                     SuperArrow(
                                         title = stringResource(R.string.clock_top_margin),
@@ -306,6 +309,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
                                     )
                                 }
+                                addline()
                                 Column {
                                     SuperArrow(
                                         title = stringResource(R.string.clock_bottom_margin),
@@ -323,6 +327,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
                                     )
                                 }
+                                addline()
                                 Column {
                                     SuperArrow(
                                         title = stringResource(R.string.clock_left_margin),
@@ -340,6 +345,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
                                     )
                                 }
+                                addline()
                                 Column {
                                     SuperArrow(
                                         title = stringResource(R.string.clock_right_margin),
@@ -378,6 +384,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         }
                                     }
                                 )
+                                addline()
                                 SuperSwitch(
                                     title = stringResource(R.string.show_month_title),
                                     summary = stringResource(R.string.show_month_summary),
@@ -389,6 +396,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         }
                                     }
                                 )
+                                addline()
                                 SuperSwitch(
                                     title = stringResource(R.string.show_day_title),
                                     summary = stringResource(R.string.show_day_summary),
@@ -400,6 +408,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         }
                                     }
                                 )
+                                addline()
                                 SuperSwitch(
                                     title = stringResource(R.string.show_week_title),
                                     summary = stringResource(R.string.show_week_summary),
@@ -411,6 +420,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         }
                                     }
                                 )
+                                addline()
                                 SuperSwitch(
                                     title = stringResource(R.string.show_cn_hour_title),
                                     summary = stringResource(R.string.show_cn_hour_summary),
@@ -422,6 +432,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         }
                                     }
                                 )
+                                addline()
                                 SuperSwitch(
                                     title = stringResource(R.string.showtime_period_title),
                                     summary = stringResource(R.string.showtime_period_summary),
@@ -433,6 +444,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         }
                                     }
                                 )
+                                addline()
                                 SuperSwitch(
                                     title = stringResource(R.string.show_seconds_title),
                                     summary = stringResource(R.string.show_seconds_summary),
@@ -444,6 +456,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         }
                                     }
                                 )
+                                addline()
                                 SuperSwitch(
                                     title = stringResource(R.string.show_millisecond_title),
                                     summary = stringResource(R.string.show_millisecond_summary),
@@ -455,6 +468,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         }
                                     }
                                 )
+                                addline()
                                 SuperSwitch(
                                     title = stringResource(R.string.hide_space_title),
                                     summary = stringResource(R.string.hide_space_summary),
@@ -466,6 +480,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         }
                                     }
                                 )
+                                addline()
                                 SuperSwitch(
                                     title = stringResource(R.string.dual_row_title),
                                     summary = stringResource(R.string.dual_row_summary),
@@ -501,6 +516,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                         }
                                     }
                                 )
+                                addline()
                                 SuperArrow(title = stringResource(R.string.clock_format)
                                     , rightText = customClock.value, onClick = {
                                         showCustomClockDialog.value = true

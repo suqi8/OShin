@@ -5,6 +5,7 @@ composeneumorphism = "1.0.0-alpha02"
 composeShimmer = "1.3.0"
 datastorePreferences = "1.1.1"
 expandablebottombar = "1.5.3"
+ezxhelper = "2.2.0"
 gson = "2.11.0"
 haze = "0.9.0-beta01"
 kotlin = "2.0.20"
@@ -40,6 +41,7 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "composeShimmer" }
 composeneumorphism = { module = "me.nikhilchaudhari:composeNeumorphism", version.ref = "composeneumorphism" }
 expandablebottombar = { module = "com.github.st235:expandablebottombar", version.ref = "expandablebottombar" }
+ezxhelper = { module = "com.github.kyuubiran:EzXHelper", version.ref = "ezxhelper" }
 firebase-crashlytics-buildtools = { group = "com.google.firebase", name = "firebase-crashlytics-buildtools", version.ref = "firebaseCrashlyticsBuildtools" }
 androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }
 androidx-datastore-preferences-core-jvm = { group = "androidx.datastore", name = "datastore-preferences-core-jvm", version.ref = "datastorePreferencesCoreJvm" }
