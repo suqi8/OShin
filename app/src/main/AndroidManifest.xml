@@ -8,13 +8,15 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 读取电话状态权限 -->
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 请求安装包权限 -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"
+            tools:ignore="SelectedPhotoAccess" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
             android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-            android:maxSdkVersion="32" />
+            android:maxSdkVersion="32"
+            tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 声明需要使用的权限，QueryAllPackagesPermission权限是用于查询所有应用程序包名的权限 -->
     <uses-permission
             android:name="android.permission.QUERY_ALL_PACKAGES"
@@ -46,6 +48,7 @@
                 android:name=".MainActivity"
                 android:exported="true"
                 android:screenOrientation="behind"
+                android:windowSoftInputMode="adjustResize"
                 tools:ignore="DiscouragedApi,DuplicateActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
