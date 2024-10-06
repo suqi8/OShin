@@ -109,10 +109,25 @@ class StatusBarConsumption_indicator: YukiBaseHooker() {
     fun getBatteryCurrent(): Long {
         val currentFile = File("/sys/class/power_supply/battery/current_now")
         return try {
-            currentFile.readText().trim().toLong()
+            if (isCharging() == "Charging") {
+                currentFile.readText().trim().toLong()
+            } else {
+                currentFile.readText().trim().toLong() * -1
+            }
         } catch (e: Exception) {
             e.printStackTrace()
             0L // 如果读取失败，返回 0
+        }
+    }
+
+    //是否充电
+    fun isCharging(): String {
+        val chargingFile = File("/sys/class/power_supply/battery/status")
+        return try {
+            chargingFile.readText().trim()
+        } catch (e: Exception) {
+            e.printStackTrace()
+            "Not charhing" // 如果读取失败，返回 false
         }
     }
 
