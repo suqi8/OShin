@@ -26,34 +26,29 @@ jobs:
       run: ./gradlew assembleDebug
     - name: Upload All APKs and output-metadata.json
       id: upload-artifacts
-      run: |
-        apk_all=$(find app/build/outputs/apk/debug -name 'OPatch_all_v*.apk' -print -quit)
-        apk_arm64=$(find app/build/outputs/apk/debug -name 'OPatch_arm64-v8a_v*.apk' -print -quit)
-        apk_armeabi=$(find app/build/outputs/apk/debug -name 'OPatch_armeabi-v7a_v*.apk' -print -quit)
-        metadata=$(find app/build/outputs/apk/debug -name 'output-metadata.json' -print -quit)
-
-        for apk in "$apk_all" "$apk_arm64" "$apk_armeabi"; do
-          if [ -f "$apk" ]; then
-            echo "Uploading $apk"
-            echo "::set-output name=apk_name::$(basename $apk)"
-            echo "::set-output name=apk_path::$apk"
-          fi
-        done
-
-        if [ -f "$metadata" ]; then
-          echo "Uploading $metadata"
-          echo "::set-output name=metadata_name::$(basename $metadata)"
-          echo "::set-output name=metadata_path::$metadata"
-        fi
-
-    - name: Upload APKs
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ steps.upload-artifacts.outputs.apk_name }}
-        path: ${{ steps.upload-artifacts.outputs.apk_path }}
+        name: OPatch_all
+        path: app/build/outputs/apk/debug/OPatch_all_v*.apk
+      if: success() && startsWith(github.event_name, 'push')
+
+    - name: Upload Arm64 APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: OPatch_arm64
+        path: app/build/outputs/apk/debug/OPatch_arm64-v8a_v*.apk
+      if: success() && startsWith(github.event_name, 'push')
+
+    - name: Upload Armeabi APK
+      uses: actions/upload-artifact@v3
+      with:
+        name: OPatch_armeabi
+        path: app/build/outputs/apk/debug/OPatch_armeabi-v7a_v*.apk
+      if: success() && startsWith(github.event_name, 'push')
 
     - name: Upload Metadata
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ steps.upload-artifacts.outputs.metadata_name }}
-        path: ${{ steps.upload-artifacts.outputs.metadata_path }}
+        name: output-metadata
+        path: app/build/outputs/apk/debug/output-metadata.json
+      if: success() && startsWith(github.event_name, 'push')
