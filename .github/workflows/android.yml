@@ -24,8 +24,42 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew assembleDebug
-    - name: Upload APKs
-      uses: actions/upload-artifact@v3
-      with:
-        name: APK Files
-        path: app/build/outputs/apk/debug/*.apk
+    - name: Upload APKs and output-metadata.json
+      id: upload-artifacts
+      run: |
+        apk_all=$(find app/build/outputs/apk/debug -name 'OPatch_all_v*.apk' -print -quit)
+        apk_arm64=$(find app/build/outputs/apk/debug -name 'OPatch_arm64-v8a_v*.apk' -print -quit)
+        apk_armeabi=$(find app/build/outputs/apk/debug -name 'OPatch_armeabi-v7a_v*.apk' -print -quit)
+        metadata=$(find app/build/outputs/apk/debug -name 'output-metadata.json' -print -quit)
+        
+        # Upload the all APK if found
+        if [ -f "$apk_all" ]; then
+          echo "Uploading $apk_all"
+          actions/upload-artifact@v3 with:
+            name: $(basename $apk_all)
+            path: $apk_all
+        fi
+        
+        # Upload the arm64 APK if found
+        if [ -f "$apk_arm64" ]; then
+          echo "Uploading $apk_arm64"
+          actions/upload-artifact@v3 with:
+            name: $(basename $apk_arm64)
+            path: $apk_arm64
+        fi
+        
+        # Upload the armeabi APK if found
+        if [ -f "$apk_armeabi" ]; then
+          echo "Uploading $apk_armeabi"
+          actions/upload-artifact@v3 with:
+            name: $(basename $apk_armeabi)
+            path: $apk_armeabi
+        fi
+        
+        # Upload the output-metadata.json if found
+        if [ -f "$metadata" ]; then
+          echo "Uploading $metadata"
+          actions/upload-artifact@v3 with:
+            name: $(basename $metadata)
+            path: $metadata
+        fi
