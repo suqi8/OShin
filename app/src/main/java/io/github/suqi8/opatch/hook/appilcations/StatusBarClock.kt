@@ -1,29 +1,22 @@
 package io.github.suqi8.opatch.hook.appilcations
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.content.res.Resources
 import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
-import android.text.TextUtils.replace
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.ImageView
+import android.view.Window
+import android.view.WindowManager
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
-import com.highcapable.yukihookapi.hook.factory.field
-import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.factory.prefs
 import com.highcapable.yukihookapi.hook.type.java.CharSequenceType
-import com.highcapable.yukihookapi.hook.type.java.IntClass
-import com.highcapable.yukihookapi.hook.type.java.StringClass
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -54,7 +47,7 @@ class StatusBarClock : YukiBaseHooker() {
     var ClockTopPadding = prefs("settings").getInt("Status_Bar_Time_TopPadding", 0)
     var ClockBottomPadding = prefs("settings").getInt("Status_Bar_Time_BottomPadding", 0)
 
-    @SuppressLint("SetTextI18n")
+    @SuppressLint("SetTextI18n", "ResourceType")
     @OptIn(LegacyHookApi::class)
     override fun onHook() {
         var context: Context? = null
@@ -201,78 +194,6 @@ class StatusBarClock : YukiBaseHooker() {
                             result = getCustomDate(context!!, customClockStyle).replace("\\n", "\n")
                         }
                     }
-                    /*injectMember {
-                        method {
-                            name = "onAttachedToWindow"
-                        }
-
-                        beforeHook {
-                            // 获取 Clock（时间显示的 TextView 控件）
-                            val clockTextView = instance as TextView
-
-                            // 获取状态栏父布局
-                            val parentViewGroup = clockTextView.parent as LinearLayout
-                            var parentLayout = parentViewGroup.parent as ViewGroup
-
-                            // 获取 Clock 的索引
-                            val clockIndex = parentViewGroup.indexOfChild(clockTextView)
-
-                            // 获取状态栏的背景颜色
-                            val statusBarColor = (clockTextView.context as Activity).window.decorView.rootView.background
-                            val color = (statusBarColor as ColorDrawable).color
-
-                            // 创建一个新的 TextView 控件
-                            val newTextView = TextView(clockTextView.context).apply {
-                                text = "文本" + clockIndex
-                                textSize = 12f
-                                // 设置反色
-                                setTextColor(if (Color.red(color) + Color.green(color) + Color.blue(color) < 382) Color.WHITE else Color.BLACK)
-                            }
-
-                            // 在 Clock 后面插入新控件
-                            parentViewGroup.addView(newTextView)
-                            clockTextView.post {
-                                newTextView.x = clockTextView.x + clockTextView.width + 8 // 添加8个像素的间距
-                            }
-                        }
-                        *//*beforeHook {
-                            val clockView = instance<View>() // 获取时间View
-                            val parentLayout = clockView.parent as LinearLayout // 获取父布局
-
-                            // 检查是否已经添加了自定义 TextView，避免重复添加
-                            val customTextView = parentLayout.findViewWithTag<TextView>("customText")
-
-                            if (customTextView == null) {
-                                // 创建新的 TextView
-
-                                // 获取通知图标的索引，假设通知图标在时间的后面
-                                val clockIndex = parentLayout.indexOfChild(clockView)
-                                var notificationIconIndex = -1
-
-                                // 遍历子布局，找到通知图标的位置
-                                for (i in clockIndex + 1 until parentLayout.childCount) {
-                                    val child = parentLayout.getChildAt(i)
-                                    if (child is ImageView) { // 假设通知图标是ImageView
-                                        notificationIconIndex = i
-                                        break
-                                    }
-                                }
-                                val newTextView = TextView(clockView.context).apply {
-                                    text = "新的文本"+notificationIconIndex // 自定义文本
-                                    textSize = 13f
-                                    tag = "customText" // 用标签标识
-                                    layoutParams = LinearLayout.LayoutParams(
-                                        LinearLayout.LayoutParams.WRAP_CONTENT,
-                                        LinearLayout.LayoutParams.WRAP_CONTENT
-                                    ).apply {
-                                        marginStart = 8 // 与时间的距离
-                                    }
-                                }
-                                // 如果找到通知图标，将TextView插入到时间后面、通知图标前面
-                                parentLayout.addView(newTextView, notificationIconIndex)
-                            }
-                        }*//*
-                    }*/
                 }
             }
         }

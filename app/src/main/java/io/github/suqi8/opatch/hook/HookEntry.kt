@@ -7,6 +7,7 @@ import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.StringClass
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import io.github.suqi8.opatch.hook.StatusBar.StatusBarClock
+import io.github.suqi8.opatch.hook.StatusBar.StatusBarhardware_indicator
 
 @InjectYukiHookWithXposed(entryClassName = "opatch", isUsingResourcesHook = true)
 class HookEntry : IYukiHookXposedInit {
@@ -29,5 +30,6 @@ class HookEntry : IYukiHookXposedInit {
             }
         }
         loadApp(hooker = StatusBarClock())
+        loadApp(hooker = StatusBarhardware_indicator())
     }
 }

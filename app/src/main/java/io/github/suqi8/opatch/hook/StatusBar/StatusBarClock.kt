@@ -13,7 +13,6 @@ class StatusBarClock: YukiBaseHooker() {
             if (prefs("settings").getBoolean("com_android_systemui_status_bar_clock", false)) {
                 loadHooker(StatusBarClock())
             }
-            loadHooker(StatusLayout())
         }
     }
 }
