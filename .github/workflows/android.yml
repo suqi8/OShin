@@ -49,14 +49,14 @@ jobs:
         echo "### Build Success :rocket:" >> $GITHUB_STEP_SUMMARY
         echo "|ABI|SHA256|" >> $GITHUB_STEP_SUMMARY
         echo "|:--------:|:----------|" >> $GITHUB_STEP_SUMMARY
-        armeabi=($(sha256sum ${{ env.APK_FILE_ARMEABI }}))
-        echo "|armeabi|armeabi" >> $GITHUB_STEP_SUMMARY
-        arm64=($(sha256sum ${{ env.APK_FILE_ARM64 }}))
-        echo "|arm64|$arm64" >> $GITHUB_STEP_SUMMARY
-        armAll=($(sha256sum ${{ env.APK_FILE_ARMALL }}))
-        echo "|armAll|$armAll" >> $GITHUB_STEP_SUMMARY
-        metadata=($(sha256sum ${{ env.APK_FILE_METADATA }}))
-        echo "|metadata|$metadata" >> $GITHUB_STEP_SUMMARY
+        armeabi=($(sha256sum "${{ env.APK_FILE_ARMEABI }}"))
+        echo "|armeabi|${armeabi[0]}|" >> $GITHUB_STEP_SUMMARY
+        arm64=($(sha256sum "${{ env.APK_FILE_ARM64 }}"))
+        echo "|arm64|${arm64[0]}|" >> $GITHUB_STEP_SUMMARY
+        armAll=($(sha256sum "${{ env.APK_FILE_ARMALL }}"))
+        echo "|armAll|${armAll[0]}|" >> $GITHUB_STEP_SUMMARY
+        metadata=($(sha256sum "${{ env.APK_FILE_METADATA }}"))
+        echo "|metadata|${metadata[0]}|" >> $GITHUB_STEP_SUMMARY
 
     - name: Upload All APK
       uses: actions/upload-artifact@v3
