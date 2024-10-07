@@ -143,4 +143,7 @@
     <string name="clock_right_margin">时钟右边距</string>
     <string name="addline">显示分割线</string>
     <string name="dual_cell">双电芯</string>
+    <string name="voltage">电压</string>
+    <string name="first_line_content">第一行显示内容</string>
+    <string name="second_line_content">第二行显示内容</string>
 </resources>

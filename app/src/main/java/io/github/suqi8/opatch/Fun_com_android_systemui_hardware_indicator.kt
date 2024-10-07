@@ -36,6 +36,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -82,18 +83,24 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
     var com_android_systemui_power_consumption_indicator = remember { mutableStateOf(false) }
     var com_android_systemui_temperature_indicator = remember { mutableStateOf(false) }
     val appList = listOf("com.android.systemui")
-    val powerDisplay = listOf(stringResource(R.string.both), stringResource(R.string.power), stringResource(R.string.current))
-    val powerDisplaySelect = remember { mutableStateOf(0) }
+    val powerDisplay = listOf(stringResource(R.string.power), stringResource(R.string.current),stringResource(R.string.voltage))
+    val powerDisplaySelect1 = remember { mutableStateOf(0) }
+    val powerDisplaySelect2 = remember { mutableStateOf(0) }
     val hidePowerUnit = remember { mutableStateOf(false) }
     val hideCurrentUnit = remember { mutableStateOf(false) }
+    val hideVoltageUnit = remember { mutableStateOf(false) }
     val isdualcell = remember { mutableStateOf(false) }
+    val power_consumption_indicator_dual_row = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
+        power_consumption_indicator_dual_row.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_dual_row", false)
         isdualcell.value = context.prefs("settings").getBoolean("com_android_systemui_dual_cell", false)
         com_android_systemui_power_consumption_indicator.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator", false)
         com_android_systemui_temperature_indicator.value = context.prefs("settings").getBoolean("com_android_systemui_temperature_indicator", false)
-        powerDisplaySelect.value = context.prefs("settings").getInt("com_android_systemui_powerDisplaySelect", 0)
+        powerDisplaySelect1.value = context.prefs("settings").getInt("com_android_systemui_powerDisplaySelect1", 0)
+        powerDisplaySelect2.value = context.prefs("settings").getInt("com_android_systemui_powerDisplaySelect2", 0)
         hidePowerUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hidePowerUnit", false)
         hideCurrentUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hideCurrentUnit", false)
+        hideVoltageUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hideVoltageUnit", false)
     }
     Scaffold(topBar = {
         TopAppBar(
@@ -169,9 +176,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                         }
                     }
                     AnimatedVisibility(
-                        visible = com_android_systemui_power_consumption_indicator.value,
-                        enter = AnimTools().enterTransition(0),
-                        exit = AnimTools().exitTransition(100)
+                        visible = com_android_systemui_power_consumption_indicator.value
                     ) {
                         Column {
                             Card(
@@ -179,15 +184,6 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                     .fillMaxWidth()
                                     .padding(horizontal = 12.dp, vertical = 6.dp)
                             ) {
-                                SuperDropdown(
-                                    title = stringResource(R.string.display_content),
-                                    items = powerDisplay,
-                                    selectedIndex = powerDisplaySelect.value
-                                ) {
-                                    powerDisplaySelect.value = it
-                                    context.prefs("settings").edit { putInt("com_android_systemui_powerDisplaySelect", it) }
-                                }
-                                addline()
                                 SuperSwitch(
                                     title = stringResource(R.string.dual_cell),
                                     onCheckedChange = {
@@ -196,6 +192,41 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                     },
                                     checked = isdualcell.value
                                 )
+                            }
+                            SmallTitle(stringResource(R.string.display_content))
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                            ) {
+                                SuperSwitch(
+                                    title = stringResource(R.string.dual_row_title),
+                                    onCheckedChange = {
+                                        power_consumption_indicator_dual_row.value = it
+                                        context.prefs("settings").edit { putBoolean("com_android_systemui_power_consumption_indicator_dual_row", it) }
+                                    },
+                                    checked = power_consumption_indicator_dual_row.value
+                                )
+                                addline()
+                                SuperDropdown(
+                                    title = stringResource(R.string.first_line_content),
+                                    items = powerDisplay,
+                                    selectedIndex = powerDisplaySelect1.value
+                                ) {
+                                    powerDisplaySelect1.value = it
+                                    context.prefs("settings").edit { putInt("com_android_systemui_powerDisplaySelect1", it) }
+                                }
+                                AnimatedVisibility(visible = power_consumption_indicator_dual_row.value) {
+                                    addline()
+                                    SuperDropdown(
+                                        title = stringResource(R.string.second_line_content),
+                                        items = powerDisplay,
+                                        selectedIndex = powerDisplaySelect2.value
+                                    ) {
+                                        powerDisplaySelect2.value = it
+                                        context.prefs("settings").edit { putInt("com_android_systemui_powerDisplaySelect2", it) }
+                                    }
+                                }
                             }
                             SmallTitle(stringResource(R.string.hide_unit))
                             Card(
@@ -219,6 +250,15 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                         context.prefs("settings").edit { putBoolean("com_android_systemui_hideCurrentUnit", it) }
                                     },
                                     checked = hideCurrentUnit.value
+                                )
+                                addline()
+                                SuperSwitch(
+                                    title = stringResource(R.string.voltage),
+                                    onCheckedChange = {
+                                        hideVoltageUnit.value = it
+                                        context.prefs("settings").edit { putBoolean("com_android_systemui_hideVoltageUnit", it) }
+                                    },
+                                    checked = hideVoltageUnit.value
                                 )
                             }
                         }

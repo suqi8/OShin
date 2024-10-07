@@ -17,8 +17,13 @@ import kotlin.math.abs
 class StatusBarConsumption_indicator: YukiBaseHooker() {
     @OptIn(LegacyHookApi::class)
     override fun onHook() {
-        val show = prefs("settings").getInt("com_android_systemui_powerDisplaySelect", 0)
+        val isdual_raw = prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_dual_row", false)
+        val show1 = prefs("settings").getInt("com_android_systemui_powerDisplaySelect1", 0)
+        val show2 = prefs("settings").getInt("com_android_systemui_powerDisplaySelect2", 0)
         val isdual_cell = prefs("settings").getBoolean("com_android_systemui_dual_cell", false)
+        val hidePowerUnit = prefs("settings").getBoolean("com_android_systemui_hidePowerUnit", false)
+        val hideCurrentUnit = prefs("settings").getBoolean("com_android_systemui_hideCurrentUnit", false)
+        val hideVoltageUnit = prefs("settings").getBoolean("com_android_systemui_hideVoltageUnit", false)
         "com.android.systemui.statusbar.policy.Clock".toClass().apply {
             hook {
                 injectMember {
@@ -61,14 +66,31 @@ class StatusBarConsumption_indicator: YukiBaseHooker() {
                                 val BatteryCurrent = String.format(Locale.getDefault(),"%.2f",props.getProperty("POWER_SUPPLY_CURRENT_NOW").toFloat() * -1 / 1000f).toFloat()
                                 val BatteryVoltage = String.format(Locale.getDefault(),"%.2f",props.getProperty("POWER_SUPPLY_VOLTAGE_NOW").toFloat() / 1000000f).toFloat()
                                 val BatteryWatt = if (isdual_cell) String.format(Locale.getDefault(), "%.2f", (BatteryCurrent * BatteryVoltage) * 2) else String.format(Locale.getDefault(), "%.2f", BatteryCurrent * BatteryVoltage)
-                                if (show == 0 ) {
-                                    val batteryInfo = BatteryCurrentmA.toString() + "mA" + "\n" + BatteryWatt + "W" + BatteryVoltage + "V"
-                                    newTextView.text = batteryInfo
-                                } else if (show == 1) {
-                                    newTextView.text = "${calculatePower()}W"
+                                var batteryInfo = ""
+                                var PowerUnit = if (hidePowerUnit) "" else "W"
+                                var CurrentUnit = if (hideCurrentUnit) "" else "mA"
+                                var VoltageUnit = if (hideVoltageUnit) "" else "V"
+                                var line1 = if (show1 == 0) {
+                                    BatteryWatt + PowerUnit
+                                } else if (show1 == 1) {
+                                    BatteryCurrentmA.toString() + CurrentUnit
                                 } else {
-                                    newTextView.text = "${getBatteryCurrent()}mA"
+                                    BatteryVoltage.toString() + VoltageUnit
                                 }
+                                var line2 = if (show2 == 0) {
+                                    BatteryWatt + PowerUnit
+                                } else if (show2 == 1) {
+                                    BatteryCurrentmA.toString() + CurrentUnit
+                                } else {
+                                    BatteryVoltage.toString() + VoltageUnit
+                                }
+                                if (isdual_raw) {
+                                    batteryInfo = line1 + "\n" + line2
+                                    //BatteryCurrentmA.toString() + "mA" + "\n" + BatteryWatt + "W" + BatteryVoltage + "V"
+                                } else {
+                                    batteryInfo = line1
+                                }
+                                newTextView.text = batteryInfo
                                 handler.postDelayed(this, 1000) // 1秒后再次执行
                             }
                         }

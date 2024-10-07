@@ -147,4 +147,7 @@
     <string name="clock_right_margin">Clock Right Margin</string>
     <string name="addline">Show Divider</string>
     <string name="dual_cell">Dual-cell</string>
+    <string name="voltage">Voltage</string>
+    <string name="first_line_content">First line content</string>
+    <string name="second_line_content">Second line content</string>
 </resources>
