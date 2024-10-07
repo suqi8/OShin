@@ -1,120 +1,143 @@
-package io.github.suqi8.opatch.hook.corepatch;
+package io.github.suqi8.opatch.hook.corepatch
 
-import android.content.pm.Signature;
+import android.content.pm.Signature
+import de.robv.android.xposed.XC_MethodHook
+import de.robv.android.xposed.XposedBridge
+import de.robv.android.xposed.XposedHelpers
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
+import java.io.PrintWriter
+import java.lang.reflect.InvocationTargetException
 
-import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
-
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.XposedHelpers;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
-
-public class CorePatchForT extends CorePatchForS {
-    @Override
-    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws IllegalAccessException, InvocationTargetException, InstantiationException {
-        super.handleLoadPackage(loadPackageParam);
-        var checkDowngrade = XposedHelpers.findMethodExactIfExists("com.android.server.pm.PackageManagerServiceUtils", loadPackageParam.classLoader,
-                "checkDowngrade",
-                "com.android.server.pm.parsing.pkg.AndroidPackage",
-                "android.content.pm.PackageInfoLite");
+open class CorePatchForT : CorePatchForS() {
+    @Throws(
+        IllegalAccessException::class,
+        InvocationTargetException::class,
+        InstantiationException::class
+    )
+    override fun handleLoadPackage(loadPackageParam: LoadPackageParam) {
+        super.handleLoadPackage(loadPackageParam)
+        val checkDowngrade = XposedHelpers.findMethodExactIfExists(
+            "com.android.server.pm.PackageManagerServiceUtils", loadPackageParam.classLoader,
+            "checkDowngrade",
+            "com.android.server.pm.parsing.pkg.AndroidPackage",
+            "android.content.pm.PackageInfoLite"
+        )
         if (checkDowngrade != null) {
-            XposedBridge.hookMethod(checkDowngrade, new ReturnConstant(prefs, "downgrade", null));
+            XposedBridge.hookMethod(checkDowngrade, ReturnConstant(prefs, "downgrade", null))
         }
 
-        Class<?> signingDetails = getSigningDetails(loadPackageParam.classLoader);
+        val signingDetails = getSigningDetails(loadPackageParam.classLoader)
         //New package has a different signature
         //处理覆盖安装但签名不一致
-        hookAllMethods(signingDetails, "checkCapability", new XC_MethodHook() {
-            @Override
-            protected void beforeHookedMethod(MethodHookParam param) {
+        hookAllMethods(signingDetails, "checkCapability", object : XC_MethodHook() {
+            override fun beforeHookedMethod(param: MethodHookParam) {
                 // Don't handle PERMISSION (grant SIGNATURE permissions to pkgs with this cert)
                 // Or applications will have all privileged permissions
                 // https://cs.android.com/android/platform/superproject/+/master:frameworks/base/core/java/android/content/pm/PackageParser.java;l=5947?q=CertCapabilities
                 if (prefs.getBoolean("digestCreak", true)) {
-                    if ((Integer) param.args[1] != 4) {
-                        param.setResult(true);
+                    if (param.args[1] as Int != 4) {
+                        param.result = true
                     }
                 }
             }
-        });
+        })
 
-        findAndHookMethod("com.android.server.pm.InstallPackageHelper", loadPackageParam.classLoader,
-                "doesSignatureMatchForPermissions", String.class,
-                "com.android.server.pm.parsing.pkg.ParsedPackage", int.class, new XC_MethodHook() {
-                    @Override
-                    protected void afterHookedMethod(MethodHookParam param) {
-                        if (prefs.getBoolean("digestCreak", true) && prefs.getBoolean("UsePreSig", false)) {
-                            //If we decide to crack this then at least make sure they are same apks, avoid another one that tries to impersonate.
-                            if (param.getResult().equals(false)) {
-                                String pPname = (String) XposedHelpers.callMethod(param.args[1], "getPackageName");
-                                if (pPname.contentEquals((String) param.args[0])) {
-                                    param.setResult(true);
-                                }
+        findAndHookMethod("com.android.server.pm.InstallPackageHelper",
+            loadPackageParam.classLoader,
+            "doesSignatureMatchForPermissions",
+            String::class.java,
+            "com.android.server.pm.parsing.pkg.ParsedPackage",
+            Int::class.javaPrimitiveType,
+            object : XC_MethodHook() {
+                override fun afterHookedMethod(param: MethodHookParam) {
+                    if (prefs.getBoolean("digestCreak", true) && prefs.getBoolean(
+                            "UsePreSig",
+                            false
+                        )
+                    ) {
+                        //If we decide to crack this then at least make sure they are same apks, avoid another one that tries to impersonate.
+                        if (param.result == false) {
+                            val pPname =
+                                XposedHelpers.callMethod(param.args[1], "getPackageName") as String
+                            if (pPname.contentEquals(param.args[0] as String)) {
+                                param.result = true
                             }
                         }
                     }
-                });
+                }
+            })
 
-        var assertMinSignatureSchemeIsValid = XposedHelpers.findMethodExactIfExists("com.android.server.pm.ScanPackageUtils", loadPackageParam.classLoader,
-                "assertMinSignatureSchemeIsValid",
-                "com.android.server.pm.parsing.pkg.AndroidPackage", int.class);
+        val assertMinSignatureSchemeIsValid = XposedHelpers.findMethodExactIfExists(
+            "com.android.server.pm.ScanPackageUtils", loadPackageParam.classLoader,
+            "assertMinSignatureSchemeIsValid",
+            "com.android.server.pm.parsing.pkg.AndroidPackage", Int::class.javaPrimitiveType
+        )
         if (assertMinSignatureSchemeIsValid != null) {
-            XposedBridge.hookMethod(assertMinSignatureSchemeIsValid, new XC_MethodHook() {
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) {
+            XposedBridge.hookMethod(assertMinSignatureSchemeIsValid, object : XC_MethodHook() {
+                override fun afterHookedMethod(param: MethodHookParam) {
                     if (prefs.getBoolean("authcreak", false)) {
-                        param.setResult(null);
+                        param.result = null
                     }
                 }
-            });
+            })
         }
 
-        Class<?> strictJarVerifier = findClass("android.util.jar.StrictJarVerifier", loadPackageParam.classLoader);
+        val strictJarVerifier =
+            findClass("android.util.jar.StrictJarVerifier", loadPackageParam.classLoader)
         if (strictJarVerifier != null) {
-            XposedBridge.hookAllConstructors(strictJarVerifier, new XC_MethodHook() {
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) {
+            XposedBridge.hookAllConstructors(strictJarVerifier, object : XC_MethodHook() {
+                override fun afterHookedMethod(param: MethodHookParam) {
                     if (prefs.getBoolean("authcreak", false)) {
-                        XposedHelpers.setBooleanField(param.thisObject, "signatureSchemeRollbackProtectionsEnforced", false);
+                        XposedHelpers.setBooleanField(
+                            param.thisObject,
+                            "signatureSchemeRollbackProtectionsEnforced",
+                            false
+                        )
                     }
                 }
-            });
+            })
         }
 
         // ensure verifySignatures success
         // https://cs.android.com/android/platform/superproject/main/+/main:frameworks/base/services/core/java/com/android/server/pm/PackageManagerServiceUtils.java;l=621;drc=2e50991320cbef77d3e8504a4b284adae8c2f4d2
-        var utils = XposedHelpers.findClassIfExists("com.android.server.pm.PackageManagerServiceUtils", loadPackageParam.classLoader);
+        val utils = XposedHelpers.findClassIfExists(
+            "com.android.server.pm.PackageManagerServiceUtils",
+            loadPackageParam.classLoader
+        )
         if (utils != null) {
-            deoptimizeMethod(utils, "canJoinSharedUserId");
+            deoptimizeMethod(utils, "canJoinSharedUserId")
         }
     }
 
-    Class<?> getSigningDetails(ClassLoader classLoader) {
-        return XposedHelpers.findClassIfExists("android.content.pm.SigningDetails", classLoader);
+    override fun getSigningDetails(classLoader: ClassLoader?): Class<*> {
+        return XposedHelpers.findClassIfExists("android.content.pm.SigningDetails", classLoader)
     }
 
-    @Override
-    protected void dumpSigningDetails(Object signingDetails, PrintWriter pw) {
-        var i = 0;
-        for (var sign : (Signature[]) XposedHelpers.callMethod(signingDetails, "getSignatures")) {
-            i++;
-            pw.println(i + ": " + sign.toCharsString());
+    override fun dumpSigningDetails(signingDetails: Any?, pw: PrintWriter) {
+        var i = 0
+        for (sign in XposedHelpers.callMethod(
+            signingDetails,
+            "getSignatures"
+        ) as Array<Signature>) {
+            i++
+            pw.println(i.toString() + ": " + sign.toCharsString())
         }
     }
 
-    @Override
-    protected Object SharedUserSetting_packages(Object sharedUser) {
-        return XposedHelpers.getObjectField(sharedUser, "mPackages");
+    override fun SharedUserSetting_packages(sharedUser: Any?): Any {
+        return XposedHelpers.getObjectField(sharedUser, "mPackages")
     }
 
-    @Override
-    protected Object SigningDetails_mergeLineageWith(Object self, Object other) {
-        return XposedHelpers.callMethod(self, "mergeLineageWith", other, 2 /*MERGE_RESTRICTED_CAPABILITY*/);
+    override fun SigningDetails_mergeLineageWith(self: Any?, other: Any?): Any {
+        return XposedHelpers.callMethod(
+            self,
+            "mergeLineageWith",
+            other,
+            2 /*MERGE_RESTRICTED_CAPABILITY*/
+        )
     }
 
-    @Override
-    Class<?> getIsVerificationEnabledClass(ClassLoader classLoader) {
-        return XposedHelpers.findClass("com.android.server.pm.VerificationParams", classLoader);
+    override fun getIsVerificationEnabledClass(classLoader: ClassLoader?): Class<*> {
+        return XposedHelpers.findClass("com.android.server.pm.VerificationParams", classLoader)
     }
 }

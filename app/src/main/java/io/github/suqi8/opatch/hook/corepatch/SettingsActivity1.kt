@@ -1,101 +1,92 @@
-package io.github.suqi8.opatch.hook.corepatch;
+package io.github.suqi8.opatch.hook.corepatch
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Insets;
-import android.os.Bundle;
-import android.preference.PreferenceFragment;
-import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowInsets;
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.AlertDialog
+import android.content.DialogInterface
+import android.content.SharedPreferences
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener
+import android.graphics.Insets
+import android.os.Bundle
+import android.preference.PreferenceFragment
+import android.view.View
+import android.view.ViewGroup.MarginLayoutParams
+import android.view.WindowInsets
+import io.github.suqi8.opatch.R
 
-import io.github.suqi8.opatch.R;
-
-import java.lang.reflect.Method;
-import java.util.Objects;
-
-@SuppressWarnings("deprecation")
-public class SettingsActivity1 extends Activity {
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_settings);
-        checkXSharedPreferences();
+@Suppress("deprecation")
+class SettingsActivity1 : Activity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_settings)
+        checkXSharedPreferences()
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, new SettingsFragment()).commit();
+            fragmentManager.beginTransaction()
+                .add(R.id.fragment_container, SettingsFragment()).commit()
         }
     }
 
     @SuppressLint("WorldReadableFiles")
-    private void checkXSharedPreferences() {
+    private fun checkXSharedPreferences() {
         try {
             // getSharedPreferences will hooked by LSPosed
             // will not throw SecurityException
-            //noinspection deprecation
-            getSharedPreferences("conf", Context.MODE_WORLD_READABLE);
-        } catch (SecurityException exception) {
-            new AlertDialog.Builder(this)
-                    .setTitle(R.string.config_error)
-                    .setMessage(R.string.not_supported)
-                    .setPositiveButton(android.R.string.ok, (dialog12, which) -> finish())
-                    .setNegativeButton(R.string.ignore, null)
-                    .show();
+            getSharedPreferences("conf", MODE_WORLD_READABLE)
+        } catch (exception: SecurityException) {
+            AlertDialog.Builder(this)
+                .setTitle(R.string.config_error)
+                .setMessage(R.string.not_supported)
+                .setPositiveButton(android.R.string.ok) { dialog12: DialogInterface?, which: Int -> finish() }
+                .setNegativeButton(R.string.ignore, null)
+                .show()
         }
     }
 
-    public static class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
-        @Override
-        public void onCreate(Bundle savedInstanceState) {
-            super.onCreate(savedInstanceState);
-            getPreferenceManager().setSharedPreferencesName("conf");
-            addPreferencesFromResource(R.xml.prefs);
+    class SettingsFragment : PreferenceFragment(), OnSharedPreferenceChangeListener {
+        override fun onCreate(savedInstanceState: Bundle?) {
+            super.onCreate(savedInstanceState)
+            preferenceManager.sharedPreferencesName = "conf"
+            addPreferencesFromResource(R.xml.prefs)
         }
 
-        @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-            view.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
-            view.setOnApplyWindowInsetsListener((v, windowInsets) -> {
-                Insets insets = null;
-                insets = windowInsets.getInsets(WindowInsets.Type.systemBars());
-                ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
-                mlp.leftMargin = insets.left;
-                mlp.bottomMargin = insets.bottom;
-                mlp.rightMargin = insets.right;
-                mlp.topMargin = insets.top;
-                v.setLayoutParams(mlp);
-                return WindowInsets.CONSUMED;
-            });
-            super.onViewCreated(view, savedInstanceState);
+        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+            view.systemUiVisibility =
+                View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+            view.setOnApplyWindowInsetsListener { v: View, windowInsets: WindowInsets ->
+                var insets: Insets? = null
+                insets = windowInsets.getInsets(WindowInsets.Type.systemBars())
+                val mlp = v.layoutParams as MarginLayoutParams
+                mlp.leftMargin = insets.left
+                mlp.bottomMargin = insets.bottom
+                mlp.rightMargin = insets.right
+                mlp.topMargin = insets.top
+                v.layoutParams = mlp
+                WindowInsets.CONSUMED
+            }
+            super.onViewCreated(view, savedInstanceState)
         }
 
-        @Override
-        public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-            if (key != null && key.equals("UsePreSig") && sharedPreferences.getBoolean(key, false)) {
+        override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String?) {
+            if (key != null && key == "UsePreSig" && sharedPreferences.getBoolean(key, false)) {
                 try {
-                    @SuppressLint("PrivateApi") Class<?> c = Class.forName("android.os.SystemProperties");
-                    Method get = c.getMethod("get", String.class);
-                } catch (Exception ignored) {
+                    @SuppressLint("PrivateApi") val c = Class.forName("android.os.SystemProperties")
+                    val get = c.getMethod("get", String::class.java)
+                } catch (ignored: Exception) {
                 }
 
-                new AlertDialog.Builder(getActivity()).setMessage(R.string.usepresig_warn).setPositiveButton(android.R.string.ok, null).show();
+                AlertDialog.Builder(activity).setMessage(R.string.usepresig_warn)
+                    .setPositiveButton(android.R.string.ok, null).show()
             }
         }
 
-        @Override
-        public void onResume() {
-            super.onResume();
-            getPreferenceManager().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
+        override fun onResume() {
+            super.onResume()
+            preferenceManager.sharedPreferences.registerOnSharedPreferenceChangeListener(this)
         }
 
-        @Override
-        public void onPause() {
-            super.onPause();
-            getPreferenceManager().getSharedPreferences().unregisterOnSharedPreferenceChangeListener(this);
+        override fun onPause() {
+            super.onPause()
+            preferenceManager.sharedPreferences.unregisterOnSharedPreferenceChangeListener(this)
         }
     }
 }

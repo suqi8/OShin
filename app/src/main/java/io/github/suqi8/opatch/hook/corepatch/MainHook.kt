@@ -1,74 +1,56 @@
-package io.github.suqi8.opatch.hook.corepatch;
+package io.github.suqi8.opatch.hook.corepatch
 
-import android.os.Build;
+import android.os.Build
+import de.robv.android.xposed.IXposedHookLoadPackage
+import de.robv.android.xposed.IXposedHookZygoteInit
+import de.robv.android.xposed.IXposedHookZygoteInit.StartupParam
+import de.robv.android.xposed.XposedBridge
+import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam
+import io.github.suqi8.opatch.BuildConfig
 
-import io.github.suqi8.opatch.BuildConfig;
+class MainHook : IXposedHookLoadPackage, IXposedHookZygoteInit {
+    @Throws(Throwable::class)
+    override fun handleLoadPackage(lpparam: LoadPackageParam) {
+        if (("android" == lpparam.packageName) && (lpparam.processName == "android")) {
+            if (BuildConfig.DEBUG) XposedBridge.log("D/" + TAG + " handleLoadPackage")
+            when (Build.VERSION.SDK_INT) {
+                Build.VERSION_CODES.UPSIDE_DOWN_CAKE -> CorePatchForU().handleLoadPackage(lpparam)
+                Build.VERSION_CODES.TIRAMISU -> CorePatchForT().handleLoadPackage(lpparam)
+                Build.VERSION_CODES.S_V2, Build.VERSION_CODES.S -> CorePatchForS().handleLoadPackage(
+                    lpparam
+                )
 
-import de.robv.android.xposed.IXposedHookLoadPackage;
-import de.robv.android.xposed.IXposedHookZygoteInit;
-import de.robv.android.xposed.XposedBridge;
-import de.robv.android.xposed.callbacks.XC_LoadPackage;
+                Build.VERSION_CODES.R -> CorePatchForR().handleLoadPackage(lpparam)
+                Build.VERSION_CODES.Q, Build.VERSION_CODES.P -> CorePatchForQ().handleLoadPackage(
+                    lpparam
+                )
 
-public class MainHook implements IXposedHookLoadPackage, IXposedHookZygoteInit {
-    public static final String TAG = "CorePatch";
-
-    @Override
-    public void handleLoadPackage(XC_LoadPackage.LoadPackageParam lpparam) throws Throwable {
-        if (("android".equals(lpparam.packageName)) && (lpparam.processName.equals("android"))) {
-            if (BuildConfig.DEBUG)
-                XposedBridge.log("D/" + TAG + " handleLoadPackage");
-            switch (Build.VERSION.SDK_INT) {
-                case Build.VERSION_CODES.UPSIDE_DOWN_CAKE: // 34
-                    new CorePatchForU().handleLoadPackage(lpparam);
-                    break;
-                case Build.VERSION_CODES.TIRAMISU: // 33
-                    new CorePatchForT().handleLoadPackage(lpparam);
-                    break;
-                case Build.VERSION_CODES.S_V2: // 32
-                case Build.VERSION_CODES.S: // 31
-                    new CorePatchForS().handleLoadPackage(lpparam);
-                    break;
-                case Build.VERSION_CODES.R: // 30
-                    new CorePatchForR().handleLoadPackage(lpparam);
-                    break;
-                case Build.VERSION_CODES.Q: // 29
-                case Build.VERSION_CODES.P: // 28
-                    new CorePatchForQ().handleLoadPackage(lpparam);
-                    break;
-                default:
-                    XposedBridge.log("W/" + TAG + " Unsupported Version of Android " + Build.VERSION.SDK_INT);
-                    break;
+                else -> XposedBridge.log("W/" + TAG + " Unsupported Version of Android " + Build.VERSION.SDK_INT)
             }
         }
     }
 
-    @Override
-    public void initZygote(StartupParam startupParam) {
+    override fun initZygote(startupParam: StartupParam) {
         if (startupParam.startsSystemServer) {
-            if (BuildConfig.DEBUG)
-                XposedBridge.log("D/" + TAG + " initZygote: Current sdk version " + Build.VERSION.SDK_INT);
-            switch (Build.VERSION.SDK_INT) {
-                case Build.VERSION_CODES.UPSIDE_DOWN_CAKE: // 34
-                    new CorePatchForU().initZygote(startupParam);
-                    break;
-                case Build.VERSION_CODES.TIRAMISU: // 33
-                    new CorePatchForT().initZygote(startupParam);
-                    break;
-                case Build.VERSION_CODES.S_V2: // 32
-                case Build.VERSION_CODES.S: // 31
-                    new CorePatchForS().initZygote(startupParam);
-                    break;
-                case Build.VERSION_CODES.R: // 30
-                    new CorePatchForR().initZygote(startupParam);
-                    break;
-                case Build.VERSION_CODES.Q: // 29
-                case Build.VERSION_CODES.P: // 28
-                    new CorePatchForQ().initZygote(startupParam);
-                    break;
-                default:
-                    XposedBridge.log("W/" + TAG + " Unsupported Version of Android " + Build.VERSION.SDK_INT);
-                    break;
+            if (BuildConfig.DEBUG) XposedBridge.log("D/" + TAG + " initZygote: Current sdk version " + Build.VERSION.SDK_INT)
+            when (Build.VERSION.SDK_INT) {
+                Build.VERSION_CODES.UPSIDE_DOWN_CAKE -> CorePatchForU().initZygote(startupParam)
+                Build.VERSION_CODES.TIRAMISU -> CorePatchForT().initZygote(startupParam)
+                Build.VERSION_CODES.S_V2, Build.VERSION_CODES.S -> CorePatchForS().initZygote(
+                    startupParam
+                )
+
+                Build.VERSION_CODES.R -> CorePatchForR().initZygote(startupParam)
+                Build.VERSION_CODES.Q, Build.VERSION_CODES.P -> CorePatchForQ().initZygote(
+                    startupParam
+                )
+
+                else -> XposedBridge.log("W/" + TAG + " Unsupported Version of Android " + Build.VERSION.SDK_INT)
             }
         }
+    }
+
+    companion object {
+        const val TAG: String = "CorePatch"
     }
 }
