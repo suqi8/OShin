@@ -7,6 +7,7 @@ plugins {
     autowire(libs.plugins.android.application)
     autowire(libs.plugins.kotlin.android)
     autowire(libs.plugins.kotlin.ksp)
+    id("com.github.ben-manes.versions") version "0.48.0"
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.20"
 }
 

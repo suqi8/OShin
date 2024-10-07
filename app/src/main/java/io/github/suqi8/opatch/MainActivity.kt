@@ -49,6 +49,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
@@ -224,8 +225,7 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
         })
     }) { padding ->
         Box(modifier = Modifier.haze(
-            state = hazeState,
-            style = hazeStyle)) {
+            state = hazeState)) {
             AppHorizontalPager(
                 modifier = Modifier.imePadding(),
                 pagerState = pagerState,
