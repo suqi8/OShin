@@ -37,27 +37,47 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Build with Gradle
-      run: ./gradlew assembleDebug
+      run: | 
+        ./gradlew assembleDebug
+        echo "APK_FILE_ARMEABI=$(find app/build/outputs/apk/debug -name 'OPatch_armeabi-v7a_v*.apk')" >> $GITHUB_ENV
+        echo "APK_FILE_ARM64=$(find app/build/outputs/apk/debug -name 'OPatch_arm64-v8a_v*.apk')" >> $GITHUB_ENV
+        echo "APK_FILE_ARMALL=$(find app/build/outputs/apk/debug -name 'OPatch_all_v*.apk')" >> $GITHUB_ENV
+        echo "APK_FILE_METADATA=$(find app/build/outputs/apk/debug -name 'output-metadata.json')" >> $GITHUB_ENV
+
+    - name: Show Artifacts SHA256
+      run: |
+        echo "### Build Success :rocket:" >> $GITHUB_STEP_SUMMARY
+        echo "|ABI|SHA256|" >> $GITHUB_STEP_SUMMARY
+        echo "|:--------:|:----------|" >> $GITHUB_STEP_SUMMARY
+        armeabi=($(sha256sum ${{ env.APK_FILE_ARMEABI }}))
+        echo "|armeabi|armeabi" >> $GITHUB_STEP_SUMMARY
+        arm64=($(sha256sum ${{ env.APK_FILE_ARM64 }}))
+        echo "|arm64|$arm64" >> $GITHUB_STEP_SUMMARY
+        armAll=($(sha256sum ${{ env.APK_FILE_ARMALL }}))
+        echo "|armAll|$armAll" >> $GITHUB_STEP_SUMMARY
+        metadata=($(sha256sum ${{ env.APK_FILE_METADATA }}))
+        echo "|metadata|$metadata" >> $GITHUB_STEP_SUMMARY
+
     - name: Upload All APK
       uses: actions/upload-artifact@v3
       with:
-        name: OPatch_all
-        path: app/build/outputs/apk/debug/OPatch_all_v*.apk
+        name: OPatch_all_${{ github.event.head_commit.id }}
+        path: ${{ env.APK_FILE_ARMALL }}
 
     - name: Upload Arm64 APK
       uses: actions/upload-artifact@v3
       with:
-        name: OPatch_arm64
-        path: app/build/outputs/apk/debug/OPatch_arm64-v8a_v*.apk
+        name: OPatch_arm64_${{ github.event.head_commit.id }}
+        path: ${{ env.APK_FILE_ARM64 }}
 
     - name: Upload Armeabi APK
       uses: actions/upload-artifact@v3
       with:
-        name: OPatch_armeabi
-        path: app/build/outputs/apk/debug/OPatch_armeabi-v7a_v*.apk
+        name: OPatch_armeabi_${{ github.event.head_commit.id }}
+        path: ${{ env.APK_FILE_ARMEABI }}
 
     - name: Upload Metadata
       uses: actions/upload-artifact@v3
       with:
         name: output-metadata
-        path: app/build/outputs/apk/debug/output-metadata.json
+        path: ${{ env.APK_FILE_METADATA }}
