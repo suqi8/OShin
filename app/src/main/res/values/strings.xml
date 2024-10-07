@@ -70,11 +70,15 @@
     <string name="preset">Preset</string>
     <string name="geek">Geek</string>
     <string name="clock_size">Clock size</string>
+    <string name="font_size">Font size</string>
     <string name="clock_size_summary">Adjust the size of the status bar clock; 0 means no size setting</string>
     <string name="clock_update_time">Clock update time</string>
+    <string name="update_time">Update time</string>
     <!-- Clock Style -->
     <string name="clock_style_title">Clock Style</string>
     <string name="clock_style_summary">Choose the display style of the clock</string>
+    <string name="absolute_value">Absolute value</string>
+    <string name="bold_text">Bold</string>
 
     <!-- Clock Size -->
 

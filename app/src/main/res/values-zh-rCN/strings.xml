@@ -52,8 +52,12 @@
     <string name="preset">预设</string>
     <string name="geek">极客</string>
     <string name="clock_size">时钟大小</string>
+    <string name="font_size">字体大小</string>
     <string name="clock_size_summary">调整状态栏时钟大小，0为不设置大小</string>
     <string name="clock_update_time">时钟更新频率</string>
+    <string name="update_time">更新频率</string>
+    <string name="absolute_value">绝对值</string>
+    <string name="bold_text">粗体</string>
     <!-- Clock Style -->
     <string name="clock_style_title">时钟样式</string>
     <string name="clock_style_summary">选择时钟的显示样式</string>

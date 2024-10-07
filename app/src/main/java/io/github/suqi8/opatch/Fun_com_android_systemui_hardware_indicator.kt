@@ -91,9 +91,22 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
     val hideVoltageUnit = remember { mutableStateOf(false) }
     val isdualcell = remember { mutableStateOf(false) }
     val power_consumption_indicator_dual_row = remember { mutableStateOf(false) }
+    val power_consumption_indicator_font_size = remember { mutableStateOf(0) }
+    val power_consumption_indicator_update_time = remember { mutableStateOf(0) }
+    val Dialog_font_size_Title = stringResource(R.string.font_size)
+    val Dialog_update_time_Title = stringResource(R.string.update_time)
+    val show_update_time_Dialog = remember { mutableStateOf(false) }
+    val show_font_size_Dialog = remember { mutableStateOf(false) }
+    val com_android_systemui_power_consumption_indicator_bold_text = remember { mutableStateOf(false) }
+    val com_android_systemui_power_consumption_indicator_absolute = remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
+        com_android_systemui_power_consumption_indicator_absolute.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_absolute", false)
+        com_android_systemui_power_consumption_indicator_bold_text.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_bold_text", false)
+        power_consumption_indicator_font_size.value = context.prefs("settings").getInt("com_android_systemui_power_consumption_indicator_font_size", 0)
+        power_consumption_indicator_update_time.value = context.prefs("settings").getInt("com_android_systemui_power_consumption_indicator_update_time", 0)
         power_consumption_indicator_dual_row.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_dual_row", false)
-        isdualcell.value = context.prefs("settings").getBoolean("com_android_systemui_dual_cell", false)
+        isdualcell.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_dual_cell", false)
         com_android_systemui_power_consumption_indicator.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator", false)
         com_android_systemui_temperature_indicator.value = context.prefs("settings").getBoolean("com_android_systemui_temperature_indicator", false)
         powerDisplaySelect1.value = context.prefs("settings").getInt("com_android_systemui_powerDisplaySelect1", 0)
@@ -188,10 +201,66 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                     title = stringResource(R.string.dual_cell),
                                     onCheckedChange = {
                                         isdualcell.value = it
-                                        context.prefs("settings").edit { putBoolean("com_android_systemui_dual_cell", it) }
+                                        context.prefs("settings").edit { putBoolean("com_android_systemui_power_consumption_indicator_dual_cell", it) }
                                     },
                                     checked = isdualcell.value
                                 )
+                                addline()
+                                SuperSwitch(
+                                    title = stringResource(R.string.absolute_value),
+                                    onCheckedChange = {
+                                        com_android_systemui_power_consumption_indicator_absolute.value = it
+                                        context.prefs("settings").edit { putBoolean("com_android_systemui_power_consumption_indicator_absolute", it) }
+                                    },
+                                    checked = com_android_systemui_power_consumption_indicator_absolute.value
+                                )
+                                addline()
+                                SuperSwitch(
+                                    title = stringResource(R.string.bold_text),
+                                    onCheckedChange = {
+                                        com_android_systemui_power_consumption_indicator_bold_text.value = it
+                                        context.prefs("settings").edit { putBoolean("com_android_systemui_power_consumption_indicator_bold_text", it) }
+                                    },
+                                    checked = com_android_systemui_power_consumption_indicator_bold_text.value
+                                )
+                                addline()
+                                Column {
+                                    SuperArrow(
+                                        title = stringResource(R.string.update_time),
+                                        onClick = {
+                                            show_update_time_Dialog.value = true
+                                        },
+                                        rightText = "${power_consumption_indicator_update_time.value}ms"
+                                    )
+                                    Slider(
+                                        progress = ((power_consumption_indicator_update_time.value / 2000.00).toFloat()),
+                                        onProgressChange = { newProgress ->
+                                            power_consumption_indicator_update_time.value =
+                                                (newProgress * 2000.00).toInt()
+                                            context.prefs("settings").edit { putInt("com_android_systemui_power_consumption_indicator_update_time", ((newProgress * 2000.00).toInt())) }
+                                        },
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+                                    )
+                                }
+                                addline()
+                                Column {
+                                    SuperArrow(
+                                        title = stringResource(R.string.font_size),
+                                        onClick = {
+                                            show_font_size_Dialog.value = true
+                                        },
+                                        rightText = "${power_consumption_indicator_font_size.value}sp"
+                                    )
+                                    Slider(
+                                        progress = ((power_consumption_indicator_font_size.value / 20.00).toFloat()),
+                                        onProgressChange = { newProgress ->
+                                            power_consumption_indicator_font_size.value =
+                                                (newProgress * 20.00).toInt()
+                                            context.prefs("settings").edit { putInt("com_android_systemui_power_consumption_indicator_font_size", ((newProgress * 20.00).toInt())) }
+                                        },
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+                                    )
+                                }
                             }
                             SmallTitle(stringResource(R.string.display_content))
                             Card(
@@ -313,5 +382,6 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
         }
     }
     resetApp.AppRestartScreen(appList,RestartAPP)
-    //CustomClockDialog(showCustomClockDialog,customClockCache,customClock,focusManager)
+    SettingIntDialog(context,show_font_size_Dialog,Dialog_font_size_Title,power_consumption_indicator_font_size,focusManager,"com_android_systemui_power_consumption_indicator_font_size")
+    SettingIntDialog(context,show_update_time_Dialog,Dialog_update_time_Title,power_consumption_indicator_update_time,focusManager,"com_android_systemui_power_consumption_indicator_update_time")
 }
