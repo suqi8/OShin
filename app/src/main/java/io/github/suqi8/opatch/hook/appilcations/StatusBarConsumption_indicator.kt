@@ -18,6 +18,7 @@ class StatusBarConsumption_indicator: YukiBaseHooker() {
     @OptIn(LegacyHookApi::class)
     override fun onHook() {
         val show = prefs("settings").getInt("com_android_systemui_powerDisplaySelect", 0)
+        val isdual_cell = prefs("settings").getBoolean("com_android_systemui_dual_cell", false)
         "com.android.systemui.statusbar.policy.Clock".toClass().apply {
             hook {
                 injectMember {
@@ -37,7 +38,7 @@ class StatusBarConsumption_indicator: YukiBaseHooker() {
 
                         // 创建一个新的 TextView 控件
                         val newTextView = TextView(clockTextView.context).apply {
-                            text = "a"
+                            text = ""
                             textSize = 8f
                             isSingleLine = false
                             setTextAppearance(clockTextColor)
@@ -53,53 +54,15 @@ class StatusBarConsumption_indicator: YukiBaseHooker() {
                             @SuppressLint("SetTextI18n", "DefaultLocale")
                             override fun run() {
                                 var props: Properties? = null
-                                var fis: FileInputStream? = null
-                                try {
-                                    fis =
-                                        FileInputStream("/sys/class/power_supply/battery/uevent")
-                                    props = Properties()
-                                    props.load(fis)
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                } finally {
-                                    fis?.close()
-                                }
-                                val currVal: String
-                                var rawCurr = 0
-                                try {
-                                    if (props != null) {
-                                        rawCurr = -1 * Math.round(
-                                            props.getProperty("POWER_SUPPLY_CURRENT_NOW")
-                                                .toFloat()
-                                        )
-                                    }
-                                } catch (e: Exception) {
-                                    e.printStackTrace()
-                                }
-                                val currNow = rawCurr
-                                if (abs(rawCurr.toDouble()) > 999) {
-                                    currVal = String.format("%.2f", rawCurr)
-                                } else {
-                                    currVal = "" + rawCurr
-                                }
-
+                                val fis: FileInputStream = FileInputStream("/sys/class/power_supply/battery/uevent")
+                                props = Properties()
+                                props.load(fis)
+                                val BatteryCurrentmA = props.getProperty("POWER_SUPPLY_CURRENT_NOW").toFloat() * -1
+                                val BatteryCurrent = String.format(Locale.getDefault(),"%.2f",props.getProperty("POWER_SUPPLY_CURRENT_NOW").toFloat() * -1 / 1000f).toFloat()
+                                val BatteryVoltage = String.format(Locale.getDefault(),"%.2f",props.getProperty("POWER_SUPPLY_VOLTAGE_NOW").toFloat() / 1000000f).toFloat()
+                                val BatteryWatt = if (isdual_cell) String.format(Locale.getDefault(), "%.2f", (BatteryCurrent * BatteryVoltage) * 2) else String.format(Locale.getDefault(), "%.2f", BatteryCurrent * BatteryVoltage)
                                 if (show == 0 ) {
-                                    var voltVal = 0f
-                                    val powerNow: String?
-                                    try {
-                                        powerNow =
-                                            props!!.getProperty("POWER_SUPPLY_VOLTAGE_NOW")
-                                    } catch (e: Exception) {
-                                        throw RuntimeException(e)
-                                    }
-                                    if (powerNow != null) voltVal =
-                                        powerNow.toInt() / 1000000f
-
-                                    var wattVal = voltVal * currNow / 1000.00f
-                                    val simpleWatt =
-                                        String.format(Locale.getDefault(), "%.2f", wattVal)
-                                    val batteryInfo =
-                                        currVal + "mA" + "\n" + simpleWatt + "W" + voltVal + "V"
+                                    val batteryInfo = BatteryCurrentmA.toString() + "mA" + "\n" + BatteryWatt + "W" + BatteryVoltage + "V"
                                     newTextView.text = batteryInfo
                                 } else if (show == 1) {
                                     newTextView.text = "${calculatePower()}W"

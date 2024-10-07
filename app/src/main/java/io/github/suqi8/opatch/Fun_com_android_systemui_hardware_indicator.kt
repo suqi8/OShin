@@ -86,7 +86,9 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
     val powerDisplaySelect = remember { mutableStateOf(0) }
     val hidePowerUnit = remember { mutableStateOf(false) }
     val hideCurrentUnit = remember { mutableStateOf(false) }
+    val isdualcell = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
+        isdualcell.value = context.prefs("settings").getBoolean("com_android_systemui_dual_cell", false)
         com_android_systemui_power_consumption_indicator.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator", false)
         com_android_systemui_temperature_indicator.value = context.prefs("settings").getBoolean("com_android_systemui_temperature_indicator", false)
         powerDisplaySelect.value = context.prefs("settings").getInt("com_android_systemui_powerDisplaySelect", 0)
@@ -185,6 +187,15 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                     powerDisplaySelect.value = it
                                     context.prefs("settings").edit { putInt("com_android_systemui_powerDisplaySelect", it) }
                                 }
+                                addline()
+                                SuperSwitch(
+                                    title = stringResource(R.string.dual_cell),
+                                    onCheckedChange = {
+                                        isdualcell.value = it
+                                        context.prefs("settings").edit { putBoolean("com_android_systemui_dual_cell", it) }
+                                    },
+                                    checked = isdualcell.value
+                                )
                             }
                             SmallTitle(stringResource(R.string.hide_unit))
                             Card(

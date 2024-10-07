@@ -146,4 +146,5 @@
     <string name="clock_left_margin">Clock Left Margin</string>
     <string name="clock_right_margin">Clock Right Margin</string>
     <string name="addline">Show Divider</string>
+    <string name="dual_cell">Dual-cell</string>
 </resources>
