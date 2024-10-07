@@ -9,6 +9,10 @@ import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.prefs
 import java.io.File
+import java.io.FileInputStream
+import java.util.Locale
+import java.util.Properties
+import kotlin.math.abs
 
 class StatusBarConsumption_indicator: YukiBaseHooker() {
     @OptIn(LegacyHookApi::class)
@@ -46,12 +50,57 @@ class StatusBarConsumption_indicator: YukiBaseHooker() {
                         }
                         val handler = Handler(Looper.getMainLooper())
                         val runnable = object : Runnable {
-                            @SuppressLint("SetTextI18n")
+                            @SuppressLint("SetTextI18n", "DefaultLocale")
                             override fun run() {
+                                var props: Properties? = null
+                                var fis: FileInputStream? = null
+                                try {
+                                    fis =
+                                        FileInputStream("/sys/class/power_supply/battery/uevent")
+                                    props = Properties()
+                                    props.load(fis)
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                } finally {
+                                    fis?.close()
+                                }
+                                val currVal: String
+                                var rawCurr = 0
+                                try {
+                                    if (props != null) {
+                                        rawCurr = -1 * Math.round(
+                                            props.getProperty("POWER_SUPPLY_CURRENT_NOW")
+                                                .toFloat()
+                                        )
+                                    }
+                                } catch (e: Exception) {
+                                    e.printStackTrace()
+                                }
+                                val currNow = rawCurr
+                                if (abs(rawCurr.toDouble()) > 999) {
+                                    currVal = String.format("%.2f", rawCurr)
+                                } else {
+                                    currVal = "" + rawCurr
+                                }
+
                                 if (show == 0 ) {
-                                    newTextView.text = """${calculatePower()}W
-                                        |${getBatteryCurrent()}mA
-                                    """.trimMargin()
+                                    var voltVal = 0f
+                                    val powerNow: String?
+                                    try {
+                                        powerNow =
+                                            props!!.getProperty("POWER_SUPPLY_VOLTAGE_NOW")
+                                    } catch (e: Exception) {
+                                        throw RuntimeException(e)
+                                    }
+                                    if (powerNow != null) voltVal =
+                                        powerNow.toInt() / 1000000f
+
+                                    var wattVal = voltVal * currNow / 1000.00f
+                                    val simpleWatt =
+                                        String.format(Locale.getDefault(), "%.2f", wattVal)
+                                    val batteryInfo =
+                                        currVal + "mA" + "\n" + simpleWatt + "W" + voltVal + "V"
+                                    newTextView.text = batteryInfo
                                 } else if (show == 1) {
                                     newTextView.text = "${calculatePower()}W"
                                 } else {
@@ -64,49 +113,13 @@ class StatusBarConsumption_indicator: YukiBaseHooker() {
                         // 启动定时更新
                         handler.post(runnable)
                     }
-                    /*beforeHook {
-                        val clockView = instance<View>() // 获取时间View
-                        val parentLayout = clockView.parent as LinearLayout // 获取父布局
-
-                        // 检查是否已经添加了自定义 TextView，避免重复添加
-                        val customTextView = parentLayout.findViewWithTag<TextView>("customText")
-
-                        if (customTextView == null) {
-                            // 创建新的 TextView
-
-                            // 获取通知图标的索引，假设通知图标在时间的后面
-                            val clockIndex = parentLayout.indexOfChild(clockView)
-                            var notificationIconIndex = -1
-
-                            // 遍历子布局，找到通知图标的位置
-                            for (i in clockIndex + 1 until parentLayout.childCount) {
-                                val child = parentLayout.getChildAt(i)
-                                if (child is ImageView) { // 假设通知图标是ImageView
-                                    notificationIconIndex = i
-                                    break
-                                }
-                            }
-                            val newTextView = TextView(clockView.context).apply {
-                                text = "新的文本"+notificationIconIndex // 自定义文本
-                                textSize = 13f
-                                tag = "customText" // 用标签标识
-                                layoutParams = LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                                    LinearLayout.LayoutParams.WRAP_CONTENT
-                                ).apply {
-                                    marginStart = 8 // 与时间的距离
-                                }
-                            }
-                            // 如果找到通知图标，将TextView插入到时间后面、通知图标前面
-                            parentLayout.addView(newTextView, notificationIconIndex)
-                        }
-                    }*/
                 }
             }
         }
     }
     // 读取电流值（单位：微安，mA）
     fun getBatteryCurrent(): Long {
+
         val currentFile = File("/sys/class/power_supply/battery/current_now")
         return try {
             if (isCharging() == "Charging") {
