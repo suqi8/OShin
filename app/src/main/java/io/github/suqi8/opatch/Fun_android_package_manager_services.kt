@@ -23,10 +23,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.highcapable.yukihookapi.hook.factory.prefs
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.application.RestartApp
 import io.github.suqi8.opatch.ui.tools.resetApp
 import top.yukonga.miuix.kmp.basic.Card
@@ -57,9 +65,27 @@ fun Fun_android_package_manager_services(navController: NavController) {
     val resetApp = resetApp()
     resetApp.AppRestartScreen(appList,RestartAPP)
 
+    val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
+    val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
+    val noiseFactor = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
+    val containerColor: Color = MiuixTheme.colorScheme.background
+    val hazeState = remember { HazeState() }
+    val hazeStyle = remember(containerColor, alpha, blurRadius, noiseFactor) {
+        HazeStyle(
+            backgroundColor = containerColor,
+            tint = HazeTint.Color(containerColor.copy(alpha)),
+            blurRadius = blurRadius,
+            noiseFactor = noiseFactor
+        )
+    }
+
     Scaffold(topBar = {
         TopAppBar(
             scrollBehavior = topappbarzt,
+            color = Color.Transparent,
+            modifier = Modifier.hazeChild(
+                state = hazeState,
+                style = hazeStyle),
             title = stringResource(id = R.string.package_manager_services),
             navigationIcon = {
                 IconButton(onClick = {
@@ -91,6 +117,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .haze(state = hazeState)
                 .background(MiuixTheme.colorScheme.background)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),

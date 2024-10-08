@@ -79,6 +79,9 @@
     <string name="clock_style_summary">Choose the display style of the clock</string>
     <string name="absolute_value">Absolute value</string>
     <string name="bold_text">Bold</string>
+    <string name="alpha_setting">Alpha Value</string>
+    <string name="blur_radius_setting">Blur Radius</string>
+    <string name="noise_factor_setting">Noise Factor</string>
 
     <!-- Clock Size -->
 

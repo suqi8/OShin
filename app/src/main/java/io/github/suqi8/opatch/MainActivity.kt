@@ -23,9 +23,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableFloatState
+import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -49,6 +53,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -151,18 +156,23 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "InflateParams", "ResourceType")
 @Composable
 fun Main1(modifier: Modifier,context: Context,navController: NavController,colorMode: MutableState<Int>) {
-    val alpha = 0.75f
-    val blurRadius: Dp = 25.dp
-    val noiseFactor = 0f
+    val alpha: MutableFloatState = remember { mutableFloatStateOf(0.75f) }
+    val blurRadius: MutableState<Dp> = remember { mutableStateOf(25.dp) }
+    val noiseFactor = remember { mutableFloatStateOf(0f) }
     val containerColor: Color = MiuixTheme.colorScheme.background
     val hazeState = remember { HazeState() }
-    val hazeStyle = remember(containerColor, alpha, blurRadius, noiseFactor) {
+    val hazeStyle = remember(containerColor, alpha.value, blurRadius.value, noiseFactor.value) {
         HazeStyle(
             backgroundColor = containerColor,
-            tint = HazeTint.Color(containerColor.copy(alpha)),
-            blurRadius = blurRadius,
-            noiseFactor = noiseFactor
+            tint = HazeTint.Color(containerColor.copy(alpha.value)),
+            blurRadius = blurRadius.value,
+            noiseFactor = noiseFactor.value
         )
+    }
+    LaunchedEffect(Unit) {
+        alpha.value = context.prefs("settings").getFloat("AppAlpha", 0.75f)
+        blurRadius.value = context.prefs("settings").getInt("AppblurRadius", 25).dp
+        noiseFactor.value = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
     }
     val topAppBarScrollBehavior0 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val topAppBarScrollBehavior1 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
@@ -233,7 +243,10 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
                 padding = padding,
                 navController = navController,
                 colorMode = colorMode,
-                context = context
+                context = context,
+                alpha = alpha,
+                blurRadius = blurRadius,
+                noiseFactor = noiseFactor
             )
         }
         /*Column(modifier = Modifier.padding(Padding)) {
@@ -254,7 +267,10 @@ fun AppHorizontalPager(
     padding: PaddingValues,
     navController: NavController,
     colorMode: MutableState<Int>,
-    context: Context
+    context: Context,
+    alpha: MutableFloatState,
+    blurRadius: MutableState<Dp>,
+    noiseFactor: MutableFloatState
 ) {
     HorizontalPager(
         modifier = modifier,
@@ -278,7 +294,10 @@ fun AppHorizontalPager(
                     padding = padding,
                     colorMode = colorMode,
                     context = context,
-                    navController
+                    navController = navController,
+                    alpha = alpha,
+                    blur = blurRadius,
+                    noise = noiseFactor
                 )
             }
         }

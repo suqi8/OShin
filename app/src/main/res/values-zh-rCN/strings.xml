@@ -58,6 +58,9 @@
     <string name="update_time">更新频率</string>
     <string name="absolute_value">绝对值</string>
     <string name="bold_text">粗体</string>
+    <string name="alpha_setting">透明度值</string>
+    <string name="blur_radius_setting">模糊半径</string>
+    <string name="noise_factor_setting">噪声因子</string>
     <!-- Clock Style -->
     <string name="clock_style_title">时钟样式</string>
     <string name="clock_style_summary">选择时钟的显示样式</string>

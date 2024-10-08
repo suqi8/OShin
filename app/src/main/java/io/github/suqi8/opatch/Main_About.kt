@@ -77,12 +77,22 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.unit.Dp
 import com.highcapable.yukihookapi.hook.factory.prefs
+import dev.chrisbanes.haze.HazeDefaults.blurRadius
+import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, colorMode: MutableState<Int>,context: Context, navController: NavController) {
+fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
+               padding: PaddingValues,
+               colorMode: MutableState<Int>,
+               context: Context,
+               navController: NavController,
+               alpha: MutableState<Float>,
+               blur: MutableState<Dp>,
+               noise: MutableState<Float>) {
     val showDeviceNameDialog = remember { mutableStateOf(false) }
     val deviceName: MutableState<String> = remember { mutableStateOf("未设置设备昵称") }
     val deviceNameCache: MutableState<String> = remember { mutableStateOf(deviceName.value) }
@@ -91,6 +101,9 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
     val isDebug = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     val addline = remember { mutableStateOf(false) }
+    val showAlphaDialog = remember { mutableStateOf(false) }
+    val showBlurDialog = remember { mutableStateOf(false) }
+    val showNoiseDialog = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         val cachedName = getDeviceName(context) // 获取保存的设备名称
         if (cachedName != null) {
@@ -207,6 +220,61 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                             addline.value = it
                             context.prefs("settings").edit { putBoolean("addline", it) }
                         })
+                    addline()
+                    Column {
+                        SuperArrow(
+                            title = stringResource(R.string.alpha_setting),
+                            onClick = {
+                                showAlphaDialog.value = true
+                            },
+                            rightText = "${alpha.value}f"
+                        )
+                        Slider(
+                            progress = alpha.value,
+                            onProgressChange = { newProgress ->
+                                alpha.value = newProgress
+                                context.prefs("settings").edit { putFloat("AppAlpha", newProgress) }
+                            },
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+                        )
+                    }
+                    addline()
+                    Column {
+                        SuperArrow(
+                            title = stringResource(R.string.blur_radius_setting),
+                            onClick = {
+                                showBlurDialog.value = true
+                            },
+                            rightText = "${blur.value}"
+                        )
+                        Slider(
+                            progress = (blur.value.value / 100f),
+                            onProgressChange = { newProgress ->
+                                blur.value =
+                                    (newProgress * 100).dp
+                                context.prefs("settings").edit { putInt("AppblurRadius", ((newProgress * 100).toInt())) }
+                            },
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+                        )
+                    }
+                    addline()
+                    Column {
+                        SuperArrow(
+                            title = stringResource(R.string.noise_factor_setting),
+                            onClick = {
+                                showNoiseDialog.value = true
+                            },
+                            rightText = "${noise.value}f"
+                        )
+                        Slider(
+                            progress = noise.value,
+                            onProgressChange = { newProgress ->
+                                noise.value = newProgress
+                                context.prefs("settings").edit { putFloat("AppnoiseFactor", newProgress) }
+                            },
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+                        )
+                    }
                 }
                 SmallTitle(text = stringResource(R.string.by_the_way))
                 Card(modifier = Modifier.fillMaxWidth()
@@ -243,11 +311,70 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                     )
                     addline()
                     SuperArrow(
-                        title = stringResource(R.string.official_channel),
-                        summary = "Telegram、QQ",
+                        title = stringResource(R.string.official_channel) + " OPatch",
+                        summary = "Telegram",
                         onClick = {
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/OPatch"))
-                            context.startActivity(intent)
+                            val telegramIntent = Intent(Intent.ACTION_VIEW)
+                            telegramIntent.data = Uri.parse("tg://resolve?domain=OPatchA")
+                            // 检查是否安装了 Telegram 应用
+                            if (telegramIntent.resolveActivity(context.packageManager) != null) {
+                                context.startActivity(telegramIntent)
+                            } else {
+                                // 如果未安装 Telegram，可以显示一个提示或打开 Telegram 网页版
+                                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/OPatchA"))
+                                context.startActivity(webIntent)
+                            }
+                        }
+                    )
+                    addline()
+                    SuperArrow(
+                        title = stringResource(R.string.official_channel) + " OPatch Chat",
+                        summary = "Telegram",
+                        onClick = {
+                            val telegramIntent = Intent(Intent.ACTION_VIEW)
+                            telegramIntent.data = Uri.parse("tg://resolve?domain=OPatchB")
+                            // 检查是否安装了 Telegram 应用
+                            if (telegramIntent.resolveActivity(context.packageManager) != null) {
+                                context.startActivity(telegramIntent)
+                            } else {
+                                // 如果未安装 Telegram，可以显示一个提示或打开 Telegram 网页版
+                                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/OPatchB"))
+                                context.startActivity(webIntent)
+                            }
+                        }
+                    )
+                    addline()
+                    SuperArrow(
+                        title = stringResource(R.string.official_channel) + " OPatch Ci",
+                        summary = "Telegram",
+                        onClick = {
+                            val telegramIntent = Intent(Intent.ACTION_VIEW)
+                            telegramIntent.data = Uri.parse("tg://resolve?domain=OPatchC")
+                            // 检查是否安装了 Telegram 应用
+                            if (telegramIntent.resolveActivity(context.packageManager) != null) {
+                                context.startActivity(telegramIntent)
+                            } else {
+                                // 如果未安装 Telegram，可以显示一个提示或打开 Telegram 网页版
+                                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/OPatchC"))
+                                context.startActivity(webIntent)
+                            }
+                        }
+                    )
+                    addline()
+                    SuperArrow(
+                        title = stringResource(R.string.official_channel) + " OPatch QQ",
+                        summary = "QQ",
+                        onClick = {
+                            val qqIntent = Intent(Intent.ACTION_VIEW)
+                            // 使用 mqqwpa 协议来打开 QQ 群
+                            qqIntent.data = Uri.parse("mqqapi://card/show_pslcard?src_type=internal&version=1&uin=740266099&card_type=group&source=qrcode")
+                            // 检查是否安装了 QQ 应用
+                            if (qqIntent.resolveActivity(context.packageManager) != null) {
+                                context.startActivity(qqIntent)
+                            } else {
+                                val webIntent = Intent(Intent.ACTION_VIEW, Uri.parse("http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=dbP78P2qCYuR2RxGtwmwCrlMCsh2MB2N&authKey=uTkJAGf0gg7%2Fx%2B3OBPrf%2F%2FnyZY2ntPNvnz6%2BTUo%2BHa0Pe%2F%2FqtXvK%2BSJ3%2B4PS0zbO&noverify=0&group_code=740266099"))
+                                context.startActivity(webIntent)
+                            }
                         }
                     )
                     addline()
@@ -255,6 +382,8 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior, padding: PaddingValues, 
                         title = stringResource(R.string.contribute_translation),
                         summary = stringResource(R.string.crowdin_contribute_summary),
                         onClick = {
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://crowdin.com/project/opatch"))
+                            context.startActivity(intent)
                         }
                     )
                 }

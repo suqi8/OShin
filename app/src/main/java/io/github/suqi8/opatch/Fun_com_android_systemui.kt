@@ -19,12 +19,19 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.ui.tools.resetApp
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
@@ -49,8 +56,27 @@ fun Fun_com_android_systemui(navController: NavController) {
     val RestartAPP = remember { mutableStateOf(false) }
     val resetApp = resetApp()
     val isDebug = context.prefs("settings").getBoolean("Debug", false)
+
+    val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
+    val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
+    val noiseFactor = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
+    val containerColor: Color = MiuixTheme.colorScheme.background
+    val hazeState = remember { HazeState() }
+    val hazeStyle = remember(containerColor, alpha, blurRadius, noiseFactor) {
+        HazeStyle(
+            backgroundColor = containerColor,
+            tint = HazeTint.Color(containerColor.copy(alpha)),
+            blurRadius = blurRadius,
+            noiseFactor = noiseFactor
+        )
+    }
+
     Scaffold(topBar = { GetAppIconAndName(packageName = "com.android.systemui") { appName, icon ->
         TopAppBar(
+            color = Color.Transparent,
+            modifier = Modifier.hazeChild(
+                state = hazeState,
+                style = hazeStyle),
             title = appName,
             scrollBehavior = one,
             navigationIcon = {
@@ -79,7 +105,7 @@ fun Fun_com_android_systemui(navController: NavController) {
         )
     } }) {padding ->
         LazyColumn(contentPadding = PaddingValues(top = padding.calculateTopPadding()),
-            topAppBarScrollBehavior = one, modifier = Modifier.fillMaxSize()) {
+            topAppBarScrollBehavior = one, modifier = Modifier.fillMaxSize().haze(state = hazeState)) {
             item {
                 Card(
                     modifier = Modifier

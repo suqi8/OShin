@@ -42,10 +42,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.application.RestartApp
 import io.github.suqi8.opatch.tools.AnimTools
 import io.github.suqi8.opatch.ui.tools.resetApp
@@ -124,6 +130,20 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
 
     var isDebug = context.prefs("settings").getBoolean("Debug", false)
 
+    val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
+    val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
+    val noiseFactor = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
+    val containerColor: Color = MiuixTheme.colorScheme.background
+    val hazeState = remember { HazeState() }
+    val hazeStyle = remember(containerColor, alpha, blurRadius, noiseFactor) {
+        HazeStyle(
+            backgroundColor = containerColor,
+            tint = HazeTint.Color(containerColor.copy(alpha)),
+            blurRadius = blurRadius,
+            noiseFactor = noiseFactor
+        )
+    }
+
     LaunchedEffect(Unit) {
         ClockLeftPadding.value = context.prefs("settings").getInt("Status_Bar_Time_LeftPadding", 0)
         ClockRightPadding.value = context.prefs("settings").getInt("Status_Bar_Time_RightPadding", 0)
@@ -162,6 +182,10 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
         TopAppBar(
             scrollBehavior = topappbarzt,
             title = stringResource(id = R.string.status_bar_clock),
+            color = Color.Transparent,
+            modifier = Modifier.hazeChild(
+                state = hazeState,
+                style = hazeStyle),
             navigationIcon = {
                 IconButton(onClick = {
                     navController.popBackStack()
@@ -192,6 +216,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .haze(state = hazeState)
                 .height(getWindowSize().height.dp)
                 .background(MiuixTheme.colorScheme.background)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
