@@ -11,6 +11,20 @@
 ## 简介
 OPatch是一个专为ColorOS系统设计的辅助模块，旨在增强和定制用户的操作系统体验。该模块允许用户轻松地应用补丁，以实现特定的功能或优化。
 
+## 官方渠道
+
+我们为您提供了多个官方渠道，您可以通过这些渠道与我们联系或获取最新信息：
+
+### Telegram
+
+- **[OPatch 官方频道](https://t.me/OPatchA)**
+- **[OPatch 聊天频道](https://t.me/OPatchB)**
+- **[OPatch CI](https://t.me/OPatchC)**
+
+### QQ
+
+- **[OPatch QQ 群](http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=dbP78P2qCYuR2RxGtwmwCrlMCsh2MB2N&authKey=uTkJAGf0gg7%2Fx%2B3OBPrf%2F%2FnyZY2ntPNvnz6%2BTUo%2BHa0Pe%2F%2FqtXvK%2BSJ3%2B4PS0zbO&noverify=0&group_code=740266099)**
+
 ## 支持的版本
 基于 Android 14 的 ColorOS 14 / RealmeUI 5.0 / OxygenOS 14
 

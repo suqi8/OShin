@@ -18,7 +18,7 @@ class HookEntry : IYukiHookXposedInit {
 
     override fun onHook() = encase {
         // Your code here.
-        loadApp(name = "com.android.settings") {
+        /*loadApp(name = "com.android.settings") {
             "com.oplus.settings.feature.deviceinfo.controller.OplusDeviceModelPreferenceController".toClass().apply {
                 method{
                     name = "getStatusText"
@@ -28,7 +28,7 @@ class HookEntry : IYukiHookXposedInit {
                     replaceTo("原神手机酸奶独家定制版"+prefs("settings").getBoolean("com_android_systemui_status_bar_clock").toString())
                 }
             }
-        }
+        }*/
         loadApp(hooker = StatusBarClock())
         loadApp(hooker = StatusBarhardware_indicator())
     }
