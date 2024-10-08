@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.graphics.Typeface
 import android.os.Handler
 import android.os.Looper
+import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
@@ -29,6 +30,7 @@ class StatusBarConsumption_indicator: YukiBaseHooker() {
         val absolute = prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_absolute", false)
         val bold_text = prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_bold_text", false)
         val power_consumption_indicator_update_time = prefs("settings").getInt("com_android_systemui_power_consumption_indicator_update_time", 0)
+        val power_consumption_indicator_alignment = prefs("settings").getInt("com_android_systemui_power_consumption_indicator_alignment", 0)
         "com.android.systemui.statusbar.policy.Clock".toClass().apply {
             hook {
                 injectMember {
@@ -49,6 +51,19 @@ class StatusBarConsumption_indicator: YukiBaseHooker() {
                         // 创建一个新的 TextView 控件
                         val newTextView = TextView(clockTextView.context).apply {
                             text = ""
+                            gravity = when (power_consumption_indicator_alignment) {
+                                0 -> Gravity.CENTER        // 居中对齐
+                                1 -> Gravity.TOP           // 顶部对齐
+                                2 -> Gravity.BOTTOM        // 底部对齐
+                                3 -> Gravity.START         // 起始位置对齐
+                                4 -> Gravity.END           // 结束位置对齐
+                                5 -> Gravity.CENTER_HORIZONTAL  // 水平居中
+                                6 -> Gravity.CENTER_VERTICAL    // 垂直居中
+                                7 -> Gravity.FILL               // 填满整个空间
+                                8 -> Gravity.FILL_HORIZONTAL   // 水平填满
+                                9 -> Gravity.FILL_VERTICAL     // 垂直填满
+                                else -> Gravity.CENTER         // 默认居中对齐
+                            }
                             textSize = if (power_consumption_indicator_font_size == 0) 8f else power_consumption_indicator_font_size.toFloat()
                             isSingleLine = false
                             setTypeface(typeface, if (bold_text) Typeface.BOLD else Typeface.NORMAL)

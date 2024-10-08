@@ -86,8 +86,8 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
     val resetApp = resetApp()
     val focusManager = LocalFocusManager.current
     var isDebug = context.prefs("settings").getBoolean("Debug", false)
-    var com_android_systemui_power_consumption_indicator = remember { mutableStateOf(false) }
-    var com_android_systemui_temperature_indicator = remember { mutableStateOf(false) }
+    val com_android_systemui_power_consumption_indicator = remember { mutableStateOf(false) }
+    val com_android_systemui_temperature_indicator = remember { mutableStateOf(false) }
     val appList = listOf("com.android.systemui")
     val powerDisplay = listOf(stringResource(R.string.power), stringResource(R.string.current),stringResource(R.string.voltage))
     val powerDisplaySelect1 = remember { mutableStateOf(0) }
@@ -105,6 +105,18 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
     val show_font_size_Dialog = remember { mutableStateOf(false) }
     val com_android_systemui_power_consumption_indicator_bold_text = remember { mutableStateOf(false) }
     val com_android_systemui_power_consumption_indicator_absolute = remember { mutableStateOf(false) }
+    val com_android_systemui_power_consumption_indicator_alignment = remember { mutableStateOf(0) }
+    val gravityOptions = listOf(
+        stringResource(R.string.status_bar_time_gravity_center),
+        stringResource(R.string.status_bar_time_gravity_top),
+        stringResource(R.string.status_bar_time_gravity_bottom),
+        stringResource(R.string.status_bar_time_gravity_end),
+        stringResource(R.string.status_bar_time_gravity_center_horizontal),
+        stringResource(R.string.status_bar_time_gravity_center_vertical),
+        stringResource(R.string.status_bar_time_gravity_fill),
+        stringResource(R.string.status_bar_time_gravity_fill_horizontal),
+        stringResource(R.string.status_bar_time_gravity_fill_vertical)
+    )
 
     val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
     val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
@@ -134,6 +146,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
         hidePowerUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hidePowerUnit", false)
         hideCurrentUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hideCurrentUnit", false)
         hideVoltageUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hideVoltageUnit", false)
+        com_android_systemui_power_consumption_indicator_alignment.value = context.prefs("settings").getInt("com_android_systemui_power_consumption_indicator_alignment", 0)
     }
     Scaffold(topBar = {
         TopAppBar(
@@ -247,6 +260,18 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                         context.prefs("settings").edit { putBoolean("com_android_systemui_power_consumption_indicator_bold_text", it) }
                                     },
                                     checked = com_android_systemui_power_consumption_indicator_bold_text.value
+                                )
+                                addline()
+                                SuperDropdown(
+                                    title = stringResource(R.string.alignment),
+                                    items = gravityOptions,
+                                    selectedIndex = com_android_systemui_power_consumption_indicator_alignment.value,
+                                    onSelectedIndexChange = { newOption ->
+                                        com_android_systemui_power_consumption_indicator_alignment.value = newOption
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            context.prefs("settings").edit { putInt("com_android_systemui_power_consumption_indicator_alignment", newOption) }
+                                        }
+                                    }
                                 )
                                 addline()
                                 Column {
