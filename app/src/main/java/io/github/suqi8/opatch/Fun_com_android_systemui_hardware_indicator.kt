@@ -2,6 +2,7 @@ package io.github.suqi8.opatch
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 import android.view.Gravity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -16,17 +17,20 @@ import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -76,6 +80,10 @@ import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
+import java.io.File
+import java.io.FileInputStream
+import java.io.IOException
+import java.util.Properties
 
 @SuppressLint("RtlHardcoded")
 @Composable
@@ -132,7 +140,35 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
         )
     }
 
+    val show_cpu_temp_data = remember { mutableStateOf(false) }
+    val cpu_temp_source_title = stringResource(R.string.change_cpu_temp_source)
+    val show_change_cpu_temp_data = remember { mutableStateOf(false) }
+    val cpu_temp_source = remember { mutableStateOf(0) }
+    val com_android_systemui_temperature_indicator_dual_row = remember { mutableStateOf(false) }
+    val temperatureDisplay = listOf(stringResource(R.string.battery_temperature), stringResource(R.string.cpu_temperature))
+    val temperatureDisplaySelect1 = remember { mutableStateOf(0) }
+    val temperatureDisplaySelect2 = remember { mutableStateOf(0) }
+    val com_android_systemui_temperature_indicator_bold_text = remember { mutableStateOf(false) }
+    val com_android_systemui_temperature_indicator_font_size = remember { mutableStateOf(0) }
+    val com_android_systemui_temperature_indicator_alignment = remember { mutableStateOf(0) }
+    val com_android_systemui_temperature_indicator_updatetime = remember { mutableStateOf(0) }
+    val show_tempature_update_time_Dialog = remember { mutableStateOf(false) }
+    val hideBatteryUnit = remember { mutableStateOf(false) }
+    val hideCpuUnit = remember { mutableStateOf(false) }
+    val show_tempature_font_size_Dialog = remember { mutableStateOf(false) }
+
     LaunchedEffect(Unit) {
+        hideBatteryUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hideBatteryUnit", false)
+        hideCpuUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hideCpuUnit", false)
+        cpu_temp_source.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_cpu_temp_source", 0)
+        com_android_systemui_temperature_indicator_dual_row.value = context.prefs("settings").getBoolean("com_android_systemui_temperature_indicator_dual_row", false)
+        temperatureDisplaySelect2.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_display_select2", 0)
+        temperatureDisplaySelect1.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_display_select1", 0)
+        com_android_systemui_temperature_indicator_bold_text.value = context.prefs("settings").getBoolean("com_android_systemui_temperature_indicator_bold_text", false)
+        com_android_systemui_temperature_indicator_font_size.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_font_size", 0)
+        com_android_systemui_temperature_indicator_alignment.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_alignment", 0)
+        com_android_systemui_temperature_indicator_updatetime.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_update_time", 0)
+
         com_android_systemui_power_consumption_indicator_absolute.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_absolute", false)
         com_android_systemui_power_consumption_indicator_bold_text.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_bold_text", false)
         power_consumption_indicator_font_size.value = context.prefs("settings").getInt("com_android_systemui_power_consumption_indicator_font_size", 0)
@@ -196,9 +232,10 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
             item {
                 Column {
                     Card(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(horizontal = 12.dp)
-                            .padding(bottom = 6.dp,top = 15.dp)
+                            .padding(bottom = 6.dp, top = 15.dp)
                     ) {
                         SuperSwitch(
                             title = stringResource(R.string.power_consumption_indicator),
@@ -383,9 +420,10 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                         }
                     }
                     Card(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(horizontal = 12.dp)
-                            .padding(bottom = 6.dp,top = 15.dp)
+                            .padding(bottom = 6.dp, top = 15.dp)
                     ) {
                         SuperSwitch(
                             title = stringResource(R.string.temperature_indicator),
@@ -414,9 +452,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                         }
                     }
                     AnimatedVisibility(
-                        visible = com_android_systemui_temperature_indicator.value,
-                        enter = AnimTools().enterTransition(0),
-                        exit = AnimTools().exitTransition(100)
+                        visible = com_android_systemui_temperature_indicator.value
                     ) {
                         Column {
                             Card(
@@ -424,6 +460,132 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                     .fillMaxWidth()
                                     .padding(horizontal = 12.dp, vertical = 6.dp)
                             ) {
+                                SuperArrow(title = stringResource(R.string.show_cpu_temp_data), onClick = {
+                                    show_cpu_temp_data.value = true
+                                })
+                                addline()
+                                SuperArrow(title = stringResource(R.string.change_cpu_temp_source),
+                                    summary = stringResource(R.string.enter_thermal_zone_number), onClick = {
+                                    show_change_cpu_temp_data.value = true
+                                }, rightText = cpu_temp_source.value.toString())
+                                addline()
+                                SuperSwitch(
+                                    title = stringResource(R.string.bold_text),
+                                    onCheckedChange = {
+                                        com_android_systemui_temperature_indicator_bold_text.value = it
+                                        context.prefs("settings").edit { putBoolean("com_android_systemui_temperature_indicator_bold_text", it) }
+                                    },
+                                    checked = com_android_systemui_temperature_indicator_bold_text.value
+                                )
+                                addline()
+                                SuperDropdown(
+                                    title = stringResource(R.string.alignment),
+                                    items = gravityOptions,
+                                    selectedIndex = com_android_systemui_temperature_indicator_alignment.value,
+                                    onSelectedIndexChange = { newOption ->
+                                        com_android_systemui_temperature_indicator_alignment.value = newOption
+                                        CoroutineScope(Dispatchers.IO).launch {
+                                            context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_alignment", newOption) }
+                                        }
+                                    }
+                                )
+                                addline()
+                                Column {
+                                    SuperArrow(
+                                        title = stringResource(R.string.update_time),
+                                        onClick = {
+                                            show_tempature_update_time_Dialog.value = true
+                                        },
+                                        rightText = "${power_consumption_indicator_update_time.value}ms"
+                                    )
+                                    Slider(
+                                        progress = ((power_consumption_indicator_update_time.value / 2000.00).toFloat()),
+                                        onProgressChange = { newProgress ->
+                                            power_consumption_indicator_update_time.value =
+                                                (newProgress * 2000.00).toInt()
+                                            context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_update_time", ((newProgress * 2000.00).toInt())) }
+                                        },
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+                                    )
+                                }
+                                addline()
+                                Column {
+                                    SuperArrow(
+                                        title = stringResource(R.string.font_size),
+                                        onClick = {
+                                            show_tempature_font_size_Dialog.value = true
+                                        },
+                                        rightText = "${com_android_systemui_temperature_indicator_font_size.value}sp"
+                                    )
+                                    Slider(
+                                        progress = ((com_android_systemui_temperature_indicator_font_size.value / 20.00).toFloat()),
+                                        onProgressChange = { newProgress ->
+                                            com_android_systemui_temperature_indicator_font_size.value =
+                                                (newProgress * 20.00).toInt()
+                                            context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_font_size", ((newProgress * 20.00).toInt())) }
+                                        },
+                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+                                    )
+                                }
+                            }
+                            SmallTitle(stringResource(R.string.display_content))
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                            ) {
+                                SuperSwitch(
+                                    title = stringResource(R.string.dual_row_title),
+                                    onCheckedChange = {
+                                        com_android_systemui_temperature_indicator_dual_row.value = it
+                                        context.prefs("settings").edit { putBoolean("com_android_systemui_temperature_indicator_dual_row", it) }
+                                    },
+                                    checked = com_android_systemui_temperature_indicator_dual_row.value
+                                )
+                                addline()
+                                SuperDropdown(
+                                    title = stringResource(R.string.first_line_content),
+                                    items = temperatureDisplay,
+                                    selectedIndex = temperatureDisplaySelect1.value
+                                ) {
+                                    temperatureDisplaySelect1.value = it
+                                    context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_display_select1", it) }
+                                }
+                                AnimatedVisibility(visible = com_android_systemui_temperature_indicator_dual_row.value) {
+                                    addline()
+                                    SuperDropdown(
+                                        title = stringResource(R.string.second_line_content),
+                                        items = temperatureDisplay,
+                                        selectedIndex = temperatureDisplaySelect2.value
+                                    ) {
+                                        temperatureDisplaySelect2.value = it
+                                        context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_display_select2", it) }
+                                    }
+                                }
+                            }
+                            SmallTitle(stringResource(R.string.hide_unit))
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                            ) {
+                                SuperSwitch(
+                                    title = stringResource(R.string.battery_temperature),
+                                    onCheckedChange = {
+                                        hideBatteryUnit.value = it
+                                        context.prefs("settings").edit { putBoolean("com_android_systemui_hideBatteryUnit", it) }
+                                    },
+                                    checked = hideBatteryUnit.value
+                                )
+                                addline()
+                                SuperSwitch(
+                                    title = stringResource(R.string.cpu_temperature),
+                                    onCheckedChange = {
+                                        hideCpuUnit.value = it
+                                        context.prefs("settings").edit { putBoolean("com_android_systemui_hideCpuUnit", it) }
+                                    },
+                                    checked = hideCpuUnit.value
+                                )
                             }
                         }
                     }
@@ -432,6 +594,84 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
         }
     }
     resetApp.AppRestartScreen(appList,RestartAPP)
+    cpu_temp_data(show_cpu_temp_data)
+    SettingIntDialog(context,show_tempature_font_size_Dialog,Dialog_font_size_Title,com_android_systemui_temperature_indicator_font_size,focusManager,"com_android_systemui_temperature_indicator_font_size")
+    SettingIntDialog(context,show_tempature_update_time_Dialog,Dialog_update_time_Title,com_android_systemui_temperature_indicator_updatetime,focusManager,"com_android_systemui_temperature_indicator_update_time")
+    SettingIntDialog(context,show_change_cpu_temp_data,cpu_temp_source_title,cpu_temp_source,focusManager,"com_android_systemui_temperature_indicator_cpu_temp_source")
     SettingIntDialog(context,show_font_size_Dialog,Dialog_font_size_Title,power_consumption_indicator_font_size,focusManager,"com_android_systemui_power_consumption_indicator_font_size")
     SettingIntDialog(context,show_update_time_Dialog,Dialog_update_time_Title,power_consumption_indicator_update_time,focusManager,"com_android_systemui_power_consumption_indicator_update_time")
 }
+
+@Composable
+fun cpu_temp_data(show: MutableState<Boolean>) {
+    if (!show.value) return
+    val temperatures = remember { getTemperatureList() }
+    showDialog(content = {
+        SuperDialog(title = stringResource(R.string.show_cpu_temp_data),
+            show = show,
+            onDismissRequest = {
+                show.value = false
+            }) {
+            LazyColumn(modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp)) {
+                items(temperatures) { temperatureInfo ->
+                    BasicComponent(
+                        title = temperatureInfo.zoneName,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        summary = temperatureInfo.temperature
+                    )
+                }
+            }
+            Spacer(Modifier.height(12.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.ok),
+                    submit = true,
+                    onClick = {
+                        dismissDialog()
+                        show.value = false
+                    }
+                )
+            }
+        }
+    })
+}
+
+fun getTemperatureList(): List<TemperatureInfo> {
+    val temperatureList = mutableListOf<TemperatureInfo>()
+
+    // /sys/class/thermal/thermal_zone* 文件路径
+    val thermalZones = File("/sys/class/thermal/").listFiles { file -> file.name.startsWith("thermal_zone") }
+
+    thermalZones?.forEach { zone ->
+        val tempFile = File(zone, "temp")
+        if (tempFile.exists() && tempFile.canRead()) {
+            try {
+                val temperature = tempFile.readText().trim().toIntOrNull()?.let {
+                    // 将读取的温度值除以1000，转换为摄氏度
+                    it / 1000.0
+                }
+                if (temperature != null && temperature in 30.0..100.0) {
+                    temperatureList.add(TemperatureInfo(zone.name, "$temperature°C"))
+                } else {
+                    Log.d("TemperatureFilter", "排除不合理温度: $temperature°C in zone ${zone.name}")
+                }
+            } catch (e: IOException) {
+                // 处理读取失败的情况
+                e.printStackTrace()
+            }
+        } else {
+            // 文件不存在或不可读时处理
+            val TAG = ""
+            Log.d(TAG, "无法读取 $tempFile")
+        }
+    }
+    return temperatureList
+}
+
+data class TemperatureInfo(val zoneName: String, val temperature: String)

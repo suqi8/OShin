@@ -195,6 +195,26 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                     }
                 }
             }
+            AnimatedVisibility(
+                visible = cardVisible.value,
+                enter = slideInVertically(
+                    initialOffsetY = { -it },
+                    animationSpec = tween(durationMillis = 500)
+                ) + fadeIn(animationSpec = tween(durationMillis = 500))
+            ) {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 10.dp)
+                        .padding(horizontal = 20.dp, vertical = 6.dp),
+                    color = Color.Red.copy(alpha = 0.1f)
+                ) {
+                    top.yukonga.miuix.kmp.basic.BasicComponent(
+                        summary = stringResource(R.string.module_notice),
+                        summaryColor = Color.Red
+                    )
+                }
+            }
 
             // 卡片2动画
             AnimatedVisibility(
@@ -205,7 +225,7 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                 ) + fadeIn(animationSpec = tween(durationMillis = 500))
             ) {
                 Card(modifier = Modifier
-                    .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 20.dp)
+                    .padding(start = 20.dp, top = 10.dp, end = 20.dp, bottom = 20.dp)
                     .fillMaxWidth()
                 ) {
                     Column(modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 20.dp)) {

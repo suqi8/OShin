@@ -91,10 +91,12 @@
     <string name="status_bar_time_gravity_fill">FILL Fill the Whole Space</string>
     <string name="status_bar_time_gravity_fill_horizontal">FILL_HORIZONTAL Fill Horizontally</string>
     <string name="status_bar_time_gravity_fill_vertical">FILL_VERTICAL Fill Vertically</string>
-
-    <!-- Clock Size -->
-
-    <!-- Clock Update Time -->
+    <string name="enter_thermal_zone_number">Enter the number after "thermal_zone" in the /sys/devices/virtual/thermal/ folder to specify the source.</string>
+    <string name="show_cpu_temp_data">Displaying CPU temperature source data.</string>
+    <string name="change_cpu_temp_source">Change CPU temperature source</string>
+    <string name="battery_temperature">Battery Temperature</string>
+    <string name="cpu_temperature">CPU Temperature</string>
+    <string name="module_notice">This module is completely free and open-source. Please comply with the GNU General Public License v3.0. It is prohibited to use this module for traffic diversion, sharing, distributing, or selling. If you see anyone sharing this module elsewhere, please report it to the module author.</string>
     <string name="clock_update_time_title">Clock Update Time</string>
     <string name="clock_update_time_summary">Set the clock update frequency in milliseconds; 0 means no update frequency is set</string>
 

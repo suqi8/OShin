@@ -70,7 +70,12 @@
     <string name="status_bar_time_gravity_fill">FILL 填满整个空间</string>
     <string name="status_bar_time_gravity_fill_horizontal">FILL_HORIZONTAL 水平填满</string>
     <string name="status_bar_time_gravity_fill_vertical">FILL_VERTICAL 垂直填满</string>
-    <!-- Clock Style -->
+    <string name="enter_thermal_zone_number">输入 /sys/devices/virtual/thermal/ 文件夹下 thermal_zone 后的数字以指定源。</string>
+    <string name="show_cpu_temp_data">显示CPU温度源数据</string>
+    <string name="change_cpu_temp_source">更改 CPU 温度获取源</string>
+    <string name="battery_temperature">电池温度</string>
+    <string name="cpu_temperature">CPU温度</string>
+    <string name="module_notice">该模块完全免费且开源，请务必遵守GNU General Public License v3.0协议，禁止将此模块用来引流，禁止分享、搬运、售卖。如果你在其他地方看到有人分享该模块，请向模块作者进行举报。</string>
     <string name="clock_style_title">时钟样式</string>
     <string name="clock_style_summary">选择时钟的显示样式</string>
     <string name="soc_model">SOC 型号</string>

@@ -11,7 +11,7 @@
 /build
 /captures
 /app/release
-.crowdin
+crowdin.yml
 .externalNativeBuild
 .cxx
 local.properties
