@@ -61,6 +61,15 @@
     <string name="alpha_setting">透明度值</string>
     <string name="blur_radius_setting">模糊半径</string>
     <string name="noise_factor_setting">噪声因子</string>
+    <string name="status_bar_time_gravity_center">CENTER 居中对齐</string>
+    <string name="status_bar_time_gravity_top">TOP 顶部对齐</string>
+    <string name="status_bar_time_gravity_bottom">BOTTOM 底部对齐</string>
+    <string name="status_bar_time_gravity_end">END 结束位置对齐</string>
+    <string name="status_bar_time_gravity_center_horizontal">CENTER_HORIZONTAL 水平居中</string>
+    <string name="status_bar_time_gravity_center_vertical">CENTER_VERTICAL 垂直居中</string>
+    <string name="status_bar_time_gravity_fill">FILL 填满整个空间</string>
+    <string name="status_bar_time_gravity_fill_horizontal">FILL_HORIZONTAL 水平填满</string>
+    <string name="status_bar_time_gravity_fill_vertical">FILL_VERTICAL 垂直填满</string>
     <!-- Clock Style -->
     <string name="clock_style_title">时钟样式</string>
     <string name="clock_style_summary">选择时钟的显示样式</string>

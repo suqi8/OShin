@@ -168,15 +168,15 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
         customClockCache.value = context.prefs("settings").getString("Status_Bar_Time_CustomClockStyle", "HH:mm")
     }
     val Status_Bar_Time_gravityOptions = listOf(
-        "CENTER 居中对齐",
-        "TOP 顶部对齐",
-        "BOTTOM 底部对齐",
-        "END 结束位置对齐",
-        "CENTER_HORIZONTAL 水平居中",
-        "CENTER_VERTICAL 垂直居中",
-        "FILL 填满整个空间",
-        "FILL_HORIZONTAL 水平填满",
-        "FILL_VERTICAL 垂直填满"
+        stringResource(R.string.status_bar_time_gravity_center),
+        stringResource(R.string.status_bar_time_gravity_top),
+        stringResource(R.string.status_bar_time_gravity_bottom),
+        stringResource(R.string.status_bar_time_gravity_end),
+        stringResource(R.string.status_bar_time_gravity_center_horizontal),
+        stringResource(R.string.status_bar_time_gravity_center_vertical),
+        stringResource(R.string.status_bar_time_gravity_fill),
+        stringResource(R.string.status_bar_time_gravity_fill_horizontal),
+        stringResource(R.string.status_bar_time_gravity_fill_vertical)
     )
     Scaffold(topBar = {
         TopAppBar(
