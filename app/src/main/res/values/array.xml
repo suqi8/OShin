@@ -4,5 +4,6 @@
         <item>android</item>
         <item>com.android.settings</item>
         <item>com.android.systemui</item>
+        <item>com.android.launcher</item>
     </string-array>
 </resources>

@@ -158,6 +158,101 @@ fun Main_Function(
         Feature(
             stringResource(R.string.clock_format),null,
             "Fun_com_android_systemui_status_bar_clock"
+        ),
+        Feature(
+            stringResource(R.string.power_consumption_indicator),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.dual_cell),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.absolute_value),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.bold_text),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.alignment),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.update_time),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.font_size),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.dual_row_title),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.first_line_content),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.second_line_content),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.show_cpu_temp_data),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.change_cpu_temp_source),
+            stringResource(R.string.enter_thermal_zone_number),
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.bold_text),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.alignment),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.update_time),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.font_size),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.dual_row_title),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.first_line_content),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
+        ),
+        Feature(
+            stringResource(R.string.second_line_content),
+            null,
+            "Fun_com_android_systemui_hardware_indicator"
         )
     )
     var miuixSearchValue by remember { mutableStateOf("") }
@@ -289,6 +384,10 @@ fun Main_Function(
                             FunctionApp("android", "Fun_android", navController)
                             addline()
                             FunctionApp("com.android.systemui", "Fun_com_android_systemui", navController)
+                            addline()
+                            FunctionApp("com.android.settings", "Fun_com_android_settings", navController)
+                            addline()
+                            FunctionApp("com.android.launcher", "Fun_com_android_launcher", navController)
                         }
                     }
                     Spacer(Modifier.size(65.dp))
