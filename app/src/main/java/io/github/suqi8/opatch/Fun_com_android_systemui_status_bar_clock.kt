@@ -324,7 +324,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                 TextField(value = px.value, onValueChange = { px.value = it }, modifier = Modifier.padding(start = 12.dp, end = 12.dp))
                                 if (px.value.isNotEmpty()) {
                                     AnimatedVisibility(visible = px.value.isNotEmpty()) {
-                                        SmallTitle("${px.value}dp = ${dpToPx(px.value.toFloat(),context)}px")
+                                        SmallTitle(text = "${px.value}dp = ${dpToPx(px.value.toFloat(),context)}px")
                                     }
                                 }
                                 addline()
@@ -661,7 +661,7 @@ fun SettingIntDialog(context: Context,
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
             )
             AnimatedVisibility((cache.value.isEmpty())) {
-                SmallTitle(stringResource(R.string.content_not_empty), textColor = Color.Red,
+                SmallTitle(text = stringResource(R.string.content_not_empty), textColor = Color.Red,
                     insideMargin = DpSize(0.dp, 8.dp))
             }
             Spacer(Modifier.height(12.dp))
@@ -688,6 +688,62 @@ fun SettingIntDialog(context: Context,
                         dismissDialog()
                         set.value = cache.value.toInt()
                         context.prefs("settings").edit { putInt(saveName, cache.value.toInt()) }
+                        show.value = false
+                    }
+                )
+            }
+        }
+    })
+}
+
+@Composable
+fun SettingFloatDialog(context: Context,
+                     show: MutableState<Boolean>,
+                     title: String,
+                     set: MutableState<Float>,
+                     focusManager: FocusManager,
+                     saveName: String) {
+    if (!show.value) return
+    val cache = remember { mutableStateOf(set.value.toString()) }
+    showDialog(content = {
+        SuperDialog(title = stringResource(R.string.settings)+" "+title,
+            show = show,
+            onDismissRequest = {
+                show.value = false
+            }) {
+            TextField(
+                value = cache.value,
+                onValueChange = { cache.value = it },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+            )
+            AnimatedVisibility((cache.value.isEmpty())) {
+                SmallTitle(text = stringResource(R.string.content_not_empty), textColor = Color.Red,
+                    insideMargin = DpSize(0.dp, 8.dp))
+            }
+            Spacer(Modifier.height(12.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.cancel),
+                    onClick = {
+                        dismissDialog()
+                        show.value = false
+                    }
+                )
+                Spacer(Modifier.width(12.dp))
+                Button(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.ok),
+                    submit = true,
+                    enabled = (cache.value.isNotEmpty()),
+                    onClick = {
+                        dismissDialog()
+                        set.value = cache.value.toFloat()
+                        context.prefs("settings").edit { putFloat(saveName, cache.value.toFloat()) }
                         show.value = false
                     }
                 )

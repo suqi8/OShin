@@ -1,10 +1,14 @@
 package io.github.suqi8.opatch
 
+import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Rect
 import android.view.ViewTreeObserver
 import android.view.WindowManager
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -23,15 +27,18 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -40,6 +47,9 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.BlendModeColorFilter
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalWindowInfo
@@ -54,8 +64,13 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
+import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Card
@@ -67,7 +82,9 @@ import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.Search
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.createRipple
+import java.io.ByteArrayOutputStream
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @Composable
 fun Main_Function(
@@ -435,7 +452,7 @@ fun BasicComponent(
     indication: Indication? = null
 ) {
     val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
-    val indication = indication ?: createRipple()
+    val indication = indication
     val insideMargin = remember { insideMargin } ?: remember { DpSize(16.dp, 9.dp) }
     val paddingModifier = remember(insideMargin) {
         Modifier.padding(horizontal = insideMargin.width, vertical = insideMargin.height)
@@ -495,36 +512,101 @@ fun BasicComponent(
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun FunctionApp(packageName: String, activityName: String, navController: NavController) {
     GetAppIconAndName(packageName = packageName) { appName, icon ->
         if (appName != "noapp") {
-            Row(modifier = Modifier
-                .clickable {
-                    navController.navigate(activityName)
+            val context = LocalContext.current
+            val auto_color = context.prefs("settings").getBoolean("auto_color", false)
+            val defaultColor = MiuixTheme.colorScheme.primary
+            val dominantColor: MutableState<Color> = remember { mutableStateOf(defaultColor) }
+            val isLoading = remember { mutableStateOf(true) }
+
+            LaunchedEffect(icon) {
+
+                withContext(Dispatchers.IO) {
+                    if (auto_color) dominantColor.value = getautocolor(icon)
+                    isLoading.value = false
                 }
-                .fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                Card(color = if (YukiHookAPI.Status.isModuleActive) MiuixTheme.colorScheme.primary else MaterialTheme.colorScheme.errorContainer,
-                    modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                        .drawColoredShadow(
-                            if (YukiHookAPI.Status.isModuleActive) MiuixTheme.colorScheme.primary else MaterialTheme.colorScheme.errorContainer,
-                            1f,
-                            borderRadius = 13.dp,
-                            shadowRadius = 7.dp,
-                            offsetX = 0.dp,
-                            offsetY = 0.dp,
-                            roundedRect = false
-                        )) {
-                    Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier
-                        .size(48.dp))
-                }
-                Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(start = 16.dp)) {
-                    Text(text = appName)
-                    Text(text = packageName)
+                /*val bitmap = icon.asAndroidBitmap() // 假设 icon 是一个 Bitmap 类型
+                withContext(Dispatchers.IO) {
+                    if (auto_color) {
+                        withContext(Dispatchers.IO) {
+                            Palette.from(bitmap).generate { palette ->
+                                val colorSwatch = palette?.dominantSwatch
+                                if (colorSwatch != null) {
+                                    val newColor = Color(colorSwatch.rgb)
+                                    dominantColor.value = newColor
+                                }
+                                isLoading.value = false
+                            }
+                        }
+                    } else {
+                        isLoading.value = false
+                    }
+                }*/
+            }
+
+            Row(
+                modifier = Modifier
+                    .clickable {
+                        navController.navigate(activityName)
+                    }
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (isLoading.value) {
+                    // 显示加载占位符
+                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
+                    Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(start = 16.dp)) {
+                        Text(text = appName)
+                        Text(text = packageName)
+                    }
+                } else {
+                    Card(
+                        color = if (YukiHookAPI.Status.isModuleActive) dominantColor.value else MaterialTheme.colorScheme.errorContainer,
+                        modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                            .drawColoredShadow(
+                                if (YukiHookAPI.Status.isModuleActive) dominantColor.value else MaterialTheme.colorScheme.errorContainer,
+                                1f,
+                                borderRadius = 13.dp,
+                                shadowRadius = 7.dp,
+                                offsetX = 0.dp,
+                                offsetY = 0.dp,
+                                roundedRect = false
+                            )
+                    ) {
+                        Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(48.dp))
+                    }
+                    Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(start = 16.dp)) {
+                        Text(text = appName)
+                        Text(text = packageName)
+                    }
                 }
             }
         } else {
             Text(text = "$packageName 没有安装", modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 4.dp))
+        }
+    }
+}
+
+suspend fun getautocolor(icon: ImageBitmap): Color {
+    return withContext(Dispatchers.IO) {
+        val bitmap = icon.asAndroidBitmap()
+
+        // 使用 suspendCoroutine 将回调转换为协程
+        suspendCoroutine<Color> { continuation ->
+            Palette.from(bitmap).generate { palette ->
+                val colorSwatch = palette?.dominantSwatch
+                if (colorSwatch != null) {
+                    // 返回获取到的颜色
+                    continuation.resume(Color(colorSwatch.rgb))
+                } else {
+                    // 如果获取不到颜色，返回默认颜色
+                    continuation.resume(Color.White)
+                }
+            }
         }
     }
 }

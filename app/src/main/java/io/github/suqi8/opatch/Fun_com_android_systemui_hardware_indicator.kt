@@ -349,7 +349,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                     )
                                 }
                             }
-                            SmallTitle(stringResource(R.string.display_content))
+                            SmallTitle(text = stringResource(R.string.display_content))
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -367,24 +367,26 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                 SuperDropdown(
                                     title = stringResource(R.string.first_line_content),
                                     items = powerDisplay,
-                                    selectedIndex = powerDisplaySelect1.value
-                                ) {
-                                    powerDisplaySelect1.value = it
-                                    context.prefs("settings").edit { putInt("com_android_systemui_powerDisplaySelect1", it) }
-                                }
+                                    selectedIndex = powerDisplaySelect1.value,
+                                    onSelectedIndexChange = {
+                                        powerDisplaySelect1.value = it
+                                        context.prefs("settings").edit { putInt("com_android_systemui_powerDisplaySelect1", it) }
+                                    }
+                                )
                                 AnimatedVisibility(visible = power_consumption_indicator_dual_row.value) {
                                     addline()
                                     SuperDropdown(
                                         title = stringResource(R.string.second_line_content),
                                         items = powerDisplay,
-                                        selectedIndex = powerDisplaySelect2.value
-                                    ) {
-                                        powerDisplaySelect2.value = it
-                                        context.prefs("settings").edit { putInt("com_android_systemui_powerDisplaySelect2", it) }
-                                    }
+                                        selectedIndex = powerDisplaySelect2.value,
+                                        onSelectedIndexChange = {
+                                            powerDisplaySelect2.value = it
+                                            context.prefs("settings").edit { putInt("com_android_systemui_powerDisplaySelect2", it) }
+                                        }
+                                    )
                                 }
                             }
-                            SmallTitle(stringResource(R.string.hide_unit))
+                            SmallTitle(text = stringResource(R.string.hide_unit))
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -528,7 +530,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                     )
                                 }
                             }
-                            SmallTitle(stringResource(R.string.display_content))
+                            SmallTitle(text = stringResource(R.string.display_content))
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()
@@ -546,24 +548,26 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                 SuperDropdown(
                                     title = stringResource(R.string.first_line_content),
                                     items = temperatureDisplay,
-                                    selectedIndex = temperatureDisplaySelect1.value
-                                ) {
-                                    temperatureDisplaySelect1.value = it
-                                    context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_display_select1", it) }
-                                }
+                                    selectedIndex = temperatureDisplaySelect1.value,
+                                    onSelectedIndexChange = {
+                                        temperatureDisplaySelect1.value = it
+                                        context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_display_select1", it) }
+                                    }
+                                )
                                 AnimatedVisibility(visible = com_android_systemui_temperature_indicator_dual_row.value) {
                                     addline()
                                     SuperDropdown(
                                         title = stringResource(R.string.second_line_content),
                                         items = temperatureDisplay,
-                                        selectedIndex = temperatureDisplaySelect2.value
-                                    ) {
-                                        temperatureDisplaySelect2.value = it
-                                        context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_display_select2", it) }
-                                    }
+                                        selectedIndex = temperatureDisplaySelect2.value,
+                                        onSelectedIndexChange = {
+                                            temperatureDisplaySelect2.value = it
+                                            context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_display_select2", it) }
+                                        }
+                                    )
                                 }
                             }
-                            SmallTitle(stringResource(R.string.hide_unit))
+                            SmallTitle(text = stringResource(R.string.hide_unit))
                             Card(
                                 modifier = Modifier
                                     .fillMaxWidth()

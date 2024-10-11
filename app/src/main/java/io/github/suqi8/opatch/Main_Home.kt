@@ -1,25 +1,34 @@
 package io.github.suqi8.opatch
 
+import android.annotation.SuppressLint
+import android.content.Context
 import android.content.pm.PackageManager
+import android.os.BatteryManager
 import android.os.Build
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -39,14 +48,30 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.withContext
+import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import java.io.BufferedReader
+import java.io.File
+import java.io.FileInputStream
+import java.io.InputStreamReader
+import java.util.Properties
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 
 /**
  * 绘制阴影范围
@@ -128,17 +153,28 @@ fun addline(mode: Boolean = true) {
 
 @Composable
 fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
-
+    /*val loading = remember { mutableStateOf(true) }
+    if (loading.value) {
+        Box(modifier = Modifier.fillMaxSize().background(Color.Transparent)) {
+            Text(text = "Loading...", modifier = Modifier.align(Alignment.Center))
+        }
+    }*/
     LazyColumn(
         contentPadding = PaddingValues(top = padding.calculateTopPadding()),
         topAppBarScrollBehavior = topAppBarScrollBehavior
     ) {
         item {
             val cardVisible = remember { mutableStateOf(false) }
+            val cardVisible1 = remember { mutableStateOf(false) }
 
-            // 首次加载时触发动画
             LaunchedEffect(Unit) {
                 cardVisible.value = true
+                //loading.value = false
+            }
+            LaunchedEffect(Unit) {
+                cardVisible1.value = true
+                delay(6000)
+                cardVisible1.value = false
             }
 
             // 卡片1动画
@@ -151,7 +187,7 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
             ) {
                 Card(modifier = Modifier
                     .fillMaxWidth()
-                    .padding(start = 20.dp, top = 20.dp, end = 20.dp)
+                    .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 10.dp)
                     .drawColoredShadow(
                         if (YukiHookAPI.Status.isModuleActive) MiuixTheme.colorScheme.primary else MaterialTheme.colorScheme.errorContainer,
                         1f,
@@ -196,7 +232,7 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                 }
             }
             AnimatedVisibility(
-                visible = cardVisible.value,
+                visible = cardVisible1.value,
                 enter = slideInVertically(
                     initialOffsetY = { -it },
                     animationSpec = tween(durationMillis = 500)
@@ -205,7 +241,6 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(top = 10.dp)
                         .padding(horizontal = 20.dp, vertical = 6.dp),
                     color = Color.Red.copy(alpha = 0.1f)
                 ) {
@@ -228,33 +263,128 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                     .padding(start = 20.dp, top = 10.dp, end = 20.dp, bottom = 20.dp)
                     .fillMaxWidth()
                 ) {
+                    var nvid by remember { mutableStateOf("0") }
+
+                    val country: String = when (nvid) {
+                        "10010111" -> stringResource(R.string.nvid_CN)
+                        "00011010" -> stringResource(R.string.nvid_TW)
+                        "00110111" -> stringResource(R.string.nvid_RU)
+                        "01000100" -> stringResource(R.string.nvid_GDPR_EU)
+                        "10001101" -> stringResource(R.string.nvid_GDPR_Europe)
+                        "00011011" -> stringResource(R.string.nvid_IN)
+                        "00110011" -> stringResource(R.string.nvid_ID)
+                        "00111000" -> stringResource(R.string.nvid_MY)
+                        "00111001" -> stringResource(R.string.nvid_TH)
+                        "00111110" -> stringResource(R.string.nvid_PH)
+                        "10000011" -> stringResource(R.string.nvid_SA)
+                        "10011010" -> stringResource(R.string.nvid_LATAM)
+                        "10011110" -> stringResource(R.string.nvid_BR)
+                        "10100110" -> stringResource(R.string.nvid_ME)
+                        else -> stringResource(R.string.nvid_unknown, nvid)
+                    }
+                    var health by remember { mutableStateOf("0") }
+                    var versionMessage by remember { mutableStateOf("0") }
+                    var ksuVersion by remember { mutableStateOf("0") }
+                    var battery_cc by remember { mutableStateOf("0") }
+                    var charge_full_design by remember { mutableStateOf("0") }
+                    LaunchedEffect(Unit) {
+                        withContext(Dispatchers.IO) {
+                            nvid = getSystemProperty("ro.build.oplus_nv_id")
+                            val process = Runtime.getRuntime().exec("su -c cat /sys/class/power_supply/battery/health")
+                            val reader = BufferedReader(InputStreamReader(process.inputStream))
+                            health = reader.readLine()?.trim().toString()
+                            reader.close()
+                            process.waitFor()
+                            ksuVersion = executeCommand("/data/adb/ksud -V")
+                            versionMessage = if (ksuVersion.isEmpty()) {
+                                val magiskVersion = executeCommand("magisk -v")
+                                magiskVersion
+                            } else {
+                                val version = ksuVersion.substringAfter("ksud ").substring(0, 4)
+                                version
+                            }
+                            battery_cc = executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_cc").trim()
+                            charge_full_design = executeCommand("su -c cat /sys/class/power_supply/battery/charge_full_design").trim()
+                        }
+
+                    }
+                    val batteryHealthString = when (health) {
+                        "Good" -> stringResource(R.string.battery_health_good)
+                        "Overheat" -> stringResource(R.string.battery_health_overheat)
+                        "Dead" -> stringResource(R.string.battery_health_dead)
+                        "Over Voltage" -> stringResource(R.string.battery_health_over_voltage)
+                        "Cold" -> stringResource(R.string.battery_health_cold)
+                        "Unknown" -> stringResource(R.string.battery_health_unknown)
+                        else -> stringResource(R.string.battery_health_not_found)
+                    }
+                    // 使用 MutableState 存储电池信息
+                    val currentCapacity = remember { mutableStateOf("0 mAh") }
+                    val fullCapacity = remember { mutableStateOf("0 mAh") }
+                    val batteryHealth = remember { mutableStateOf("0%") }
+                    val lifecycleOwner = LocalLifecycleOwner.current
+                    var isForeground = remember { mutableStateOf(false) }
+                    DisposableEffect(Unit) {
+                        val observer = LifecycleEventObserver { _, event ->
+                            when (event) {
+                                Lifecycle.Event.ON_START -> {
+                                    isForeground.value = true
+                                }
+                                Lifecycle.Event.ON_STOP -> {
+                                    isForeground.value = false
+                                }
+                                else -> {}
+                            }
+                        }
+                        lifecycleOwner.lifecycle.addObserver(observer)
+                        onDispose {
+                            lifecycleOwner.lifecycle.removeObserver(observer)
+                        }
+                    }
+                    LaunchedEffect(Unit) {
+                        withContext(Dispatchers.IO) {
+                            while (true) {
+                                if (isForeground.value) {
+                                    currentCapacity.value = executeCommand("su -c cat /sys/class/power_supply/battery/charge_now").trim().toInt().toString() + " mAh"
+                                    fullCapacity.value = executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_fcc").trim().toInt().toString() + " mAh"
+                                    batteryHealth.value = getSOH() + "% / " +
+                                            (executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_fcc").trim().toFloat() /
+                                                    (executeCommand("su -c cat /sys/class/power_supply/battery/charge_full_design").trim().toFloat() / 100000)).toString() + "%"
+                                }
+                                delay(10000L)
+                            }
+                        }
+                    }
+
                     Column(modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 20.dp)) {
-                        Text(text = stringResource(id = R.string.soc_model),modifier = Modifier.padding(bottom=5.dp))
-                        SmallTitle(text = Build.SOC_MODEL, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(text = stringResource(id = R.string.countries_and_regions),modifier = Modifier.padding(bottom=5.dp))
+                        SmallTitle(text = country, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
                         addline(false)
-                        Text(text = stringResource(id = R.string.android_version),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = Build.VERSION.RELEASE, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(text = stringResource(id = R.string.android_version)+" / "+stringResource(id = R.string.android_api_version),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = Build.VERSION.RELEASE+"/"+Build.VERSION.SDK_INT, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
                         addline(false)
-                        Text(text = stringResource(id = R.string.android_api_version),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = Build.VERSION.SDK_INT.toString(), insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(text = stringResource(id = R.string.battery_status),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = batteryHealthString+" / "+health, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
                         addline(false)
                         Text(text = stringResource(id = R.string.system_version),modifier = Modifier.padding(top=5.dp))
                         SmallTitle(text = Build.DISPLAY, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
                         addline(false)
-                        Text(text = stringResource(id = R.string.cpu_codename),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = Build.BOARD.substringAfter("_"), insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(text = stringResource(id = R.string.battery_equivalent_capacity),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = (charge_full_design.toInt() / 1000).toString()+"mAh", insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
                         addline(false)
-                        Text(text = stringResource(id = R.string.device_manufacturer),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = Build.MANUFACTURER, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(text = stringResource(id = R.string.battery_current_capacity), modifier = Modifier.padding(top = 5.dp))
+                        SmallTitle(text = currentCapacity.value, insideMargin = DpSize(0.dp, 0.dp), modifier = Modifier.padding(bottom = 5.dp))
                         addline(false)
-                        Text(text = stringResource(id = R.string.supported_abi),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = Build.SUPPORTED_ABIS.joinToString(), insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(text = stringResource(id = R.string.battery_full_capacity), modifier = Modifier.padding(top = 5.dp))
+                        SmallTitle(text = fullCapacity.value, insideMargin = DpSize(0.dp, 0.dp), modifier = Modifier.padding(bottom = 5.dp))
                         addline(false)
-                        Text(text = stringResource(id = R.string.android_security_patch),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = Build.VERSION.SECURITY_PATCH, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(text = stringResource(id = R.string.battery_health), modifier = Modifier.padding(top = 5.dp))
+                        SmallTitle(text = batteryHealth.value, insideMargin = DpSize(0.dp, 0.dp), modifier = Modifier.padding(bottom = 5.dp))
                         addline(false)
-                        Text(text = stringResource(id = R.string.device_fingerprint),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = Build.FINGERPRINT, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(text = stringResource(id = R.string.battery_cycle_count),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = battery_cc+"次", insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        addline(false)
+                        Text(text = if (ksuVersion.isEmpty()) stringResource(id = R.string.magisk_version) else stringResource(id = R.string.ksu_version),modifier = Modifier.padding(top=5.dp))
+                        SmallTitle(text = versionMessage.trim(), insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
                     }
                 }
             }
@@ -263,6 +393,61 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
         }
     }
 
+}
+
+@SuppressLint("DefaultLocale")
+suspend fun getSOH(): String {
+    var soh = executeCommand("cat /sys/class/oplus_chg/battery/battery_soh").trim().toDouble()
+    val fcc = executeCommand("cat /sys/class/oplus_chg/battery/battery_fcc").trim().toDouble()
+
+    val getDesignCapacity = executeCommand("cat /sys/class/oplus_chg/battery/design_capacity")
+    return when {
+        soh < 50 -> {
+            val designCapacity = getDesignCapacity // Assume this function exists
+            val fccs = fcc * 100
+            soh = (fccs.toFloat() / designCapacity.toFloat()).toDouble()
+            String.format("%.1f", soh)
+        }
+        soh > 101 -> {
+            val designCapacity = getDesignCapacity // Assume this function exists
+            val fccs = fcc * 100
+            soh = (fccs.toFloat() / designCapacity.toFloat()).toDouble()
+            String.format("%.1f", soh)
+        }
+        else -> String.format("%.1f", soh)
+    }
+}
+
+@SuppressLint("PrivateApi")
+fun getSystemProperty(name: String): String {
+    return try {
+        val method = Class.forName("android.os.SystemProperties")
+            .getMethod("get", String::class.java)
+        method.invoke(null, name) as String
+    } catch (e: Exception) {
+        "null"
+    }
+}
+
+suspend fun executeCommand(command: String): String {
+    return withContext(Dispatchers.IO) {
+        try {
+            val process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
+            val reader = BufferedReader(InputStreamReader(process.inputStream))
+            val output = StringBuilder()
+            var line: String?
+
+            while (reader.readLine().also { line = it } != null) {
+                output.append(line).append("\n")
+            }
+
+            process.waitFor()
+            reader.close()
+            output.toString().trim()
+        } catch (e: Exception) {
+            "Error: ${e.message}"
+        }
+    }
 }
 
 @Composable

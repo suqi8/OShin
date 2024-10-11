@@ -11,7 +11,6 @@
     <string name="hide_app_icon_on_launcher_notice">Note: Be sure to turn off the \"Force apps to show launcher icons\" feature in LSPosed</string>
     <string name="title_activity_main" translatable="false">MainActivity</string>
     <string name="package_manager_services" >Package Management Services</string>
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="Color_Mode">Color Mode</string>
     <string name="Night_Mode">Night Mode</string>
     <string name="Light_Mode">Light Mode</string>
@@ -99,44 +98,24 @@
     <string name="module_notice">This module is completely free and open-source. Please comply with the GNU General Public License v3.0. It is prohibited to use this module for traffic diversion, sharing, distributing, or selling. If you see anyone sharing this module elsewhere, please report it to the module author.</string>
     <string name="clock_update_time_title">Clock Update Time</string>
     <string name="clock_update_time_summary">Set the clock update frequency in milliseconds; 0 means no update frequency is set</string>
-
-    <!-- Show Years -->
     <string name="show_years_title">Show Years</string>
     <string name="show_years_summary">e.g., 2023</string>
-
-    <!-- Show Month -->
     <string name="show_month_title">Show Month</string>
     <string name="show_month_summary">e.g., April</string>
-
-    <!-- Show Day -->
     <string name="show_day_title">Show Day</string>
     <string name="show_day_summary">e.g., 5th</string>
-
-    <!-- Show Week -->
     <string name="show_week_title">Show Week</string>
     <string name="show_week_summary">e.g., Monday</string>
-
-    <!-- Show Chinese Hour -->
     <string name="show_cn_hour_title">Show Chinese Hour</string>
     <string name="show_cn_hour_summary">e.g., Yin Hour</string>
-
-    <!-- Show Time Period -->
     <string name="showtime_period_title">Show Time Period</string>
     <string name="showtime_period_summary">e.g., Morning</string>
-
-    <!-- Show Seconds -->
     <string name="show_seconds_title">Show Seconds</string>
     <string name="show_seconds_summary">e.g., xx:xx:41</string>
-
-    <!-- Show Milliseconds -->
     <string name="show_millisecond_title">Show Milliseconds</string>
     <string name="show_millisecond_summary">e.g., xx:xx:xx.919</string>
-
-    <!-- Hide Space -->
     <string name="hide_space_title">Hide Space</string>
     <string name="hide_space_summary">Hide spaces within the time display</string>
-
-    <!-- Dual Row Display -->
     <string name="dual_row_title">Dual Row Display</string>
     <string name="dual_row_summary">Display time in two rows</string>
     <string name="Researt_app">Researt app</string>
@@ -168,4 +147,39 @@
     <string name="voltage">Voltage</string>
     <string name="first_line_content">First line content</string>
     <string name="second_line_content">Second line content</string>
+    <string name="desktop_icon_and_text_size_multiplier">Desktop Icon and Text Size Multiplier</string>
+    <string name="icon_size_limit_note">When the size is greater than 1x, icons will be limited to 1x. This issue will not be resolved for now.</string>
+    <string name="nvid_CN">CN China 🇨🇳</string>
+    <string name="nvid_TW">TW Taiwan Province of China 🇹🇼</string>
+    <string name="nvid_RU">RU Russia 🇷🇺</string>
+    <string name="nvid_GDPR_EU">GDPR EU 🇪🇺</string>
+    <string name="nvid_GDPR_Europe">GDPR Europe 🇪🇺</string>
+    <string name="nvid_IN">IN India 🇮🇳</string>
+    <string name="nvid_ID">ID Indonesia 🇮🇩</string>
+    <string name="nvid_MY">MY Malaysia 🇲🇾</string>
+    <string name="nvid_TH">TH Thailand 🇹🇭</string>
+    <string name="nvid_PH">PH Philippines 🇵🇭</string>
+    <string name="nvid_SA">SA Saudi Arabia 🇸🇦</string>
+    <string name="nvid_LATAM">LATAM Latin America 🇱🇰</string>
+    <string name="nvid_BR">BR Brazil 🇧🇷</string>
+    <string name="nvid_ME">MEA The Middle East and Africa 🇦🇪</string>
+    <string name="nvid_unknown">Device identifier code = %1$s</string>
+    <string name="countries_and_regions">Countries and Regions</string>
+    <string name="battery_health_good">Good</string>
+    <string name="battery_health_overheat">Overheat</string>
+    <string name="battery_health_dead">Dead</string>
+    <string name="battery_health_over_voltage">Over Voltage</string>
+    <string name="battery_health_cold">Cold</string>
+    <string name="battery_health_unknown">Unknown</string>
+    <string name="battery_health_not_found">Not found</string>
+    <string name="battery_status">Battery Status</string>
+    <string name="battery_equivalent_capacity">Battery Equivalent Capacity (Typical Value)</string>
+    <string name="battery_current_capacity">Current Battery Capacity</string>
+    <string name="battery_cycle_count">Battery Cycle Count</string>
+    <string name="battery_health">Battery Health</string>
+    <string name="battery_full_capacity">Battery Full Capacity</string>
+    <string name="magisk_version">Magisk Version</string>
+    <string name="ksu_version">KernelSU Version</string>
+    <string name="feature_auto_color_picking_enabled">Auto Color Picking Enabled</string>
+    <string name="feature_auto_color_picking_warning">After enabling, loading feature pages and entering the software page may cause stuttering. Enable with caution.</string>
 </resources>

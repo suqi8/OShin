@@ -74,6 +74,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -104,7 +105,9 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
     val showAlphaDialog = remember { mutableStateOf(false) }
     val showBlurDialog = remember { mutableStateOf(false) }
     val showNoiseDialog = remember { mutableStateOf(false) }
+    val auto_color = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
+        auto_color.value = context.prefs("settings").getBoolean("auto_color", false)
         val cachedName = getDeviceName(context) // 获取保存的设备名称
         if (cachedName != null) {
             deviceName.value = cachedName
@@ -275,6 +278,14 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
                         )
                     }
+                    addline()
+                    SuperSwitch(title = stringResource(R.string.feature_auto_color_picking_enabled),
+                        summary = stringResource(R.string.feature_auto_color_picking_warning),
+                        checked = auto_color.value,
+                        onCheckedChange = {
+                            auto_color.value = it
+                            context.prefs("settings").edit { putBoolean("auto_color", it) }
+                        })
                 }
                 SmallTitle(text = stringResource(R.string.by_the_way))
                 Card(modifier = Modifier.fillMaxWidth()

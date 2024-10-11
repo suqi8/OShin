@@ -148,6 +148,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("Fun_com_android_systemui") { Fun_com_android_systemui(navController = navController)}
             composable("Fun_com_android_systemui_status_bar_clock") { Fun_com_android_systemui_status_bar_clock(navController = navController) }
             composable("Fun_com_android_systemui_hardware_indicator") { Fun_com_android_systemui_hardware_indicator(navController = navController) }
+            composable("Fun_com_android_launcher") { Fun_com_android_launcher(navController = navController) }
         }
     }
 }

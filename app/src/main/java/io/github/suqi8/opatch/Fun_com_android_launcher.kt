@@ -6,6 +6,7 @@ import android.content.Intent
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -38,9 +40,11 @@ import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
+import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperArrow
+import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -49,13 +53,21 @@ import java.util.Properties
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun Fun_com_android_systemui(navController: NavController) {
+fun Fun_com_android_launcher(navController: NavController) {
     val context = LocalContext.current
     val one = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
-    val appList = listOf("com.android.systemui")
+    val appList = listOf("com.android.launcher")
     val RestartAPP = remember { mutableStateOf(false) }
+    val focusManager = LocalFocusManager.current
     val resetApp = resetApp()
     val isDebug = context.prefs("settings").getBoolean("Debug", false)
+    val showIconTextDialog = remember { mutableStateOf(false) }
+    val IconTextTitle = stringResource(R.string.desktop_icon_and_text_size_multiplier)
+    val IconText = remember { mutableStateOf(1.0f) }
+
+    LaunchedEffect(Unit) {
+        IconText.value = context.prefs("settings").getFloat("com_android_launcher_icon_text", 1.00f)
+    }
 
     val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
     val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
@@ -71,7 +83,7 @@ fun Fun_com_android_systemui(navController: NavController) {
         )
     }
 
-    Scaffold(topBar = { GetAppIconAndName(packageName = "com.android.systemui") { appName, icon ->
+    Scaffold(topBar = { GetAppIconAndName(packageName = "com.android.launcher") { appName, icon ->
         TopAppBar(
             color = Color.Transparent,
             modifier = Modifier.hazeChild(
@@ -113,60 +125,28 @@ fun Fun_com_android_systemui(navController: NavController) {
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp, top = 15.dp)
                 ) {
-                    SuperArrow(title = stringResource(id = R.string.status_bar_clock),
-                        onClick = {
-                            navController.navigate("Fun_com_android_systemui_status_bar_clock")
-                        })
-                    addline()
-                    SuperArrow(title = stringResource(id = R.string.hardware_indicator),
-                        onClick = {
-                            navController.navigate("Fun_com_android_systemui_hardware_indicator")
-                        })
-                }
-
-                if (isDebug) {
-                    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                        if (result.resultCode == Activity.RESULT_OK) {
-                            result.data?.data?.let { uri ->
-                                // 在这里处理返回的 URI，例如读取文件
-                                Log.d("FilePicker", "Selected file URI: $uri")
-                            }
-                        }
+                    Column {
+                        SuperArrow(
+                            title = stringResource(R.string.desktop_icon_and_text_size_multiplier),
+                            summary = stringResource(R.string.icon_size_limit_note),
+                            onClick = {
+                                showIconTextDialog.value = true
+                            },
+                            rightText = "${IconText.value}x"
+                        )
+                        Slider(
+                            progress = ((IconText.value / 2.00).toFloat()),
+                            onProgressChange = { newProgress ->
+                                IconText.value = (newProgress * 2.00).toFloat()
+                                context.prefs("settings").edit { putFloat("com_android_launcher_icon_text", (((newProgress * 2.00).toFloat()))) }
+                            },
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+                        )
                     }
-                    var fis: FileInputStream? = null
-                    var currentNow = remember { mutableStateOf(0.0) }
-                    var errorMessage = remember { mutableStateOf<String?>(null) }
-                    Button(onClick = {
-                        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
-                            addCategory(Intent.CATEGORY_OPENABLE)
-                            type = "*/*" // 可以指定特定类型，例如 "image/*" 或 "video/*"
-                        }
-                        launcher.launch(intent)
-                    },
-                        text = "a")
-
-                    LaunchedEffect(Unit) {
-                        try {
-                            val fis = FileInputStream("/sys/class/power_supply/battery/uevent")
-                            val props = Properties()
-                            props.load(fis)
-                            val currentNowString = props.getProperty("POWER_SUPPLY_CURRENT_NOW")
-                            currentNow.value = currentNowString?.toDoubleOrNull() ?: 0.0
-                        } catch (e: Exception) {
-                            errorMessage.value = e.message // 捕获异常并保存错误信息
-                        } finally {
-                            fis?.close()
-                        }
-                    }
-                    var rawCurr = 0
-                    /*
-                                    rawCurr =
-                                        (-1 * Math.round(props.getProperty("POWER_SUPPLY_CURRENT_NOW").toInt() / 1000f)).toInt()*/
-                    // UI 组件
-                    SmallTitle(text = "Error: ${errorMessage.value} ${currentNow.value}")
                 }
             }
         }
     }
+    SettingFloatDialog(context,showIconTextDialog,IconTextTitle,IconText,focusManager,"com_android_launcher_icon_text")
     resetApp.AppRestartScreen(appList,RestartAPP)
 }

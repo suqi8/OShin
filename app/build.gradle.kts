@@ -132,6 +132,7 @@ android {
 dependencies {
     implementation(libs.ezxhelper)
     implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.palette.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
     implementation(libs.haze)
