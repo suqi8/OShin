@@ -149,7 +149,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
     val temperatureDisplaySelect1 = remember { mutableStateOf(0) }
     val temperatureDisplaySelect2 = remember { mutableStateOf(0) }
     val com_android_systemui_temperature_indicator_bold_text = remember { mutableStateOf(false) }
-    val com_android_systemui_temperature_indicator_font_size = remember { mutableStateOf(0) }
+    val com_android_systemui_temperature_indicator_font_size = remember { mutableStateOf(0f) }
     val com_android_systemui_temperature_indicator_alignment = remember { mutableStateOf(0) }
     val com_android_systemui_temperature_indicator_updatetime = remember { mutableStateOf(0) }
     val show_tempature_update_time_Dialog = remember { mutableStateOf(false) }
@@ -165,7 +165,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
         temperatureDisplaySelect2.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_display_select2", 0)
         temperatureDisplaySelect1.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_display_select1", 0)
         com_android_systemui_temperature_indicator_bold_text.value = context.prefs("settings").getBoolean("com_android_systemui_temperature_indicator_bold_text", false)
-        com_android_systemui_temperature_indicator_font_size.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_font_size", 0)
+        com_android_systemui_temperature_indicator_font_size.value = context.prefs("settings").getFloat("com_android_systemui_temperature_indicator_font_size", 0f)
         com_android_systemui_temperature_indicator_alignment.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_alignment", 0)
         com_android_systemui_temperature_indicator_updatetime.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_update_time", 0)
 
@@ -523,8 +523,8 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                         progress = ((com_android_systemui_temperature_indicator_font_size.value / 20.00).toFloat()),
                                         onProgressChange = { newProgress ->
                                             com_android_systemui_temperature_indicator_font_size.value =
-                                                (newProgress * 20.00).toInt()
-                                            context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_font_size", ((newProgress * 20.00).toInt())) }
+                                                (newProgress * 20.00).toFloat()
+                                            context.prefs("settings").edit { putFloat("com_android_systemui_temperature_indicator_font_size", ((newProgress * 20.00).toFloat())) }
                                         },
                                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
                                     )
@@ -599,7 +599,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
     }
     resetApp.AppRestartScreen(appList,RestartAPP)
     cpu_temp_data(show_cpu_temp_data)
-    SettingIntDialog(context,show_tempature_font_size_Dialog,Dialog_font_size_Title,com_android_systemui_temperature_indicator_font_size,focusManager,"com_android_systemui_temperature_indicator_font_size")
+    SettingFloatDialog(context,show_tempature_font_size_Dialog,Dialog_font_size_Title,com_android_systemui_temperature_indicator_font_size,focusManager,"com_android_systemui_temperature_indicator_font_size")
     SettingIntDialog(context,show_tempature_update_time_Dialog,Dialog_update_time_Title,com_android_systemui_temperature_indicator_updatetime,focusManager,"com_android_systemui_temperature_indicator_update_time")
     SettingIntDialog(context,show_change_cpu_temp_data,cpu_temp_source_title,cpu_temp_source,focusManager,"com_android_systemui_temperature_indicator_cpu_temp_source")
     SettingIntDialog(context,show_font_size_Dialog,Dialog_font_size_Title,power_consumption_indicator_font_size,focusManager,"com_android_systemui_power_consumption_indicator_font_size")
@@ -616,7 +616,9 @@ fun cpu_temp_data(show: MutableState<Boolean>) {
             onDismissRequest = {
                 show.value = false
             }) {
-            LazyColumn(modifier = Modifier.fillMaxWidth().heightIn(max = 300.dp)) {
+            LazyColumn(modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 300.dp)) {
                 items(temperatures) { temperatureInfo ->
                     BasicComponent(
                         title = temperatureInfo.zoneName,

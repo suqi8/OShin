@@ -2,6 +2,8 @@ package io.github.suqi8.opatch.hook
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
+import android.view.View
+import android.widget.ImageView
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
 import com.github.kyuubiran.ezxhelper.finders.FieldFinder.`-Static`.fieldFinder
 import com.highcapable.yukihookapi.YukiHookAPI
@@ -21,6 +23,7 @@ import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.XposedHelpers
 import io.github.suqi8.opatch.hook.StatusBar.StatusBarClock
 import io.github.suqi8.opatch.hook.StatusBar.StatusBarhardware_indicator
+import io.github.suqi8.opatch.hook.appilcations.getObjectFieldAs
 import io.github.suqi8.opatch.hook.launcher.LauncherIcon
 
 @InjectYukiHookWithXposed(entryClassName = "opatch", isUsingResourcesHook = true)
@@ -48,5 +51,19 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = StatusBarClock())
         loadApp(hooker = StatusBarhardware_indicator())
         loadApp(hooker = LauncherIcon())
+        loadApp(name = "com.android.systemui") {
+            "com.android.systemui.statusbar.StatusBarWifiView".toClass().apply {
+                method {
+                    name = "init"
+                }.hook {
+                    after {
+                        val mIn = fields.getObjectFieldAs<ImageView>("mIn")
+                        val mOut = fields.getObjectFieldAs<ImageView>("mOut")
+                        mIn.visibility = View.GONE
+                        mOut.visibility = View.GONE
+                    }
+                }
+            }
+        }
     }
 }

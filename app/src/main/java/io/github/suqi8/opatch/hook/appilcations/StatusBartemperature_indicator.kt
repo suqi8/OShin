@@ -23,7 +23,7 @@ class StatusBartemperature_indicator: YukiBaseHooker() {
         val isdual_raw = prefs("settings").getBoolean("com_android_systemui_temperature_indicator_dual_row", false)
         val show1 = prefs("settings").getInt("com_android_systemui_temperature_indicator_display_select1", 0)
         val show2 = prefs("settings").getInt("com_android_systemui_temperature_indicator_display_select2", 0)
-        val font_size = prefs("settings").getInt("com_android_systemui_temperature_indicator_font_size", 0)
+        val font_size = prefs("settings").getFloat("com_android_systemui_temperature_indicator_font_size", 0f)
         val bold_text = prefs("settings").getBoolean("com_android_systemui_temperature_indicator_bold_text", false)
         val update_time = prefs("settings").getInt("com_android_systemui_temperature_indicator_update_time", 0)
         val alignment = prefs("settings").getInt("com_android_systemui_temperature_indicator_alignment", 0)
@@ -63,7 +63,7 @@ class StatusBartemperature_indicator: YukiBaseHooker() {
                                 9 -> Gravity.FILL_VERTICAL     // 垂直填满
                                 else -> Gravity.CENTER         // 默认居中对齐
                             }
-                            textSize = if (font_size == 0) 8f else font_size.toFloat()
+                            textSize = if (font_size == 0f) 8f else font_size.toFloat()
                             isSingleLine = false
                             setTypeface(typeface, if (bold_text) Typeface.BOLD else Typeface.NORMAL)
                         }

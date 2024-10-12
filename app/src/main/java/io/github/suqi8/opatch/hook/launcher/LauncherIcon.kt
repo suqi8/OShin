@@ -1,6 +1,7 @@
 package io.github.suqi8.opatch.hook.launcher
 
 import android.annotation.SuppressLint
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.RenderEffect
 import android.graphics.Shader
@@ -12,9 +13,11 @@ import android.widget.TextView
 import androidx.compose.ui.platform.LocalContext
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.android.ResourcesClass
 import com.highcapable.yukihookapi.hook.type.java.FloatType
+import com.highcapable.yukihookapi.hook.type.java.IntClass
 import io.github.suqi8.opatch.R
 import io.github.suqi8.opatch.hook.appilcations.StatusBarClock
 import io.github.suqi8.opatch.getSetting
@@ -25,7 +28,6 @@ class LauncherIcon: YukiBaseHooker() {
     @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
     override fun onHook() {
         loadApp("com.android.launcher"){
-            //状态栏时钟
             if (prefs("settings").getFloat("com_android_launcher_icon_text", 1.00f) != 1.00f) {
                 "com.android.launcher3.DeviceProfile".toClass().apply {
                     method {
@@ -49,32 +51,21 @@ class LauncherIcon: YukiBaseHooker() {
                     }
                 }
             }
-            "com.android.launcher.Launcher".toClass().apply {
+            "com.android.launcher3.DeviceProfile".toClass().apply {
                 method {
-                    name = "onCreate"
+                    name = "updateIconSize"
+                    paramCount = 2
+                    param(FloatType, ResourcesClass)
                 }.hook {
-                    after {
-                        // 获取当前 Hotseat 的 View
-                        val hotseatView = instance<ViewGroup>()
+                    before {
+                        // 访问目标类的字段并进行修改
+                        val iconSizePxField = "com.android.launcher3.DeviceProfile".toClass().getDeclaredField("iconSizePx")
+                        iconSizePxField.isAccessible = true // 确保可以访问私有字段
 
-                        // 创建新的 TextView
-                        val textView = TextView(hotseatView.context).apply {
-                            text = "Hello Hotseat!" // 你希望显示的文字
-                            textSize = 16f // 字体大小
-                            setTextColor(Color.WHITE) // 文字颜色
-                            gravity = Gravity.CENTER // 文字居中显示
-                        }
+                        // 这里假设您要将新的图标大小设置为 px 值
+                        val iconSizePxValue = 20
+                        iconSizePxField.set("com.android.launcher3.DeviceProfile".toClass(), iconSizePxValue) // 更新 iconSizePx
 
-                        // 创建 LayoutParams 设置 TextView 大小和位置
-                        val layoutParams = FrameLayout.LayoutParams(
-                            FrameLayout.LayoutParams.WRAP_CONTENT,
-                            FrameLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            gravity = Gravity.CENTER // 你可以调整文字的显示位置
-                        }
-
-                        // 添加 TextView 到 Hotseat
-                        hotseatView.addView(textView, layoutParams)
                     }
                 }
             }
