@@ -263,7 +263,7 @@ open class CorePatchForR : XposedHelper(), IXposedHookLoadPackage, IXposedHookZy
                                             pI!!.packageName,
                                             PackageManager.GET_SIGNING_CERTIFICATES
                                         )
-                                        lastSigs = InstpI.signingInfo.signingCertificateHistory
+                                        lastSigs = InstpI.signingInfo!!.signingCertificateHistory
                                     }
                                 }
                             } catch (ignored: Throwable) {

@@ -46,7 +46,7 @@ fun getAndIncrementBuildNumber(): Int? {
 
 android {
     namespace = property.project.app.packageName
-    compileSdk = 34
+    compileSdk = 35
 
     lint {
         baseline = file("lint-baseline.xml")
@@ -114,7 +114,7 @@ android {
     }
     lint { checkReleaseBuilds = false }
     ndkVersion = "27.0.11718014 rc1"
-    buildToolsVersion = "34.0.0"
+    buildToolsVersion = "35.0.0"
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"
     }
