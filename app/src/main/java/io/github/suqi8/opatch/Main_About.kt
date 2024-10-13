@@ -286,6 +286,11 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                             auto_color.value = it
                             context.prefs("settings").edit { putBoolean("auto_color", it) }
                         })
+                    addline()
+                    SuperArrow(title = "Miuix",
+                        onClick = {
+                            navController.navigate("Miuix")
+                        })
                 }
                 SmallTitle(text = stringResource(R.string.by_the_way))
                 Card(modifier = Modifier.fillMaxWidth()
