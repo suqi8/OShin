@@ -181,4 +181,9 @@
     <string name="ksu_version">KernelSU版本</string>
     <string name="feature_auto_color_picking_enabled">自动取色功能开启</string>
     <string name="feature_auto_color_picking_warning">开启后加载功能页面，进入软件页面会有卡顿，谨慎开启</string>
+    <string name="opatch_root_permission_error">请授予 OPatch Root 权限后再重试！</string>
+    <string name="retry">重试</string>
+    <string name="retrying">重试中...</string>
+    <string name="exit">退出</string>
+    <string name="root_access_denied">未授权 Root 权限</string>
 </resources>

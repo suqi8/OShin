@@ -80,7 +80,7 @@ android {
     val number = getAndIncrementBuildNumber()
     defaultConfig {
         applicationId = property.project.app.packageName
-        minSdkVersion(rootProject.extra["defaultMinSdkVersion"] as Int)
+        minSdk = property.project.android.minSdk
         targetSdk = property.project.android.targetSdk
         versionName = property.project.app.versionName+".b"+number+"."+getGitCommitHash()
         versionCode = number

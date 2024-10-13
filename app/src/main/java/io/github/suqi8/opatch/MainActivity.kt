@@ -1,8 +1,13 @@
 package io.github.suqi8.opatch
 
 import android.annotation.SuppressLint
+import android.content.ActivityNotFoundException
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -13,12 +18,22 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -34,15 +49,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -53,6 +73,8 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.highcapable.yukihookapi.YukiHookAPI
+import com.highcapable.yukihookapi.YukiHookAPI_Impl
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.chrisbanes.haze.HazeDefaults
 import dev.chrisbanes.haze.HazeState
@@ -61,7 +83,10 @@ import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.ui.theme.AppTheme
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -69,16 +94,30 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.Box
+import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.HorizontalPager
+import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationItem
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
+import top.yukonga.miuix.kmp.basic.Slider
+import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.extra.SuperArrow
+import top.yukonga.miuix.kmp.extra.SuperDialog
+import top.yukonga.miuix.kmp.extra.SuperDropdown
+import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
+val TAG = "OPatch"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,11 +144,99 @@ class MainActivity : ComponentActivity() {
             }
 
             AppTheme(colorMode = colorMode.intValue) {
-                Main0(colorMode = colorMode, context = context, modifier = Modifier)
+                CheckRoot(colorMode = colorMode, context = context, modifier = Modifier)
             }
 
         }
     }
+}
+
+@Composable
+fun CheckRoot(modifier: Modifier,context: Context,colorMode: MutableState<Int> = remember { mutableIntStateOf(0) }) {
+
+    val showroot = remember { mutableStateOf(true) }
+
+    LaunchedEffect(Unit) {
+        try {
+            val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
+            if (process.waitFor() != 0) {
+                showroot.value = true
+            } else {
+                dismissDialog()
+                showroot.value = false
+            }
+        } catch (e: Exception) {
+            showroot.value = true
+        }
+    }
+
+    if (!showroot.value) {
+        Main0(colorMode = colorMode, context = context, modifier = modifier)
+    } else {
+        Scaffold() {
+            SmallTitle(text = showroot.value.toString())
+        }
+    }
+    dial(showroot)
+}
+
+@Composable
+fun dial(showroot: MutableState<Boolean>) {
+    if (!showroot.value) return
+    val retry = remember { mutableStateOf(false) }
+    showDialog(content = {
+        SuperDialog(title = stringResource(R.string.root_access_denied),
+            summary = stringResource(R.string.opatch_root_permission_error),
+            show = showroot,
+            onDismissRequest = {
+                retry.value = true
+            },
+            summaryColor = Color.Red) {
+            Spacer(Modifier.height(12.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.exit),
+                    onClick = {
+                        dismissDialog()
+                        System.exit(0)
+                    }
+                )
+                Spacer(Modifier.width(12.dp))
+                Button(
+                    modifier = Modifier.weight(1f),
+                    enabled = !retry.value,
+                    text = if (retry.value) stringResource(R.string.retrying) else stringResource(R.string.retry),
+                    submit = true,
+                    onClick = {
+                        retry.value = true
+                    }
+                )
+                LaunchedEffect(retry.value) {
+                    if (retry.value) {
+                        delay(500)
+                        try {
+                            val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
+                            val exitCode = process.waitFor()
+                            if (exitCode == 0) {
+                                dismissDialog()
+                                showroot.value = false
+                            } else {
+                                retry.value = false
+                            }
+                        } catch (e: Exception) {
+                            showroot.value = true
+                            retry.value = false
+                        }
+                    }
+                }
+            }
+        }
+    })
 }
 
 @Composable

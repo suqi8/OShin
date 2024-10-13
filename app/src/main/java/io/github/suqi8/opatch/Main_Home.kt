@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.BatteryManager
 import android.os.Build
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
@@ -285,26 +286,26 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                     var health by remember { mutableStateOf("0") }
                     var versionMessage by remember { mutableStateOf("0") }
                     var ksuVersion by remember { mutableStateOf("0") }
-                    var battery_cc by remember { mutableStateOf("0") }
-                    var charge_full_design by remember { mutableStateOf("0") }
+                    var battery_cc: Int by remember { mutableStateOf(0) }
+                    var charge_full_design: Int by remember { mutableStateOf(0) }
                     LaunchedEffect(Unit) {
                         withContext(Dispatchers.IO) {
                             nvid = getSystemProperty("ro.build.oplus_nv_id")
-                            val process = Runtime.getRuntime().exec("su -c cat /sys/class/power_supply/battery/health")
-                            val reader = BufferedReader(InputStreamReader(process.inputStream))
-                            health = reader.readLine()?.trim().toString()
-                            reader.close()
-                            process.waitFor()
+                            health = executeCommand("cat /sys/class/power_supply/battery/health").trim().toString()
                             ksuVersion = executeCommand("/data/adb/ksud -V")
                             versionMessage = if (ksuVersion.isEmpty()) {
                                 val magiskVersion = executeCommand("magisk -v")
-                                magiskVersion
+                                magiskVersion +" "+ executeCommand("magisk -V")
                             } else {
                                 val version = ksuVersion.substringAfter("ksud ").substring(0, 4)
                                 version
                             }
-                            battery_cc = executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_cc").trim()
-                            charge_full_design = executeCommand("su -c cat /sys/class/power_supply/battery/charge_full_design").trim()
+                            battery_cc = try {
+                                executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_cc").trim().toInt() / 1000
+                            } catch (e: Exception) {0}
+                            charge_full_design = try {
+                                executeCommand("su -c cat /sys/class/power_supply/battery/charge_full_design").trim().toInt() / 1000
+                            } catch (e: Exception) { 0 }
                         }
 
                     }
@@ -344,11 +345,17 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                         withContext(Dispatchers.IO) {
                             while (true) {
                                 if (isForeground.value) {
-                                    currentCapacity.value = executeCommand("su -c cat /sys/class/power_supply/battery/charge_now").trim().toInt().toString() + " mAh"
-                                    fullCapacity.value = executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_fcc").trim().toInt().toString() + " mAh"
-                                    batteryHealth.value = getSOH() + "% / " +
-                                            (executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_fcc").trim().toFloat() /
-                                                    (executeCommand("su -c cat /sys/class/power_supply/battery/charge_full_design").trim().toFloat() / 100000)).toString() + "%"
+                                    currentCapacity.value = try {
+                                        executeCommand("su -c cat /sys/class/power_supply/battery/charge_now").trim().toInt().toString()
+                                    } catch (e: Exception) {e.message} + " mAh"
+                                    fullCapacity.value = try {
+                                        executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_fcc").trim().toInt().toString()
+                                    } catch (e: Exception) {e.message} + " mAh"
+                                    batteryHealth.value = try {
+                                        getSOH() + "% / " +
+                                                (executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_fcc").trim().toFloat() /
+                                                        (executeCommand("su -c cat /sys/class/power_supply/battery/charge_full_design").trim().toFloat() / 100000)).toString()
+                                    } catch (e: Exception) { e.message } + "%"
                                 }
                                 delay(10000L)
                             }
@@ -369,7 +376,7 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                         SmallTitle(text = Build.DISPLAY, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
                         addline(false)
                         Text(text = stringResource(id = R.string.battery_equivalent_capacity),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = (charge_full_design.toInt() / 1000).toString()+"mAh", insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        SmallTitle(text = charge_full_design.toString()+"mAh", insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
                         addline(false)
                         Text(text = stringResource(id = R.string.battery_current_capacity), modifier = Modifier.padding(top = 5.dp))
                         SmallTitle(text = currentCapacity.value, insideMargin = DpSize(0.dp, 0.dp), modifier = Modifier.padding(bottom = 5.dp))
@@ -381,7 +388,7 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                         SmallTitle(text = batteryHealth.value, insideMargin = DpSize(0.dp, 0.dp), modifier = Modifier.padding(bottom = 5.dp))
                         addline(false)
                         Text(text = stringResource(id = R.string.battery_cycle_count),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = battery_cc+"次", insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        SmallTitle(text = battery_cc.toString()+"次", insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
                         addline(false)
                         Text(text = if (ksuVersion.isEmpty()) stringResource(id = R.string.magisk_version) else stringResource(id = R.string.ksu_version),modifier = Modifier.padding(top=5.dp))
                         SmallTitle(text = versionMessage.trim(), insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
@@ -445,7 +452,8 @@ suspend fun executeCommand(command: String): String {
             reader.close()
             output.toString().trim()
         } catch (e: Exception) {
-            "Error: ${e.message}"
+            Log.e(TAG, "executeCommand: $e", )
+            return@withContext "0"
         }
     }
 }

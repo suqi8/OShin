@@ -6,5 +6,4 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.20"
     id("com.autonomousapps.dependency-analysis") version "2.1.4"
 }
-val defaultMinSdkVersion by extra(33)
 

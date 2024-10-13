@@ -182,4 +182,9 @@
     <string name="ksu_version">KernelSU Version</string>
     <string name="feature_auto_color_picking_enabled">Auto Color Picking Enabled</string>
     <string name="feature_auto_color_picking_warning">After enabling, loading feature pages and entering the software page may cause stuttering. Enable with caution.</string>
+    <string name="opatch_root_permission_error">Please grant OPatch root permissions and try again!</string>
+    <string name="retry">Retry</string>
+    <string name="retrying">Retrying...</string>
+    <string name="exit">Exit</string>
+    <string name="root_access_denied">Root access not granted</string>
 </resources>
