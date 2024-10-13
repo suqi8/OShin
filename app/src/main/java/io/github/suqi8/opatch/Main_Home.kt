@@ -295,13 +295,13 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                             ksuVersion = executeCommand("/data/adb/ksud -V")
                             versionMessage = if (ksuVersion.isEmpty()) {
                                 val magiskVersion = executeCommand("magisk -v")
-                                magiskVersion +" "+ executeCommand("magisk -V")
+                                magiskVersion +" "+ executeCommand("magisk -V").trim()
                             } else {
                                 val version = ksuVersion.substringAfter("ksud ").substring(0, 4)
                                 version
                             }
                             battery_cc = try {
-                                executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_cc").trim().toInt() / 1000
+                                executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_cc").trim().toInt()
                             } catch (e: Exception) {0}
                             charge_full_design = try {
                                 executeCommand("su -c cat /sys/class/power_supply/battery/charge_full_design").trim().toInt() / 1000
