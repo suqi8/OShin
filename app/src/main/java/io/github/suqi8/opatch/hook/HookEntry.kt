@@ -2,8 +2,10 @@ package io.github.suqi8.opatch.hook
 
 import android.annotation.SuppressLint
 import android.content.res.Resources
+import android.util.Log
 import android.view.View
 import android.widget.ImageView
+import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
 import com.github.kyuubiran.ezxhelper.finders.FieldFinder.`-Static`.fieldFinder
 import com.highcapable.yukihookapi.YukiHookAPI
@@ -34,7 +36,6 @@ class HookEntry : IYukiHookXposedInit {
     }
 
     @SuppressLint("RestrictedApi")
-    @OptIn(LegacyHookApi::class)
     override fun onHook() = encase {
         // Your code here.
         /*loadApp(name = "com.android.settings") {
@@ -54,13 +55,14 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(name = "com.android.systemui") {
             "com.android.systemui.statusbar.StatusBarWifiView".toClass().apply {
                 method {
-                    name = "init"
+                    name = "initViewState"
+                    emptyParam()
                 }.hook {
-                    after {
-                        val mIn = fields.getObjectFieldAs<ImageView>("mIn")
-                        val mOut = fields.getObjectFieldAs<ImageView>("mOut")
-                        mIn.visibility = View.GONE
-                        mOut.visibility = View.GONE
+                    before {
+                        val wifiView = instance<View>()
+                        val wifiIcon = field {
+                            name = "mWifiIcon"
+                        }.get(wifiView).cast<View>()?.isVisible = false
                     }
                 }
             }

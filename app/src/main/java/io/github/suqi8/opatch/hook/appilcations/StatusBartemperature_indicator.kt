@@ -7,6 +7,7 @@ import android.os.Looper
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.prefs
@@ -42,7 +43,7 @@ class StatusBartemperature_indicator: YukiBaseHooker() {
                         val clockTextView = instance as TextView
 
                         // 获取状态栏父布局
-                        val parentViewGroup = clockTextView.parent as LinearLayout
+                        val parentViewGroup = clockTextView.parent as ConstraintLayout
                         // 获取 Clock 的索引
                         val clockIndex = parentViewGroup.indexOfChild(clockTextView)
                         val clockTextColor = clockTextView.context.resources.getIdentifier("status_bar_clock_color", "color", "com.android.systemui") // 适用于 Android 6.0 及以上版本

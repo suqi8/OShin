@@ -7,8 +7,9 @@ plugins {
     autowire(libs.plugins.android.application)
     autowire(libs.plugins.kotlin.android)
     autowire(libs.plugins.kotlin.ksp)
-    id("com.github.ben-manes.versions") version "0.48.0"
+    id("com.github.ben-manes.versions") version "0.51.0"
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.20"
+    id("com.autonomousapps.dependency-analysis") version "2.1.4"
 }
 
 fun getGitCommitHash(): String {
@@ -92,6 +93,10 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            isDebuggable = false
+            isJniDebuggable = false
+            isCrunchPngs = true
+            multiDexEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
@@ -131,7 +136,7 @@ android {
 
 dependencies {
     implementation(libs.ezxhelper)
-    implementation(libs.androidx.room.runtime)
+    runtimeOnly(libs.androidx.room.runtime)
     implementation(libs.androidx.palette.ktx)
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
@@ -153,20 +158,19 @@ dependencies {
     implementation(libs.ui.tooling.preview)
     implementation(libs.material3)
     implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.firebase.crashlytics.buildtools)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
     compileOnly(de.robv.android.xposed.api)
     implementation(com.highcapable.yukihookapi.api)
     debugImplementation(libs.ui.tooling)
-    debugImplementation(libs.ui.test.manifest)
+    debugRuntimeOnly(libs.ui.test.manifest)
     ksp(com.highcapable.yukihookapi.ksp.xposed)
     implementation(com.github.duanhong169.drawabletoolbox)
     implementation(androidx.core.core.ktx)
     implementation(androidx.appcompat.appcompat)
     implementation(com.google.android.material.material)
     implementation(androidx.constraintlayout.constraintlayout)
-    testImplementation(junit.junit)
+    androidTestImplementation(junit.junit)
     androidTestImplementation(androidx.test.ext.junit)
     androidTestImplementation(androidx.test.espresso.espresso.core)
 }

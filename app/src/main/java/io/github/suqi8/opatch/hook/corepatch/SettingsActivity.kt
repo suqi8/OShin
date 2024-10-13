@@ -17,7 +17,7 @@ import java.util.Objects
 
 @Suppress("deprecation")
 class SettingsActivity : Activity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
+    /*override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
         checkXSharedPreferences()
@@ -25,7 +25,7 @@ class SettingsActivity : Activity() {
             fragmentManager.beginTransaction()
                 .add(R.id.fragment_container, SettingsFragment()).commit()
         }
-    }
+    }*/
 
     @SuppressLint("WorldReadableFiles")
     private fun checkXSharedPreferences() {
