@@ -479,7 +479,7 @@ fun DeviceNameDialog(showDeviceNameDialog: MutableState<Boolean>,deviceNameCache
         SuperDialog(title = stringResource(R.string.Device_Name),
             show = showDeviceNameDialog,
             onDismissRequest = {
-                showDeviceNameDialog.value = false
+                dismissDialog(showDeviceNameDialog)
             }) {
             TextField(
                 value = deviceNameCache.value,
@@ -500,8 +500,7 @@ fun DeviceNameDialog(showDeviceNameDialog: MutableState<Boolean>,deviceNameCache
                     modifier = Modifier.weight(1f),
                     text = stringResource(R.string.cancel),
                     onClick = {
-                        dismissDialog()
-                        showDeviceNameDialog.value = false
+                        dismissDialog(showDeviceNameDialog)
                     }
                 )
                 Spacer(Modifier.width(12.dp))
@@ -510,12 +509,11 @@ fun DeviceNameDialog(showDeviceNameDialog: MutableState<Boolean>,deviceNameCache
                     text = stringResource(R.string.ok),
                     submit = true,
                     onClick = {
-                        dismissDialog()
+                        dismissDialog(showDeviceNameDialog)
                         deviceName.value = deviceNameCache.value
                         CoroutineScope(Dispatchers.IO).launch {
                             saveDeviceName(context, deviceName.value) // 保存设备名称
                         }
-                        showDeviceNameDialog.value = false
                     }
                 )
             }

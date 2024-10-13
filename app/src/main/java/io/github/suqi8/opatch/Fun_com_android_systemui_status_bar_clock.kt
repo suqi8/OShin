@@ -618,8 +618,7 @@ fun CustomClockDialog(showCustomClockDialog: MutableState<Boolean>, customClockC
                     modifier = Modifier.weight(1f),
                     text = stringResource(R.string.cancel),
                     onClick = {
-                        dismissDialog()
-                        showCustomClockDialog.value = false
+                        dismissDialog(showCustomClockDialog)
                     }
                 )
                 Spacer(Modifier.width(12.dp))
@@ -628,10 +627,9 @@ fun CustomClockDialog(showCustomClockDialog: MutableState<Boolean>, customClockC
                     text = stringResource(R.string.ok),
                     submit = true,
                     onClick = {
-                        dismissDialog()
+                        dismissDialog(showCustomClockDialog)
                         CustomClock.value = customClockCache.value
                         context.prefs("settings").edit { putString("Status_Bar_Time_CustomClockStyle", customClockCache.value) }
-                        showCustomClockDialog.value = false
                     }
                 )
             }
@@ -653,7 +651,7 @@ fun SettingIntDialog(context: Context,
         SuperDialog(title = stringResource(R.string.settings)+" "+title,
             show = show,
             onDismissRequest = {
-                show.value = false
+                dismissDialog(show)
             }) {
             TextField(
                 value = cache.value,
@@ -674,7 +672,7 @@ fun SettingIntDialog(context: Context,
                     modifier = Modifier.weight(1f),
                     text = stringResource(R.string.cancel),
                     onClick = {
-                        dismissDialog()
+                        dismissDialog(show)
                         show.value = false
                     }
                 )
@@ -685,10 +683,9 @@ fun SettingIntDialog(context: Context,
                     submit = true,
                     enabled = (cache.value.isNotEmpty()),
                     onClick = {
-                        dismissDialog()
+                        dismissDialog(show)
                         set.value = cache.value.toInt()
                         context.prefs("settings").edit { putInt(saveName, cache.value.toInt()) }
-                        show.value = false
                     }
                 )
             }
@@ -709,7 +706,7 @@ fun SettingFloatDialog(context: Context,
         SuperDialog(title = stringResource(R.string.settings)+" "+title,
             show = show,
             onDismissRequest = {
-                show.value = false
+                dismissDialog(show)
             }) {
             TextField(
                 value = cache.value,
@@ -730,8 +727,7 @@ fun SettingFloatDialog(context: Context,
                     modifier = Modifier.weight(1f),
                     text = stringResource(R.string.cancel),
                     onClick = {
-                        dismissDialog()
-                        show.value = false
+                        dismissDialog(show)
                     }
                 )
                 Spacer(Modifier.width(12.dp))
@@ -741,10 +737,9 @@ fun SettingFloatDialog(context: Context,
                     submit = true,
                     enabled = (cache.value.isNotEmpty()),
                     onClick = {
-                        dismissDialog()
+                        dismissDialog(show)
                         set.value = cache.value.toFloat()
                         context.prefs("settings").edit { putFloat(saveName, cache.value.toFloat()) }
-                        show.value = false
                     }
                 )
             }

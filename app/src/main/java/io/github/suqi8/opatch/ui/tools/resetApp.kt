@@ -35,12 +35,11 @@ class resetApp {
                     appList.forEach {
                         restartApp(it)
                     }
-                    dismissDialog()
-                    showresetAppDialog.value = false
+                    dismissDialog(showresetAppDialog)
                 },
                 show = showresetAppDialog,
-                onDismiss = { showresetAppDialog.value = false
-                dismissDialog()
+                onDismiss = {
+                dismissDialog(showresetAppDialog)
                 }
             )
         }

@@ -162,8 +162,7 @@ fun CheckRoot(modifier: Modifier,context: Context,colorMode: MutableState<Int> =
             if (process.waitFor() != 0) {
                 showroot.value = true
             } else {
-                dismissDialog()
-                showroot.value = false
+                dismissDialog(showroot)
             }
         } catch (e: Exception) {
             showroot.value = true
@@ -190,6 +189,7 @@ fun dial(showroot: MutableState<Boolean>) {
             show = showroot,
             onDismissRequest = {
                 retry.value = true
+                dismissDialog(showroot)
             },
             summaryColor = Color.Red) {
             Spacer(Modifier.height(12.dp))
@@ -202,7 +202,7 @@ fun dial(showroot: MutableState<Boolean>) {
                     modifier = Modifier.weight(1f),
                     text = stringResource(R.string.exit),
                     onClick = {
-                        dismissDialog()
+                        dismissDialog(showroot)
                         System.exit(0)
                     }
                 )
@@ -223,8 +223,7 @@ fun dial(showroot: MutableState<Boolean>) {
                             val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
                             val exitCode = process.waitFor()
                             if (exitCode == 0) {
-                                dismissDialog()
-                                showroot.value = false
+                                dismissDialog(showroot)
                             } else {
                                 retry.value = false
                             }

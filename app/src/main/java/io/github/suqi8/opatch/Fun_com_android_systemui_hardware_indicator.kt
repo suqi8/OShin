@@ -614,7 +614,7 @@ fun cpu_temp_data(show: MutableState<Boolean>) {
         SuperDialog(title = stringResource(R.string.show_cpu_temp_data),
             show = show,
             onDismissRequest = {
-                show.value = false
+                dismissDialog(show)
             }) {
             LazyColumn(modifier = Modifier
                 .fillMaxWidth()
@@ -639,8 +639,7 @@ fun cpu_temp_data(show: MutableState<Boolean>) {
                     text = stringResource(R.string.ok),
                     submit = true,
                     onClick = {
-                        dismissDialog()
-                        show.value = false
+                        dismissDialog(show)
                     }
                 )
             }
