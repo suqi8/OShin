@@ -3,10 +3,12 @@ package io.github.suqi8.opatch
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.CubicBezierEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
@@ -22,9 +24,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -39,8 +44,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -58,6 +65,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -66,6 +74,7 @@ import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.ui.miuix.MainPage
 import io.github.suqi8.opatch.ui.theme.AppTheme
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
@@ -74,6 +83,7 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.HorizontalPager
@@ -83,12 +93,15 @@ import top.yukonga.miuix.kmp.basic.NavigationItem
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 val TAG = "OPatch"
 class MainActivity : ComponentActivity() {
@@ -117,9 +130,58 @@ class MainActivity : ComponentActivity() {
             }
 
             AppTheme(colorMode = colorMode.intValue) {
-                CheckRoot(colorMode = colorMode, context = context, modifier = Modifier)
+                CheckRoot1(colorMode = colorMode, context = context, modifier = Modifier)
             }
 
+        }
+    }
+}
+
+@Composable
+fun CheckRoot1(modifier: Modifier,context: Context,colorMode: MutableState<Int> = remember { mutableIntStateOf(0) }) {
+    val showroot = remember { mutableStateOf(2) }
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            try {
+                val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
+                showroot.value = process.waitFor()
+            } catch (e: Exception) {
+                showroot.value = 3
+            }
+        }
+    }
+    when (showroot.value) {
+        0 -> AnimatedVisibility(true) {
+            Main0(colorMode = colorMode, context = context, modifier = modifier)
+        }
+        2 -> AnimatedVisibility(true) {
+            Scaffold {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .wrapContentSize(Alignment.Center) // 内容居中
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally // 水平居中
+                    ) {
+                        // 圆形进度条
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(50.dp), // 设置进度条的大小
+                            color = MiuixTheme.colorScheme.primary, // 进度条颜色
+                            strokeWidth = 6.dp // 进度条宽度
+                        )
+
+                        Spacer(modifier = Modifier.height(16.dp))
+
+                        Text(
+                            text = stringResource(R.string.loading),
+                        )
+                    }
+                }
+            }
+        }
+        else -> AnimatedVisibility(true) {
+            CheckRoot(colorMode = colorMode, context = context, modifier = modifier)
         }
     }
 }
@@ -141,15 +203,15 @@ fun CheckRoot(modifier: Modifier,context: Context,colorMode: MutableState<Int> =
             showroot.value = true
         }
     }
-
-    if (!showroot.value) {
+    AnimatedVisibility(!showroot.value) {
         Main0(colorMode = colorMode, context = context, modifier = modifier)
-    } else {
+    }
+    AnimatedVisibility(showroot.value) {
         Scaffold() {
             SmallTitle(text = showroot.value.toString())
         }
+        dial(showroot)
     }
-    dial(showroot)
 }
 
 @Composable
@@ -248,6 +310,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("Fun_com_android_systemui_status_bar_clock") { Fun_com_android_systemui_status_bar_clock(navController = navController) }
             composable("Fun_com_android_systemui_hardware_indicator") { Fun_com_android_systemui_hardware_indicator(navController = navController) }
             composable("Fun_com_android_launcher") { Fun_com_android_launcher(navController = navController) }
+            composable("Fun_com_android_systemui_statusbar_icon") { Fun_com_android_systemui_statusbar_icon(navController = navController) }
             composable("miuix") { MainPage() }
         }
     }

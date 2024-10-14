@@ -60,7 +60,7 @@ class HookEntry : IYukiHookXposedInit {
                 }.hook {
                     before {
                         val wifiView = instance<View>()
-                        val wifiIcon = field {
+                        field {
                             name = "mWifiIcon"
                         }.get(wifiView).cast<View>()?.isVisible = false
                     }

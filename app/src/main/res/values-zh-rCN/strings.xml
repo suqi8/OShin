@@ -186,4 +186,6 @@
     <string name="retrying">重试中...</string>
     <string name="exit">退出</string>
     <string name="root_access_denied">未授权 Root 权限</string>
+    <string name="status_bar_icon">状态栏图标</string>
+    <string name="loading">加载中...</string>
 </resources>

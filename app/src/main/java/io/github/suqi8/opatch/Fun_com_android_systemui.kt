@@ -122,6 +122,11 @@ fun Fun_com_android_systemui(navController: NavController) {
                         onClick = {
                             navController.navigate("Fun_com_android_systemui_hardware_indicator")
                         })
+                    addline()
+                    SuperArrow(title = stringResource(id = R.string.status_bar_icon),
+                        onClick = {
+                            navController.navigate("Fun_com_android_systemui_statusbar_icon")
+                        })
                 }
 
                 if (isDebug) {
