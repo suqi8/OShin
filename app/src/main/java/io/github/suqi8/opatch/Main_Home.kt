@@ -301,10 +301,10 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                                 version
                             }
                             battery_cc = try {
-                                executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_cc").trim().toInt()
+                                executeCommand("cat /sys/class/oplus_chg/battery/battery_cc").trim().toInt()
                             } catch (e: Exception) {0}
                             charge_full_design = try {
-                                executeCommand("su -c cat /sys/class/power_supply/battery/charge_full_design").trim().toInt() / 1000
+                                executeCommand("cat /sys/class/power_supply/battery/charge_full_design").trim().toInt() / 1000
                             } catch (e: Exception) { 0 }
                         }
 
@@ -346,15 +346,28 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                             while (true) {
                                 if (isForeground.value) {
                                     currentCapacity.value = try {
-                                        executeCommand("su -c cat /sys/class/power_supply/battery/charge_now").trim().toInt().toString()
-                                    } catch (e: Exception) {e.message} + " mAh"
+                                        when {
+                                            executeCommand("cat /sys/class/oplus_chg/battery/charge_full").isNotEmpty() -> {
+                                                (executeCommand("cat /sys/class/oplus_chg/battery/charge_full").trim().toInt() / 1000).toString()
+                                            }
+                                            executeCommand("cat /sys/class/power_supply/battery/charge_counter").isNotEmpty() -> {
+                                                (executeCommand("cat /sys/class/power_supply/battery/charge_counter").trim().toInt() / 1000).toString()
+                                            }
+                                            executeCommand("cat /sys/class/power_supply/battery/charge_now").isNotEmpty() -> {
+                                                (executeCommand("cat /sys/class/power_supply/battery/charge_now").trim().toInt() / 1000).toString()
+                                            }
+                                            else -> "ERROR"
+                                        }
+                                    } catch (e: Exception) {
+                                        e.message
+                                    } + " mAh"
                                     fullCapacity.value = try {
-                                        executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_fcc").trim().toInt().toString()
+                                        executeCommand("cat /sys/class/oplus_chg/battery/battery_fcc").trim().toInt().toString()
                                     } catch (e: Exception) {e.message} + " mAh"
                                     batteryHealth.value = try {
                                         getSOH() + "% / " +
-                                                (executeCommand("su -c cat /sys/class/oplus_chg/battery/battery_fcc").trim().toFloat() /
-                                                        (executeCommand("su -c cat /sys/class/power_supply/battery/charge_full_design").trim().toFloat() / 100000)).toString()
+                                                (executeCommand("cat /sys/class/oplus_chg/battery/battery_fcc").trim().toFloat() /
+                                                        (executeCommand("cat /sys/class/power_supply/battery/charge_full_design").trim().toFloat() / 100000)).toString()
                                     } catch (e: Exception) { e.message } + "%"
                                 }
                                 delay(10000L)
