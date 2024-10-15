@@ -88,12 +88,17 @@ class resetApp {
     private fun restartApp(packageName: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                val command = "pkill -f " + packageName
-                // 使用 su 执行命令
-                val process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
+                if (packageName == "android") {
+                    val process = Runtime.getRuntime().exec(arrayOf("su", "-c","reboot"))
+                    process.waitFor()
+                } else {
+                    val command = "pkill -f " + packageName
+                    // 使用 su 执行命令
+                    val process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
 
-                // 等待命令执行完成
-                process.waitFor()
+                    // 等待命令执行完成
+                    process.waitFor()
+                }
             } catch (e: Exception) {
                 e.printStackTrace()
                 // 处理错误

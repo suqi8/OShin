@@ -8,6 +8,7 @@ import android.widget.ImageView
 import androidx.core.view.isVisible
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
 import com.github.kyuubiran.ezxhelper.finders.FieldFinder.`-Static`.fieldFinder
+import com.github.kyuubiran.ezxhelper.params
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.annotation.xposed.InjectYukiHookWithXposed
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
@@ -24,6 +25,7 @@ import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.XposedHelpers
 import io.github.suqi8.opatch.hook.StatusBar.StatusBarClock
+import io.github.suqi8.opatch.hook.StatusBar.StatusBarIcon
 import io.github.suqi8.opatch.hook.StatusBar.StatusBarhardware_indicator
 import io.github.suqi8.opatch.hook.appilcations.getObjectFieldAs
 import io.github.suqi8.opatch.hook.launcher.LauncherIcon
@@ -52,20 +54,6 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = StatusBarClock())
         loadApp(hooker = StatusBarhardware_indicator())
         loadApp(hooker = LauncherIcon())
-        loadApp(name = "com.android.systemui") {
-            "com.android.systemui.statusbar.StatusBarWifiView".toClass().apply {
-                method {
-                    name = "initViewState"
-                    emptyParam()
-                }.hook {
-                    before {
-                        val wifiView = instance<View>()
-                        field {
-                            name = "mWifiIcon"
-                        }.get(wifiView).cast<View>()?.isVisible = false
-                    }
-                }
-            }
-        }
+        loadApp(hooker = StatusBarIcon())
     }
 }

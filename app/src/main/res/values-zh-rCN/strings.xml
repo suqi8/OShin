@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OPatch</string>
-    <string name="xposed_desc">Make ColorOS Great Again!</string>
+    <string name="xposed_desc">系统辅助模块，支持 ColorOS、RealmeUI、OxygenOS。免费软件，请勿二次转发，分享，售卖！github@suqi8</string>
     <string name="about_module">此模块使用 YukiHookAPI 构建。\n了解更多 https://github.com/HighCapable/YuKiHookAPI</string>
     <string name="module_version">模块版本：%1$s</string>
     <string name="module_not_activated">模块未激活</string>
@@ -188,4 +188,8 @@
     <string name="root_access_denied">未授权 Root 权限</string>
     <string name="status_bar_icon">状态栏图标</string>
     <string name="loading">加载中...</string>
+    <string name="default_">默认</string>
+    <string name="hide">隐藏</string>
+    <string name="wifi_icon">Wifi图标</string>
+    <string name="wifi_arrow">Wifi箭头</string>
 </resources>

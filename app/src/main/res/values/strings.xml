@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">OPatch</string>
-    <string name="xposed_desc">Make ColorOS Great Again!</string>
+    <string name="xposed_desc">System support module for ColorOS, RealmeUI, and OxygenOS. Free software – redistribution, sharing, or selling is prohibited! Contact: github@suqi8</string>
     <string name="about_module">This module is made by YukiHookAPI. \nLearn more https://github.com/HighCapable/YuKiHookAPI</string>
     <string name="module_version">Module version: %1$s</string>
     <string name="module_not_activated">Module not activated</string>
@@ -189,4 +189,8 @@
     <string name="root_access_denied">Root access not granted</string>
     <string name="status_bar_icon">Status Bar Icon</string>
     <string name="loading">Loading...</string>
+    <string name="default_">Default</string>
+    <string name="hide">Hide</string>
+    <string name="wifi_icon">Wifi Icon</string>
+    <string name="wifi_arrow">Wifi Arrow</string>
 </resources>

@@ -95,6 +95,9 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
     val resetApp = resetApp()
     val appList = listOf("com.android.systemui")
     val com_android_systemui_statusbar_icon = remember { mutableStateOf(false) }
+    val showlist = listOf(stringResource(R.string.default_),stringResource(R.string.hide))
+    val show_Wifi_icon = remember { mutableStateOf(0) }
+    val show_Wifi_arrow = remember { mutableStateOf(0) }
 
     val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
     val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
@@ -112,6 +115,8 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
 
     LaunchedEffect(Unit) {
         com_android_systemui_statusbar_icon.value = context.prefs("settings").getBoolean("com_android_systemui_statusbar_icon", false)
+        show_Wifi_icon.value = context.prefs("settings").getInt("com_android_systemui_statusbar_icon_show_Wifi_icon", 0)
+        show_Wifi_arrow.value = context.prefs("settings").getInt("com_android_systemui_statusbar_icon_show_Wifi_arrow", 0)
     }
     Scaffold(topBar = {
         TopAppBar(
@@ -201,7 +206,20 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
                                     .fillMaxWidth()
                                     .padding(horizontal = 12.dp, vertical = 6.dp)
                             ) {
-
+                                SuperDropdown(title = stringResource(R.string.wifi_icon),
+                                    items = showlist,
+                                    selectedIndex = show_Wifi_icon.value,
+                                    onSelectedIndexChange = {
+                                        show_Wifi_icon.value = it
+                                        context.prefs("settings").edit { putInt("com_android_systemui_statusbar_icon_show_Wifi_icon", it) }
+                                    })
+                                SuperDropdown(title = stringResource(R.string.wifi_arrow),
+                                    items = showlist,
+                                    selectedIndex = show_Wifi_arrow.value,
+                                    onSelectedIndexChange = {
+                                        show_Wifi_arrow.value = it
+                                        context.prefs("settings").edit { putInt("com_android_systemui_statusbar_icon_show_Wifi_arrow", it) }
+                                    })
                             }
                         }
                     }
