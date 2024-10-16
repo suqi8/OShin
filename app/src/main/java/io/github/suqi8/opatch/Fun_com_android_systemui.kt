@@ -2,8 +2,13 @@ package io.github.suqi8.opatch
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.Activity.ScreenCaptureCallback
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.util.Log
+import android.view.View
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,6 +19,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -46,6 +52,13 @@ import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import java.io.FileInputStream
 import java.util.Properties
+import androidx.compose.runtime.*
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import top.yukonga.miuix.kmp.basic.Box
+import top.yukonga.miuix.kmp.basic.Text
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -105,7 +118,9 @@ fun Fun_com_android_systemui(navController: NavController) {
         )
     } }) {padding ->
         LazyColumn(contentPadding = PaddingValues(top = padding.calculateTopPadding()),
-            topAppBarScrollBehavior = one, modifier = Modifier.fillMaxSize().haze(state = hazeState)) {
+            topAppBarScrollBehavior = one, modifier = Modifier
+                .fillMaxSize()
+                .haze(state = hazeState)) {
             item {
                 Card(
                     modifier = Modifier
@@ -130,6 +145,33 @@ fun Fun_com_android_systemui(navController: NavController) {
                 }
 
                 if (isDebug) {
+                    // 创建 MutableStateList 存储广播日志
+                    val broadcastLogs = remember { mutableStateListOf<String>() }
+                    val context = LocalContext.current
+
+                    DisposableEffect(Unit) {
+                        val receiver = object : BroadcastReceiver() {
+                            override fun onReceive(ctx: Context?, intent: Intent?) {
+                                val action = intent?.action ?: "Unknown Action"
+                                val extras = intent?.extras?.keySet()?.joinToString(", ") ?: "No extras"
+                                val logMessage: String = "Action: $action, Extras: [$extras]"
+
+                                Log.d(TAG, "onReceive: $logMessage")
+                                broadcastLogs.add(0, logMessage)  // 最新的日志添加在顶部
+                            }
+                        }
+
+                        // 注册一个不带过滤器的 IntentFilter 尽量捕获所有广播
+                        val intentFilter = IntentFilter().apply {
+                            priority = IntentFilter.SYSTEM_HIGH_PRIORITY  // 尽量提升优先级
+                        }
+                        context.registerReceiver(receiver, intentFilter)
+
+                        // 在 Composable 销毁时注销接收器，避免内存泄漏
+                        onDispose {
+                            context.unregisterReceiver(receiver)
+                        }
+                    }
                     val launcher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
                         if (result.resultCode == Activity.RESULT_OK) {
                             result.data?.data?.let { uri ->

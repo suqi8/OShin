@@ -16,7 +16,10 @@ import com.highcapable.yukihookapi.hook.factory.configs
 import com.highcapable.yukihookapi.hook.factory.encase
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.method
+import com.highcapable.yukihookapi.hook.type.android.BundleClass
 import com.highcapable.yukihookapi.hook.type.android.ResourcesClass
+import com.highcapable.yukihookapi.hook.type.android.ViewClass
+import com.highcapable.yukihookapi.hook.type.java.BooleanClass
 import com.highcapable.yukihookapi.hook.type.java.FloatClass
 import com.highcapable.yukihookapi.hook.type.java.FloatType
 import com.highcapable.yukihookapi.hook.type.java.IntClass
@@ -47,7 +50,7 @@ class HookEntry : IYukiHookXposedInit {
                     emptyParam()
                     returnType = StringClass
                 }.hook {
-                    replaceTo("原神手机酸奶独家定制版"+prefs("settings").getBoolean("com_android_systemui_status_bar_clock").toString())
+                    replaceTo("原神手机酸奶独家定制版")
                 }
             }
         }*/
@@ -55,5 +58,28 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = StatusBarhardware_indicator())
         loadApp(hooker = LauncherIcon())
         loadApp(hooker = StatusBarIcon())
+        loadApp(name = "com.android.systemui") {
+            /*"com.android.systemui.statusbar.phone.StatusBarIconController".toClass().apply {
+                method {
+                    name = "setIconVisibility"
+                    param(StringClass, BooleanClass)
+                }.hook {
+                    before {
+                        args[1] = true
+                    }
+                }
+            }*/
+            "com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment".toClass().apply {
+                method {
+                    name = "onViewCreated"
+                    param(ViewClass, BundleClass)
+                }.hook {
+                    after {
+                        val view = args[0] as View
+                        view.visibility = View.INVISIBLE
+                    }
+                }
+            }
+        }
     }
 }

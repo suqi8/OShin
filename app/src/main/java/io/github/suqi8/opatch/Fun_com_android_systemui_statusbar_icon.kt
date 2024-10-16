@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import android.view.Gravity
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.items
@@ -43,6 +45,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.FirstBaseline
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
@@ -206,13 +209,15 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
                                     .fillMaxWidth()
                                     .padding(horizontal = 12.dp, vertical = 6.dp)
                             ) {
-                                SuperDropdown(title = stringResource(R.string.wifi_icon),
-                                    items = showlist,
-                                    selectedIndex = show_Wifi_icon.value,
-                                    onSelectedIndexChange = {
-                                        show_Wifi_icon.value = it
-                                        context.prefs("settings").edit { putInt("com_android_systemui_statusbar_icon_show_Wifi_icon", it) }
-                                    })
+                                Row {
+                                    SuperDropdown(title = stringResource(R.string.wifi_icon),
+                                        items = showlist,
+                                        selectedIndex = show_Wifi_icon.value,
+                                        onSelectedIndexChange = {
+                                            show_Wifi_icon.value = it
+                                            context.prefs("settings").edit { putInt("com_android_systemui_statusbar_icon_show_Wifi_icon", it) }
+                                        })
+                                }
                                 SuperDropdown(title = stringResource(R.string.wifi_arrow),
                                     items = showlist,
                                     selectedIndex = show_Wifi_arrow.value,
