@@ -81,38 +81,19 @@ jobs:
       with:
         name: output-metadata
         path: ${{ env.APK_FILE_METADATA }}
-
-  upload-telegram:
-    name: Upload Release
-    if: ${{ success() && github.ref == 'refs/heads/master' }}
-    runs-on: ubuntu-latest
-    needs:
-      - build
-    steps:
-      - name: Download Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: artifacts
-      - name: Release
-        env:
-          COMMIT_MESSAGE: |+
-            New push to GitHub\!
-            ```
-            ${{ github.event.head_commit.message }}
-            ```by `${{ github.event.head_commit.author.name }}`
-            See commit detail [here](${{ github.event.head_commit.url }})
-          COMMIT_URL: ${{ github.event.head_commit.url }}
-        run: |
-          ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
-          export armeabi=$(find artifacts -name "OPatch_armeabi-v7a_*")
-          export arm64=$(find artifacts -name "OPatch_arm64-v8a_*")
-          export armAll=$(find artifacts -name "OPatch_all_*")
-          export metadata=$(find artifacts -name "output-metadata")
-          ls artifacts
-          chmod +x telegram-bot-api-binary
-          curl -v "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=%5B%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Farmeabi%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Farm64%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2FarmAll%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Fmetadata%22%2C%22parse_mode%22%3A%22MarkdownV2%22%2C%22caption%22%3A%24%7BESCAPED%7D%7D%5D" \
-           -F armeabi="@$armeabi" \
-           -F arm64="@$arm64" \
-           -F armAll="@$armAll" \
-           -F metadata="@$metadata"
-          pkill telegram-bot
+    - name: Upload To Telegram Release
+      env:
+        COMMIT_MESSAGE: |+
+          New push to GitHub\!
+          ```
+          ${{ github.event.head_commit.message }}
+          ```by `${{ github.event.head_commit.author.name }}`
+          See commit detail [here](${{ github.event.head_commit.url }})
+        COMMIT_URL: ${{ github.event.head_commit.url }}
+      run: |
+        ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
+        curl -v "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=%5B%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Farmeabi%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Farm64%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2FarmAll%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Fmetadata%22%2C%22parse_mode%22%3A%22MarkdownV2%22%2C%22caption%22%3A%24%7BESCAPED%7D%7D%5D" \
+         -F armeabi="@${{ env.APK_FILE_ARMEABI }}" \
+         -F arm64="@${{ env.APK_FILE_ARM64 }}" \
+         -F armAll="@${{ env.APK_FILE_ARMALL }}" \
+         -F metadata="@${{ env.APK_FILE_METADATA }}"
