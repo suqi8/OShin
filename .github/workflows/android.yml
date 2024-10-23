@@ -92,7 +92,14 @@ jobs:
         COMMIT_URL: ${{ github.event.head_commit.url }}
       run: |
         ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
-        curl -v "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=%5B%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Farmeabi%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Farm64%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2FarmAll%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Fmetadata%22%2C%20%22parse_mode%22%3A%22MarkdownV2%22%2C%20%22caption%22%3A%22'%22%24%7BESCAPED1%7D%22'%22%7D%5D" \
+        media='[
+          {"type":"document", "media":"attach://armeabi"},
+          {"type":"document", "media":"attach://arm64"},
+          {"type":"document", "media":"attach://armAll"},
+          {"type":"document", "media":"attach://metadata", "parse_mode":"MarkdownV2", "caption":${ESCAPED1}}
+        ]'
+        ENCODED_MEDIA=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$media'''))")
+        curl -v "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=${ENCODED_MEDIA}" \
          -F armeabi="@${{ env.APK_FILE_ARMEABI }}" \
          -F arm64="@${{ env.APK_FILE_ARM64 }}" \
          -F armAll="@${{ env.APK_FILE_ARMALL }}" \
