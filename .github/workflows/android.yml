@@ -95,10 +95,8 @@ jobs:
           - **📦 仓库**：`${{ github.repository }}`
           - **🔢 提交 SHA**：`${{ github.event.head_commit.id }}`
           - **🔍 分支**：`${{ github.ref }}`
-          - **🧪 修改文件**：`${{ github.event.head_commit.modified_files }}`
-          - **⭐️ 提交状态**：`${{ github.event.head_commit.status }}`
           *ABI 和 SHA256 列表：*
-          armeabi:`${armeabi[0]}`
+          armeabi:`${{armeabi[0]}}`
           arm64:`${arm64[0]}`
           armAll:`${armAll[0]}`
           metadata:`${metadata[0]}`
