@@ -84,11 +84,26 @@ jobs:
     - name: Upload To Telegram Release
       env:
         COMMIT_MESSAGE: |+
-          New push to GitHub\!
+          🚀 **GitHub 新推送来了！**  
+
+           - **📄 提交信息**：
           ```
           ${{ github.event.head_commit.message }}
-          ```by `${{ github.event.head_commit.author.name }}`
-          See commit detail [here](${{ github.event.head_commit.url }})
+          ```
+           - **👤 作者**：`${{ github.event.head_commit.author.name }}`
+           - **🕒 提交时间**：`${{ github.event.head_commit.timestamp }}`
+           - **📦 仓库**：`${{ github.repository }}`
+           - **🔢 提交 SHA**：`${{ github.event.head_commit.id }}`
+           - **🔍 分支**：`${{ github.ref }}`
+           - **🧪 修改文件**：`${{ github.event.head_commit.modified_files }}`
+           - **⭐️ 提交状态**：`${{ github.event.head_commit.status }}`
+          *ABI 和 SHA256 列表：*
+          armeabi:`${armeabi[0]}`
+          arm64:`${arm64[0]}`
+          armAll:`${armAll[0]}`
+          metadata:`${metadata[0]}`
+           
+           🔗 **查看详情**：[点我看具体内容](${{ github.event.head_commit.url }})
         COMMIT_URL: ${{ github.event.head_commit.url }}
       run: |
         ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
