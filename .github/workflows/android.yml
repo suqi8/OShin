@@ -91,7 +91,7 @@ jobs:
           See commit detail [here](${{ github.event.head_commit.url }})
         COMMIT_URL: ${{ github.event.head_commit.url }}
       run: |
-        ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); msg = msg.replace(".", "\\.").replace("-", "\\-").replace("_", "\\_").replace(" ", "\\ "); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
+        ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); msg = msg.replace(".", "\\.").replace("-", "\\-").replace("_", "\\_").replace(" ", "\\ ").replace("*", "\\*").replace("[", "\\[").replace("]", "\\]").replace("(", "\\(").replace(")", "\\)").replace("`", "\\`"); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
         media='[
           {"type":"document", "media":"attach://armeabi"},
           {"type":"document", "media":"attach://arm64"},
