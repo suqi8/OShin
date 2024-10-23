@@ -121,7 +121,7 @@ jobs:
            -F armeabi="@armeabi" \
            -F arm64="@$arm64" \
            -F armAll="@$armAll" \
-           -F metadata="@metadata" \
+           -F metadata="@metadata"
           pkill telegram-bot
 
   telegram-bot-api:
