@@ -98,7 +98,8 @@ jobs:
           {"type":"document", "media":"attach://armAll"},
           {"type":"document", "media":"attach://metadata", "parse_mode":"MarkdownV2", "caption":"'"${ESCAPED}"'"}
         ]'
-        curl -v "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=${media}" \
+        ENCODED_MEDIA=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$media'''))")
+        curl -v "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=${ENCODED_MEDIA}" \
          -F armeabi="@${{ env.APK_FILE_ARMEABI }}" \
          -F arm64="@${{ env.APK_FILE_ARM64 }}" \
          -F armAll="@${{ env.APK_FILE_ARMALL }}" \
