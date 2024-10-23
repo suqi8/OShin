@@ -91,12 +91,14 @@ jobs:
           See commit detail [here](${{ github.event.head_commit.url }})
         COMMIT_URL: ${{ github.event.head_commit.url }}
       run: |
-        ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); msg = msg.replace(".", "\\.").replace("-", "\\-").replace("_", "\\_").replace(" ", "\\ ").replace("*", "\\*").replace("[", "\\[").replace("]", "\\]").replace("(", "\\(").replace(")", "\\)").replace("`", "\\`"); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
+        ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
+        
+        ESCAPED1=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''${ESCAPED}'''))")
         media='[
           {"type":"document", "media":"attach://armeabi"},
           {"type":"document", "media":"attach://arm64"},
           {"type":"document", "media":"attach://armAll"},
-          {"type":"document", "media":"attach://metadata", "parse_mode":"MarkdownV2", "caption":"'"${ESCAPED}"'"}
+          {"type":"document", "media":"attach://metadata", "parse_mode":"MarkdownV2", "caption":"'"${ESCAPED1}"'"}
         ]'
         ENCODED_MEDIA=$(python3 -c "import urllib.parse; print(urllib.parse.quote('''$media'''))")
         curl -v "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=${ENCODED_MEDIA}" \
