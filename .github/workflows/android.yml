@@ -38,11 +38,11 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: | 
-        ./gradlew assembleDebug
-        echo "APK_FILE_ARMEABI=$(find app/build/outputs/apk/debug -name 'OPatch_armeabi-v7a_v*.apk')" >> $GITHUB_ENV
-        echo "APK_FILE_ARM64=$(find app/build/outputs/apk/debug -name 'OPatch_arm64-v8a_v*.apk')" >> $GITHUB_ENV
-        echo "APK_FILE_ARMALL=$(find app/build/outputs/apk/debug -name 'OPatch_all_v*.apk')" >> $GITHUB_ENV
-        echo "APK_FILE_METADATA=$(find app/build/outputs/apk/debug -name 'output-metadata.json')" >> $GITHUB_ENV
+        ./gradlew assembleRelease
+        echo "APK_FILE_ARMEABI=$(find app/build/outputs/apk/release -name 'OPatch_armeabi-v7a_v*.apk')" >> $GITHUB_ENV
+        echo "APK_FILE_ARM64=$(find app/build/outputs/apk/release -name 'OPatch_arm64-v8a_v*.apk')" >> $GITHUB_ENV
+        echo "APK_FILE_ARMALL=$(find app/build/outputs/apk/release -name 'OPatch_all_v*.apk')" >> $GITHUB_ENV
+        echo "APK_FILE_METADATA=$(find app/build/outputs/apk/release -name 'output-metadata.json')" >> $GITHUB_ENV
 
     - name: Show Artifacts SHA256
       run: |
