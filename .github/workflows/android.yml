@@ -84,7 +84,7 @@ jobs:
 
   upload-telegram:
     name: Upload Release
-    if: ${{ success() && github.ref == 'refs/heads/main' }}
+    if: ${{ success() && github.ref == 'refs/heads/master' }}
     runs-on: ubuntu-latest
     needs:
       - build
