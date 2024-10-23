@@ -110,11 +110,11 @@ jobs:
           COMMIT_URL: ${{ github.event.head_commit.url }}
         run: |
           ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
-          export armeabi=$(find artifacts -name "OPatch_armeabi-v7a_v*.apk")
-          export arm64=$(find artifacts -name "OPatch_arm64-v8a_v*.apk")
-          export armAll=$(find artifacts -name "OPatch_all_v*.apk")
-          export metadata=$(find artifacts -name "output-metadata.json")
-          ls artifacts
+          export armeabi=$(find app/build/outputs/apk/debug -name 'OPatch_armeabi-v7a_v*.apk')
+          export arm64=$(find app/build/outputs/apk/debug -name "OPatch_arm64-v8a_v*.apk")
+          export armAll=$(find app/build/outputs/apk/debug -name "OPatch_all_v*.apk")
+          export metadata=$(find app/build/outputs/apk/debug -name "output-metadata.json")
+          ls app/build/outputs/apk/debug
           chmod +x telegram-bot-api-binary
           ./telegram-bot-api-binary --api-id=21724 --api-hash=3e0cb5efcd52300aec5994fdfc5bdc16 --local 2>&1 > /dev/null &
           curl -v "http://127.0.0.1:8081/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=%5B%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Farm64%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Farm32%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2FarmAll%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Funiversal%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Fsymbol%22%2C%22parse_mode%22%3A%22MarkdownV2%22%2C%22caption%22:${ESCAPED}%7D%5D" \
