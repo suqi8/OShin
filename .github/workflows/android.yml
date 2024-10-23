@@ -100,10 +100,10 @@ jobs:
           - **🔢 提交 SHA**：`${{ github.event.head_commit.id }}`
           - **🔍 分支**：`${{ github.ref }}`
           *ABI 和 SHA256 列表：*
-          armeabi:`${{armeabi[0]}}`
-          arm64:`${{arm64[0]}}`
-          armAll:`${{armAll[0]}}`
-          metadata:`${{metadata[0]}}`
+          armeabi:`${{ env.armeabi }}`
+          arm64:`${{ env.arm64 }}`
+          armAll:`${{ env.armAll }}`
+          metadata:`${{ env.metadata }}`
           
           🔗 **查看详情**：[点我看具体内容](${{ github.event.head_commit.url }})
         COMMIT_URL: ${{ github.event.head_commit.url }}
