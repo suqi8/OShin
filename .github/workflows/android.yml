@@ -103,7 +103,7 @@ jobs:
           armAll:`${armAll[0]}`
           metadata:`${metadata[0]}`
            
-           🔗 **查看详情**：[点我看具体内容](${{ github.event.head_commit.url }})
+         🔗 **查看详情**：[点我看具体内容](${{ github.event.head_commit.url }})
         COMMIT_URL: ${{ github.event.head_commit.url }}
       run: |
         ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
