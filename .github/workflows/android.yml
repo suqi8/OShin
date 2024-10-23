@@ -112,7 +112,7 @@ jobs:
           ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
           ls artifacts
           cd artifacts
-          for file in artifacts/OPatch*; do
+          for file in OPatch*; do
             echo "Decompressing $file"
             mv "$file" "unzip.zip"
             unzip "unzip.zip"
