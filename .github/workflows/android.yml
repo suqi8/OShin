@@ -110,18 +110,11 @@ jobs:
           COMMIT_URL: ${{ github.event.head_commit.url }}
         run: |
           ESCAPED=`python3 -c 'import json,os,urllib.parse; msg = json.dumps(os.environ["COMMIT_MESSAGE"]); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"])))'`
-          ls artifacts
-          cd artifacts
-          for file in OPatch*; do
-            echo "Decompressing $file"
-            mv "$file" "unzip.zip"
-            unzip "unzip.zip"
-            rm "unzip.zip"
-          done
-          export armeabi=$(find artifacts -name "OPatch_armeabi-v7a_v*.apk")
-          export arm64=$(find artifacts -name "OPatch_arm64-v8a_v*.apk")
-          export armAll=$(find artifacts -name "OPatch_all_v*.apk")
-          export metadata=$(find artifacts -name "output-metadata.json")
+          
+          export armeabi=$(find artifacts -name "OPatch_armeabi-v7a_v*")
+          export arm64=$(find artifacts -name "OPatch_arm64-v8a_v*")
+          export armAll=$(find artifacts -name "OPatch_all_v*")
+          export metadata=$(find artifacts -name "output-metadata")
           ls artifacts
           chmod +x telegram-bot-api-binary
           ./telegram-bot-api-binary --api-id=21724 --api-hash=3e0cb5efcd52300aec5994fdfc5bdc16 --local 2>&1 > /dev/null &
