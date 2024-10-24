@@ -36,6 +36,23 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+    - name: Install ccache
+      run: |
+        sudo apt install -y ccache ninja-build
+        ccache -o max_size=1G
+        ccache -o hash_dir=false
+        ccache -o hard_link=true
+        ccache -o compiler_check='%compiler% -dumpmachine; %compiler% -dumpversion'
+        ccache -zp
+    - name: Cache Native Build
+      uses: actions/cache@v4.1.1
+      with:
+        path: |
+          ~/.cache/ccache
+          ~/.ccache
+          app/build/.lto-cache
+        key: native-cache-${{ github.sha }}
+        restore-keys: native-cache-
     - name: Build with Gradle
       run: | 
         ./gradlew assembleRelease
@@ -101,6 +118,7 @@ jobs:
           🐼 arm64:`${{ env.arm64 }}`
           🤩 armAll:`${{ env.armAll }}`
           😶‍🌫️ metadata:`${{ env.metadata }}`
+          
           *📄 提交信息 📄*
           ```
           ${{ github.event.head_commit.message }}
@@ -108,7 +126,7 @@ jobs:
           🔗 **查看详情**：[点我看具体内容](${{ github.event.head_commit.url }})
         COMMIT_URL: ${{ github.event.head_commit.url }}
       run: |
-        ESCAPED=`python3 -c 'import json,os,re,urllib.parse; msg = json.dumps(re.sub(r"([-.])", r"\\\1", os.environ["COMMIT_MESSAGE"])); print(urllib.parse.quote(msg, safe=""))'`
+        ESCAPED=`python3 -c 'import json,os,re,urllib.parse; msg = json.dumps(re.sub(r"([\-.])", r"\\\1", os.environ["COMMIT_MESSAGE"])); print(urllib.parse.quote(msg if len(msg) <= 1024 else json.dumps(os.environ["COMMIT_URL"]), safe=""))'`
         echo "COMMIT_MESSAGE: $ESCAPED"
         curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=%5B%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Farmeabi%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Farm64%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2FarmAll%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Fmetadata%22%2C%20%22parse_mode%22%3A%22MarkdownV2%22%2C%20%22caption%22%3A${ESCAPED}%7D%5D%0A" \
          -F armeabi="@${{ env.APK_FILE_ARMEABI }}" \
