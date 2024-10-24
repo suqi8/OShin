@@ -27,6 +27,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
     - name: set up JDK 21
       uses: actions/setup-java@v4
       with:
@@ -53,9 +55,6 @@ jobs:
           app/build/.lto-cache
         key: native-cache-${{ github.sha }}
         restore-keys: native-cache-
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
     - name: Build with Gradle
       run: | 
         ./gradlew assembleRelease
