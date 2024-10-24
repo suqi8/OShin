@@ -21,28 +21,13 @@ fun getGitCommitHash(): String {
     return stdout.toString().trim()
 }
 
-fun getAndIncrementBuildNumber(): Int? {
-    val propertiesFile = file("version.properties")
-    val properties = Properties()
-
-    // Load existing properties
-    if (propertiesFile.exists()) {
-        properties.load(FileInputStream(propertiesFile))
-    } else {
-        // If file doesn't exist, create a new one
-        properties["BUILD_NUMBER"] = "1"
+fun commitCount(): String {
+    val stdout = ByteArrayOutputStream()
+    exec {
+        commandLine = "git rev-list --count HEAD".split(" ")
+        standardOutput = stdout
     }
-
-    // Get the current build number
-    val buildNumber = properties["BUILD_NUMBER"].toString().toInt()
-
-    // Increment the build number
-    properties["BUILD_NUMBER"] = (buildNumber + 1).toString()
-
-    // Save the updated build number back to the properties file
-    properties.store(FileOutputStream(propertiesFile), null)
-
-    return buildNumber
+    return stdout.toString().trim()
 }
 
 android {
@@ -77,7 +62,7 @@ android {
             }
     }
 
-    val number = getAndIncrementBuildNumber()
+    val number = commitCount().toInt()
     defaultConfig {
         applicationId = property.project.app.packageName
         minSdk = property.project.android.minSdk
@@ -101,11 +86,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = "21"
         freeCompilerArgs = listOf(
             "-Xno-param-assertions",
             "-Xno-call-assertions",
