@@ -29,7 +29,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -75,9 +74,11 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.offset
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.Dp
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.chrisbanes.haze.HazeDefaults.blurRadius
@@ -120,31 +121,74 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
         LazyColumn(contentPadding = PaddingValues(top = padding.calculateTopPadding()),
             topAppBarScrollBehavior = topAppBarScrollBehavior, modifier = Modifier.fillMaxSize()) {
             item {
-                Spacer(modifier = Modifier.size(12.dp))
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize() // 让 Box 填满整个容器或屏幕
-                ) {
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                        contentDescription = null,
+
+                Spacer(modifier = Modifier.height(16.dp))
+                Card(modifier = Modifier.fillMaxWidth()
+                    .padding(horizontal = 12.dp)
+                    .padding(bottom = 6.dp)) {
+                    Box(
                         modifier = Modifier
-                            .size(250.dp)
-                            .align(Alignment.Center), // 将图片在 Box 中居中对齐
-                        contentScale = ContentScale.Crop // 图片裁剪并放大，保持充满容器
-                    )
-                    Text(text = context.packageManager.getPackageInfo(context.packageName, 0).versionName.toString(), fontSize = 14.sp, color = Color.Gray,
-                        modifier = Modifier.padding(top=180.dp)
-                            .align(Alignment.Center))
-                }
-                Button(
-                    modifier = Modifier.padding(start = 20.dp, end = 20.dp)
-                        .fillMaxWidth(),
-                    text = stringResource(R.string.check_update),
-                    submit = true,
-                    onClick = {
+                            .fillMaxWidth()
+                    ) {
+                        // 背景图片
+                        Image(
+                            painter = painterResource(id = R.drawable.aboutbackground),
+                            contentDescription = null,
+                            contentScale = ContentScale.Crop, // 图片裁剪以适应容器
+                            modifier = Modifier.matchParentSize() // 使图片充满整个 Box
+                        )
+                        Column(modifier = Modifier.padding(bottom = 16.dp)) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(200.dp) // 设定 Box 的高度
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(250.dp)
+                                        .align(Alignment.Center)
+                                        .offset(y = -20.dp),
+                                    contentScale = ContentScale.Crop
+                                )
+                                Text(
+                                    text = context.packageManager.getPackageInfo(context.packageName, 0).versionName.toString(),
+                                    fontSize = 14.sp,
+                                    color = Color.Gray,
+                                    modifier = Modifier
+                                        .align(Alignment.BottomCenter)
+                                        .padding(bottom = 8.dp)
+                                        .offset(y = -20.dp)
+                                )
+                            }
+
+                            Row(
+                                modifier = Modifier.fillMaxWidth().offset(y = -10.dp),
+                                horizontalArrangement = Arrangement.Center,
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.coloros),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(width = 121.875.dp, height = 25.dp)
+                                )
+                                Spacer(modifier = Modifier.size(8.dp))
+                                Image(
+                                    painter = painterResource(id = R.drawable.coloros15logo),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(40.dp).offset(y = -2.5.dp)
+                                )
+                            }
+                            Button(
+                                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                                    .fillMaxWidth(),
+                                text = stringResource(R.string.check_update),
+                                submit = true,
+                                onClick = {})
+                        }
                     }
-                )
+                }
                 Spacer(modifier = Modifier.size(12.dp))
                 Card(modifier = Modifier.fillMaxWidth()
                     .padding(horizontal = 12.dp)

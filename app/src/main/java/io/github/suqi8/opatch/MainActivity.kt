@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -393,9 +394,8 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
         }, modifier = Modifier.hazeChild(
             state = hazeState,
             style = hazeStyle), navigationIcon = {
-            IconButton(onClick = { /* do something */ }) {
-                Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null)
-            }
+            Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null,
+                modifier = Modifier.size(50.dp))
         })
     }) { padding ->
         Box(modifier = Modifier.haze(
