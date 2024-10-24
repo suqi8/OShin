@@ -53,6 +53,9 @@ jobs:
           app/build/.lto-cache
         key: native-cache-${{ github.sha }}
         restore-keys: native-cache-
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
     - name: Build with Gradle
       run: | 
         ./gradlew assembleRelease
