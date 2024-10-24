@@ -193,4 +193,5 @@
     <string name="hide">Hide</string>
     <string name="wifi_icon">Wifi Icon</string>
     <string name="wifi_arrow">Wifi Arrow</string>
+    <string name="hide_status_bar">Hide Status Bar</string>
 </resources>

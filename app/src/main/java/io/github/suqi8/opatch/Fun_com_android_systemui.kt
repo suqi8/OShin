@@ -59,6 +59,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.extra.SuperSwitch
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -69,6 +70,10 @@ fun Fun_com_android_systemui(navController: NavController) {
     val RestartAPP = remember { mutableStateOf(false) }
     val resetApp = resetApp()
     val isDebug = context.prefs("settings").getBoolean("Debug", false)
+    val hide_status_bar = remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        hide_status_bar.value = context.prefs("settings").getBoolean("hide_status_bar", false)
+    }
 
     val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
     val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
@@ -141,6 +146,19 @@ fun Fun_com_android_systemui(navController: NavController) {
                     SuperArrow(title = stringResource(id = R.string.status_bar_icon),
                         onClick = {
                             navController.navigate("Fun_com_android_systemui_statusbar_icon")
+                        })
+                }
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp)
+                        .padding(bottom = 6.dp, top = 15.dp)
+                ) {
+                    SuperSwitch(title = stringResource(id = R.string.hide_status_bar),
+                        checked = hide_status_bar.value,
+                        onCheckedChange = {
+                            hide_status_bar.value = it
+                            context.prefs("settings").edit().putBoolean("hide_status_bar", it)
                         })
                 }
 

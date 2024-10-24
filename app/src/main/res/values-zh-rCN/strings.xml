@@ -192,4 +192,5 @@
     <string name="hide">隐藏</string>
     <string name="wifi_icon">Wifi图标</string>
     <string name="wifi_arrow">Wifi箭头</string>
+    <string name="hide_status_bar">隐藏状态栏</string>
 </resources>

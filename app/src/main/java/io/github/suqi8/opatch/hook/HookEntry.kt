@@ -27,6 +27,7 @@ import com.highcapable.yukihookapi.hook.type.java.StringClass
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import de.robv.android.xposed.XSharedPreferences
 import de.robv.android.xposed.XposedHelpers
+import io.github.suqi8.opatch.hook.StatusBar.StatusBar
 import io.github.suqi8.opatch.hook.StatusBar.StatusBarClock
 import io.github.suqi8.opatch.hook.StatusBar.StatusBarIcon
 import io.github.suqi8.opatch.hook.StatusBar.StatusBarhardware_indicator
@@ -69,17 +70,7 @@ class HookEntry : IYukiHookXposedInit {
                     }
                 }
             }*/
-            "com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment".toClass().apply {
-                method {
-                    name = "onViewCreated"
-                    param(ViewClass, BundleClass)
-                }.hook {
-                    after {
-                        val view = args[0] as View
-                        view.visibility = View.INVISIBLE
-                    }
-                }
-            }
         }
+        loadApp(hooker = StatusBar())
     }
 }
