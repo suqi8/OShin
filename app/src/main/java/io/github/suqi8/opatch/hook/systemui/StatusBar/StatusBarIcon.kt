@@ -1,4 +1,4 @@
-package io.github.suqi8.opatch.hook.StatusBar
+package io.github.suqi8.opatch.hook.systemui.StatusBar
 
 import android.view.View
 import androidx.core.view.isVisible

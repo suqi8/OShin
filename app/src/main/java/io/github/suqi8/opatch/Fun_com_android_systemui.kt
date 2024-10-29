@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.View
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -71,8 +72,12 @@ fun Fun_com_android_systemui(navController: NavController) {
     val resetApp = resetApp()
     val isDebug = context.prefs("settings").getBoolean("Debug", false)
     val hide_status_bar = remember { mutableStateOf(false) }
+    val enable_all_day_screen_off = remember { mutableStateOf(false) }
+    val force_trigger_ltpo = remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         hide_status_bar.value = context.prefs("settings").getBoolean("hide_status_bar", false)
+        enable_all_day_screen_off.value = context.prefs("settings").getBoolean("enable_all_day_screen_off", false)
+        force_trigger_ltpo.value = context.prefs("settings").getBoolean("force_trigger_ltpo", false)
     }
 
     val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
@@ -160,6 +165,30 @@ fun Fun_com_android_systemui(navController: NavController) {
                             hide_status_bar.value = it
                             context.prefs("settings").edit().putBoolean("hide_status_bar", it)
                         })
+                }
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp)
+                        .padding(bottom = 6.dp, top = 15.dp)
+                ) {
+                    SuperSwitch(
+                        title = stringResource(R.string.enable_all_day_screen_off),
+                        onCheckedChange = {
+                            enable_all_day_screen_off.value = it
+                            context.prefs("settings").edit { putBoolean("enable_all_day_screen_off", it) }
+                        },
+                        checked = enable_all_day_screen_off.value
+                    )
+                    AnimatedVisibility(enable_all_day_screen_off.value) {
+                        addline()
+                        SuperSwitch(title = stringResource(id = R.string.force_trigger_ltpo),
+                            checked = force_trigger_ltpo.value,
+                            onCheckedChange = {
+                                force_trigger_ltpo.value = it
+                                context.prefs("settings").edit { putBoolean("force_trigger_ltpo", it) }
+                            })
+                    }
                 }
 
                 if (isDebug) {

@@ -1,38 +1,17 @@
 package io.github.suqi8.opatch.hook
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
-import android.util.Log
-import android.view.View
-import android.widget.ImageView
-import androidx.core.view.isVisible
-import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
-import com.github.kyuubiran.ezxhelper.finders.FieldFinder.`-Static`.fieldFinder
-import com.github.kyuubiran.ezxhelper.params
-import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.annotation.xposed.InjectYukiHookWithXposed
-import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
+import com.highcapable.yukihookapi.hook.core.annotation.LegacyResourcesHook
 import com.highcapable.yukihookapi.hook.factory.configs
 import com.highcapable.yukihookapi.hook.factory.encase
-import com.highcapable.yukihookapi.hook.factory.field
-import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.type.android.BundleClass
-import com.highcapable.yukihookapi.hook.type.android.ResourcesClass
-import com.highcapable.yukihookapi.hook.type.android.ViewClass
-import com.highcapable.yukihookapi.hook.type.java.BooleanClass
-import com.highcapable.yukihookapi.hook.type.java.FloatClass
-import com.highcapable.yukihookapi.hook.type.java.FloatType
-import com.highcapable.yukihookapi.hook.type.java.IntClass
-import com.highcapable.yukihookapi.hook.type.java.StringClass
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
-import de.robv.android.xposed.XSharedPreferences
-import de.robv.android.xposed.XposedHelpers
-import io.github.suqi8.opatch.hook.StatusBar.StatusBar
-import io.github.suqi8.opatch.hook.StatusBar.StatusBarClock
-import io.github.suqi8.opatch.hook.StatusBar.StatusBarIcon
-import io.github.suqi8.opatch.hook.StatusBar.StatusBarhardware_indicator
-import io.github.suqi8.opatch.hook.appilcations.getObjectFieldAs
+import io.github.suqi8.opatch.hook.systemui.StatusBar.StatusBar
+import io.github.suqi8.opatch.hook.systemui.StatusBar.StatusBarClock
+import io.github.suqi8.opatch.hook.systemui.StatusBar.StatusBarIcon
+import io.github.suqi8.opatch.hook.systemui.StatusBar.StatusBarhardware_indicator
 import io.github.suqi8.opatch.hook.launcher.LauncherIcon
+import io.github.suqi8.opatch.hook.systemui.aod.allday_screenoff
 
 @InjectYukiHookWithXposed(entryClassName = "opatch", isUsingResourcesHook = true)
 class HookEntry : IYukiHookXposedInit {
@@ -41,6 +20,7 @@ class HookEntry : IYukiHookXposedInit {
         // Your code here.
     }
 
+    @OptIn(LegacyResourcesHook::class)
     @SuppressLint("RestrictedApi")
     override fun onHook() = encase {
         // Your code here.
@@ -71,6 +51,19 @@ class HookEntry : IYukiHookXposedInit {
                 }
             }*/
         }
+        /*loadApp(name = "com.android.settings") {
+            resources().hook {
+                injectResource {
+                    conditions {
+                        name = "device_ota_card_bg"
+                        drawable()
+                    }
+                    replaceToModuleResource(R.drawable.aboutbackground)
+                }
+            }
+        }*/
+
         loadApp(hooker = StatusBar())
+        loadApp(hooker = allday_screenoff())
     }
 }

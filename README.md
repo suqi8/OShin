@@ -97,6 +97,9 @@ OPatch是一个专为ColorOS系统设计的辅助模块，旨在增强和定制�
 - [「Compose」 by JetBrains](https://github.com/JetBrains/compose)
 - [「Miuix」 by YuKongA](https://github.com/miuix-kotlin-multiplatform/miuix)
 - [「LuckyTool」 by luckyzyx](https://github.com/Xposed-Modules-Repo/com.luckyzyx.luckytool)
+- [「Magisk」 by topjohnwu](https://github.com/topjohnwu/Magisk)
+- [「LSPosed」 by LSPosed](https://github.com/LSPosed/LSPosed)
+- [「coloros-aod」 by Flyfish233](https://github.com/Flyfish233/coloros-aod)
 
 ---
 

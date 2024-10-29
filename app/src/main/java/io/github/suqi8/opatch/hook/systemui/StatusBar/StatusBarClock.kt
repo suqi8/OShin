@@ -1,4 +1,4 @@
-package io.github.suqi8.opatch.hook.StatusBar
+package io.github.suqi8.opatch.hook.systemui.StatusBar
 
 import androidx.compose.ui.platform.LocalContext
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker

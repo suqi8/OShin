@@ -193,4 +193,6 @@
     <string name="wifi_icon">Wifi图标</string>
     <string name="wifi_arrow">Wifi箭头</string>
     <string name="hide_status_bar">隐藏状态栏</string>
+    <string name="enable_all_day_screen_off">启用全天候息屏</string>
+    <string name="force_trigger_ltpo">强制触发 LTPO</string>
 </resources>

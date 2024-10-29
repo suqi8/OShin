@@ -1,9 +1,7 @@
-package io.github.suqi8.opatch.hook.StatusBar
+package io.github.suqi8.opatch.hook.systemui.StatusBar
 
 import android.view.View
-import androidx.core.view.isVisible
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
-import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.android.BundleClass
 import com.highcapable.yukihookapi.hook.type.android.ViewClass
