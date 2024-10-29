@@ -154,7 +154,6 @@ dependencies {
     ksp(com.highcapable.yukihookapi.ksp.xposed)
     implementation(com.github.duanhong169.drawabletoolbox)
     implementation(androidx.core.core.ktx)
-    implementation(androidx.appcompat.appcompat)
     implementation(com.google.android.material.material)
     implementation(androidx.constraintlayout.constraintlayout)
     androidTestImplementation(junit.junit)

@@ -30,8 +30,7 @@
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:supportsRtl="true"
-            android:theme="@style/Theme.AppDefault"
-            tools:targetApi="tiramisu">
+            android:theme="@style/Theme.AppDefault">
         <meta-data
                 android:name="xposedmodule"
                 android:value="true" />
