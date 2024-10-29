@@ -106,7 +106,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
     val showAlphaDialog = remember { mutableStateOf(false) }
     val showBlurDialog = remember { mutableStateOf(false) }
     val showNoiseDialog = remember { mutableStateOf(false) }
-    val auto_color = remember { mutableStateOf(false) }
+    val auto_color = remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
         auto_color.value = context.prefs("settings").getBoolean("auto_color", false)
         val cachedName = getDeviceName(context) // 获取保存的设备名称

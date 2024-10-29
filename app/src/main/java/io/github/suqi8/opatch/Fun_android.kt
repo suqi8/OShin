@@ -62,7 +62,6 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
-import io.github.suqi8.opatch.hook.corepatch.SettingsActivity
 import io.github.suqi8.opatch.ui.tools.resetApp
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn

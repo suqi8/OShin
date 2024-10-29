@@ -1,23 +1,32 @@
 package io.github.suqi8.opatch
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -37,33 +47,53 @@ import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.application.RestartApp
 import io.github.suqi8.opatch.ui.tools.resetApp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Fun_android_package_manager_services(navController: NavController) {
-    var downgr by remember { mutableStateOf(false) }
-    var authcreak by remember { mutableStateOf(false) }
-    var digestCreak by remember { mutableStateOf(false) }
-    var UsePreSig by remember { mutableStateOf(false) }
-    var enhancedMode by remember { mutableStateOf(false) }
-    var bypassBlock by remember { mutableStateOf(false) }
-    var disable_verification_agent by remember { mutableStateOf(false) }
+    var downgr = remember { mutableStateOf(false) }
+    var authcreak = remember { mutableStateOf(false) }
+    var digestCreak = remember { mutableStateOf(false) }
+    var UsePreSig = remember { mutableStateOf(false) }
+    var enhancedMode = remember { mutableStateOf(false) }
+    var bypassBlock = remember { mutableStateOf(false) }
+    var disable_verification_agent = remember { mutableStateOf(false) }
+    val shared_user = remember { mutableStateOf(false) }
     val context = LocalContext.current
     val topappbarzt = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val appList = listOf("android")
     val RestartAPP = remember { mutableStateOf(false) }
     val resetApp = resetApp()
+    val showUsePreSigDialog = remember { mutableStateOf(false) }
     resetApp.AppRestartScreen(appList,RestartAPP)
+    LaunchedEffect(Unit) {
+        downgr.value = context.prefs("corepatch").getBoolean("downgrade", false)
+        authcreak.value = context.prefs("corepatch").getBoolean("authcreak", false)
+        digestCreak.value = context.prefs("corepatch").getBoolean("digestCreak", false)
+        UsePreSig.value = context.prefs("corepatch").getBoolean("UsePreSig", false)
+        enhancedMode.value = context.prefs("corepatch").getBoolean("enhancedMode", false)
+        bypassBlock.value = context.prefs("corepatch").getBoolean("bypassBlock", false)
+        disable_verification_agent.value = context.prefs("corepatch").getBoolean("disableVerificationAgent", false)
+        shared_user.value = context.prefs("corepatch").getBoolean("sharedUser", false)
+    }
 
     val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
     val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
@@ -137,51 +167,52 @@ fun Fun_android_package_manager_services(navController: NavController) {
                         SuperSwitch(
                             title = stringResource(R.string.downgr),
                             summary = stringResource(R.string.downgr_summary),
-                            enabled = false,
                             onCheckedChange = {
-                                downgr = it
+                                downgr.value = it
+                                context.prefs("corepatch").edit { putBoolean("downgrade", it) }
                             },
-                            checked = downgr
+                            checked = downgr.value
                         )
                         addline()
                         SuperSwitch(
                             title = stringResource(R.string.authcreak),
                             summary = stringResource(R.string.authcreak_summary),
-                            enabled = false,
                             onCheckedChange = {
-                                authcreak = it
+                                authcreak.value = it
+                                context.prefs("corepatch").edit { putBoolean("authcreak", it) }
                             },
-                            checked = authcreak
+                            checked = authcreak.value
                         )
                         addline()
                         SuperSwitch(
                             title = stringResource(R.string.digestCreak),
                             summary = stringResource(R.string.digestCreak_summary),
-                            enabled = false,
                             onCheckedChange = {
-                                digestCreak = it
+                                digestCreak.value = it
+                                context.prefs("corepatch").edit { putBoolean("digestCreak", it) }
                             },
-                            checked = digestCreak
+                            checked = digestCreak.value
                         )
                         addline()
                         SuperSwitch(
                             title = stringResource(R.string.UsePreSig),
                             summary = stringResource(R.string.UsePreSig_summary),
-                            enabled = false,
                             onCheckedChange = {
-                                UsePreSig = it
+                                showUsePreSigDialog.value = it
+                                UsePreSig.value = it
+                                context.prefs("corepatch").edit { putBoolean("UsePreSig", it) }
                             },
-                            checked = UsePreSig
+                            checked = UsePreSig.value
                         )
                         addline()
                         SuperSwitch(
                             title = stringResource(R.string.enhancedMode),
                             summary = stringResource(R.string.enhancedMode_summary),
-                            enabled = false,
                             onCheckedChange = {
-                                enhancedMode = it
+                                enhancedMode.value = it
+                                context.prefs("corepatch").edit { putBoolean("enhancedMode", it) }
                             },
-                            checked = enhancedMode
+                            checked = enhancedMode.value
                         )
                     }
                     SmallTitle(
@@ -195,25 +226,66 @@ fun Fun_android_package_manager_services(navController: NavController) {
                         SuperSwitch(
                             title = stringResource(R.string.bypassBlock),
                             summary = stringResource(R.string.bypassBlock_summary),
-                            enabled = false,
                             onCheckedChange = {
-                                bypassBlock = it
+                                bypassBlock.value = it
+                                context.prefs("corepatch").edit { putBoolean("bypassBlock", it) }
                             },
-                            checked = bypassBlock
+                            checked = bypassBlock.value
+                        )
+                        addline()
+                        SuperSwitch(
+                            title = stringResource(R.string.shared_user_title),
+                            summary = stringResource(R.string.shared_user_summary),
+                            onCheckedChange = {
+                                shared_user.value = it
+                                context.prefs("corepatch").edit { putBoolean("sharedUser", it) }
+                            },
+                            checked = shared_user.value
                         )
                         addline()
                         SuperSwitch(
                             title = stringResource(R.string.disable_verification_agent_title),
                             summary = stringResource(R.string.disable_verification_agent_summary),
-                            enabled = false,
                             onCheckedChange = {
-                                disable_verification_agent = it
+                                disable_verification_agent.value = it
+                                context.prefs("corepatch").edit { putBoolean("disableVerificationAgent", it) }
                             },
-                            checked = disable_verification_agent
+                            checked = disable_verification_agent.value
                         )
                     }
                 }
             }
         }
     }
+    UsePreSig(showUsePreSigDialog)
+}
+
+@Composable
+fun UsePreSig(showDialog: MutableState<Boolean>) {
+    if (!showDialog.value) return
+    showDialog(content = {
+        SuperDialog(title = stringResource(R.string.warn),
+            titleColor = Color.Red,
+            summary = stringResource(R.string.usepresig_warn),
+            show = showDialog,
+            onDismissRequest = {
+                dismissDialog(showDialog)
+            }) {
+            Spacer(Modifier.height(12.dp))
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.ok),
+                    submit = true,
+                    onClick = {
+                        dismissDialog(showDialog)
+                    }
+                )
+            }
+        }
+    })
 }

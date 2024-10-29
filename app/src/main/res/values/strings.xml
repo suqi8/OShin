@@ -196,4 +196,5 @@
     <string name="hide_status_bar">Hide Status Bar</string>
     <string name="enable_all_day_screen_off">Enable All-Day Screen-Off</string>
     <string name="force_trigger_ltpo">Force Trigger LTPO</string>
+    <string name="warn">Warn</string>
 </resources>

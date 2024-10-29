@@ -101,6 +101,7 @@ fun Main_Function(
         Feature(stringResource(R.string.UsePreSig), stringResource(R.string.UsePreSig_summary), "Fun_android_package_manager_services"),
         Feature(stringResource(R.string.enhancedMode), stringResource(R.string.enhancedMode_summary), "Fun_android_package_manager_services"),
         Feature(stringResource(R.string.bypassBlock), stringResource(R.string.bypassBlock_summary), "Fun_android_package_manager_services"),
+        Feature(stringResource(R.string.shared_user_title), stringResource(R.string.shared_user_summary), "Fun_android_package_manager_services"),
         Feature(stringResource(R.string.disable_verification_agent_title), stringResource(R.string.disable_verification_agent_summary), "Fun_android_package_manager_services"),
         Feature(stringResource(R.string.status_bar_clock), null, "Fun_com_android_systemui_status_bar_clock"),
         Feature(
@@ -119,110 +120,12 @@ fun Main_Function(
             "Fun_com_android_systemui_status_bar_clock"
         ),
         Feature(
-            stringResource(R.string.show_years_title),
-            stringResource(R.string.show_years_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.show_month_title),
-            stringResource(R.string.show_month_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.show_day_title),
-            stringResource(R.string.show_day_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.show_week_title),
-            stringResource(R.string.show_week_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.show_cn_hour_title),
-            stringResource(R.string.show_cn_hour_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.showtime_period_title),
-            stringResource(R.string.showtime_period_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.show_seconds_title),
-            stringResource(R.string.show_seconds_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.show_millisecond_title),
-            stringResource(R.string.show_millisecond_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.hide_space_title),
-            stringResource(R.string.hide_space_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.dual_row_title),
-            stringResource(R.string.dual_row_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.alignment),null,
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.clock_format),null,
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
             stringResource(R.string.power_consumption_indicator),
             null,
             "Fun_com_android_systemui_hardware_indicator"
         ),
         Feature(
-            stringResource(R.string.dual_cell),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.absolute_value),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.bold_text),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.alignment),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.update_time),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.font_size),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.dual_row_title),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.first_line_content),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.second_line_content),
+            stringResource(R.string.temperature_indicator),
             null,
             "Fun_com_android_systemui_hardware_indicator"
         ),
@@ -232,45 +135,25 @@ fun Main_Function(
             "Fun_com_android_systemui_hardware_indicator"
         ),
         Feature(
-            stringResource(R.string.change_cpu_temp_source),
-            stringResource(R.string.enter_thermal_zone_number),
-            "Fun_com_android_systemui_hardware_indicator"
+            stringResource(R.string.hide_status_bar),
+            null,
+            "Fun_com_android_systemui"
         ),
         Feature(
-            stringResource(R.string.bold_text),
+            stringResource(R.string.enable_all_day_screen_off),
             null,
-            "Fun_com_android_systemui_hardware_indicator"
+            "Fun_com_android_systemui"
         ),
         Feature(
-            stringResource(R.string.alignment),
+            stringResource(R.string.force_trigger_ltpo),
             null,
-            "Fun_com_android_systemui_hardware_indicator"
+            "Fun_com_android_systemui"
         ),
         Feature(
-            stringResource(R.string.update_time),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
+            stringResource(R.string.desktop_icon_and_text_size_multiplier),
+            stringResource(R.string.icon_size_limit_note),
+            "Fun_com_android_launcher"
         ),
-        Feature(
-            stringResource(R.string.font_size),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.dual_row_title),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.first_line_content),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.second_line_content),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        )
     )
     var miuixSearchValue by remember { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -358,29 +241,20 @@ fun Main_Function(
 
                     filteredFeatures.forEachIndexed { index, feature ->
                         item {
-                            AnimatedVisibility(
-                                visible = true,
-                                enter = fadeIn(animationSpec = tween(durationMillis = 300)),
-                                exit = fadeOut(animationSpec = tween(durationMillis = 300))
-                            ) {
-                                BasicComponent(
-                                    title = highlightMatches(feature.nickname, miuixSearchValue),
-                                    summary = feature.description?.let { highlightMatches(it, miuixSearchValue) },
-                                    modifier = Modifier.fillMaxWidth(),
-                                    onClick = {
-                                        miuixSearchValue = feature.nickname
-                                        expanded = false
-                                        navController.navigate(feature.page)
-                                    }
-                                )
+                            BasicComponent(
+                                title = highlightMatches(feature.nickname, miuixSearchValue),
+                                summary = feature.description?.let { highlightMatches(it, miuixSearchValue) },
+                                modifier = Modifier.fillMaxWidth(),
+                                onClick = {
+                                    miuixSearchValue = feature.nickname
+                                    expanded = false
+                                    navController.navigate(feature.page)
+                                }
+                            )
+                            if (index < filteredFeatures.size - 1) {
+                                addline()
                             }
                         }
-                        // 在最后一项后面不添加分割线
-                            if (index < filteredFeatures.size - 1) {
-                                item {
-                                    addline()
-                                }
-                            }
                     }
                 }
             }
@@ -518,7 +392,7 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
     GetAppIconAndName(packageName = packageName) { appName, icon ->
         if (appName != "noapp") {
             val context = LocalContext.current
-            val auto_color = context.prefs("settings").getBoolean("auto_color", false)
+            val auto_color = context.prefs("settings").getBoolean("auto_color", true)
             val defaultColor = MiuixTheme.colorScheme.primary
             val dominantColor: MutableState<Color> = remember { mutableStateOf(defaultColor) }
             val isLoading = remember { mutableStateOf(true) }
