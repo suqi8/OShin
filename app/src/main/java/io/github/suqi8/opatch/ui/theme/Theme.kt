@@ -63,7 +63,7 @@ fun AppTheme(
 ) {
     val darkTheme = isSystemInDarkTheme()
     return MiuixTheme(
-        colorScheme = when (colorMode) {
+        colors = when (colorMode) {
             1 -> top.yukonga.miuix.kmp.theme.lightColorScheme()
             2 -> top.yukonga.miuix.kmp.theme.darkColorScheme()
             else -> if (darkTheme) top.yukonga.miuix.kmp.theme.darkColorScheme() else top.yukonga.miuix.kmp.theme.lightColorScheme()

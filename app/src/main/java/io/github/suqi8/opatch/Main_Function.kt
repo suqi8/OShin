@@ -370,7 +370,7 @@ fun BasicComponent(
                 Text(
                     text = it,
                     color = summaryColor, // 这里使用传入的颜色
-                    fontSize = MiuixTheme.textStyles.title.fontSize,
+                    fontSize = MiuixTheme.textStyles.headline1.fontSize,
                 )
             }
         }
