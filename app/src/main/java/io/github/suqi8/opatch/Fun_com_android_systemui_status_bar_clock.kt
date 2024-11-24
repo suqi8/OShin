@@ -135,7 +135,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
     val hazeStyle = remember(containerColor, alpha, blurRadius, noiseFactor) {
         HazeStyle(
             backgroundColor = containerColor,
-            tint = HazeTint.Color(containerColor.copy(alpha)),
+            tint = HazeTint(containerColor.copy(alpha)),
             blurRadius = blurRadius,
             noiseFactor = noiseFactor
         )

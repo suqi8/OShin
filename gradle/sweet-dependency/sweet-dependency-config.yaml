@@ -23,10 +23,10 @@ plugins:
     version: 8.7.0
   org.jetbrains.kotlin.android:
     alias: kotlin-android
-    version: 2.0.20
+    version: 2.0.21
   com.google.devtools.ksp:
     alias: kotlin-ksp
-    version: 2.0.20-1.0.25
+    version: 2.0.21-1.0.26
 
 libraries:
   de.robv.android.xposed:

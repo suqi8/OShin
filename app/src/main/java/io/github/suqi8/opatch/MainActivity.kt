@@ -321,7 +321,7 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
     val hazeStyle = remember(containerColor, alpha.value, blurRadius.value, noiseFactor.value) {
         HazeStyle(
             backgroundColor = containerColor,
-            tint = HazeTint.Color(containerColor.copy(alpha.value)),
+            tint = HazeTint(containerColor.copy(alpha.value)),
             blurRadius = blurRadius.value,
             noiseFactor = noiseFactor.value
         )

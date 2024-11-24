@@ -1,11 +1,6 @@
 package io.github.suqi8.opatch
 
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Intent
-import android.util.Log
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -26,7 +21,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.chrisbanes.haze.HazeState
@@ -35,21 +29,16 @@ import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.ui.tools.resetApp
-import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Slider
-import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperArrow
-import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import java.io.FileInputStream
-import java.util.Properties
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -77,7 +66,7 @@ fun Fun_com_android_launcher(navController: NavController) {
     val hazeStyle = remember(containerColor, alpha, blurRadius, noiseFactor) {
         HazeStyle(
             backgroundColor = containerColor,
-            tint = HazeTint.Color(containerColor.copy(alpha)),
+            tint = HazeTint(containerColor.copy(alpha)),
             blurRadius = blurRadius,
             noiseFactor = noiseFactor
         )

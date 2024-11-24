@@ -91,7 +91,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
     val hazeStyle = remember(containerColor, alpha, blurRadius, noiseFactor) {
         HazeStyle(
             backgroundColor = containerColor,
-            tint = HazeTint.Color(containerColor.copy(alpha)),
+            tint = HazeTint(containerColor.copy(alpha)),
             blurRadius = blurRadius,
             noiseFactor = noiseFactor
         )
