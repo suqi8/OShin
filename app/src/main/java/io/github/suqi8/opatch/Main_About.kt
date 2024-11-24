@@ -70,7 +70,6 @@ import top.yukonga.miuix.kmp.extra.SuperDropdown
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 import java.lang.reflect.Method
 import java.time.Instant
 import java.time.ZoneId
@@ -141,7 +140,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                                     modifier = Modifier
                                         .size(250.dp)
                                         .align(Alignment.Center)
-                                        .offset(y = -20.dp),
+                                        .offset(y = (-20).dp),
                                     contentScale = ContentScale.Crop
                                 )
                                 Text(
@@ -151,14 +150,14 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                                     modifier = Modifier
                                         .align(Alignment.BottomCenter)
                                         .padding(bottom = 8.dp)
-                                        .offset(y = -20.dp)
+                                        .offset(y = (-20).dp)
                                 )
                             }
 
                             Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .offset(y = -10.dp),
+                                    .offset(y = (-10).dp),
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -173,7 +172,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                                     contentDescription = null,
                                     modifier = Modifier
                                         .size(40.dp)
-                                        .offset(y = -2.5.dp)
+                                        .offset(y = (-2.5).dp)
                                 )
                             }
                             Button(

@@ -12,6 +12,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -46,16 +47,16 @@ fun Fun_com_android_launcher(navController: NavController) {
     val context = LocalContext.current
     val one = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val appList = listOf("com.android.launcher")
-    val RestartAPP = remember { mutableStateOf(false) }
+    val restartAPP = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     val resetApp = resetApp()
     val isDebug = context.prefs("settings").getBoolean("Debug", false)
     val showIconTextDialog = remember { mutableStateOf(false) }
-    val IconTextTitle = stringResource(R.string.desktop_icon_and_text_size_multiplier)
-    val IconText = remember { mutableStateOf(1.0f) }
+    val iconTextTitle = stringResource(R.string.desktop_icon_and_text_size_multiplier)
+    val iconText = remember { mutableFloatStateOf(1.0f) }
 
     LaunchedEffect(Unit) {
-        IconText.value = context.prefs("settings").getFloat("com_android_launcher_icon_text", 1.00f)
+        iconText.floatValue = context.prefs("settings").getFloat("com_android_launcher_icon_text", 1.00f)
     }
 
     val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
@@ -93,7 +94,7 @@ fun Fun_com_android_launcher(navController: NavController) {
                 }
             }, actions = {
                 IconButton(onClick = {
-                    RestartAPP.value = true
+                    restartAPP.value = true
                 },
                     modifier = Modifier.padding(end = 18.dp)) {
                     Icon(
@@ -121,12 +122,12 @@ fun Fun_com_android_launcher(navController: NavController) {
                             onClick = {
                                 showIconTextDialog.value = true
                             },
-                            rightText = "${IconText.value}x"
+                            rightText = "${iconText.floatValue}x"
                         )
                         Slider(
-                            progress = ((IconText.value / 2.00).toFloat()),
+                            progress = ((iconText.floatValue / 2.00).toFloat()),
                             onProgressChange = { newProgress ->
-                                IconText.value = (newProgress * 2.00).toFloat()
+                                iconText.floatValue = (newProgress * 2.00).toFloat()
                                 context.prefs("settings").edit { putFloat("com_android_launcher_icon_text", (((newProgress * 2.00).toFloat()))) }
                             },
                             modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
@@ -136,6 +137,6 @@ fun Fun_com_android_launcher(navController: NavController) {
             }
         }
     }
-    SettingFloatDialog(context,showIconTextDialog,IconTextTitle,IconText,focusManager,"com_android_launcher_icon_text")
-    resetApp.AppRestartScreen(appList,RestartAPP)
+    SettingFloatDialog(context,showIconTextDialog,iconTextTitle,iconText,focusManager,"com_android_launcher_icon_text")
+    resetApp.AppRestartScreen(appList,restartAPP)
 }

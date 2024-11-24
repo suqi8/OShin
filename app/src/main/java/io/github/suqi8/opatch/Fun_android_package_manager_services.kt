@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -54,29 +53,28 @@ import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Fun_android_package_manager_services(navController: NavController) {
-    var downgr = remember { mutableStateOf(false) }
-    var authcreak = remember { mutableStateOf(false) }
-    var digestCreak = remember { mutableStateOf(false) }
-    var UsePreSig = remember { mutableStateOf(false) }
-    var enhancedMode = remember { mutableStateOf(false) }
-    var bypassBlock = remember { mutableStateOf(false) }
-    var disable_verification_agent = remember { mutableStateOf(false) }
+    val downgr = remember { mutableStateOf(false) }
+    val authcreak = remember { mutableStateOf(false) }
+    val digestCreak = remember { mutableStateOf(false) }
+    val usePreSig = remember { mutableStateOf(false) }
+    val enhancedMode = remember { mutableStateOf(false) }
+    val bypassBlock = remember { mutableStateOf(false) }
+    val disable_verification_agent = remember { mutableStateOf(false) }
     val shared_user = remember { mutableStateOf(false) }
     val context = LocalContext.current
     val topappbarzt = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val appList = listOf("android")
-    val RestartAPP = remember { mutableStateOf(false) }
+    val restartAPP = remember { mutableStateOf(false) }
     val resetApp = resetApp()
     val showUsePreSigDialog = remember { mutableStateOf(false) }
-    resetApp.AppRestartScreen(appList,RestartAPP)
+    resetApp.AppRestartScreen(appList,restartAPP)
     LaunchedEffect(Unit) {
         downgr.value = context.prefs("corepatch").getBoolean("downgrade", false)
         authcreak.value = context.prefs("corepatch").getBoolean("authcreak", false)
         digestCreak.value = context.prefs("corepatch").getBoolean("digestCreak", false)
-        UsePreSig.value = context.prefs("corepatch").getBoolean("UsePreSig", false)
+        usePreSig.value = context.prefs("corepatch").getBoolean("UsePreSig", false)
         enhancedMode.value = context.prefs("corepatch").getBoolean("enhancedMode", false)
         bypassBlock.value = context.prefs("corepatch").getBoolean("bypassBlock", false)
         disable_verification_agent.value = context.prefs("corepatch").getBoolean("disableVerificationAgent", false)
@@ -120,7 +118,7 @@ fun Fun_android_package_manager_services(navController: NavController) {
             actions = {
                 // 如果你有其他操作按钮，这里可以添加
                 IconButton(onClick = {
-                    RestartAPP.value = true
+                    restartAPP.value = true
                 },
                     modifier = Modifier.padding(end = 18.dp)) {
                     Icon(
@@ -188,10 +186,10 @@ fun Fun_android_package_manager_services(navController: NavController) {
                             summary = stringResource(R.string.UsePreSig_summary),
                             onCheckedChange = {
                                 showUsePreSigDialog.value = it
-                                UsePreSig.value = it
+                                usePreSig.value = it
                                 context.prefs("corepatch").edit { putBoolean("UsePreSig", it) }
                             },
-                            checked = UsePreSig.value
+                            checked = usePreSig.value
                         )
                         addline()
                         SuperSwitch(

@@ -1,9 +1,7 @@
 package io.github.suqi8.opatch
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.pm.PackageManager
-import android.os.BatteryManager
 import android.os.Build
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -11,18 +9,14 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -32,6 +26,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -43,11 +38,9 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -57,7 +50,6 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -65,14 +57,7 @@ import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import java.io.BufferedReader
-import java.io.File
-import java.io.FileInputStream
 import java.io.InputStreamReader
-import java.util.Properties
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 
 /**
  * 绘制阴影范围
@@ -145,13 +130,21 @@ fun addline(mode: Boolean = true) {
     val context = LocalContext.current
     if (context.prefs("settings").getBoolean("addline", false))
         if (mode) {
-            HorizontalDivider(modifier = Modifier.padding(start = 25.dp, end = 25.dp), thickness = 0.5.dp, color = Color.Gray.copy(alpha = 0.2f))
+            HorizontalDivider(
+                modifier = Modifier.padding(start = 25.dp, end = 25.dp),
+                thickness = 0.5.dp,
+                color = Color.Gray.copy(alpha = 0.2f)
+            )
         } else {
-            HorizontalDivider(modifier = Modifier.padding(start = 5.dp, end = 5.dp), thickness = 0.5.dp, color = Color.Gray.copy(alpha = 0.2f))
+            HorizontalDivider(
+                modifier = Modifier.padding(start = 5.dp, end = 5.dp),
+                thickness = 0.5.dp,
+                color = Color.Gray.copy(alpha = 0.2f)
+            )
         }
-    else {}
 }
 
+@SuppressLint("AutoboxingStateCreation")
 @Composable
 fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
     /*val loading = remember { mutableStateOf(true) }
@@ -286,12 +279,12 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                     var health by remember { mutableStateOf("0") }
                     var versionMessage by remember { mutableStateOf("0") }
                     var ksuVersion by remember { mutableStateOf("0") }
-                    var battery_cc: Int by remember { mutableStateOf(0) }
-                    var charge_full_design: Int by remember { mutableStateOf(0) }
+                    var battery_cc: Int by remember { mutableIntStateOf(0) }
+                    var charge_full_design: Int by remember { mutableIntStateOf(0) }
                     LaunchedEffect(Unit) {
                         withContext(Dispatchers.IO) {
                             nvid = getSystemProperty("ro.build.oplus_nv_id")
-                            health = executeCommand("cat /sys/class/power_supply/battery/health").trim().toString()
+                            health = executeCommand("cat /sys/class/power_supply/battery/health").trim()
                             ksuVersion = executeCommand("/data/adb/ksud -V")
                             versionMessage = if (ksuVersion.isEmpty()) {
                                 val magiskVersion = executeCommand("magisk -v")
@@ -323,7 +316,7 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                     val fullCapacity = remember { mutableStateOf("0 mAh") }
                     val batteryHealth = remember { mutableStateOf("0%") }
                     val lifecycleOwner = LocalLifecycleOwner.current
-                    var isForeground = remember { mutableStateOf(false) }
+                    val isForeground = remember { mutableStateOf(false) }
                     DisposableEffect(Unit) {
                         val observer = LifecycleEventObserver { _, event ->
                             when (event) {
@@ -383,7 +376,7 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                         SmallTitle(text = Build.VERSION.RELEASE+"/"+Build.VERSION.SDK_INT, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
                         addline(false)
                         Text(text = stringResource(id = R.string.battery_status),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = batteryHealthString+" / "+health, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        SmallTitle(text = "$batteryHealthString / $health", insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
                         addline(false)
                         Text(text = stringResource(id = R.string.system_version),modifier = Modifier.padding(top=5.dp))
                         SmallTitle(text = Build.DISPLAY, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
@@ -465,7 +458,7 @@ suspend fun executeCommand(command: String): String {
             reader.close()
             output.toString().trim()
         } catch (e: Exception) {
-            Log.e(TAG, "executeCommand: $e", )
+            Log.e(TAG, "executeCommand: $e")
             return@withContext "0"
         }
     }

@@ -56,7 +56,6 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -76,7 +75,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -95,8 +93,9 @@ import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
+import kotlin.system.exitProcess
 
-val TAG = "OPatch"
+const val TAG = "OPatch"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -132,18 +131,18 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun CheckRoot1(modifier: Modifier,context: Context,colorMode: MutableState<Int> = remember { mutableIntStateOf(0) }) {
-    val showroot = remember { mutableStateOf(2) }
+    val showroot = remember { mutableIntStateOf(2) }
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
             try {
                 val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
-                showroot.value = process.waitFor()
+                showroot.intValue = process.waitFor()
             } catch (e: Exception) {
-                showroot.value = 3
+                showroot.intValue = 3
             }
         }
     }
-    when (showroot.value) {
+    when (showroot.intValue) {
         0 -> AnimatedVisibility(true) {
             Main0(colorMode = colorMode, context = context, modifier = modifier)
         }
@@ -200,13 +199,14 @@ fun CheckRoot(modifier: Modifier,context: Context,colorMode: MutableState<Int> =
         Main0(colorMode = colorMode, context = context, modifier = modifier)
     }
     AnimatedVisibility(showroot.value) {
-        Scaffold() {
+        Scaffold {
             SmallTitle(text = showroot.value.toString())
         }
         dial(showroot)
     }
 }
 
+@SuppressLint("ComposableNaming")
 @Composable
 fun dial(showroot: MutableState<Boolean>) {
     if (!showroot.value) return
@@ -232,7 +232,7 @@ fun dial(showroot: MutableState<Boolean>) {
                 text = stringResource(R.string.exit),
                 onClick = {
                     dismissDialog(showroot)
-                    System.exit(0)
+                    exitProcess(0)
                 }
             )
             Spacer(Modifier.width(12.dp))
@@ -318,18 +318,18 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
     val noiseFactor = remember { mutableFloatStateOf(0f) }
     val containerColor: Color = MiuixTheme.colorScheme.background
     val hazeState = remember { HazeState() }
-    val hazeStyle = remember(containerColor, alpha.value, blurRadius.value, noiseFactor.value) {
+    val hazeStyle = remember(containerColor, alpha.floatValue, blurRadius.value, noiseFactor.floatValue) {
         HazeStyle(
             backgroundColor = containerColor,
-            tint = HazeTint(containerColor.copy(alpha.value)),
+            tint = HazeTint(containerColor.copy(alpha.floatValue)),
             blurRadius = blurRadius.value,
-            noiseFactor = noiseFactor.value
+            noiseFactor = noiseFactor.floatValue
         )
     }
     LaunchedEffect(Unit) {
-        alpha.value = context.prefs("settings").getFloat("AppAlpha", 0.75f)
+        alpha.floatValue = context.prefs("settings").getFloat("AppAlpha", 0.75f)
         blurRadius.value = context.prefs("settings").getInt("AppblurRadius", 25).dp
-        noiseFactor.value = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
+        noiseFactor.floatValue = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
     }
     val topAppBarScrollBehavior0 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val topAppBarScrollBehavior1 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
@@ -472,19 +472,6 @@ fun getColorMode(context: Context): Flow<Int> {
     return context.dataStore.data.map { preferences ->
         preferences[colorModeKey] ?: 0 // 默认值为 0（Auto_Mode）
     }
-}
-
-suspend fun saveSetting(context: Context, name: String, data: String) {
-    context.dataStore.edit { preferences ->
-        val KEY = stringPreferencesKey(name)
-        preferences[KEY] = data
-    }
-}
-
-suspend fun getSetting(context: Context, name: String): String? {
-    val preferences = context.dataStore.data.first()
-    val KEY = stringPreferencesKey(name)
-    return preferences[KEY]
 }
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")

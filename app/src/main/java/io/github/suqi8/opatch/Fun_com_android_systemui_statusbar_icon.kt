@@ -21,6 +21,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -60,8 +61,8 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
     val appList = listOf("com.android.systemui")
     val com_android_systemui_statusbar_icon = remember { mutableStateOf(false) }
     val showlist = listOf(stringResource(R.string.default_),stringResource(R.string.hide))
-    val show_Wifi_icon = remember { mutableStateOf(0) }
-    val show_Wifi_arrow = remember { mutableStateOf(0) }
+    val show_Wifi_icon = remember { mutableIntStateOf(0) }
+    val show_Wifi_arrow = remember { mutableIntStateOf(0) }
 
     val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
     val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
@@ -79,8 +80,8 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
 
     LaunchedEffect(Unit) {
         com_android_systemui_statusbar_icon.value = context.prefs("settings").getBoolean("com_android_systemui_statusbar_icon", false)
-        show_Wifi_icon.value = context.prefs("settings").getInt("com_android_systemui_statusbar_icon_show_Wifi_icon", 0)
-        show_Wifi_arrow.value = context.prefs("settings").getInt("com_android_systemui_statusbar_icon_show_Wifi_arrow", 0)
+        show_Wifi_icon.intValue = context.prefs("settings").getInt("com_android_systemui_statusbar_icon_show_Wifi_icon", 0)
+        show_Wifi_arrow.intValue = context.prefs("settings").getInt("com_android_systemui_statusbar_icon_show_Wifi_arrow", 0)
     }
     Scaffold(topBar = {
         TopAppBar(
@@ -173,17 +174,17 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
                                 Row {
                                     SuperDropdown(title = stringResource(R.string.wifi_icon),
                                         items = showlist,
-                                        selectedIndex = show_Wifi_icon.value,
+                                        selectedIndex = show_Wifi_icon.intValue,
                                         onSelectedIndexChange = {
-                                            show_Wifi_icon.value = it
+                                            show_Wifi_icon.intValue = it
                                             context.prefs("settings").edit { putInt("com_android_systemui_statusbar_icon_show_Wifi_icon", it) }
                                         })
                                 }
                                 SuperDropdown(title = stringResource(R.string.wifi_arrow),
                                     items = showlist,
-                                    selectedIndex = show_Wifi_arrow.value,
+                                    selectedIndex = show_Wifi_arrow.intValue,
                                     onSelectedIndexChange = {
-                                        show_Wifi_arrow.value = it
+                                        show_Wifi_arrow.intValue = it
                                         context.prefs("settings").edit { putInt("com_android_systemui_statusbar_icon_show_Wifi_arrow", it) }
                                     })
                             }

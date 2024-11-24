@@ -28,6 +28,8 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -73,7 +75,7 @@ import java.io.IOException
 fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
     val context = LocalContext.current
     val topappbarzt = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
-    val RestartAPP = remember { mutableStateOf(false) }
+    val restartAPP = remember { mutableStateOf(false) }
     val resetApp = resetApp()
     val focusManager = LocalFocusManager.current
     var isDebug = context.prefs("settings").getBoolean("Debug", false)
@@ -81,22 +83,22 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
     val com_android_systemui_temperature_indicator = remember { mutableStateOf(false) }
     val appList = listOf("com.android.systemui")
     val powerDisplay = listOf(stringResource(R.string.power), stringResource(R.string.current),stringResource(R.string.voltage))
-    val powerDisplaySelect1 = remember { mutableStateOf(0) }
-    val powerDisplaySelect2 = remember { mutableStateOf(0) }
+    val powerDisplaySelect1 = remember { mutableIntStateOf(0) }
+    val powerDisplaySelect2 = remember { mutableIntStateOf(0) }
     val hidePowerUnit = remember { mutableStateOf(false) }
     val hideCurrentUnit = remember { mutableStateOf(false) }
     val hideVoltageUnit = remember { mutableStateOf(false) }
     val isdualcell = remember { mutableStateOf(false) }
     val power_consumption_indicator_dual_row = remember { mutableStateOf(false) }
-    val power_consumption_indicator_font_size = remember { mutableStateOf(0) }
-    val power_consumption_indicator_update_time = remember { mutableStateOf(0) }
+    val power_consumption_indicator_font_size = remember { mutableIntStateOf(0) }
+    val power_consumption_indicator_update_time = remember { mutableIntStateOf(0) }
     val Dialog_font_size_Title = stringResource(R.string.font_size)
     val Dialog_update_time_Title = stringResource(R.string.update_time)
     val show_update_time_Dialog = remember { mutableStateOf(false) }
     val show_font_size_Dialog = remember { mutableStateOf(false) }
     val com_android_systemui_power_consumption_indicator_bold_text = remember { mutableStateOf(false) }
     val com_android_systemui_power_consumption_indicator_absolute = remember { mutableStateOf(false) }
-    val com_android_systemui_power_consumption_indicator_alignment = remember { mutableStateOf(0) }
+    val com_android_systemui_power_consumption_indicator_alignment = remember { mutableIntStateOf(0) }
     val gravityOptions = listOf(
         stringResource(R.string.status_bar_time_gravity_center),
         stringResource(R.string.status_bar_time_gravity_top),
@@ -126,15 +128,15 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
     val show_cpu_temp_data = remember { mutableStateOf(false) }
     val cpu_temp_source_title = stringResource(R.string.change_cpu_temp_source)
     val show_change_cpu_temp_data = remember { mutableStateOf(false) }
-    val cpu_temp_source = remember { mutableStateOf(0) }
+    val cpu_temp_source = remember { mutableIntStateOf(0) }
     val com_android_systemui_temperature_indicator_dual_row = remember { mutableStateOf(false) }
     val temperatureDisplay = listOf(stringResource(R.string.battery_temperature), stringResource(R.string.cpu_temperature))
-    val temperatureDisplaySelect1 = remember { mutableStateOf(0) }
-    val temperatureDisplaySelect2 = remember { mutableStateOf(0) }
+    val temperatureDisplaySelect1 = remember { mutableIntStateOf(0) }
+    val temperatureDisplaySelect2 = remember { mutableIntStateOf(0) }
     val com_android_systemui_temperature_indicator_bold_text = remember { mutableStateOf(false) }
-    val com_android_systemui_temperature_indicator_font_size = remember { mutableStateOf(0f) }
-    val com_android_systemui_temperature_indicator_alignment = remember { mutableStateOf(0) }
-    val com_android_systemui_temperature_indicator_updatetime = remember { mutableStateOf(0) }
+    val com_android_systemui_temperature_indicator_font_size = remember { mutableFloatStateOf(0f) }
+    val com_android_systemui_temperature_indicator_alignment = remember { mutableIntStateOf(0) }
+    val com_android_systemui_temperature_indicator_updatetime = remember { mutableIntStateOf(0) }
     val show_tempature_update_time_Dialog = remember { mutableStateOf(false) }
     val hideBatteryUnit = remember { mutableStateOf(false) }
     val hideCpuUnit = remember { mutableStateOf(false) }
@@ -143,29 +145,29 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
     LaunchedEffect(Unit) {
         hideBatteryUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hideBatteryUnit", false)
         hideCpuUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hideCpuUnit", false)
-        cpu_temp_source.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_cpu_temp_source", 0)
+        cpu_temp_source.intValue = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_cpu_temp_source", 0)
         com_android_systemui_temperature_indicator_dual_row.value = context.prefs("settings").getBoolean("com_android_systemui_temperature_indicator_dual_row", false)
-        temperatureDisplaySelect2.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_display_select2", 0)
-        temperatureDisplaySelect1.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_display_select1", 0)
+        temperatureDisplaySelect2.intValue = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_display_select2", 0)
+        temperatureDisplaySelect1.intValue = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_display_select1", 0)
         com_android_systemui_temperature_indicator_bold_text.value = context.prefs("settings").getBoolean("com_android_systemui_temperature_indicator_bold_text", false)
-        com_android_systemui_temperature_indicator_font_size.value = context.prefs("settings").getFloat("com_android_systemui_temperature_indicator_font_size", 0f)
-        com_android_systemui_temperature_indicator_alignment.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_alignment", 0)
-        com_android_systemui_temperature_indicator_updatetime.value = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_update_time", 0)
+        com_android_systemui_temperature_indicator_font_size.floatValue = context.prefs("settings").getFloat("com_android_systemui_temperature_indicator_font_size", 0f)
+        com_android_systemui_temperature_indicator_alignment.intValue = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_alignment", 0)
+        com_android_systemui_temperature_indicator_updatetime.intValue = context.prefs("settings").getInt("com_android_systemui_temperature_indicator_update_time", 0)
 
         com_android_systemui_power_consumption_indicator_absolute.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_absolute", false)
         com_android_systemui_power_consumption_indicator_bold_text.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_bold_text", false)
-        power_consumption_indicator_font_size.value = context.prefs("settings").getInt("com_android_systemui_power_consumption_indicator_font_size", 0)
-        power_consumption_indicator_update_time.value = context.prefs("settings").getInt("com_android_systemui_power_consumption_indicator_update_time", 0)
+        power_consumption_indicator_font_size.intValue = context.prefs("settings").getInt("com_android_systemui_power_consumption_indicator_font_size", 0)
+        power_consumption_indicator_update_time.intValue = context.prefs("settings").getInt("com_android_systemui_power_consumption_indicator_update_time", 0)
         power_consumption_indicator_dual_row.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_dual_row", false)
         isdualcell.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_dual_cell", false)
         com_android_systemui_power_consumption_indicator.value = context.prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator", false)
         com_android_systemui_temperature_indicator.value = context.prefs("settings").getBoolean("com_android_systemui_temperature_indicator", false)
-        powerDisplaySelect1.value = context.prefs("settings").getInt("com_android_systemui_powerDisplaySelect1", 0)
-        powerDisplaySelect2.value = context.prefs("settings").getInt("com_android_systemui_powerDisplaySelect2", 0)
+        powerDisplaySelect1.intValue = context.prefs("settings").getInt("com_android_systemui_powerDisplaySelect1", 0)
+        powerDisplaySelect2.intValue = context.prefs("settings").getInt("com_android_systemui_powerDisplaySelect2", 0)
         hidePowerUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hidePowerUnit", false)
         hideCurrentUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hideCurrentUnit", false)
         hideVoltageUnit.value = context.prefs("settings").getBoolean("com_android_systemui_hideVoltageUnit", false)
-        com_android_systemui_power_consumption_indicator_alignment.value = context.prefs("settings").getInt("com_android_systemui_power_consumption_indicator_alignment", 0)
+        com_android_systemui_power_consumption_indicator_alignment.intValue = context.prefs("settings").getInt("com_android_systemui_power_consumption_indicator_alignment", 0)
     }
     Scaffold(topBar = {
         TopAppBar(
@@ -190,7 +192,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
             actions = {
                 // 如果你有其他操作按钮，这里可以添加
                 IconButton(onClick = {
-                    RestartAPP.value = true
+                    restartAPP.value = true
                 },
                     modifier = Modifier.padding(end = 18.dp)) {
                     Icon(
@@ -285,9 +287,9 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                 SuperDropdown(
                                     title = stringResource(R.string.alignment),
                                     items = gravityOptions,
-                                    selectedIndex = com_android_systemui_power_consumption_indicator_alignment.value,
+                                    selectedIndex = com_android_systemui_power_consumption_indicator_alignment.intValue,
                                     onSelectedIndexChange = { newOption ->
-                                        com_android_systemui_power_consumption_indicator_alignment.value = newOption
+                                        com_android_systemui_power_consumption_indicator_alignment.intValue = newOption
                                         CoroutineScope(Dispatchers.IO).launch {
                                             context.prefs("settings").edit { putInt("com_android_systemui_power_consumption_indicator_alignment", newOption) }
                                         }
@@ -300,12 +302,12 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                         onClick = {
                                             show_update_time_Dialog.value = true
                                         },
-                                        rightText = "${power_consumption_indicator_update_time.value}ms"
+                                        rightText = "${power_consumption_indicator_update_time.intValue}ms"
                                     )
                                     Slider(
-                                        progress = ((power_consumption_indicator_update_time.value / 2000.00).toFloat()),
+                                        progress = ((power_consumption_indicator_update_time.intValue / 2000.00).toFloat()),
                                         onProgressChange = { newProgress ->
-                                            power_consumption_indicator_update_time.value =
+                                            power_consumption_indicator_update_time.intValue =
                                                 (newProgress * 2000.00).toInt()
                                             context.prefs("settings").edit { putInt("com_android_systemui_power_consumption_indicator_update_time", ((newProgress * 2000.00).toInt())) }
                                         },
@@ -319,12 +321,12 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                         onClick = {
                                             show_font_size_Dialog.value = true
                                         },
-                                        rightText = "${power_consumption_indicator_font_size.value}sp"
+                                        rightText = "${power_consumption_indicator_font_size.intValue}sp"
                                     )
                                     Slider(
-                                        progress = ((power_consumption_indicator_font_size.value / 20.00).toFloat()),
+                                        progress = ((power_consumption_indicator_font_size.intValue / 20.00).toFloat()),
                                         onProgressChange = { newProgress ->
-                                            power_consumption_indicator_font_size.value =
+                                            power_consumption_indicator_font_size.intValue =
                                                 (newProgress * 20.00).toInt()
                                             context.prefs("settings").edit { putInt("com_android_systemui_power_consumption_indicator_font_size", ((newProgress * 20.00).toInt())) }
                                         },
@@ -350,9 +352,9 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                 SuperDropdown(
                                     title = stringResource(R.string.first_line_content),
                                     items = powerDisplay,
-                                    selectedIndex = powerDisplaySelect1.value,
+                                    selectedIndex = powerDisplaySelect1.intValue,
                                     onSelectedIndexChange = {
-                                        powerDisplaySelect1.value = it
+                                        powerDisplaySelect1.intValue = it
                                         context.prefs("settings").edit { putInt("com_android_systemui_powerDisplaySelect1", it) }
                                     }
                                 )
@@ -361,9 +363,9 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                     SuperDropdown(
                                         title = stringResource(R.string.second_line_content),
                                         items = powerDisplay,
-                                        selectedIndex = powerDisplaySelect2.value,
+                                        selectedIndex = powerDisplaySelect2.intValue,
                                         onSelectedIndexChange = {
-                                            powerDisplaySelect2.value = it
+                                            powerDisplaySelect2.intValue = it
                                             context.prefs("settings").edit { putInt("com_android_systemui_powerDisplaySelect2", it) }
                                         }
                                     )
@@ -452,7 +454,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                 SuperArrow(title = stringResource(R.string.change_cpu_temp_source),
                                     summary = stringResource(R.string.enter_thermal_zone_number), onClick = {
                                     show_change_cpu_temp_data.value = true
-                                }, rightText = cpu_temp_source.value.toString())
+                                }, rightText = cpu_temp_source.intValue.toString())
                                 addline()
                                 SuperSwitch(
                                     title = stringResource(R.string.bold_text),
@@ -466,9 +468,9 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                 SuperDropdown(
                                     title = stringResource(R.string.alignment),
                                     items = gravityOptions,
-                                    selectedIndex = com_android_systemui_temperature_indicator_alignment.value,
+                                    selectedIndex = com_android_systemui_temperature_indicator_alignment.intValue,
                                     onSelectedIndexChange = { newOption ->
-                                        com_android_systemui_temperature_indicator_alignment.value = newOption
+                                        com_android_systemui_temperature_indicator_alignment.intValue = newOption
                                         CoroutineScope(Dispatchers.IO).launch {
                                             context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_alignment", newOption) }
                                         }
@@ -481,12 +483,12 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                         onClick = {
                                             show_tempature_update_time_Dialog.value = true
                                         },
-                                        rightText = "${power_consumption_indicator_update_time.value}ms"
+                                        rightText = "${power_consumption_indicator_update_time.intValue}ms"
                                     )
                                     Slider(
-                                        progress = ((power_consumption_indicator_update_time.value / 2000.00).toFloat()),
+                                        progress = ((power_consumption_indicator_update_time.intValue / 2000.00).toFloat()),
                                         onProgressChange = { newProgress ->
-                                            power_consumption_indicator_update_time.value =
+                                            power_consumption_indicator_update_time.intValue =
                                                 (newProgress * 2000.00).toInt()
                                             context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_update_time", ((newProgress * 2000.00).toInt())) }
                                         },
@@ -500,12 +502,12 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                         onClick = {
                                             show_tempature_font_size_Dialog.value = true
                                         },
-                                        rightText = "${com_android_systemui_temperature_indicator_font_size.value}sp"
+                                        rightText = "${com_android_systemui_temperature_indicator_font_size.floatValue}sp"
                                     )
                                     Slider(
-                                        progress = ((com_android_systemui_temperature_indicator_font_size.value / 20.00).toFloat()),
+                                        progress = ((com_android_systemui_temperature_indicator_font_size.floatValue / 20.00).toFloat()),
                                         onProgressChange = { newProgress ->
-                                            com_android_systemui_temperature_indicator_font_size.value =
+                                            com_android_systemui_temperature_indicator_font_size.floatValue =
                                                 (newProgress * 20.00).toFloat()
                                             context.prefs("settings").edit { putFloat("com_android_systemui_temperature_indicator_font_size", ((newProgress * 20.00).toFloat())) }
                                         },
@@ -531,9 +533,9 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                 SuperDropdown(
                                     title = stringResource(R.string.first_line_content),
                                     items = temperatureDisplay,
-                                    selectedIndex = temperatureDisplaySelect1.value,
+                                    selectedIndex = temperatureDisplaySelect1.intValue,
                                     onSelectedIndexChange = {
-                                        temperatureDisplaySelect1.value = it
+                                        temperatureDisplaySelect1.intValue = it
                                         context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_display_select1", it) }
                                     }
                                 )
@@ -542,9 +544,9 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                                     SuperDropdown(
                                         title = stringResource(R.string.second_line_content),
                                         items = temperatureDisplay,
-                                        selectedIndex = temperatureDisplaySelect2.value,
+                                        selectedIndex = temperatureDisplaySelect2.intValue,
                                         onSelectedIndexChange = {
-                                            temperatureDisplaySelect2.value = it
+                                            temperatureDisplaySelect2.intValue = it
                                             context.prefs("settings").edit { putInt("com_android_systemui_temperature_indicator_display_select2", it) }
                                         }
                                     )
@@ -580,7 +582,7 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
             }
         }
     }
-    resetApp.AppRestartScreen(appList,RestartAPP)
+    resetApp.AppRestartScreen(appList,restartAPP)
     cpu_temp_data(show_cpu_temp_data)
     SettingFloatDialog(context,show_tempature_font_size_Dialog,Dialog_font_size_Title,com_android_systemui_temperature_indicator_font_size,focusManager,"com_android_systemui_temperature_indicator_font_size")
     SettingIntDialog(context,show_tempature_update_time_Dialog,Dialog_update_time_Title,com_android_systemui_temperature_indicator_updatetime,focusManager,"com_android_systemui_temperature_indicator_update_time")

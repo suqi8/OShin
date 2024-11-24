@@ -1,10 +1,7 @@
 package io.github.suqi8.opatch.hook.systemui.StatusBar
 
-import androidx.compose.ui.platform.LocalContext
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import io.github.suqi8.opatch.hook.appilcations.StatusBarClock
-import io.github.suqi8.opatch.getSetting
-import io.github.suqi8.opatch.hook.appilcations.StatusLayout
 
 class StatusBarClock: YukiBaseHooker() {
     override fun onHook() {

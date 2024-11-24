@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -36,15 +35,14 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Fun_android(navController: NavController) {
     val context = LocalContext.current
     val one = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val appList = listOf("android")
-    val RestartAPP = remember { mutableStateOf(false) }
+    val restartAPP = remember { mutableStateOf(false) }
     val resetApp = resetApp()
-    resetApp.AppRestartScreen(appList,RestartAPP)
+    resetApp.AppRestartScreen(appList,restartAPP)
 
     val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
     val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
@@ -81,7 +79,7 @@ fun Fun_android(navController: NavController) {
                 }
             }, actions = {
                 IconButton(onClick = {
-                    RestartAPP.value = true
+                    restartAPP.value = true
                 },
                     modifier = Modifier.padding(end = 18.dp)) {
                     Icon(

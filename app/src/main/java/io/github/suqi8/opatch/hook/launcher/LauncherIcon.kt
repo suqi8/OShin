@@ -1,27 +1,11 @@
 package io.github.suqi8.opatch.hook.launcher
 
 import android.annotation.SuppressLint
-import android.content.res.Resources
-import android.graphics.Color
-import android.graphics.RenderEffect
-import android.graphics.Shader
-import android.view.Gravity
-import android.view.View
-import android.view.ViewGroup
-import android.widget.FrameLayout
-import android.widget.TextView
-import androidx.compose.ui.platform.LocalContext
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
-import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.android.ResourcesClass
 import com.highcapable.yukihookapi.hook.type.java.FloatType
-import com.highcapable.yukihookapi.hook.type.java.IntClass
-import io.github.suqi8.opatch.R
-import io.github.suqi8.opatch.hook.appilcations.StatusBarClock
-import io.github.suqi8.opatch.getSetting
-import io.github.suqi8.opatch.hook.appilcations.StatusLayout
 
 class LauncherIcon: YukiBaseHooker() {
     @OptIn(LegacyHookApi::class)
