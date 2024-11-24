@@ -3,7 +3,6 @@ package io.github.suqi8.opatch
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.TypedValue
-import android.view.Gravity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -52,7 +51,6 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
-import io.github.suqi8.opatch.application.RestartApp
 import io.github.suqi8.opatch.tools.AnimTools
 import io.github.suqi8.opatch.ui.tools.resetApp
 import kotlinx.coroutines.CoroutineScope
@@ -77,7 +75,6 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @SuppressLint("RtlHardcoded")
@@ -228,9 +225,10 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
             item {
                 Column {
                     Card(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(horizontal = 12.dp)
-                            .padding(bottom = 6.dp,top = 15.dp)
+                            .padding(bottom = 6.dp, top = 15.dp)
                     ) {
                         SuperSwitch(
                             title = stringResource(R.string.status_bar_clock),
@@ -595,47 +593,49 @@ fun dpToPx(dp: Float, context: Context): Float {
 fun CustomClockDialog(showCustomClockDialog: MutableState<Boolean>, customClockCache: MutableState<String>, CustomClock: MutableState<String>, focusManager: androidx.compose.ui.focus.FocusManager) {
     val context = LocalContext.current
     if (!showCustomClockDialog.value) return
-    showDialog(content = {
-        SuperDialog(title = stringResource(R.string.clock_format),
-            show = showCustomClockDialog,
-            onDismissRequest = {
-                showCustomClockDialog.value = false
-            }) {
-            TextField(
-                value = customClockCache.value,
-                onValueChange = { customClockCache.value = it },
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
-                singleLine = false
+    SuperDialog(title = stringResource(R.string.clock_format),
+        show = showCustomClockDialog,
+        onDismissRequest = {
+            showCustomClockDialog.value = false
+        }) {
+        TextField(
+            value = customClockCache.value,
+            onValueChange = { customClockCache.value = it },
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
+            singleLine = false
+        )
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showCustomClockDialog)
+                }
             )
-            Spacer(Modifier.height(12.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Button(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.cancel),
-                    onClick = {
-                        dismissDialog(showCustomClockDialog)
+            Spacer(Modifier.width(12.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    dismissDialog(showCustomClockDialog)
+                    CustomClock.value = customClockCache.value
+                    context.prefs("settings").edit {
+                        putString(
+                            "Status_Bar_Time_CustomClockStyle",
+                            customClockCache.value
+                        )
                     }
-                )
-                Spacer(Modifier.width(12.dp))
-                Button(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.ok),
-                    submit = true,
-                    onClick = {
-                        dismissDialog(showCustomClockDialog)
-                        CustomClock.value = customClockCache.value
-                        context.prefs("settings").edit { putString("Status_Bar_Time_CustomClockStyle", customClockCache.value) }
-                    }
-                )
-            }
+                }
+            )
         }
-    })
-
+    }
 }
 
 @Composable
@@ -647,50 +647,50 @@ fun SettingIntDialog(context: Context,
                      saveName: String) {
     if (!show.value) return
     val cache = remember { mutableStateOf(set.value.toString()) }
-    showDialog(content = {
-        SuperDialog(title = stringResource(R.string.settings)+" "+title,
-            show = show,
-            onDismissRequest = {
-                dismissDialog(show)
-            }) {
-            TextField(
-                value = cache.value,
-                onValueChange = { cache.value = it },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+    SuperDialog(title = stringResource(R.string.settings) + " " + title,
+        show = show,
+        onDismissRequest = {
+            dismissDialog(show)
+        }) {
+        TextField(
+            value = cache.value,
+            onValueChange = { cache.value = it },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+        )
+        AnimatedVisibility((cache.value.isEmpty())) {
+            SmallTitle(
+                text = stringResource(R.string.content_not_empty), textColor = Color.Red,
+                insideMargin = DpSize(0.dp, 8.dp)
             )
-            AnimatedVisibility((cache.value.isEmpty())) {
-                SmallTitle(text = stringResource(R.string.content_not_empty), textColor = Color.Red,
-                    insideMargin = DpSize(0.dp, 8.dp))
-            }
-            Spacer(Modifier.height(12.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Button(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.cancel),
-                    onClick = {
-                        dismissDialog(show)
-                        show.value = false
-                    }
-                )
-                Spacer(Modifier.width(12.dp))
-                Button(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.ok),
-                    submit = true,
-                    enabled = (cache.value.isNotEmpty()),
-                    onClick = {
-                        dismissDialog(show)
-                        set.value = cache.value.toInt()
-                        context.prefs("settings").edit { putInt(saveName, cache.value.toInt()) }
-                    }
-                )
-            }
         }
-    })
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(show)
+                    show.value = false
+                }
+            )
+            Spacer(Modifier.width(12.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                enabled = (cache.value.isNotEmpty()),
+                onClick = {
+                    dismissDialog(show)
+                    set.value = cache.value.toInt()
+                    context.prefs("settings").edit { putInt(saveName, cache.value.toInt()) }
+                }
+            )
+        }
+    }
 }
 
 @Composable
@@ -702,47 +702,47 @@ fun SettingFloatDialog(context: Context,
                      saveName: String) {
     if (!show.value) return
     val cache = remember { mutableStateOf(set.value.toString()) }
-    showDialog(content = {
-        SuperDialog(title = stringResource(R.string.settings)+" "+title,
-            show = show,
-            onDismissRequest = {
-                dismissDialog(show)
-            }) {
-            TextField(
-                value = cache.value,
-                onValueChange = { cache.value = it },
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+    SuperDialog(title = stringResource(R.string.settings) + " " + title,
+        show = show,
+        onDismissRequest = {
+            dismissDialog(show)
+        }) {
+        TextField(
+            value = cache.value,
+            onValueChange = { cache.value = it },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+        )
+        AnimatedVisibility((cache.value.isEmpty())) {
+            SmallTitle(
+                text = stringResource(R.string.content_not_empty), textColor = Color.Red,
+                insideMargin = DpSize(0.dp, 8.dp)
             )
-            AnimatedVisibility((cache.value.isEmpty())) {
-                SmallTitle(text = stringResource(R.string.content_not_empty), textColor = Color.Red,
-                    insideMargin = DpSize(0.dp, 8.dp))
-            }
-            Spacer(Modifier.height(12.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Button(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.cancel),
-                    onClick = {
-                        dismissDialog(show)
-                    }
-                )
-                Spacer(Modifier.width(12.dp))
-                Button(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.ok),
-                    submit = true,
-                    enabled = (cache.value.isNotEmpty()),
-                    onClick = {
-                        dismissDialog(show)
-                        set.value = cache.value.toFloat()
-                        context.prefs("settings").edit { putFloat(saveName, cache.value.toFloat()) }
-                    }
-                )
-            }
         }
-    })
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(show)
+                }
+            )
+            Spacer(Modifier.width(12.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                enabled = (cache.value.isNotEmpty()),
+                onClick = {
+                    dismissDialog(show)
+                    set.value = cache.value.toFloat()
+                    context.prefs("settings").edit { putFloat(saveName, cache.value.toFloat()) }
+                }
+            )
+        }
+    }
 }

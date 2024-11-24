@@ -610,41 +610,41 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
 fun cpu_temp_data(show: MutableState<Boolean>) {
     if (!show.value) return
     val temperatures = remember { getTemperatureList() }
-    showDialog(content = {
-        SuperDialog(title = stringResource(R.string.show_cpu_temp_data),
-            show = show,
-            onDismissRequest = {
-                dismissDialog(show)
-            }) {
-            LazyColumn(modifier = Modifier
+    SuperDialog(title = stringResource(R.string.show_cpu_temp_data),
+        show = show,
+        onDismissRequest = {
+            dismissDialog(show)
+        }) {
+        LazyColumn(
+            modifier = Modifier
                 .fillMaxWidth()
-                .heightIn(max = 300.dp)) {
-                items(temperatures) { temperatureInfo ->
-                    BasicComponent(
-                        title = temperatureInfo.zoneName,
-                        modifier = Modifier
-                            .fillMaxWidth(),
-                        summary = temperatureInfo.temperature
-                    )
-                }
-            }
-            Spacer(Modifier.height(12.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Button(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.ok),
-                    submit = true,
-                    onClick = {
-                        dismissDialog(show)
-                    }
+                .heightIn(max = 300.dp)
+        ) {
+            items(temperatures) { temperatureInfo ->
+                BasicComponent(
+                    title = temperatureInfo.zoneName,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    summary = temperatureInfo.temperature
                 )
             }
         }
-    })
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    dismissDialog(show)
+                }
+            )
+        }
+    }
 }
 
 fun getTemperatureList(): List<TemperatureInfo> {

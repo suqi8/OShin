@@ -3,7 +3,6 @@ package io.github.suqi8.opatch
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
@@ -20,7 +19,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,7 +29,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -48,7 +45,6 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -66,7 +62,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -99,10 +94,7 @@ import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 val TAG = "OPatch"
 class MainActivity : ComponentActivity() {
@@ -219,59 +211,59 @@ fun CheckRoot(modifier: Modifier,context: Context,colorMode: MutableState<Int> =
 fun dial(showroot: MutableState<Boolean>) {
     if (!showroot.value) return
     val retry = remember { mutableStateOf(false) }
-    showDialog(content = {
-        SuperDialog(title = stringResource(R.string.root_access_denied),
-            summary = stringResource(R.string.opatch_root_permission_error),
-            show = showroot,
-            onDismissRequest = {
-                retry.value = true
-                dismissDialog(showroot)
-            },
-            summaryColor = Color.Red) {
-            Spacer(Modifier.height(12.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Button(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.exit),
-                    onClick = {
-                        dismissDialog(showroot)
-                        System.exit(0)
-                    }
-                )
-                Spacer(Modifier.width(12.dp))
-                Button(
-                    modifier = Modifier.weight(1f),
-                    enabled = !retry.value,
-                    text = if (retry.value) stringResource(R.string.retrying) else stringResource(R.string.retry),
-                    submit = true,
-                    onClick = {
-                        retry.value = true
-                    }
-                )
-                LaunchedEffect(retry.value) {
-                    if (retry.value) {
-                        delay(500)
-                        try {
-                            val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
-                            val exitCode = process.waitFor()
-                            if (exitCode == 0) {
-                                dismissDialog(showroot)
-                            } else {
-                                retry.value = false
-                            }
-                        } catch (e: Exception) {
-                            showroot.value = true
+    SuperDialog(
+        title = stringResource(R.string.root_access_denied),
+        summary = stringResource(R.string.opatch_root_permission_error),
+        show = showroot,
+        onDismissRequest = {
+            retry.value = true
+            dismissDialog(showroot)
+        },
+        summaryColor = Color.Red
+    ) {
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.exit),
+                onClick = {
+                    dismissDialog(showroot)
+                    System.exit(0)
+                }
+            )
+            Spacer(Modifier.width(12.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                enabled = !retry.value,
+                text = if (retry.value) stringResource(R.string.retrying) else stringResource(R.string.retry),
+                submit = true,
+                onClick = {
+                    retry.value = true
+                }
+            )
+            LaunchedEffect(retry.value) {
+                if (retry.value) {
+                    delay(500)
+                    try {
+                        val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
+                        val exitCode = process.waitFor()
+                        if (exitCode == 0) {
+                            dismissDialog(showroot)
+                        } else {
                             retry.value = false
                         }
+                    } catch (e: Exception) {
+                        showroot.value = true
+                        retry.value = false
                     }
                 }
             }
         }
-    })
+    }
 }
 
 @Composable

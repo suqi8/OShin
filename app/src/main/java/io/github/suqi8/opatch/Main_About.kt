@@ -114,7 +114,8 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
             item {
 
                 Spacer(modifier = Modifier.height(16.dp))
-                Card(modifier = Modifier.fillMaxWidth()
+                Card(modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 12.dp)
                     .padding(bottom = 6.dp)) {
                     Box(
@@ -155,7 +156,9 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                             }
 
                             Row(
-                                modifier = Modifier.fillMaxWidth().offset(y = -10.dp),
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .offset(y = -10.dp),
                                 horizontalArrangement = Arrangement.Center,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
@@ -168,11 +171,14 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                                 Image(
                                     painter = painterResource(id = R.drawable.coloros15logo),
                                     contentDescription = null,
-                                    modifier = Modifier.size(40.dp).offset(y = -2.5.dp)
+                                    modifier = Modifier
+                                        .size(40.dp)
+                                        .offset(y = -2.5.dp)
                                 )
                             }
                             Button(
-                                modifier = Modifier.padding(start = 16.dp, end = 16.dp)
+                                modifier = Modifier
+                                    .padding(start = 16.dp, end = 16.dp)
                                     .fillMaxWidth(),
                                 text = stringResource(R.string.check_update),
                                 submit = true,
@@ -181,7 +187,8 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                     }
                 }
                 Spacer(modifier = Modifier.size(12.dp))
-                Card(modifier = Modifier.fillMaxWidth()
+                Card(modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 12.dp)
                     .padding(bottom = 6.dp)) {
                     SuperArrow(title = stringResource(R.string.Device_Name), onClick = {
@@ -204,7 +211,8 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                         })
                 }
                 Spacer(modifier = Modifier.size(12.dp))
-                Card(modifier = Modifier.fillMaxWidth()
+                Card(modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 12.dp)
                     .padding(bottom = 6.dp)) {
 
@@ -229,7 +237,8 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                     }
                 }
                 SmallTitle(text = stringResource(R.string.app_settings))
-                Card(modifier = Modifier.fillMaxWidth()
+                Card(modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 12.dp)
                     .padding(bottom = 6.dp)) {
                     SuperDropdown(
@@ -328,9 +337,10 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                         })
                 }
                 SmallTitle(text = stringResource(R.string.by_the_way))
-                Card(modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = 12.dp)
-                        .padding(bottom = 6.dp)) {
+                Card(modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp)
+                    .padding(bottom = 6.dp)) {
                     Card(Modifier.padding(10.dp)) {
                         Image(painter = painterResource(R.drawable.qq_pic_merged_1727926207595), contentDescription = null, modifier = Modifier.fillMaxWidth())
                     }
@@ -349,7 +359,8 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                     })
                 }
                 SmallTitle(text = stringResource(R.string.about))
-                Card(modifier = Modifier.fillMaxWidth()
+                Card(modifier = Modifier
+                    .fillMaxWidth()
                     .padding(horizontal = 12.dp)
                     .padding(bottom = 6.dp)) {
                     SuperArrow(
@@ -515,50 +526,48 @@ fun getUsedStorage(): Long {
 fun DeviceNameDialog(showDeviceNameDialog: MutableState<Boolean>,deviceNameCache: MutableState<String>, deviceName: MutableState<String>, focusManager: androidx.compose.ui.focus.FocusManager) {
     val context = LocalContext.current
     if (!showDeviceNameDialog.value) return
-    showDialog(content = {
-        SuperDialog(title = stringResource(R.string.Device_Name),
-            show = showDeviceNameDialog,
-            onDismissRequest = {
-                dismissDialog(showDeviceNameDialog)
-            }) {
-            TextField(
-                value = deviceNameCache.value,
-                onValueChange = { deviceNameCache.value = it },
-                backgroundColor = MiuixTheme.colorScheme.secondaryContainer,
-                label = "",
-                modifier = Modifier.padding(),
-                keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+    SuperDialog(title = stringResource(R.string.Device_Name),
+        show = showDeviceNameDialog,
+        onDismissRequest = {
+            dismissDialog(showDeviceNameDialog)
+        }) {
+        TextField(
+            value = deviceNameCache.value,
+            onValueChange = { deviceNameCache.value = it },
+            backgroundColor = MiuixTheme.colorScheme.secondaryContainer,
+            label = "",
+            modifier = Modifier.padding(),
+            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+        )
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    dismissDialog(showDeviceNameDialog)
+                }
             )
-            Spacer(Modifier.height(12.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Button(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.cancel),
-                    onClick = {
-                        dismissDialog(showDeviceNameDialog)
+            Spacer(Modifier.width(12.dp))
+            Button(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                submit = true,
+                onClick = {
+                    dismissDialog(showDeviceNameDialog)
+                    deviceName.value = deviceNameCache.value
+                    CoroutineScope(Dispatchers.IO).launch {
+                        saveDeviceName(context, deviceName.value) // 保存设备名称
                     }
-                )
-                Spacer(Modifier.width(12.dp))
-                Button(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.ok),
-                    submit = true,
-                    onClick = {
-                        dismissDialog(showDeviceNameDialog)
-                        deviceName.value = deviceNameCache.value
-                        CoroutineScope(Dispatchers.IO).launch {
-                            saveDeviceName(context, deviceName.value) // 保存设备名称
-                        }
-                    }
-                )
-            }
+                }
+            )
         }
-    })
+    }
 }
 
 suspend fun saveDeviceName(context: Context, deviceName: String) {

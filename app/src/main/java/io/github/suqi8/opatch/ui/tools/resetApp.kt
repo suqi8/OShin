@@ -1,33 +1,27 @@
 package io.github.suqi8.opatch.ui.tools
 
 import android.annotation.SuppressLint
-import android.app.ActivityManager
-import android.content.Context
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.runtime.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.width
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.unit.dp
 import io.github.suqi8.opatch.R
-import io.github.suqi8.opatch.saveDeviceName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.Button
-import top.yukonga.miuix.kmp.basic.Text
-import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.SuperDialog
-import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.showDialog
 
 class resetApp {
     @Composable
-    fun AppRestartScreen(appList: List<String>,showresetAppDialog: MutableState<Boolean>) {
+    fun AppRestartScreen(appList: List<String>, showresetAppDialog: MutableState<Boolean>) {
         if (showresetAppDialog.value) {
             ConfirmationDialog(
                 appPackage = appList.joinToString(separator = "\n"),
@@ -39,7 +33,7 @@ class resetApp {
                 },
                 show = showresetAppDialog,
                 onDismiss = {
-                dismissDialog(showresetAppDialog)
+                    dismissDialog(showresetAppDialog)
                 }
             )
         }
@@ -47,49 +41,54 @@ class resetApp {
 
     @SuppressLint("UnrememberedMutableState")
     @Composable
-    fun ConfirmationDialog(appPackage: String,show: MutableState<Boolean>, onConfirm: () -> Unit, onDismiss: () -> Unit) {
+    fun ConfirmationDialog(
+        appPackage: String,
+        show: MutableState<Boolean>,
+        onConfirm: () -> Unit,
+        onDismiss: () -> Unit
+    ) {
         if (!show.value) return
-        showDialog(content = {
-            SuperDialog(title = stringResource(R.string.Researt_app),
-                show = show,
-                onDismissRequest = {
-                    onDismiss()
-                }, summary = """${stringResource(R.string.confirm_restart_applications)}
-                    |$appPackage""".trimMargin()) {
-                /*Text(text = """${stringResource(R.string.confirm_restart_applications)}
-                    |$appPackage""".trimMargin())
-                Spacer(Modifier.height(12.dp))*/
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.cancel),
-                        onClick = {
-                            onDismiss()
-                        }
-                    )
-                    Spacer(Modifier.width(12.dp))
-                    Button(
-                        modifier = Modifier.weight(1f),
-                        text = stringResource(R.string.ok),
-                        submit = true,
-                        onClick = {
-                            onConfirm()
-                        }
-                    )
-                }
+        SuperDialog(
+            title = stringResource(R.string.Researt_app),
+            show = show,
+            onDismissRequest = {
+                onDismiss()
+            }, summary = """${stringResource(R.string.confirm_restart_applications)}
+                    |$appPackage""".trimMargin()
+        ) {
+            /*Text(text = """${stringResource(R.string.confirm_restart_applications)}
+                |$appPackage""".trimMargin())
+            Spacer(Modifier.height(12.dp))*/
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Button(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.cancel),
+                    onClick = {
+                        onDismiss()
+                    }
+                )
+                Spacer(Modifier.width(12.dp))
+                Button(
+                    modifier = Modifier.weight(1f),
+                    text = stringResource(R.string.ok),
+                    submit = true,
+                    onClick = {
+                        onConfirm()
+                    }
+                )
             }
-        })
+        }
     }
 
     private fun restartApp(packageName: String) {
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 if (packageName == "android") {
-                    val process = Runtime.getRuntime().exec(arrayOf("su", "-c","reboot"))
+                    val process = Runtime.getRuntime().exec(arrayOf("su", "-c", "reboot"))
                     process.waitFor()
                 } else {
                     val command = "pkill -f " + packageName
