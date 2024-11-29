@@ -2,20 +2,13 @@ package io.github.suqi8.opatch.hook.appilcations
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Color
 import android.os.Handler
-import android.os.Looper
 import android.provider.Settings
 import android.util.TypedValue
 import android.view.Gravity
-import android.view.View
-import android.view.Window
-import android.view.WindowManager
-import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.content.ContextCompat
-import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.CharSequenceType
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
@@ -48,111 +41,34 @@ class StatusBarClock : YukiBaseHooker() {
     var ClockBottomPadding = prefs("settings").getInt("Status_Bar_Time_BottomPadding", 0)
 
     @SuppressLint("SetTextI18n", "ResourceType")
-    @OptIn(LegacyHookApi::class)
     override fun onHook() {
         var context: Context? = null
         "com.android.systemui.statusbar.policy.Clock".toClass().apply {
-            hook {
-                if (ClockStyleSelectedOption == 0) {
-                    injectMember {
-                        constructor {
-                            paramCount = 3
-                        }
-                        afterHook {
-                            context = args(0).cast<Context>()
-                            val clockView = instance<TextView>()
-                            clockView.apply {
-                                if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
-                                isSingleLine = false
-                                gravity = Gravity.CENTER
-                                setPadding(if (ClockLeftPadding!=0) ClockLeftPadding else paddingLeft,
-                                    if (ClockTopPadding!=0) ClockTopPadding else paddingTop,
-                                    if (ClockRightPadding!=0) ClockRightPadding else paddingRight,
-                                    if (ClockBottomPadding!=0) ClockBottomPadding else paddingBottom)
+            if (ClockStyleSelectedOption == 0) {
+                method {
+                    paramCount = 3
+                }.hook {
+                    after {
+                        context = args(0).cast<Context>()
+                        val clockView = instance<TextView>()
+                        clockView.apply {
+                            if (this.resources.getResourceEntryName(id) != "clock") return@after
+                            isSingleLine = false
+                            gravity = Gravity.CENTER
+                            setPadding(
+                                if (ClockLeftPadding != 0) ClockLeftPadding else paddingLeft,
+                                if (ClockTopPadding != 0) ClockTopPadding else paddingTop,
+                                if (ClockRightPadding != 0) ClockRightPadding else paddingRight,
+                                if (ClockBottomPadding != 0) ClockBottomPadding else paddingBottom
+                            )
 
-                                if (DualRow) {
-                                    newline = "\n"
-                                    var defaultSize = 8F
-                                    if (FontSize != 0) defaultSize = FontSize.toFloat()
-                                    setTextSize(TypedValue.COMPLEX_UNIT_DIP, defaultSize)
-                                    setLineSpacing(0F, 0.8F)
-                                } else {
-                                    if (FontSize != 0) {
-                                        setTextSize(
-                                            TypedValue.COMPLEX_UNIT_DIP,
-                                            FontSize.toFloat()
-                                        )
-                                    }
-                                }
-                            }
-
-                            if (updateSpeed != 0) {
-                                // 获取 updateClock 方法并设置定时器
-                                val updateClockMethod: Method = clockView.javaClass.superclass.getDeclaredMethod("updateClock")
-                                val runnable = Runnable {
-                                    updateClockMethod.isAccessible = true
-                                    updateClockMethod.invoke(clockView)
-                                }
-
-                                // 自定义定时器任务
-                                class CustomTimerTask : TimerTask() {
-                                    override fun run() {
-                                        Handler(clockView.context.mainLooper).post(runnable)
-                                    }
-                                }
-
-                                // 使用 Timer 控制刷新频率，改为 500 毫秒
-                                Timer().schedule(CustomTimerTask(), 1000 - System.currentTimeMillis() % 1000, updateSpeed.toLong())
-                            }
-                        }
-                    }
-
-                    // Hook getSmallTime 方法自定义显示格式
-                    injectMember {
-                        method {
-                            name = "getSmallTime"
-                            returnType = CharSequenceType
-                        }
-                        afterHook {
-                            instance<TextView>().apply {
-                                if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
-                            }
-                            nowTime = Calendar.getInstance().time
-                            result = getDate(context!!) + newline + getTime(context!!)
-                        }
-                    }
-
-                } else {
-                    // 其他样式选择逻辑
-                    injectMember {
-                        constructor {
-                            paramCount = 3
-                        }
-                        afterHook {
-                            context = args(0).cast<Context>()
-                            val clockView = instance<TextView>()
-                            clockView.apply {
-                                setPadding(if (ClockLeftPadding!=0) ClockLeftPadding else paddingLeft,
-                                    if (ClockTopPadding!=0) ClockTopPadding else paddingTop,
-                                    if (ClockRightPadding!=0) ClockRightPadding else paddingRight,
-                                    if (ClockBottomPadding!=0) ClockBottomPadding else paddingBottom)
-
-                                isSingleLine = false
-                                if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
-                                gravity = when (customAlignment) {
-                                    0 -> Gravity.CENTER        // 居中对齐
-                                    1 -> Gravity.TOP           // 顶部对齐
-                                    2 -> Gravity.BOTTOM        // 底部对齐
-                                    3 -> Gravity.START         // 起始位置对齐
-                                    4 -> Gravity.END           // 结束位置对齐
-                                    5 -> Gravity.CENTER_HORIZONTAL  // 水平居中
-                                    6 -> Gravity.CENTER_VERTICAL    // 垂直居中
-                                    7 -> Gravity.FILL               // 填满整个空间
-                                    8 -> Gravity.FILL_HORIZONTAL   // 水平填满
-                                    9 -> Gravity.FILL_VERTICAL     // 垂直填满
-                                    else -> Gravity.CENTER         // 默认居中对齐
-                                }
-
+                            if (DualRow) {
+                                newline = "\n"
+                                var defaultSize = 8F
+                                if (FontSize != 0) defaultSize = FontSize.toFloat()
+                                setTextSize(TypedValue.COMPLEX_UNIT_DIP, defaultSize)
+                                setLineSpacing(0F, 0.8F)
+                            } else {
                                 if (FontSize != 0) {
                                     setTextSize(
                                         TypedValue.COMPLEX_UNIT_DIP,
@@ -160,39 +76,120 @@ class StatusBarClock : YukiBaseHooker() {
                                     )
                                 }
                             }
+                        }
 
-                            if (updateSpeed != 0) {
-                                // 获取 updateClock 方法并设置定时器
-                                val updateClockMethod: Method = clockView.javaClass.superclass.getDeclaredMethod("updateClock")
-                                val runnable = Runnable {
-                                    updateClockMethod.isAccessible = true
-                                    updateClockMethod.invoke(clockView)
-                                }
-
-                                // 自定义定时器任务
-                                class CustomTimerTask : TimerTask() {
-                                    override fun run() {
-                                        Handler(clockView.context.mainLooper).post(runnable)
-                                    }
-                                }
-
-                                // 使用 Timer 控制刷新频率，改为 500 毫秒
-                                Timer().schedule(CustomTimerTask(), 1000 - System.currentTimeMillis() % 1000, updateSpeed.toLong())
+                        if (updateSpeed != 0) {
+                            // 获取 updateClock 方法并设置定时器
+                            val updateClockMethod: Method =
+                                clockView.javaClass.superclass.getDeclaredMethod("updateClock")
+                            val runnable = Runnable {
+                                updateClockMethod.isAccessible = true
+                                updateClockMethod.invoke(clockView)
                             }
+
+                            // 自定义定时器任务
+                            class CustomTimerTask : TimerTask() {
+                                override fun run() {
+                                    Handler(clockView.context.mainLooper).post(runnable)
+                                }
+                            }
+
+                            // 使用 Timer 控制刷新频率，改为 500 毫秒
+                            Timer().schedule(
+                                CustomTimerTask(),
+                                1000 - System.currentTimeMillis() % 1000,
+                                updateSpeed.toLong()
+                            )
                         }
                     }
-                    injectMember {
-                        method {
-                            name = "getSmallTime"
-                            returnType = CharSequenceType
+                }
+
+                method {
+                    name = "getSmallTime"
+                    returnType = CharSequenceType
+                }.hook {
+                    after {
+                        instance<TextView>().apply {
+                            if (this.resources.getResourceEntryName(id) != "clock") return@after
                         }
-                        afterHook {
-                            instance<TextView>().apply {
-                                if (this.resources.getResourceEntryName(id) != "clock") return@afterHook
+                        nowTime = Calendar.getInstance().time
+                        result = getDate(context!!) + newline + getTime(context!!)
+                    }
+                }
+            } else {
+                method {
+                    paramCount = 3
+                }.hook {
+                    after {
+                        context = args(0).cast<Context>()
+                        val clockView = instance<TextView>()
+                        clockView.apply {
+                            setPadding(
+                                if (ClockLeftPadding != 0) ClockLeftPadding else paddingLeft,
+                                if (ClockTopPadding != 0) ClockTopPadding else paddingTop,
+                                if (ClockRightPadding != 0) ClockRightPadding else paddingRight,
+                                if (ClockBottomPadding != 0) ClockBottomPadding else paddingBottom
+                            )
+
+                            isSingleLine = false
+                            if (this.resources.getResourceEntryName(id) != "clock") return@after
+                            gravity = when (customAlignment) {
+                                0 -> Gravity.CENTER        // 居中对齐
+                                1 -> Gravity.TOP           // 顶部对齐
+                                2 -> Gravity.BOTTOM        // 底部对齐
+                                3 -> Gravity.START         // 起始位置对齐
+                                4 -> Gravity.END           // 结束位置对齐
+                                5 -> Gravity.CENTER_HORIZONTAL  // 水平居中
+                                6 -> Gravity.CENTER_VERTICAL    // 垂直居中
+                                7 -> Gravity.FILL               // 填满整个空间
+                                8 -> Gravity.FILL_HORIZONTAL   // 水平填满
+                                9 -> Gravity.FILL_VERTICAL     // 垂直填满
+                                else -> Gravity.CENTER         // 默认居中对齐
                             }
-                            nowTime = Calendar.getInstance().time
-                            result = getCustomDate(context!!, customClockStyle).replace("\\n", "\n")
+
+                            if (FontSize != 0) {
+                                setTextSize(
+                                    TypedValue.COMPLEX_UNIT_DIP,
+                                    FontSize.toFloat()
+                                )
+                            }
                         }
+
+                        if (updateSpeed != 0) {
+                            // 获取 updateClock 方法并设置定时器
+                            val updateClockMethod: Method =
+                                clockView.javaClass.superclass.getDeclaredMethod("updateClock")
+                            val runnable = Runnable {
+                                updateClockMethod.isAccessible = true
+                                updateClockMethod.invoke(clockView)
+                            }
+
+                            // 自定义定时器任务
+                            class CustomTimerTask : TimerTask() {
+                                override fun run() {
+                                    Handler(clockView.context.mainLooper).post(runnable)
+                                }
+                            }
+
+                            // 使用 Timer 控制刷新频率，改为 500 毫秒
+                            Timer().schedule(
+                                CustomTimerTask(),
+                                1000 - System.currentTimeMillis() % 1000,
+                                updateSpeed.toLong()
+                            )
+                        }
+                    }
+                }
+                method {
+                    name = "getSmallTime"
+                    returnType = CharSequenceType
+                }.hook {
+                    after {
+                        instance<TextView>().apply {
+                            if (this.resources.getResourceEntryName(id) != "clock") return@after
+                        }
+                        nowTime = Calendar.getInstance().time
+                        result = getCustomDate(context!!, customClockStyle).replace("\\n", "\n")
                     }
                 }
             }
@@ -217,7 +214,7 @@ class StatusBarClock : YukiBaseHooker() {
     }
 
     @SuppressLint("SimpleDateFormat")
-    private fun getCustomDate(context: Context,format: String): String {
+    private fun getCustomDate(context: Context, format: String): String {
         return SimpleDateFormat(format).format(nowTime!!)
     }
 
@@ -268,36 +265,47 @@ class StatusBarClock : YukiBaseHooker() {
                 "23", "00" -> {
                     doubleHour = "子时"
                 }
+
                 "01", "02" -> {
                     doubleHour = "丑时"
                 }
+
                 "03", "04" -> {
                     doubleHour = "寅时"
                 }
+
                 "05", "06" -> {
                     doubleHour = "卯时"
                 }
+
                 "07", "08" -> {
                     doubleHour = "辰时"
                 }
+
                 "09", "10" -> {
                     doubleHour = "巳时"
                 }
+
                 "11", "12" -> {
                     doubleHour = "午时"
                 }
+
                 "13", "14" -> {
                     doubleHour = "未时"
                 }
+
                 "15", "16" -> {
                     doubleHour = "申时"
                 }
+
                 "17", "18" -> {
                     doubleHour = "酉时"
                 }
+
                 "19", "20" -> {
                     doubleHour = "戌时"
                 }
+
                 "21", "22" -> {
                     doubleHour = "亥时"
                 }
@@ -316,18 +324,23 @@ class StatusBarClock : YukiBaseHooker() {
                     "00", "01", "02", "03", "04", "05" -> {
                         period = "凌晨"
                     }
+
                     "06", "07", "08", "09", "10", "11" -> {
                         period = "上午"
                     }
+
                     "12" -> {
                         period = "中午"
                     }
+
                     "13", "14", "15", "16", "17" -> {
                         period = "下午"
                     }
+
                     "18" -> {
                         period = "傍晚"
                     }
+
                     "19", "20", "21", "22", "23" -> {
                         period = "晚上"
                     }
