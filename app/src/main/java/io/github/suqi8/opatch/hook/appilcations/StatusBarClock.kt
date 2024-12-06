@@ -39,6 +39,7 @@ class StatusBarClock : YukiBaseHooker() {
     var ClockRightPadding = prefs("settings").getInt("Status_Bar_Time_RightPadding", 0)
     var ClockTopPadding = prefs("settings").getInt("Status_Bar_Time_TopPadding", 0)
     var ClockBottomPadding = prefs("settings").getInt("Status_Bar_Time_BottomPadding", 0)
+    var ClockColor = prefs("settings").getString("Status_Bar_Time_Color", "null")
 
     @SuppressLint("SetTextI18n", "ResourceType")
     override fun onHook() {
