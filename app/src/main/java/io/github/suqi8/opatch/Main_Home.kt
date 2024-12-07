@@ -5,6 +5,11 @@ import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
@@ -55,9 +60,9 @@ import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
-import top.yukonga.miuix.kmp.theme.MiuixTheme
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import kotlin.random.Random
 
 /**
  * 绘制阴影范围
@@ -179,11 +184,43 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                     animationSpec = tween(durationMillis = 500)
                 ) + fadeIn(animationSpec = tween(durationMillis = 500))
             ) {
+                fun randomColor(): Color {
+                    return Color(
+                        red = Random.nextFloat(),
+                        green = Random.nextFloat(),
+                        blue = Random.nextFloat()
+                    )
+                }
+                // 记住当前的颜色
+                var currentStartColor by remember { mutableStateOf(randomColor()) }
+                var currentEndColor by remember { mutableStateOf(randomColor()) }
+
+                // 动态渐变颜色动画
+                val infiniteTransition = rememberInfiniteTransition(label = "")
+
+                // 生成的颜色从当前到目标
+                val startColor by infiniteTransition.animateColor(
+                    initialValue = currentStartColor,
+                    targetValue = currentEndColor,
+                    animationSpec = infiniteRepeatable(
+                        animation = tween(durationMillis = 2000, easing = LinearEasing),
+                        repeatMode = RepeatMode.Reverse
+                    ), label = ""
+                )
+
+                // 动画完成时更新目标颜色
+                LaunchedEffect(Unit) {
+                    while (true) {
+                        delay(2000) // 动画时长后更新
+                        currentStartColor = currentEndColor
+                        currentEndColor = randomColor() // 更新新的随机颜色
+                    }
+                }
                 Card(modifier = Modifier
                     .fillMaxWidth()
                     .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 10.dp)
                     .drawColoredShadow(
-                        if (YukiHookAPI.Status.isModuleActive) MiuixTheme.colorScheme.primary else MaterialTheme.colorScheme.errorContainer,
+                        if (YukiHookAPI.Status.isModuleActive) startColor else MaterialTheme.colorScheme.errorContainer,
                         1f,
                         borderRadius = 0.dp,
                         shadowRadius = 15.dp,
@@ -191,7 +228,7 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                         offsetY = 0.dp,
                         roundedRect = false
                     ),
-                    color = if (YukiHookAPI.Status.isModuleActive) MiuixTheme.colorScheme.primary else MaterialTheme.colorScheme.errorContainer
+                    color = if (YukiHookAPI.Status.isModuleActive) startColor else MaterialTheme.colorScheme.errorContainer,
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
