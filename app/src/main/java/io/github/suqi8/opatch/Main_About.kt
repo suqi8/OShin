@@ -10,6 +10,7 @@ import android.os.Environment
 import android.os.StatFs
 import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
+import android.provider.Settings
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -20,7 +21,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -86,7 +86,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                blur: MutableState<Dp>,
                noise: MutableState<Float>) {
     val showDeviceNameDialog = remember { mutableStateOf(false) }
-    val deviceName: MutableState<String> = remember { mutableStateOf("未设置设备昵称") }
+    val deviceName: MutableState<String> = remember { mutableStateOf(Settings.Global.getString(context.contentResolver, "revise_device_name")) }
     val deviceNameCache: MutableState<String> = remember { mutableStateOf(deviceName.value) }
     val physicalTotalStorage = formatSize(getPhysicalTotalStorage(context))
     val usedStorage = formatSize(getUsedStorage())
@@ -99,11 +99,6 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
     val auto_color = remember { mutableStateOf(true) }
     LaunchedEffect(Unit) {
         auto_color.value = context.prefs("settings").getBoolean("auto_color", false)
-        val cachedName = getDeviceName(context) // 获取保存的设备名称
-        if (cachedName != null) {
-            deviceName.value = cachedName
-            deviceNameCache.value = cachedName
-        }
         isDebug.value = context.prefs("settings").getBoolean("Debug", false)
         addline.value = context.prefs("settings").getBoolean("addline", false)
     }
@@ -140,7 +135,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                                     modifier = Modifier
                                         .size(250.dp)
                                         .align(Alignment.Center)
-                                        .offset(y = (-20).dp),
+                                        /*.offset(y = (-20).dp)*/,
                                     contentScale = ContentScale.Crop
                                 )
                                 Text(
@@ -150,11 +145,11 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                                     modifier = Modifier
                                         .align(Alignment.BottomCenter)
                                         .padding(bottom = 8.dp)
-                                        .offset(y = (-20).dp)
+                                        /*.offset(y = (-20).dp)*/
                                 )
                             }
 
-                            Row(
+                            /*Row(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .offset(y = (-10).dp),
@@ -181,7 +176,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                                     .fillMaxWidth(),
                                 text = stringResource(R.string.check_update),
                                 submit = true,
-                                onClick = {})
+                                onClick = {})*/
                         }
                     }
                 }
@@ -215,7 +210,7 @@ fun Main_About(topAppBarScrollBehavior: ScrollBehavior,
                     .padding(horizontal = 12.dp)
                     .padding(bottom = 6.dp)) {
 
-                    Text("OPatch", fontSize = 25.sp,fontWeight = FontWeight.Bold, modifier = Modifier.padding(20.dp))
+                    Text(deviceName.value, fontSize = 25.sp,fontWeight = FontWeight.Bold, modifier = Modifier.padding(20.dp))
                     Column(Modifier.padding(start = 20.dp, end = 20.dp, bottom = 10.dp)) {
                         Column(Modifier.padding( bottom = 10.dp)) {
                             Text(context.packageManager.getPackageInfo(context.packageName, 0).versionName.toString().substringAfterLast("."), fontSize = 14.sp)
@@ -561,23 +556,10 @@ fun DeviceNameDialog(showDeviceNameDialog: MutableState<Boolean>,deviceNameCache
                     dismissDialog(showDeviceNameDialog)
                     deviceName.value = deviceNameCache.value
                     CoroutineScope(Dispatchers.IO).launch {
-                        saveDeviceName(context, deviceName.value) // 保存设备名称
+                        executeCommand("settings put global revise_device_name \"${deviceName.value}\"")
                     }
                 }
             )
         }
     }
-}
-
-suspend fun saveDeviceName(context: Context, deviceName: String) {
-    context.dataStore.edit { preferences ->
-        val DEVICE_NAME_KEY = stringPreferencesKey("device_name")
-        preferences[DEVICE_NAME_KEY] = deviceName
-    }
-}
-
-suspend fun getDeviceName(context: Context): String? {
-    val preferences = context.dataStore.data.first()
-    val DEVICE_NAME_KEY = stringPreferencesKey("device_name")
-    return preferences[DEVICE_NAME_KEY]
 }
