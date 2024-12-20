@@ -50,7 +50,7 @@ O神是一个专为ColorOS系统设计的辅助模块，旨在增强和定制用
 
 ## 感谢
 
-> OPatch 使用了以下开源项目的部分或全部内容，感谢这些项目的开发者（排名顺序不分先后）
+> O神 使用了以下开源项目的部分或全部内容，感谢这些项目的开发者（排名顺序不分先后）
 
 - [「Android」 by Android Open Source Project, Google Inc.](https://source.android.google.cn/license)
 - [「AndroidX」 by Android Open Source Project, Google Inc.](https://github.com/androidx/androidx)
@@ -76,7 +76,7 @@ O神是一个专为ColorOS系统设计的辅助模块，旨在增强和定制用
   <img src="https://contrib.rocks/image?repo=suqi8/OPatch"  alt=""/>
 </a>
 
-![Alt](https://repobeats.axiom.co/api/embed/076d597ede41432208435f233d18cb20052fb90a.svg "Repobeats analytics image")
+![Alt](https://repobeats.axiom.co/api/embed/cc78ce423b8c1fe1ca2dfdc4ce580bc1fa8bfd62.svg "Repobeats analytics image")
 
 ## Star History
 
