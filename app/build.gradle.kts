@@ -52,7 +52,7 @@ android {
         variant.outputs
             .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
             .forEach { output ->
-                val name = "OPatch"
+                val name = "OShin"
                 var abi = output.getFilter(com.android.build.OutputFile.ABI)
                 if (abi == null) abi = "all" //兼容
                 val version = variant.versionName
