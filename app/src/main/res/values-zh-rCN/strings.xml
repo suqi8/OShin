@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">OPatch</string>
+    <string name="app_name">O神</string>
     <string name="xposed_desc">系统辅助模块，支持 ColorOS、RealmeUI、OxygenOS。免费软件，请勿二次转发，分享，售卖！github@suqi8</string>
     <string name="about_module">此模块使用 YukiHookAPI 构建。\n了解更多 https://github.com/HighCapable/YuKiHookAPI</string>
     <string name="module_version">模块版本：%1$s</string>
@@ -75,7 +75,7 @@
     <string name="change_cpu_temp_source">更改 CPU 温度获取源</string>
     <string name="battery_temperature">电池温度</string>
     <string name="cpu_temperature">CPU温度</string>
-    <string name="module_notice">该模块完全免费且开源，请务必遵守GNU General Public License v3.0协议，禁止将此模块用来引流，禁止分享、搬运、售卖。如果你在其他地方看到有人分享该模块，请向模块作者进行举报。</string>
+    <string name="module_notice">该模块完全免费且开源，请务必遵守GNU Affero General Public License v3.0协议，禁止将此模块用来引流，禁止分享、搬运、售卖。如果你在其他地方看到有人分享该模块，请向模块作者进行举报。</string>
     <string name="clock_style_title">时钟样式</string>
     <string name="clock_style_summary">选择时钟的显示样式</string>
     <string name="soc_model">SOC 型号</string>
@@ -181,7 +181,7 @@
     <string name="ksu_version">KernelSU版本</string>
     <string name="feature_auto_color_picking_enabled">自动取色功能开启</string>
     <string name="feature_auto_color_picking_warning">开启后加载功能页面，进入软件页面会有卡顿，谨慎开启</string>
-    <string name="opatch_root_permission_error">请授予 OPatch Root 权限后再重试！</string>
+    <string name="opatch_root_permission_error">请授予 O神 Root 权限后再重试！</string>
     <string name="retry">重试</string>
     <string name="retrying">重试中...</string>
     <string name="exit">退出</string>

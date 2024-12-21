@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">OPatch</string>
+    <string name="app_name">OShin</string>
     <string name="xposed_desc">System support module for ColorOS, RealmeUI, and OxygenOS. Free software – redistribution, sharing, or selling is prohibited! Contact: github@suqi8</string>
     <string name="about_module">This module is made by YukiHookAPI. \nLearn more https://github.com/HighCapable/YuKiHookAPI</string>
     <string name="module_version">Module version: %1$s</string>
@@ -95,7 +95,7 @@
     <string name="change_cpu_temp_source">Change CPU temperature source</string>
     <string name="battery_temperature">Battery Temperature</string>
     <string name="cpu_temperature">CPU Temperature</string>
-    <string name="module_notice">This module is completely free and open-source. Please comply with the GNU General Public License v3.0. It is prohibited to use this module for traffic diversion, sharing, distributing, or selling. If you see anyone sharing this module elsewhere, please report it to the module author.</string>
+    <string name="module_notice">This module is completely free and open-source. Please comply with the GNU Affero General Public License v3.0. It is prohibited to use this module for traffic diversion, sharing, distributing, or selling. If you see anyone sharing this module elsewhere, please report it to the module author.</string>
     <string name="clock_update_time_title">Clock Update Time</string>
     <string name="clock_update_time_summary">Set the clock update frequency in milliseconds; 0 means no update frequency is set</string>
     <string name="show_years_title">Show Years</string>
@@ -182,7 +182,7 @@
     <string name="ksu_version">KernelSU Version</string>
     <string name="feature_auto_color_picking_enabled">Auto Color Picking Enabled</string>
     <string name="feature_auto_color_picking_warning">After enabling, loading feature pages and entering the software page may cause stuttering. Enable with caution.</string>
-    <string name="opatch_root_permission_error">Please grant OPatch root permissions and try again!</string>
+    <string name="opatch_root_permission_error">Please grant OShin root permissions and try again!</string>
     <string name="retry">Retry</string>
     <string name="retrying">Retrying...</string>
     <string name="exit">Exit</string>
