@@ -51,13 +51,14 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
@@ -243,7 +244,10 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                             ) {
                                 BasicComponent(
                                     title = stringResource(R.string.no_start_func),
-                                    titleColor = Color.Red
+                                    titleColor = BasicComponentColors(
+                                            color = Color.Red,
+                                            disabledColor = Color.Red
+                                        )
                                 )
                             }
                         }
@@ -433,7 +437,10 @@ fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
                             ) {
                                 BasicComponent(
                                     title = stringResource(R.string.no_start_func),
-                                    titleColor = Color.Red
+                                    titleColor = BasicComponentColors(
+                                        color = Color.Red,
+                                        disabledColor = Color.Red
+                                    )
                                 )
                             }
                         }
@@ -620,10 +627,10 @@ fun cpu_temp_data(show: MutableState<Boolean>) {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                enabled = true,
                 onClick = {
                     dismissDialog(show)
                 }

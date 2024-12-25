@@ -8,6 +8,7 @@ import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
@@ -63,12 +64,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.highcapable.yukihookapi.hook.factory.prefs
+import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
-import io.github.suqi8.opatch.ui.miuix.MainPage
+import io.github.suqi8.opatch.ui.activity.about.Main_About
+import io.github.suqi8.opatch.ui.activity.about.about_group
+import io.github.suqi8.opatch.ui.activity.about.about_setting
 import io.github.suqi8.opatch.ui.theme.AppTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -80,7 +84,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Box
-import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.HorizontalPager
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.NavigationBar
@@ -89,6 +93,7 @@ import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -223,7 +228,6 @@ fun dial(showroot: MutableState<Boolean>) {
         show = showroot,
         onDismissRequest = {
             retry.value = true
-            dismissDialog(showroot)
         },
         summaryColor = Color.Red
     ) {
@@ -233,7 +237,7 @@ fun dial(showroot: MutableState<Boolean>) {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.exit),
                 onClick = {
@@ -242,11 +246,11 @@ fun dial(showroot: MutableState<Boolean>) {
                 }
             )
             Spacer(Modifier.width(12.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 enabled = !retry.value,
                 text = if (retry.value) stringResource(R.string.retrying) else stringResource(R.string.retry),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     retry.value = true
                 }
@@ -521,6 +525,25 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
     val windowWidth = getWindowSize().width
     val easing = SpringEasing(0.95f, 0.4f)//CubicBezierEasing(0.4f, 0.95f, 0.2f, 1f)
     val duration = easing.duration.toInt()
+    val alpha: MutableFloatState = remember { mutableFloatStateOf(0.75f) }
+    val blurRadius: MutableState<Dp> = remember { mutableStateOf(25.dp) }
+    val noiseFactor = remember { mutableFloatStateOf(0f) }
+    val containerColor: Color = MiuixTheme.colorScheme.background
+    val hazeState = remember { HazeState() }
+    val hazeStyle =
+        remember(containerColor, alpha.floatValue, blurRadius.value, noiseFactor.floatValue) {
+            HazeStyle(
+                backgroundColor = containerColor,
+                tint = HazeTint(containerColor.copy(alpha.floatValue)),
+                blurRadius = blurRadius.value,
+                noiseFactor = noiseFactor.floatValue
+            )
+        }
+    LaunchedEffect(Unit) {
+        alpha.floatValue = context.prefs("settings").getFloat("AppAlpha", 0.75f)
+        blurRadius.value = context.prefs("settings").getInt("AppblurRadius", 25).dp
+        noiseFactor.floatValue = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
+    }
     Column {
         NavHost(navController = navController, startDestination = "Main",enterTransition = {
                 slideInHorizontally(
@@ -545,9 +568,12 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
                     targetOffsetX = { windowWidth },
                     animationSpec = tween(duration, 0, easing = easing)
                 )
-            }
+            },
+            sizeTransform = {
+                    SizeTransform(clip = true)  // 允许页面在过渡时进行缩放，但不裁剪内容
+                }
         ) {
-            composable("Main") { Main1(modifier = modifier, context = context,navController,colorMode) }
+            composable("Main") { Main1(modifier = modifier, context = context,navController,colorMode,alpha, blurRadius, noiseFactor, hazeState, hazeStyle) }
             composable("Fun_android") { Fun_android(navController) }
             composable("Fun_android_package_manager_services") { Fun_android_package_manager_services(navController = navController)}
             composable("Fun_com_android_systemui") { Fun_com_android_systemui(navController = navController)}
@@ -555,7 +581,8 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("Fun_com_android_systemui_hardware_indicator") { Fun_com_android_systemui_hardware_indicator(navController = navController) }
             composable("Fun_com_android_launcher") { Fun_com_android_launcher(navController = navController) }
             composable("Fun_com_android_systemui_statusbar_icon") { Fun_com_android_systemui_statusbar_icon(navController = navController) }
-            composable("miuix") { MainPage() }
+            composable("about_setting") { about_setting(navController,alpha,blurRadius,noiseFactor,colorMode) }
+            composable("about_group") { about_group(navController) }
         }
     }
 }
@@ -563,25 +590,9 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
 @OptIn(FlowPreview::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "InflateParams", "ResourceType")
 @Composable
-fun Main1(modifier: Modifier,context: Context,navController: NavController,colorMode: MutableState<Int>) {
-    val alpha: MutableFloatState = remember { mutableFloatStateOf(0.75f) }
-    val blurRadius: MutableState<Dp> = remember { mutableStateOf(25.dp) }
-    val noiseFactor = remember { mutableFloatStateOf(0f) }
-    val containerColor: Color = MiuixTheme.colorScheme.background
-    val hazeState = remember { HazeState() }
-    val hazeStyle = remember(containerColor, alpha.floatValue, blurRadius.value, noiseFactor.floatValue) {
-        HazeStyle(
-            backgroundColor = containerColor,
-            tint = HazeTint(containerColor.copy(alpha.floatValue)),
-            blurRadius = blurRadius.value,
-            noiseFactor = noiseFactor.floatValue
-        )
-    }
-    LaunchedEffect(Unit) {
-        alpha.floatValue = context.prefs("settings").getFloat("AppAlpha", 0.75f)
-        blurRadius.value = context.prefs("settings").getInt("AppblurRadius", 25).dp
-        noiseFactor.floatValue = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
-    }
+fun Main1(modifier: Modifier,context: Context,navController: NavController,colorMode: MutableState<Int>,
+          alpha: MutableFloatState, blurRadius: MutableState<Dp>, noiseFactor: MutableFloatState,
+          hazeState: HazeState, hazeStyle: HazeStyle) {
     val topAppBarScrollBehavior0 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val topAppBarScrollBehavior1 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val topAppBarScrollBehavior2 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
@@ -636,7 +647,9 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
             else -> stringResource(R.string.about)
         }, modifier = Modifier.hazeChild(
             state = hazeState,
-            style = hazeStyle), navigationIcon = {
+            style = hazeStyle) {
+            progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
+        }, navigationIcon = {
             Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null,
                 modifier = Modifier.size(50.dp))
         })

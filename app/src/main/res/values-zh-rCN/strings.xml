@@ -179,8 +179,8 @@
     <string name="battery_full_capacity">电池充满容量</string>
     <string name="magisk_version">Magisk版本</string>
     <string name="ksu_version">KernelSU版本</string>
-    <string name="feature_auto_color_picking_enabled">自动取色功能开启</string>
-    <string name="feature_auto_color_picking_warning">开启后加载功能页面，进入软件页面会有卡顿，谨慎开启</string>
+    <string name="feature_auto_color_picking_enabled">图标背景自动取色</string>
+    <string name="feature_auto_color_picking_warning">开启后功能页面的应用图标的背景颜色将会自动取色</string>
     <string name="opatch_root_permission_error">请授予 O神 Root 权限后再重试！</string>
     <string name="retry">重试</string>
     <string name="retrying">重试中...</string>
@@ -196,4 +196,13 @@
     <string name="enable_all_day_screen_off">启用全天候息屏</string>
     <string name="force_trigger_ltpo">强制触发 LTPO</string>
     <string name="warn">警告</string>
+    <string name="other">其他</string>
+    <string name="github_summary">欢迎各位开发者与用户与我们共同开发或提出建议！</string>
+    <string name="thank">感谢</string>
+    <string name="contributors">贡献人员</string>
+    <string name="donors_list">捐赠列表</string>
+    <string name="references">引用内容</string>
+    <string name="discussion_group">讨论群组</string>
+    <string name="auto_build_release">自动构建发布</string>
+    <string name="official_website">官方网站</string>
 </resources>

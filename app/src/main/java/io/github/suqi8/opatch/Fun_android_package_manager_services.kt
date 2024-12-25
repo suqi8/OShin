@@ -39,12 +39,12 @@ import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.ui.tools.resetApp
-import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperSwitch
@@ -264,10 +264,10 @@ fun UsePreSig(showDialog: MutableState<Boolean>) {
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                enabled = true,
                 onClick = {
                     dismissDialog(showDialog)
                 }

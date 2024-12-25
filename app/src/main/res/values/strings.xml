@@ -180,8 +180,8 @@
     <string name="battery_full_capacity">Battery Full Capacity</string>
     <string name="magisk_version">Magisk Version</string>
     <string name="ksu_version">KernelSU Version</string>
-    <string name="feature_auto_color_picking_enabled">Auto Color Picking Enabled</string>
-    <string name="feature_auto_color_picking_warning">After enabling, loading feature pages and entering the software page may cause stuttering. Enable with caution.</string>
+    <string name="feature_auto_color_picking_enabled">Icon background automatically colored</string>
+    <string name="feature_auto_color_picking_warning">When enabled, the background color of the app icon on the feature page will be automatically selected</string>
     <string name="opatch_root_permission_error">Please grant OShin root permissions and try again!</string>
     <string name="retry">Retry</string>
     <string name="retrying">Retrying...</string>
@@ -197,4 +197,13 @@
     <string name="enable_all_day_screen_off">Enable All-Day Screen-Off</string>
     <string name="force_trigger_ltpo">Force Trigger LTPO</string>
     <string name="warn">Warn</string>
+    <string name="other">Other</string>
+    <string name="github_summary">Developers and users are welcome to co-develop with us or make suggestions!</string>
+    <string name="thank">Thank</string>
+    <string name="contributors">Contributors</string>
+    <string name="donors_list">Donors List</string>
+    <string name="references">References</string>
+    <string name="discussion_group">Discussion Group</string>
+    <string name="auto_build_release">Auto Build Release</string>
+    <string name="official_website">Official Website</string>
 </resources>

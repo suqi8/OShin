@@ -77,6 +77,7 @@ class StatusBarClock : YukiBaseHooker() {
                                     )
                                 }
                             }
+
                         }
 
                         if (updateSpeed != 0) {

@@ -58,7 +58,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -66,6 +68,7 @@ import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperArrow
@@ -252,7 +255,10 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                             ) {
                                 BasicComponent(
                                     title = stringResource(R.string.no_start_func),
-                                    titleColor = Color.Red
+                                    titleColor = BasicComponentColors(
+                                            color = MiuixTheme.colorScheme.onSurface,
+                                            disabledColor = MiuixTheme.colorScheme.disabledOnSecondaryVariant
+                                        )
                                 )
                             }
                         }
@@ -556,7 +562,7 @@ fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
                                     , rightText = customClock.value, onClick = {
                                         showCustomClockDialog.value = true
                                     })
-                                SmallTitle(text = stringResource(R.string.status_bar_clock_custom_tips), insideMargin = DpSize(18.dp, 8.dp))
+                                SmallTitle(text = stringResource(R.string.status_bar_clock_custom_tips), insideMargin = PaddingValues(18.dp, 8.dp))
                             }
                         }
                     }
@@ -604,7 +610,7 @@ fun CustomClockDialog(showCustomClockDialog: MutableState<Boolean>, customClockC
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -612,10 +618,10 @@ fun CustomClockDialog(showCustomClockDialog: MutableState<Boolean>, customClockC
                 }
             )
             Spacer(Modifier.width(12.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
                     dismissDialog(showCustomClockDialog)
                     CustomClock.value = customClockCache.value
@@ -653,7 +659,7 @@ fun SettingIntDialog(context: Context,
         AnimatedVisibility((cache.value.isEmpty())) {
             SmallTitle(
                 text = stringResource(R.string.content_not_empty), textColor = Color.Red,
-                insideMargin = DpSize(0.dp, 8.dp)
+                insideMargin = PaddingValues(0.dp, 8.dp)
             )
         }
         Spacer(Modifier.height(12.dp))
@@ -662,7 +668,7 @@ fun SettingIntDialog(context: Context,
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -671,10 +677,10 @@ fun SettingIntDialog(context: Context,
                 }
             )
             Spacer(Modifier.width(12.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 enabled = (cache.value.isNotEmpty()),
                 onClick = {
                     dismissDialog(show)
@@ -708,7 +714,7 @@ fun SettingFloatDialog(context: Context,
         AnimatedVisibility((cache.value.isEmpty())) {
             SmallTitle(
                 text = stringResource(R.string.content_not_empty), textColor = Color.Red,
-                insideMargin = DpSize(0.dp, 8.dp)
+                insideMargin = PaddingValues(0.dp, 8.dp)
             )
         }
         Spacer(Modifier.height(12.dp))
@@ -717,7 +723,7 @@ fun SettingFloatDialog(context: Context,
                 .fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
@@ -725,10 +731,10 @@ fun SettingFloatDialog(context: Context,
                 }
             )
             Spacer(Modifier.width(12.dp))
-            Button(
+            TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
-                submit = true,
+                colors = ButtonDefaults.textButtonColorsPrimary(),
                 enabled = (cache.value.isNotEmpty()),
                 onClick = {
                     dismissDialog(show)

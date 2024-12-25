@@ -39,6 +39,7 @@ import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.ui.tools.resetApp
 import top.yukonga.miuix.kmp.basic.BasicComponent
+import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -60,7 +61,7 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
     val resetApp = resetApp()
     val appList = listOf("com.android.systemui")
     val com_android_systemui_statusbar_icon = remember { mutableStateOf(false) }
-    val showlist = listOf(stringResource(R.string.default_),stringResource(R.string.hide))
+    val showlist = listOf(stringResource(R.string.default_), stringResource(R.string.hide))
     val show_Wifi_icon = remember { mutableIntStateOf(0) }
     val show_Wifi_arrow = remember { mutableIntStateOf(0) }
 
@@ -79,9 +80,12 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
     }
 
     LaunchedEffect(Unit) {
-        com_android_systemui_statusbar_icon.value = context.prefs("settings").getBoolean("com_android_systemui_statusbar_icon", false)
-        show_Wifi_icon.intValue = context.prefs("settings").getInt("com_android_systemui_statusbar_icon_show_Wifi_icon", 0)
-        show_Wifi_arrow.intValue = context.prefs("settings").getInt("com_android_systemui_statusbar_icon_show_Wifi_arrow", 0)
+        com_android_systemui_statusbar_icon.value =
+            context.prefs("settings").getBoolean("com_android_systemui_statusbar_icon", false)
+        show_Wifi_icon.intValue = context.prefs("settings")
+            .getInt("com_android_systemui_statusbar_icon_show_Wifi_icon", 0)
+        show_Wifi_arrow.intValue = context.prefs("settings")
+            .getInt("com_android_systemui_statusbar_icon_show_Wifi_arrow", 0)
     }
     Scaffold(topBar = {
         TopAppBar(
@@ -90,12 +94,15 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
             color = Color.Transparent,
             modifier = Modifier.hazeChild(
                 state = hazeState,
-                style = hazeStyle),
+                style = hazeStyle
+            ),
             navigationIcon = {
-                IconButton(onClick = {
-                    navController.popBackStack()
-                },
-                    modifier = Modifier.padding(start = 18.dp)) {
+                IconButton(
+                    onClick = {
+                        navController.popBackStack()
+                    },
+                    modifier = Modifier.padding(start = 18.dp)
+                ) {
                     Icon(
                         imageVector = MiuixIcons.ArrowBack,
                         contentDescription = null,
@@ -105,10 +112,12 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
             },
             actions = {
                 // 如果你有其他操作按钮，这里可以添加
-                IconButton(onClick = {
-                    RestartAPP.value = true
-                },
-                    modifier = Modifier.padding(end = 18.dp)) {
+                IconButton(
+                    onClick = {
+                        RestartAPP.value = true
+                    },
+                    modifier = Modifier.padding(end = 18.dp)
+                ) {
                     Icon(
                         imageVector = Icons.Outlined.Refresh,
                         contentDescription = null,
@@ -140,7 +149,8 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
                             title = stringResource(R.string.status_bar_icon),
                             onCheckedChange = {
                                 com_android_systemui_statusbar_icon.value = it
-                                context.prefs("settings").edit { putBoolean("com_android_systemui_statusbar_icon", it) }
+                                context.prefs("settings")
+                                    .edit { putBoolean("com_android_systemui_statusbar_icon", it) }
                             },
                             checked = com_android_systemui_statusbar_icon.value
                         )
@@ -157,7 +167,10 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
                             ) {
                                 BasicComponent(
                                     title = stringResource(R.string.no_start_func),
-                                    titleColor = Color.Red
+                                    titleColor = BasicComponentColors(
+                                        color = Color.Red,
+                                        disabledColor = Color.Red
+                                    )
                                 )
                             }
                         }
@@ -177,7 +190,12 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
                                         selectedIndex = show_Wifi_icon.intValue,
                                         onSelectedIndexChange = {
                                             show_Wifi_icon.intValue = it
-                                            context.prefs("settings").edit { putInt("com_android_systemui_statusbar_icon_show_Wifi_icon", it) }
+                                            context.prefs("settings").edit {
+                                                putInt(
+                                                    "com_android_systemui_statusbar_icon_show_Wifi_icon",
+                                                    it
+                                                )
+                                            }
                                         })
                                 }
                                 SuperDropdown(title = stringResource(R.string.wifi_arrow),
@@ -185,7 +203,12 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
                                     selectedIndex = show_Wifi_arrow.intValue,
                                     onSelectedIndexChange = {
                                         show_Wifi_arrow.intValue = it
-                                        context.prefs("settings").edit { putInt("com_android_systemui_statusbar_icon_show_Wifi_arrow", it) }
+                                        context.prefs("settings").edit {
+                                            putInt(
+                                                "com_android_systemui_statusbar_icon_show_Wifi_arrow",
+                                                it
+                                            )
+                                        }
                                     })
                             }
                         }
@@ -194,5 +217,5 @@ fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
             }
         }
     }
-    resetApp.AppRestartScreen(appList,RestartAPP)
+    resetApp.AppRestartScreen(appList, RestartAPP)
 }

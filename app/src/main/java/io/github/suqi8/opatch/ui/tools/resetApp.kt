@@ -15,7 +15,8 @@ import io.github.suqi8.opatch.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import top.yukonga.miuix.kmp.basic.Button
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
+import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 
@@ -64,7 +65,7 @@ class resetApp {
                     .fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Button(
+                TextButton(
                     modifier = Modifier.weight(1f),
                     text = stringResource(R.string.cancel),
                     onClick = {
@@ -72,10 +73,10 @@ class resetApp {
                     }
                 )
                 Spacer(Modifier.width(12.dp))
-                Button(
+                TextButton(
                     modifier = Modifier.weight(1f),
                     text = stringResource(R.string.ok),
-                    submit = true,
+                    colors = ButtonDefaults.textButtonColorsPrimary(),
                     onClick = {
                         onConfirm()
                     }

@@ -3,7 +3,7 @@ package io.github.suqi8.opatch
 import android.annotation.SuppressLint
 import android.view.ViewTreeObserver
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.Indication
+import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -35,6 +36,8 @@ import androidx.compose.ui.graphics.BlendModeColorFilter
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -56,6 +59,7 @@ import top.yukonga.miuix.kmp.basic.InputField
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SearchBar
+import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.Search
@@ -199,7 +203,8 @@ fun Main_Function(
             onExpandedChange = { expanded = it }
         ) {
             Card(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(bottom = (if (isKeyboardVisible) 6 else 65).dp, top = 6.dp)
             ) {
                 LazyColumn(topAppBarScrollBehavior = topAppBarScrollBehavior) {
@@ -218,7 +223,7 @@ fun Main_Function(
 
                     filteredFeatures.forEachIndexed { index, feature ->
                         item {
-                            BasicComponent(
+                            BasicComponentre(
                                 title = highlightMatches(feature.nickname, miuixSearchValue),
                                 summary = feature.description?.let { highlightMatches(it, miuixSearchValue) },
                                 modifier = Modifier.fillMaxWidth(),
@@ -244,7 +249,8 @@ fun Main_Function(
             LazyColumn(Modifier.fillMaxSize(), topAppBarScrollBehavior = topAppBarScrollBehavior) {
                 item {
                     Card(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .padding(horizontal = 12.dp)
                             .padding(bottom = 6.dp)
                     ) {
@@ -289,38 +295,48 @@ fun highlightMatches(text: String, query: String): AnnotatedString {
 }
 
 @Composable
-fun BasicComponent(
+fun BasicComponentre(
     modifier: Modifier = Modifier,
     insideMargin: DpSize? = null,
-    title: AnnotatedString? = null, // 修改为 AnnotatedString
+    title: AnnotatedString? = null,
     titleColor: Color = MiuixTheme.colorScheme.onSurface,
-    summary: AnnotatedString? = null, // 修改为 AnnotatedString
+    summary: AnnotatedString? = null,
     summaryColor: Color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
     leftAction: @Composable (() -> Unit?)? = null,
     rightActions: @Composable RowScope.() -> Unit = {},
     onClick: (() -> Unit)? = null,
-    interactionSource: MutableInteractionSource? = null,
-    indication: Indication? = null
+    enabled: Boolean = true,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
 ) {
-    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
-    val indication = indication
-    val insideMargin = remember { insideMargin } ?: remember { DpSize(16.dp, 9.dp) }
+    var pointerPressed by remember { mutableStateOf(false) }
+    val insideMargin = remember { insideMargin } ?: remember { DpSize(16.dp, 16.dp) }
     val paddingModifier = remember(insideMargin) {
         Modifier.padding(horizontal = insideMargin.width, vertical = insideMargin.height)
     }
-
+    val titleColor = if (enabled) titleColor else MiuixTheme.colorScheme.disabledOnSecondaryVariant
+    val summaryColor =
+        if (enabled) summaryColor else MiuixTheme.colorScheme.disabledOnSecondaryVariant
     Row(
-        modifier = if (onClick != null) {
+        modifier = if (onClick != null && enabled) {
             modifier
                 .clickable(
-                    interactionSource = interactionSource,
-                    indication = indication
+                    indication = LocalIndication.current,
+                    interactionSource = interactionSource
                 ) {
                     onClick.invoke()
                 }
         } else {
             modifier
         }
+            .pointerInput(Unit) {
+                awaitPointerEventScope {
+                    while (enabled) {
+                        val event = awaitPointerEvent()
+                        pointerPressed = event.type == PointerEventType.Press
+                    }
+                }
+            }
+            .heightIn(min = 56.dp)
             .fillMaxWidth()
             .then(paddingModifier),
         verticalAlignment = Alignment.CenterVertically,
@@ -339,15 +355,16 @@ fun BasicComponent(
             title?.let {
                 Text(
                     text = it,
-                    color = titleColor,
-                    fontWeight = FontWeight.Medium
+                    fontSize = MiuixTheme.textStyles.headline1.fontSize,
+                    fontWeight = FontWeight.Medium,
+                    color = titleColor
                 )
             }
             summary?.let {
                 Text(
                     text = it,
-                    color = summaryColor, // 这里使用传入的颜色
-                    fontSize = MiuixTheme.textStyles.headline1.fontSize,
+                    fontSize = MiuixTheme.textStyles.body2.fontSize,
+                    color = summaryColor
                 )
             }
         }
@@ -412,12 +429,13 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
                     CircularProgressIndicator(modifier = Modifier.padding(16.dp))
                     Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(start = 16.dp)) {
                         Text(text = appName)
-                        Text(text = packageName)
+                        SmallTitle(text = packageName, insideMargin = PaddingValues(0.dp, 0.dp))
                     }
                 } else {
                     Card(
                         color = if (YukiHookAPI.Status.isModuleActive) dominantColor.value else MaterialTheme.colorScheme.errorContainer,
-                        modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
                             .drawColoredShadow(
                                 if (YukiHookAPI.Status.isModuleActive) dominantColor.value else MaterialTheme.colorScheme.errorContainer,
                                 1f,
@@ -428,11 +446,11 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
                                 roundedRect = false
                             )
                     ) {
-                        Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(48.dp))
+                        Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(45.dp))
                     }
                     Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(start = 16.dp)) {
                         Text(text = appName)
-                        Text(text = packageName)
+                        SmallTitle(text = packageName, insideMargin = PaddingValues(0.dp, 0.dp))
                     }
                 }
             }

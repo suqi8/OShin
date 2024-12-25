@@ -44,7 +44,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
@@ -55,11 +54,13 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.theme.MiuixTheme
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import kotlin.random.Random
@@ -77,7 +78,7 @@ open class ShadowElevation(
     private val start: Dp = 0.dp,
     private val bottom: Dp = 0.dp,
     private val end: Dp = 0.dp
-){
+) {
     companion object : ShadowElevation()
 }
 
@@ -151,7 +152,7 @@ fun addline(mode: Boolean = true) {
 
 @SuppressLint("AutoboxingStateCreation")
 @Composable
-fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
+fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior) {
     /*val loading = remember { mutableStateOf(true) }
     if (loading.value) {
         Box(modifier = Modifier.fillMaxSize().background(Color.Transparent)) {
@@ -216,23 +217,29 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                         currentEndColor = randomColor() // 更新新的随机颜色
                     }
                 }
-                Card(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 10.dp)
-                    .drawColoredShadow(
-                        if (YukiHookAPI.Status.isModuleActive) startColor else MaterialTheme.colorScheme.errorContainer,
-                        1f,
-                        borderRadius = 0.dp,
-                        shadowRadius = 15.dp,
-                        offsetX = 0.dp,
-                        offsetY = 0.dp,
-                        roundedRect = false
-                    ),
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 20.dp, top = 20.dp, end = 20.dp, bottom = 10.dp)
+                        .drawColoredShadow(
+                            if (YukiHookAPI.Status.isModuleActive) startColor else MaterialTheme.colorScheme.errorContainer,
+                            1f,
+                            borderRadius = 0.dp,
+                            shadowRadius = 15.dp,
+                            offsetX = 0.dp,
+                            offsetY = 0.dp,
+                            roundedRect = false
+                        ),
                     color = if (YukiHookAPI.Status.isModuleActive) startColor else MaterialTheme.colorScheme.errorContainer,
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(start = 30.dp, end = 30.dp, top = 30.dp, bottom = 30.dp)
+                        modifier = Modifier.padding(
+                            start = 30.dp,
+                            end = 30.dp,
+                            top = 30.dp,
+                            bottom = 30.dp
+                        )
                     ) {
                         Image(
                             painter = painterResource(
@@ -273,11 +280,14 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp, vertical = 6.dp),
-                    color = Color.Red.copy(alpha = 0.1f)
+                    color = MiuixTheme.colorScheme.primaryVariant.copy(alpha = 0.1f)
                 ) {
                     top.yukonga.miuix.kmp.basic.BasicComponent(
                         summary = stringResource(R.string.module_notice),
-                        summaryColor = Color.Red
+                        summaryColor = BasicComponentColors(
+                            color = MiuixTheme.colorScheme.primaryVariant,
+                            disabledColor = MiuixTheme.colorScheme.primaryVariant
+                        )
                     )
                 }
             }
@@ -290,9 +300,10 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                     animationSpec = tween(durationMillis = 500)
                 ) + fadeIn(animationSpec = tween(durationMillis = 500))
             ) {
-                Card(modifier = Modifier
-                    .padding(start = 20.dp, top = 10.dp, end = 20.dp, bottom = 20.dp)
-                    .fillMaxWidth()
+                Card(
+                    modifier = Modifier
+                        .padding(start = 20.dp, top = 10.dp, end = 20.dp, bottom = 20.dp)
+                        .fillMaxWidth()
                 ) {
                     var nvid by remember { mutableStateOf("0") }
 
@@ -321,21 +332,28 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                     LaunchedEffect(Unit) {
                         withContext(Dispatchers.IO) {
                             nvid = getSystemProperty("ro.build.oplus_nv_id")
-                            health = executeCommand("cat /sys/class/power_supply/battery/health").trim()
+                            health =
+                                executeCommand("cat /sys/class/power_supply/battery/health").trim()
                             ksuVersion = executeCommand("/data/adb/ksud -V")
                             versionMessage = if (ksuVersion.isEmpty()) {
                                 val magiskVersion = executeCommand("magisk -v")
-                                magiskVersion +" "+ executeCommand("magisk -V").trim()
+                                magiskVersion + " " + executeCommand("magisk -V").trim()
                             } else {
                                 val version = ksuVersion.substringAfter("ksud ").substring(0, 4)
                                 version
                             }
                             battery_cc = try {
-                                executeCommand("cat /sys/class/oplus_chg/battery/battery_cc").trim().toInt()
-                            } catch (e: Exception) {0}
+                                executeCommand("cat /sys/class/oplus_chg/battery/battery_cc").trim()
+                                    .toInt()
+                            } catch (e: Exception) {
+                                0
+                            }
                             charge_full_design = try {
-                                executeCommand("cat /sys/class/power_supply/battery/charge_full_design").trim().toInt() / 1000
-                            } catch (e: Exception) { 0 }
+                                executeCommand("cat /sys/class/power_supply/battery/charge_full_design").trim()
+                                    .toInt() / 1000
+                            } catch (e: Exception) {
+                                0
+                            }
                         }
 
                     }
@@ -360,9 +378,11 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                                 Lifecycle.Event.ON_START -> {
                                     isForeground.value = true
                                 }
+
                                 Lifecycle.Event.ON_STOP -> {
                                     isForeground.value = false
                                 }
+
                                 else -> {}
                             }
                         }
@@ -378,63 +398,155 @@ fun Main_Home(padding: PaddingValues,topAppBarScrollBehavior: ScrollBehavior) {
                                     currentCapacity.value = try {
                                         when {
                                             executeCommand("cat /sys/class/oplus_chg/battery/charge_full").isNotEmpty() -> {
-                                                (executeCommand("cat /sys/class/oplus_chg/battery/charge_full").trim().toInt() / 1000).toString()
+                                                (executeCommand("cat /sys/class/oplus_chg/battery/charge_full").trim()
+                                                    .toInt() / 1000).toString()
                                             }
+
                                             executeCommand("cat /sys/class/power_supply/battery/charge_counter").isNotEmpty() -> {
-                                                (executeCommand("cat /sys/class/power_supply/battery/charge_counter").trim().toInt() / 1000).toString()
+                                                (executeCommand("cat /sys/class/power_supply/battery/charge_counter").trim()
+                                                    .toInt() / 1000).toString()
                                             }
+
                                             executeCommand("cat /sys/class/power_supply/battery/charge_now").isNotEmpty() -> {
-                                                (executeCommand("cat /sys/class/power_supply/battery/charge_now").trim().toInt() / 1000).toString()
+                                                (executeCommand("cat /sys/class/power_supply/battery/charge_now").trim()
+                                                    .toInt() / 1000).toString()
                                             }
+
                                             else -> "ERROR"
                                         }
                                     } catch (e: Exception) {
                                         e.message
                                     } + " mAh"
                                     fullCapacity.value = try {
-                                        executeCommand("cat /sys/class/oplus_chg/battery/battery_fcc").trim().toInt().toString()
-                                    } catch (e: Exception) {e.message} + " mAh"
+                                        executeCommand("cat /sys/class/oplus_chg/battery/battery_fcc").trim()
+                                            .toInt().toString()
+                                    } catch (e: Exception) {
+                                        e.message
+                                    } + " mAh"
                                     batteryHealth.value = try {
                                         getSOH() + "% / " +
-                                                (executeCommand("cat /sys/class/oplus_chg/battery/battery_fcc").trim().toFloat() /
-                                                        (executeCommand("cat /sys/class/power_supply/battery/charge_full_design").trim().toFloat() / 100000)).toString()
-                                    } catch (e: Exception) { e.message } + "%"
+                                                (executeCommand("cat /sys/class/oplus_chg/battery/battery_fcc").trim()
+                                                    .toFloat() /
+                                                        (executeCommand("cat /sys/class/power_supply/battery/charge_full_design").trim()
+                                                            .toFloat() / 100000)).toString()
+                                    } catch (e: Exception) {
+                                        e.message
+                                    } + "%"
                                 }
                                 delay(10000L)
                             }
                         }
                     }
 
-                    Column(modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 20.dp, bottom = 20.dp)) {
-                        Text(text = stringResource(id = R.string.countries_and_regions),modifier = Modifier.padding(bottom=5.dp))
-                        SmallTitle(text = country, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                    Column(
+                        modifier = Modifier.padding(
+                            start = 20.dp,
+                            end = 20.dp,
+                            top = 20.dp,
+                            bottom = 20.dp
+                        )
+                    ) {
+                        Text(
+                            text = stringResource(id = R.string.countries_and_regions),
+                            modifier = Modifier.padding(bottom = 5.dp)
+                        )
+                        SmallTitle(
+                            text = country,
+                            insideMargin = PaddingValues(0.dp, 0.dp),
+                            modifier = Modifier.padding(bottom = 5.dp)
+                        )
                         addline(false)
-                        Text(text = stringResource(id = R.string.android_version)+" / "+stringResource(id = R.string.android_api_version),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = Build.VERSION.RELEASE+"/"+Build.VERSION.SDK_INT, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(
+                            text = stringResource(id = R.string.android_version) + " / " + stringResource(
+                                id = R.string.android_api_version
+                            ), modifier = Modifier.padding(top = 5.dp)
+                        )
+                        SmallTitle(
+                            text = Build.VERSION.RELEASE + "/" + Build.VERSION.SDK_INT,
+                            insideMargin = PaddingValues(0.dp, 0.dp),
+                            modifier = Modifier.padding(bottom = 5.dp)
+                        )
                         addline(false)
-                        Text(text = stringResource(id = R.string.battery_status),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = "$batteryHealthString / $health", insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(
+                            text = stringResource(id = R.string.battery_status),
+                            modifier = Modifier.padding(top = 5.dp)
+                        )
+                        SmallTitle(
+                            text = "$batteryHealthString / $health",
+                            insideMargin = PaddingValues(0.dp, 0.dp),
+                            modifier = Modifier.padding(bottom = 5.dp)
+                        )
                         addline(false)
-                        Text(text = stringResource(id = R.string.system_version),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = Build.DISPLAY, insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(
+                            text = stringResource(id = R.string.system_version),
+                            modifier = Modifier.padding(top = 5.dp)
+                        )
+                        SmallTitle(
+                            text = Build.DISPLAY,
+                            insideMargin = PaddingValues(0.dp, 0.dp),
+                            modifier = Modifier.padding(bottom = 5.dp)
+                        )
                         addline(false)
-                        Text(text = stringResource(id = R.string.battery_equivalent_capacity),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = charge_full_design.toString()+"mAh", insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(
+                            text = stringResource(id = R.string.battery_equivalent_capacity),
+                            modifier = Modifier.padding(top = 5.dp)
+                        )
+                        SmallTitle(
+                            text = charge_full_design.toString() + "mAh",
+                            insideMargin = PaddingValues(0.dp, 0.dp),
+                            modifier = Modifier.padding(bottom = 5.dp)
+                        )
                         addline(false)
-                        Text(text = stringResource(id = R.string.battery_current_capacity), modifier = Modifier.padding(top = 5.dp))
-                        SmallTitle(text = currentCapacity.value, insideMargin = DpSize(0.dp, 0.dp), modifier = Modifier.padding(bottom = 5.dp))
+                        Text(
+                            text = stringResource(id = R.string.battery_current_capacity),
+                            modifier = Modifier.padding(top = 5.dp)
+                        )
+                        SmallTitle(
+                            text = currentCapacity.value,
+                            insideMargin = PaddingValues(0.dp, 0.dp),
+                            modifier = Modifier.padding(bottom = 5.dp)
+                        )
                         addline(false)
-                        Text(text = stringResource(id = R.string.battery_full_capacity), modifier = Modifier.padding(top = 5.dp))
-                        SmallTitle(text = fullCapacity.value, insideMargin = DpSize(0.dp, 0.dp), modifier = Modifier.padding(bottom = 5.dp))
+                        Text(
+                            text = stringResource(id = R.string.battery_full_capacity),
+                            modifier = Modifier.padding(top = 5.dp)
+                        )
+                        SmallTitle(
+                            text = fullCapacity.value,
+                            insideMargin = PaddingValues(0.dp, 0.dp),
+                            modifier = Modifier.padding(bottom = 5.dp)
+                        )
                         addline(false)
-                        Text(text = stringResource(id = R.string.battery_health), modifier = Modifier.padding(top = 5.dp))
-                        SmallTitle(text = batteryHealth.value, insideMargin = DpSize(0.dp, 0.dp), modifier = Modifier.padding(bottom = 5.dp))
+                        Text(
+                            text = stringResource(id = R.string.battery_health),
+                            modifier = Modifier.padding(top = 5.dp)
+                        )
+                        SmallTitle(
+                            text = batteryHealth.value,
+                            insideMargin = PaddingValues(0.dp, 0.dp),
+                            modifier = Modifier.padding(bottom = 5.dp)
+                        )
                         addline(false)
-                        Text(text = stringResource(id = R.string.battery_cycle_count),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = battery_cc.toString()+"次", insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(
+                            text = stringResource(id = R.string.battery_cycle_count),
+                            modifier = Modifier.padding(top = 5.dp)
+                        )
+                        SmallTitle(
+                            text = battery_cc.toString() + "次",
+                            insideMargin = PaddingValues(0.dp, 0.dp),
+                            modifier = Modifier.padding(bottom = 5.dp)
+                        )
                         addline(false)
-                        Text(text = if (ksuVersion.isEmpty()) stringResource(id = R.string.magisk_version) else stringResource(id = R.string.ksu_version),modifier = Modifier.padding(top=5.dp))
-                        SmallTitle(text = versionMessage.trim(), insideMargin = DpSize(0.dp,0.dp),modifier = Modifier.padding(bottom=5.dp))
+                        Text(
+                            text = if (ksuVersion.isEmpty()) stringResource(id = R.string.magisk_version) else stringResource(
+                                id = R.string.ksu_version
+                            ), modifier = Modifier.padding(top = 5.dp)
+                        )
+                        SmallTitle(
+                            text = versionMessage.trim(),
+                            insideMargin = PaddingValues(0.dp, 0.dp),
+                            modifier = Modifier.padding(bottom = 5.dp)
+                        )
                     }
                 }
             }
@@ -458,12 +570,14 @@ suspend fun getSOH(): String {
             soh = (fccs.toFloat() / designCapacity.toFloat()).toDouble()
             String.format("%.1f", soh)
         }
+
         soh > 101 -> {
             val designCapacity = getDesignCapacity // Assume this function exists
             val fccs = fcc * 100
             soh = (fccs.toFloat() / designCapacity.toFloat()).toDouble()
             String.format("%.1f", soh)
         }
+
         else -> String.format("%.1f", soh)
     }
 }
@@ -502,7 +616,10 @@ suspend fun executeCommand(command: String): String {
 }
 
 @Composable
-fun GetAppIconAndName(packageName: String, onAppInfoLoaded: @Composable (String, ImageBitmap) -> Unit) {
+fun GetAppIconAndName(
+    packageName: String,
+    onAppInfoLoaded: @Composable (String, ImageBitmap) -> Unit
+) {
     val context = LocalContext.current
     val packageManager = context.packageManager
     val applicationInfo = remember { mutableStateOf<android.content.pm.ApplicationInfo?>(null) }
