@@ -5,18 +5,12 @@ import android.graphics.Typeface
 import android.os.Handler
 import android.os.Looper
 import android.view.Gravity
-import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
-import com.highcapable.yukihookapi.hook.factory.prefs
-import io.github.suqi8.opatch.cpu_temp_data
 import java.io.File
-import java.io.FileInputStream
 import java.util.Locale
-import java.util.Properties
-import kotlin.math.abs
 
 class StatusBartemperature_indicator: YukiBaseHooker() {
     @OptIn(LegacyHookApi::class)

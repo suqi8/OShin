@@ -1,4 +1,4 @@
-package io.github.suqi8.opatch
+package io.github.suqi8.opatch.ui.activity.com.android.systemui
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -43,7 +43,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
@@ -52,6 +51,8 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
+import io.github.suqi8.opatch.R
+import io.github.suqi8.opatch.addline
 import io.github.suqi8.opatch.tools.AnimTools
 import io.github.suqi8.opatch.ui.tools.resetApp
 import kotlinx.coroutines.CoroutineScope
@@ -59,7 +60,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentColors
-import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
@@ -83,7 +83,7 @@ import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @SuppressLint("RtlHardcoded")
 @Composable
-fun Fun_com_android_systemui_status_bar_clock(navController: NavController) {
+fun status_bar_clock(navController: NavController) {
     val context = LocalContext.current
     val topappbarzt = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val ClockStyle = listOf(stringResource(R.string.preset),

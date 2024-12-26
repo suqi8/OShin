@@ -1,4 +1,4 @@
-package io.github.suqi8.opatch
+package io.github.suqi8.opatch.ui.activity.com.android.systemui
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -46,6 +46,8 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
+import io.github.suqi8.opatch.R
+import io.github.suqi8.opatch.addline
 import io.github.suqi8.opatch.ui.tools.resetApp
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -73,7 +75,7 @@ import java.io.IOException
 
 @SuppressLint("RtlHardcoded")
 @Composable
-fun Fun_com_android_systemui_hardware_indicator(navController: NavController) {
+fun hardware_indicator(navController: NavController) {
     val context = LocalContext.current
     val topappbarzt = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val restartAPP = remember { mutableStateOf(false) }

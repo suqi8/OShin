@@ -75,6 +75,10 @@ import io.github.suqi8.opatch.ui.activity.about.about_contributors
 import io.github.suqi8.opatch.ui.activity.about.about_group
 import io.github.suqi8.opatch.ui.activity.about.about_references
 import io.github.suqi8.opatch.ui.activity.about.about_setting
+import io.github.suqi8.opatch.ui.activity.com.android.systemui.hardware_indicator
+import io.github.suqi8.opatch.ui.activity.com.android.systemui.status_bar_clock
+import io.github.suqi8.opatch.ui.activity.com.android.systemui.statusbar_icon
+import io.github.suqi8.opatch.ui.activity.com.android.systemui.systemui
 import io.github.suqi8.opatch.ui.theme.AppTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -578,11 +582,11 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("Main") { Main1(modifier = modifier, context = context,navController,colorMode,alpha, blurRadius, noiseFactor, hazeState, hazeStyle) }
             composable("Fun_android") { Fun_android(navController) }
             composable("Fun_android_package_manager_services") { Fun_android_package_manager_services(navController = navController)}
-            composable("Fun_com_android_systemui") { Fun_com_android_systemui(navController = navController)}
-            composable("Fun_com_android_systemui_status_bar_clock") { Fun_com_android_systemui_status_bar_clock(navController = navController) }
-            composable("Fun_com_android_systemui_hardware_indicator") { Fun_com_android_systemui_hardware_indicator(navController = navController) }
+            composable("systemui") { systemui(navController = navController)}
+            composable("systemui/status_bar_clock") { status_bar_clock(navController = navController) }
+            composable("systemui/hardware_indicator") { hardware_indicator(navController = navController) }
             composable("Fun_com_android_launcher") { Fun_com_android_launcher(navController = navController) }
-            composable("Fun_com_android_systemui_statusbar_icon") { Fun_com_android_systemui_statusbar_icon(navController = navController) }
+            composable("systemui/statusbar_icon") { statusbar_icon(navController = navController) }
             composable("about_setting") { about_setting(navController,alpha,blurRadius,noiseFactor,colorMode) }
             composable("about_group") { about_group(navController) }
             composable("about_references") { about_references(navController) }

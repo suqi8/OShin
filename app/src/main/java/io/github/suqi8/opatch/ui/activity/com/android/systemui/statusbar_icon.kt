@@ -1,4 +1,4 @@
-package io.github.suqi8.opatch
+package io.github.suqi8.opatch.ui.activity.com.android.systemui
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
@@ -37,6 +37,7 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
+import io.github.suqi8.opatch.R
 import io.github.suqi8.opatch.ui.tools.resetApp
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentColors
@@ -54,7 +55,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @SuppressLint("RtlHardcoded")
 @Composable
-fun Fun_com_android_systemui_statusbar_icon(navController: NavController) {
+fun statusbar_icon(navController: NavController) {
     val context = LocalContext.current
     val topappbarzt = MiuixScrollBehavior(rememberTopAppBarState())
     val RestartAPP = remember { mutableStateOf(false) }

@@ -257,7 +257,7 @@ fun Main_Function(
                         Column {
                             FunctionApp("android", "Fun_android", navController)
                             addline()
-                            FunctionApp("com.android.systemui", "Fun_com_android_systemui", navController)
+                            FunctionApp("com.android.systemui", "systemui", navController)
                             addline()
                             FunctionApp("com.android.settings", "Fun_com_android_settings", navController)
                             addline()

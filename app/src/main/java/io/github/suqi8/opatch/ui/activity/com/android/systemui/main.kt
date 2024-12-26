@@ -1,4 +1,4 @@
-package io.github.suqi8.opatch
+package io.github.suqi8.opatch.ui.activity.com.android.systemui
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
@@ -27,6 +27,9 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
+import io.github.suqi8.opatch.GetAppIconAndName
+import io.github.suqi8.opatch.R
+import io.github.suqi8.opatch.addline
 import io.github.suqi8.opatch.ui.tools.resetApp
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
@@ -41,7 +44,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun Fun_com_android_systemui(navController: NavController) {
+fun systemui(navController: NavController) {
     val context = LocalContext.current
     val one = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
     val appList = listOf("com.android.systemui")
@@ -117,17 +120,17 @@ fun Fun_com_android_systemui(navController: NavController) {
                 ) {
                     SuperArrow(title = stringResource(id = R.string.status_bar_clock),
                         onClick = {
-                            navController.navigate("Fun_com_android_systemui_status_bar_clock")
+                            navController.navigate("systemui/status_bar_clock")
                         })
                     addline()
                     SuperArrow(title = stringResource(id = R.string.hardware_indicator),
                         onClick = {
-                            navController.navigate("Fun_com_android_systemui_hardware_indicator")
+                            navController.navigate("systemui/hardware_indicator")
                         })
                     addline()
                     SuperArrow(title = stringResource(id = R.string.status_bar_icon),
                         onClick = {
-                            navController.navigate("Fun_com_android_systemui_statusbar_icon")
+                            navController.navigate("systemui/statusbar_icon")
                         })
                 }
                 Card(
