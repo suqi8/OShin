@@ -109,7 +109,7 @@ jobs:
         COMMIT_MESSAGE: |+
           🚀 **GitHub 新推送来了！**  
           *👤 作者*：`${{ github.event.head_commit.author.name }}`  
-          *🔢 CommitID*：`${{ github.event.head_commit.id.substring(0, 7) }}`  
+          *🔢 CommitID*：`${{ github.event.head_commit.id }}`  
           *📄 提交信息 📄*  
           
           ${{ github.event.head_commit.message }}
