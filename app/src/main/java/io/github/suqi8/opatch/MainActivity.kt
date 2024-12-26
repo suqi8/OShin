@@ -71,7 +71,9 @@ import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.ui.activity.about.Main_About
+import io.github.suqi8.opatch.ui.activity.about.about_contributors
 import io.github.suqi8.opatch.ui.activity.about.about_group
+import io.github.suqi8.opatch.ui.activity.about.about_references
 import io.github.suqi8.opatch.ui.activity.about.about_setting
 import io.github.suqi8.opatch.ui.theme.AppTheme
 import kotlinx.coroutines.Dispatchers
@@ -583,6 +585,8 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("Fun_com_android_systemui_statusbar_icon") { Fun_com_android_systemui_statusbar_icon(navController = navController) }
             composable("about_setting") { about_setting(navController,alpha,blurRadius,noiseFactor,colorMode) }
             composable("about_group") { about_group(navController) }
+            composable("about_references") { about_references(navController) }
+            composable("about_contributors") { about_contributors(navController) }
         }
     }
 }

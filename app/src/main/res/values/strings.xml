@@ -206,4 +206,10 @@
     <string name="discussion_group">Discussion Group</string>
     <string name="auto_build_release">Auto Build Release</string>
     <string name="official_website">Official Website</string>
+    <string name="open_source_project">Open Source Project</string>
+    <string name="closed_source_project">Closed Source Project</string>
+    <string name="no_license">No License</string>
+    <string name="thanks_open_source_projects">OShin has used part or all of the following open source projects. Thanks to the developers of these projects (in no particular order).</string>
+    <string name="coolapk">CoolApk</string>
+    <string name="thanks_contributors">Thanks to the following developers or users for their contributions to OShin. OShin would not be where it is today without you! (In no particular order.)</string>
 </resources>

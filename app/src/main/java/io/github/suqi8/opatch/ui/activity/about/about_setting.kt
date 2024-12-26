@@ -105,7 +105,6 @@ fun about_setting(
             topAppBarScrollBehavior = one, modifier = Modifier
                 .fillMaxSize()
                 .haze(state = hazeState)
-                .padding(top = 15.dp)
         ) {
             item {
                 Card(
@@ -113,6 +112,7 @@ fun about_setting(
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp)
+                        .padding(top = 15.dp)
                 ) {
                     SuperDropdown(
                         title = stringResource(R.string.Color_Mode),

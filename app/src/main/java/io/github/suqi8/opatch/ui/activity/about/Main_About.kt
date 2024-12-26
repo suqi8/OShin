@@ -41,6 +41,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -302,8 +303,12 @@ fun Main_About(
                         .padding(bottom = 6.dp)
                 ) {
                     SuperArrow(title = stringResource(R.string.donors_list))
-                    SuperArrow(title = stringResource(R.string.contributors))
-                    SuperArrow(title = stringResource(R.string.references))
+                    SuperArrow(title = stringResource(R.string.contributors), onClick = {
+                        navController.navigate("about_contributors")
+                    })
+                    SuperArrow(title = stringResource(R.string.references), onClick = {
+                        navController.navigate("about_references")
+                    })
                 }
                 SmallTitle(text = stringResource(R.string.other))
                 Card(
@@ -316,7 +321,9 @@ fun Main_About(
                         Image(
                             painter = painterResource(R.drawable.settings),
                             contentDescription = null,
-                            modifier = Modifier.size(32.dp).padding(end = 8.dp),
+                            modifier = Modifier
+                                .size(32.dp)
+                                .padding(end = 8.dp),
                             colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
                         )
                     }, onClick = {
@@ -326,7 +333,9 @@ fun Main_About(
                         Image(
                             painter = painterResource(R.drawable.group),
                             contentDescription = null,
-                            modifier = Modifier.size(32.dp).padding(end = 8.dp),
+                            modifier = Modifier
+                                .size(32.dp)
+                                .padding(end = 8.dp),
                             colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
                         )
                     }, onClick = {
@@ -336,7 +345,9 @@ fun Main_About(
                         Image(
                             painter = painterResource(R.drawable.website),
                             contentDescription = null,
-                            modifier = Modifier.size(32.dp).padding(end = 8.dp),
+                            modifier = Modifier
+                                .size(32.dp)
+                                .padding(end = 8.dp),
                             colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
                         )
                     }, onClick = {
@@ -353,7 +364,9 @@ fun Main_About(
                             Image(
                                 painter = painterResource(R.drawable.github),
                                 contentDescription = null,
-                                modifier = Modifier.size(32.dp).padding(end = 8.dp),
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .padding(end = 8.dp),
                                 colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
                             )
                         }, onClick = {
@@ -369,7 +382,9 @@ fun Main_About(
                             Image(
                                 painter = painterResource(R.drawable.translators),
                                 contentDescription = null,
-                                modifier = Modifier.size(32.dp).padding(end = 8.dp),
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .padding(end = 8.dp),
                                 colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
                             )
                         },
@@ -382,7 +397,15 @@ fun Main_About(
                         })
                 }
                 Spacer(Modifier.size(20.dp))
-                Spacer(Modifier.size(65.dp))
+                Text(
+                    modifier = Modifier.fillMaxWidth(),
+                    text = "Powered By SYC Team",
+                    fontSize = MiuixTheme.textStyles.subtitle.fontSize,
+                    fontWeight = FontWeight.Medium,
+                    color = MiuixTheme.colorScheme.onBackgroundVariant,
+                    textAlign = TextAlign.Center
+                )
+                Spacer(Modifier.size(105.dp))
             }
         }
     }

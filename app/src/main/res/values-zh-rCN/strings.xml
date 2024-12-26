@@ -205,4 +205,10 @@
     <string name="discussion_group">讨论群组</string>
     <string name="auto_build_release">自动构建发布</string>
     <string name="official_website">官方网站</string>
+    <string name="open_source_project">开源项目</string>
+    <string name="closed_source_project">闭源项目</string>
+    <string name="no_license">无许可证</string>
+    <string name="thanks_open_source_projects">O神 使用了以下开源项目的部分或全部内容，感谢这些项目的开发者（排名顺序不分先后）</string>
+    <string name="coolapk">酷安</string>
+    <string name="thanks_contributors">感谢以下开发者或用户对 O神 做出的贡献，现在的 O神 离不开你们！（排名顺序不分先后）</string>
 </resources>
