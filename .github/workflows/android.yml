@@ -108,24 +108,16 @@ jobs:
       env:
         COMMIT_MESSAGE: |+
           🚀 **GitHub 新推送来了！**  
+          *👤 作者*：`${{ github.event.head_commit.author.name }}`  
+          *🔢 CommitID*：`${{ github.event.head_commit.id.substring(0, 7) }}`  
+          *📄 提交信息 📄*  
           
-          *👤 作者*：`${{ github.event.head_commit.author.name }}`
-          *🕒 提交时间*：`${{ github.event.head_commit.timestamp }}`
-          *📦 仓库*：`${{ github.repository }}`
-          *🔢 SHA*：`${{ github.event.head_commit.id }}`
-          *🔍 分支*：`${{ github.ref }}`
-          
-          *📄 提交信息 📄*
-          ```
           ${{ github.event.head_commit.message }}
-          ```
+          
           🔗 **查看详情**：[点我看具体内容](${{ github.event.head_commit.url }})
         COMMIT_URL: ${{ github.event.head_commit.url }}
       run: |
-        ESCAPED=`python3 -c 'import json,os,re,urllib.parse; msg = json.dumps(re.sub("\-", "\\-",re.sub("\.", "\\.", os.environ["COMMIT_MESSAGE"]))); print(urllib.parse.quote(msg, safe=""))'`
+        ESCAPED=`python3 -c 'import json,os,re,urllib.parse; msg = json.dumps(re.sub("\-", "\\-",re.sub("\.", "\\.", os.environ["COMMIT_MESSAGE"]))); print(urllib.parse.quote(msg, safe=""))'`        
         echo "COMMIT_MESSAGE: $ESCAPED"
-        curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=%5B%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Farmeabi%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Farm64%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2FarmAll%22%7D%2C%7B%22type%22%3A%22document%22%2C%20%22media%22%3A%22attach%3A%2F%2Fmetadata%22%2C%20%22parse_mode%22%3A%22MarkdownV2%22%2C%20%22caption%22%3A${ESCAPED}%7D%5D%0A" \
-         -F armeabi="@${{ env.APK_FILE_ARMEABI }}" \
-         -F arm64="@${{ env.APK_FILE_ARM64 }}" \
-         -F armAll="@${{ env.APK_FILE_ARMALL }}" \
-         -F metadata="@${{ env.APK_FILE_METADATA }}"
+        curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=%5b%22media%22%3a%22attach%3a%2f%2farmAll%22%2c+%22parse_mode%22%3a%22MarkdownV2%22%2c+%22caption%22%3a${ESCAPED}%7d%5d" \
+         -F armAll="@${{ env.APK_FILE_ARMALL }}"
