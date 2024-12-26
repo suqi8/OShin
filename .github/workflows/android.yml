@@ -38,23 +38,6 @@ jobs:
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
-    - name: Install ccache
-      run: |
-        sudo apt install -y ccache ninja-build
-        ccache -o max_size=1G
-        ccache -o hash_dir=false
-        ccache -o hard_link=true
-        ccache -o compiler_check='%compiler% -dumpmachine; %compiler% -dumpversion'
-        ccache -zp
-    - name: Cache Native Build
-      uses: actions/cache@v4.1.1
-      with:
-        path: |
-          ~/.cache/ccache
-          ~/.ccache
-          app/build/.lto-cache
-        key: native-cache-${{ github.sha }}
-        restore-keys: native-cache-
     - name: Build with Gradle
       run: | 
         ./gradlew assembleRelease
@@ -119,5 +102,5 @@ jobs:
       run: |
         ESCAPED=`python3 -c 'import json,os,re,urllib.parse; msg = json.dumps(re.sub("\-", "\\-",re.sub("\.", "\\.", os.environ["COMMIT_MESSAGE"]))); print(urllib.parse.quote(msg, safe=""))'`        
         echo "COMMIT_MESSAGE: $ESCAPED"
-        curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=%5b%22media%22%3a%22attach%3a%2f%2farmAll%22%2c+%22parse_mode%22%3a%22MarkdownV2%22%2c+%22caption%22%3a${ESCAPED}%7d%5d" \
+        curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=%5b%7b%22type%22%3a%22document%22%2c+%22media%22%3a%22attach%3a%2f%2farmAll%22%2c+%22parse_mode%22%3a%22MarkdownV2%22%2c+%22caption%22%3a${ESCAPED}%7d%5d%0a" \
          -F armAll="@${{ env.APK_FILE_ARMALL }}"
