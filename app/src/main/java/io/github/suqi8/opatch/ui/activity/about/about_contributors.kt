@@ -66,7 +66,7 @@ fun about_contributors(navController: NavController) {
 
     Scaffold(topBar = {
         TopAppBar(
-            title = stringResource(id = R.string.references),
+            title = stringResource(id = R.string.contributors),
             color = Color.Transparent,
             modifier = Modifier.hazeChild(
                 state = hazeState,
@@ -218,6 +218,7 @@ fun about_contributors_item(
                     }
                 }
             )
+            addline()
             SuperArrow(title = "Github", leftAction = {
                 Image(
                     painter = painterResource(R.drawable.github),
