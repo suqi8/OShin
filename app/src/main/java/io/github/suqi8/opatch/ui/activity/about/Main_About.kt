@@ -303,9 +303,11 @@ fun Main_About(
                         .padding(bottom = 6.dp)
                 ) {
                     SuperArrow(title = stringResource(R.string.donors_list))
+                    addline()
                     SuperArrow(title = stringResource(R.string.contributors), onClick = {
                         navController.navigate("about_contributors")
                     })
+                    addline()
                     SuperArrow(title = stringResource(R.string.references), onClick = {
                         navController.navigate("about_references")
                     })
@@ -329,6 +331,7 @@ fun Main_About(
                     }, onClick = {
                         navController.navigate("about_setting")
                     })
+                    addline()
                     SuperArrow(title = stringResource(R.string.official_channel), leftAction = {
                         Image(
                             painter = painterResource(R.drawable.group),
@@ -341,6 +344,7 @@ fun Main_About(
                     }, onClick = {
                         navController.navigate("about_group")
                     })
+                    addline()
                     SuperArrow(title = stringResource(R.string.official_website), leftAction = {
                         Image(
                             painter = painterResource(R.drawable.website),
@@ -357,6 +361,7 @@ fun Main_About(
                         )
                         context.startActivity(intent)
                     })
+                    addline()
                     SuperArrow(
                         title = "GitHub",
                         summary = stringResource(R.string.github_summary),
@@ -376,6 +381,7 @@ fun Main_About(
                             )
                             context.startActivity(intent)
                         })
+                    addline()
                     SuperArrow(title = stringResource(R.string.contribute_translation),
                         summary = stringResource(R.string.crowdin_contribute_summary),
                         leftAction = {

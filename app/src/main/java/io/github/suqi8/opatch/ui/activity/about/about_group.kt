@@ -24,6 +24,7 @@ import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.R
+import io.github.suqi8.opatch.addline
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -106,6 +107,7 @@ fun about_group(navController: NavController) {
                                 context.startActivity(webIntent)
                             }
                         })
+                    addline()
                     SuperArrow(title = stringResource(id = R.string.discussion_group),
                         onClick = {
                             val telegramIntent = Intent(Intent.ACTION_VIEW)
@@ -120,6 +122,7 @@ fun about_group(navController: NavController) {
                                 context.startActivity(webIntent)
                             }
                         })
+                    addline()
                     SuperArrow(title = stringResource(id = R.string.auto_build_release),
                         onClick = {
                             val telegramIntent = Intent(Intent.ACTION_VIEW)

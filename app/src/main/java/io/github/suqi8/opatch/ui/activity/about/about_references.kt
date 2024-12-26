@@ -24,6 +24,7 @@ import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.R
+import io.github.suqi8.opatch.addline
 import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
@@ -113,75 +114,75 @@ fun about_references(navController: NavController) {
                         url = "https://source.android.google.cn/license",
                         license = "Apache-2.0"
                     )
-
+                    addline()
                     about_references_item(
                         name = "AndroidX",
                         username = "Android Open Source Project, Google Inc.",
                         url = "https://github.com/androidx/androidx",
                         license = "Apache-2.0"
                     )
-
+                    addline()
                     about_references_item(
                         name = "CorePatch",
                         username = "LSPosed",
                         url = "https://github.com/LSPosed/CorePatch",
                         license = "GPL-2.0"
                     )
-
+                    addline()
                     about_references_item(
                         name = "Gson",
                         username = "Android Open Source Project, Google Inc.",
                         url = "https://github.com/google/gson",
                         license = "Apache-2.0"
                     )
-
+                    addline()
                     about_references_item(
                         name = "Kotlin",
                         username = "JetBrains",
                         url = "https://github.com/JetBrains/kotlin"
                     )
-
+                    addline()
                     about_references_item(
                         name = "Xposed",
                         username = "rovo89, Tungstwenty",
                         url = "https://github.com/rovo89/XposedBridge"
                     )
-
+                    addline()
                     about_references_item(
                         name = "YukiHookAPI",
                         username = "HighCapable",
                         url = "https://github.com/HighCapable/YukiHookAPI",
                         license = "Apache-2.0"
                     )
-
+                    addline()
                     about_references_item(
                         name = "Compose",
                         username = "JetBrains",
                         url = "https://github.com/JetBrains/compose",
                         license = "Apache-2.0"
                     )
-
+                    addline()
                     about_references_item(
                         name = "Miuix",
                         username = "YuKongA",
                         url = "https://github.com/miuix-kotlin-multiplatform/miuix",
                         license = "Apache-2.0"
                     )
-
+                    addline()
                     about_references_item(
                         name = "Magisk",
                         username = "topjohnwu",
                         url = "https://github.com/topjohnwu/Magisk",
                         license = "GPL-3.0"
                     )
-
+                    addline()
                     about_references_item(
                         name = "LSPosed",
                         username = "LSPosed",
                         url = "https://github.com/LSPosed/LSPosed",
                         license = "GPL-3.0"
                     )
-
+                    addline()
                     about_references_item(
                         name = "coloros-aod",
                         username = "Flyfish233",

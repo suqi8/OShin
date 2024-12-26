@@ -32,6 +32,7 @@ import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.R
+import io.github.suqi8.opatch.addline
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Card
@@ -121,11 +122,13 @@ fun about_contributors(navController: NavController) {
                         coolapkid = 15225420,
                         github = "suqi8"
                     )
+                    addline()
                     about_contributors_item(
                         name = "凌逸",
                         coolapk = "网恋秀牛被骗",
                         coolapkid = 34081897
                     )
+                    addline()
                     about_contributors_item(
                         name = "YuKong_A",
                         coolapk = "YuKong_A",
