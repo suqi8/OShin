@@ -51,24 +51,6 @@ If you have any questions or need help, please contact us through the following:
 - GitHub Issues
 - Email: [3383787570@qq.com]
 
-## Acknowledgements
-
-> OShin uses some or all of the following open-source projects, thanks to the developers of these projects (in no particular order):
-
-- [Android by Android Open Source Project, Google Inc.](https://source.android.google.cn/license)
-- [AndroidX by Android Open Source Project, Google Inc.](https://github.com/androidx/androidx)
-- [CorePatch by LSPosed](https://github.com/LSPosed/CorePatch)
-- [Gson by Android Open Source Project, Google Inc.](https://github.com/google/gson)
-- [Kotlin by JetBrains](https://github.com/JetBrains/kotlin)
-- [Xposed by rovo89, Tungstwenty](https://github.com/rovo89/XposedBridge)
-- [YukiHookAPI by HighCapable](https://github.com/HighCapable/YukiHookAPI)
-- [Compose by JetBrains](https://github.com/JetBrains/compose)
-- [Miuix by YuKongA](https://github.com/miuix-kotlin-multiplatform/miuix)
-- [LuckyTool by luckyzyx](https://github.com/Xposed-Modules-Repo/com.luckyzyx.luckytool)
-- [Magisk by topjohnwu](https://github.com/topjohnwu/Magisk)
-- [LSPosed by LSPosed](https://github.com/LSPosed/LSPosed)
-- [coloros-aod by Flyfish233](https://github.com/Flyfish233/coloros-aod)
-
 ---
 
 ## Contributors
@@ -80,7 +62,5 @@ Thanks to the following contributors:
 </a>
 
 ![Alt](https://repobeats.axiom.co/api/embed/cc78ce423b8c1fe1ca2dfdc4ce580bc1fa8bfd62.svg "Repobeats analytics image")
-
-## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=suqi8/OPatch&type=Date)](https://star-history.com/#suqi8/OPatch&Date)

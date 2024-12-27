@@ -51,24 +51,6 @@ O神是一个专为ColorOS系统设计的辅助模块，旨在增强和定制用
 - GitHub Issues
 - 电子邮件：[3383787570@qq.com]
 
-## 感谢
-
-> O神 使用了以下开源项目的部分或全部内容，感谢这些项目的开发者（排名顺序不分先后）
-
-- [「Android」 by Android Open Source Project, Google Inc.](https://source.android.google.cn/license)
-- [「AndroidX」 by Android Open Source Project, Google Inc.](https://github.com/androidx/androidx)
-- [「CorePatch」 by LSPosed](https://github.com/LSPosed/CorePatch)
-- [「Gson」 by Android Open Source Project, Google Inc.](https://github.com/google/gson)
-- [「Kotlin」 by JetBrains](https://github.com/JetBrains/kotlin)
-- [「Xposed」 by rovo89, Tungstwenty](https://github.com/rovo89/XposedBridge)
-- [「YukiHookAPI」 by HighCapable](https://github.com/HighCapable/YukiHookAPI)
-- [「Compose」 by JetBrains](https://github.com/JetBrains/compose)
-- [「Miuix」 by YuKongA](https://github.com/miuix-kotlin-multiplatform/miuix)
-- [「LuckyTool」 by luckyzyx](https://github.com/Xposed-Modules-Repo/com.luckyzyx.luckytool)
-- [「Magisk」 by topjohnwu](https://github.com/topjohnwu/Magisk)
-- [「LSPosed」 by LSPosed](https://github.com/LSPosed/LSPosed)
-- [「coloros-aod」 by Flyfish233](https://github.com/Flyfish233/coloros-aod)
-
 ---
 
 ## 贡献者
@@ -80,8 +62,6 @@ O神是一个专为ColorOS系统设计的辅助模块，旨在增强和定制用
 </a>
 
 ![Alt](https://repobeats.axiom.co/api/embed/cc78ce423b8c1fe1ca2dfdc4ce580bc1fa8bfd62.svg "Repobeats analytics image")
-
-## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=suqi8/OPatch&type=Date)](https://star-history.com/#suqi8/OPatch&Date)
 
