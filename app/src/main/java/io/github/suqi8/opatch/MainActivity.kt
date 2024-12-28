@@ -583,10 +583,10 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("Fun_android") { Fun_android(navController) }
             composable("Fun_android_package_manager_services") { Fun_android_package_manager_services(navController = navController)}
             composable("systemui") { systemui(navController = navController)}
-            composable("systemui/status_bar_clock") { status_bar_clock(navController = navController) }
-            composable("systemui/hardware_indicator") { hardware_indicator(navController = navController) }
+            composable("systemui\\status_bar_clock") { status_bar_clock(navController = navController) }
+            composable("systemui\\hardware_indicator") { hardware_indicator(navController = navController) }
             composable("Fun_com_android_launcher") { Fun_com_android_launcher(navController = navController) }
-            composable("systemui/statusbar_icon") { statusbar_icon(navController = navController) }
+            composable("systemui\\statusbar_icon") { statusbar_icon(navController = navController) }
             composable("about_setting") { about_setting(navController,alpha,blurRadius,noiseFactor,colorMode) }
             composable("about_group") { about_group(navController) }
             composable("about_references") { about_references(navController) }

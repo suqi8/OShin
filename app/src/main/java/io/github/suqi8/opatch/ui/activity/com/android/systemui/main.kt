@@ -120,17 +120,17 @@ fun systemui(navController: NavController) {
                 ) {
                     SuperArrow(title = stringResource(id = R.string.status_bar_clock),
                         onClick = {
-                            navController.navigate("systemui/status_bar_clock")
+                            navController.navigate("systemui\\status_bar_clock")
                         })
                     addline()
                     SuperArrow(title = stringResource(id = R.string.hardware_indicator),
                         onClick = {
-                            navController.navigate("systemui/hardware_indicator")
+                            navController.navigate("systemui\\hardware_indicator")
                         })
                     addline()
                     SuperArrow(title = stringResource(id = R.string.status_bar_icon),
                         onClick = {
-                            navController.navigate("systemui/statusbar_icon")
+                            navController.navigate("systemui\\statusbar_icon")
                         })
                 }
                 Card(

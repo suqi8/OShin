@@ -9,8 +9,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
-import com.highcapable.yukihookapi.hook.factory.prefs
-import java.io.File
 import java.io.FileInputStream
 import java.util.Locale
 import java.util.Properties
@@ -19,18 +17,18 @@ import kotlin.math.abs
 class StatusBarConsumption_indicator: YukiBaseHooker() {
     @OptIn(LegacyHookApi::class)
     override fun onHook() {
-        val isdual_raw = prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_dual_row", false)
-        val show1 = prefs("settings").getInt("com_android_systemui_powerDisplaySelect1", 0)
-        val show2 = prefs("settings").getInt("com_android_systemui_powerDisplaySelect2", 0)
-        val isdual_cell = prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_dual_cell", false)
-        val hidePowerUnit = prefs("settings").getBoolean("com_android_systemui_hidePowerUnit", false)
-        val hideCurrentUnit = prefs("settings").getBoolean("com_android_systemui_hideCurrentUnit", false)
-        val hideVoltageUnit = prefs("settings").getBoolean("com_android_systemui_hideVoltageUnit", false)
-        val power_consumption_indicator_font_size = prefs("settings").getInt("com_android_systemui_power_consumption_indicator_font_size", 0)
-        val absolute = prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_absolute", false)
-        val bold_text = prefs("settings").getBoolean("com_android_systemui_power_consumption_indicator_bold_text", false)
-        val power_consumption_indicator_update_time = prefs("settings").getInt("com_android_systemui_power_consumption_indicator_update_time", 0)
-        val power_consumption_indicator_alignment = prefs("settings").getInt("com_android_systemui_power_consumption_indicator_alignment", 0)
+        val isdual_raw = prefs("systemui\\hardware_indicator").getBoolean("power_consumption_indicator_dual_row", false)
+        val show1 = prefs("systemui\\hardware_indicator").getInt("powerDisplaySelect1", 0)
+        val show2 = prefs("systemui\\hardware_indicator").getInt("powerDisplaySelect2", 0)
+        val isdual_cell = prefs("systemui\\hardware_indicator").getBoolean("power_consumption_indicator_dual_cell", false)
+        val hidePowerUnit = prefs("systemui\\hardware_indicator").getBoolean("hidePowerUnit", false)
+        val hideCurrentUnit = prefs("systemui\\hardware_indicator").getBoolean("hideCurrentUnit", false)
+        val hideVoltageUnit = prefs("systemui\\hardware_indicator").getBoolean("hideVoltageUnit", false)
+        val power_consumption_indicator_font_size = prefs("systemui\\hardware_indicator").getInt("power_consumption_indicator_font_size", 0)
+        val absolute = prefs("systemui\\hardware_indicator").getBoolean("power_consumption_indicator_absolute", false)
+        val bold_text = prefs("systemui\\hardware_indicator").getBoolean("power_consumption_indicator_bold_text", false)
+        val power_consumption_indicator_update_time = prefs("systemui\\hardware_indicator").getInt("power_consumption_indicator_update_time", 0)
+        val power_consumption_indicator_alignment = prefs("systemui\\hardware_indicator").getInt("power_consumption_indicator_alignment", 0)
         "com.android.systemui.statusbar.policy.Clock".toClass().apply {
             hook {
                 injectMember {

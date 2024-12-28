@@ -15,16 +15,16 @@ import java.util.Locale
 class StatusBartemperature_indicator: YukiBaseHooker() {
     @OptIn(LegacyHookApi::class)
     override fun onHook() {
-        val isdual_raw = prefs("settings").getBoolean("com_android_systemui_temperature_indicator_dual_row", false)
-        val show1 = prefs("settings").getInt("com_android_systemui_temperature_indicator_display_select1", 0)
-        val show2 = prefs("settings").getInt("com_android_systemui_temperature_indicator_display_select2", 0)
-        val font_size = prefs("settings").getFloat("com_android_systemui_temperature_indicator_font_size", 0f)
-        val bold_text = prefs("settings").getBoolean("com_android_systemui_temperature_indicator_bold_text", false)
-        val update_time = prefs("settings").getInt("com_android_systemui_temperature_indicator_update_time", 0)
-        val alignment = prefs("settings").getInt("com_android_systemui_temperature_indicator_alignment", 0)
-        val cpu_temp_source = prefs("settings").getInt("com_android_systemui_temperature_indicator_cpu_temp_source", 0)
-        val hideBatteryUnit = prefs("settings").getBoolean("com_android_systemui_hideBatteryUnit", false)
-        val hidecpuUnit = prefs("settings").getBoolean("com_android_systemui_hideCpuUnit", false)
+        val isdual_raw = prefs("systemui\\hardware_indicator").getBoolean("temperature_indicator_dual_row", false)
+        val show1 = prefs("systemui\\hardware_indicator").getInt("temperature_indicator_display_select1", 0)
+        val show2 = prefs("systemui\\hardware_indicator").getInt("temperature_indicator_display_select2", 0)
+        val font_size = prefs("systemui\\hardware_indicator").getFloat("temperature_indicator_font_size", 0f)
+        val bold_text = prefs("systemui\\hardware_indicator").getBoolean("temperature_indicator_bold_text", false)
+        val update_time = prefs("systemui\\hardware_indicator").getInt("temperature_indicator_update_time", 0)
+        val alignment = prefs("systemui\\hardware_indicator").getInt("temperature_indicator_alignment", 0)
+        val cpu_temp_source = prefs("systemui\\hardware_indicator").getInt("temperature_indicator_cpu_temp_source", 0)
+        val hideBatteryUnit = prefs("systemui\\hardware_indicator").getBoolean("hideBatteryUnit", false)
+        val hidecpuUnit = prefs("systemui\\hardware_indicator").getBoolean("com_android_systemui_hideCpuUnit", false)
         "com.android.systemui.statusbar.policy.Clock".toClass().apply {
             hook {
                 injectMember {
