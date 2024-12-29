@@ -100,7 +100,7 @@ jobs:
           🔗 **查看详情**：[点我看具体内容](${{ github.event.head_commit.url }})
         COMMIT_URL: ${{ github.event.head_commit.url }}
       run: |
-        ESCAPED=`python3 -c 'import json, os, re, urllib.parse; msg = os.environ["COMMIT_MESSAGE"]; msg = re.sub(r"\(", r"\\(", msg); msg = re.sub(r"\)", r"\\)", msg); msg = re.sub(r"\[", r"\\[", msg); msg = re.sub(r"\]", r"\\]", msg); msg = re.sub(r"\-", r"\\-", msg); msg = re.sub(r"\.", r"\\.", msg); msg = json.dumps(msg); print(urllib.parse.quote(msg, safe=""))'`
+        ESCAPED=`python3 -c 'import json, os, re, urllib.parse; msg = os.environ["COMMIT_MESSAGE"]; msg = re.sub(r"\-", r"\\-", msg); msg = re.sub(r"\.", r"\\.", msg); msg = json.dumps(msg); print(urllib.parse.quote(msg, safe=""))'`
         echo "COMMIT_MESSAGE: $ESCAPED"
         curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN  }}/sendMediaGroup?chat_id=-1002477655219&media=%5b%7b%22type%22%3a%22document%22%2c+%22media%22%3a%22attach%3a%2f%2farmAll%22%2c+%22parse_mode%22%3a%22MarkdownV2%22%2c+%22caption%22%3a${ESCAPED}%7d%5d%0a" \
          -F armAll="@${{ env.APK_FILE_ARMALL }}"
