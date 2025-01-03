@@ -48,9 +48,6 @@ import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.R
 import io.github.suqi8.opatch.addline
 import io.github.suqi8.opatch.ui.tools.resetApp
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Card
@@ -381,7 +378,7 @@ fun hardware_indicator(navController: NavController) {
                                         isdualcell.value = it
                                         context.prefs("systemui\\hardware_indicator").edit {
                                             putBoolean(
-                                                "com_android_systemui_power_consumption_indicator_dual_cell",
+                                                "power_consumption_indicator_dual_cell",
                                                 it
                                             )
                                         }
@@ -426,13 +423,11 @@ fun hardware_indicator(navController: NavController) {
                                     onSelectedIndexChange = { newOption ->
                                         power_consumption_indicator_alignment.intValue =
                                             newOption
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("systemui\\hardware_indicator").edit {
-                                                putInt(
-                                                    "power_consumption_indicator_alignment",
-                                                    newOption
-                                                )
-                                            }
+                                        context.prefs("systemui\\hardware_indicator").edit {
+                                            putInt(
+                                                "power_consumption_indicator_alignment",
+                                                newOption
+                                            )
                                         }
                                     }
                                 )
@@ -679,13 +674,11 @@ fun hardware_indicator(navController: NavController) {
                                     onSelectedIndexChange = { newOption ->
                                         temperature_indicator_alignment.intValue =
                                             newOption
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("systemui\\hardware_indicator").edit {
-                                                putInt(
-                                                    "temperature_indicator_alignment",
-                                                    newOption
-                                                )
-                                            }
+                                        context.prefs("systemui\\hardware_indicator").edit {
+                                            putInt(
+                                                "temperature_indicator_alignment",
+                                                newOption
+                                            )
                                         }
                                     }
                                 )
