@@ -20,6 +20,6 @@ jobs:
           # `MY_RELEASE_PLEASE_TOKEN` (this secret name is not important).
           token: ${{ secrets.MY_RELEASE_PLEASE_TOKEN }}
           release-type: java
-          skip-github-release: true
+          #skip-github-release: true
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json
