@@ -24,6 +24,7 @@ import io.github.suqi8.opatch.hook.systemui.StatusBar.StatusBarClock
 import io.github.suqi8.opatch.hook.systemui.StatusBar.StatusBarIcon
 import io.github.suqi8.opatch.hook.systemui.StatusBar.StatusBarhardware_indicator
 import io.github.suqi8.opatch.hook.launcher.LauncherIcon
+import io.github.suqi8.opatch.hook.services.OplusRootCheck
 import io.github.suqi8.opatch.hook.systemui.aod.allday_screenoff
 
 @InjectYukiHookWithXposed(entryClassName = "opatch", isUsingResourcesHook = true)
@@ -47,6 +48,7 @@ class HookEntry : IYukiHookXposedInit {
                 }
             }
         }*/
+        loadApp(hooker = OplusRootCheck())
         loadApp(hooker = StatusBarClock())
         loadApp(hooker = StatusBarhardware_indicator())
         loadApp(hooker = LauncherIcon())

@@ -211,4 +211,7 @@
     <string name="thanks_open_source_projects">O神 使用了以下开源项目的部分或全部内容，感谢这些项目的开发者（排名顺序不分先后）</string>
     <string name="coolapk">酷安</string>
     <string name="thanks_contributors">感谢以下开发者或用户对 O神 做出的贡献，现在的 O神 离不开你们！（排名顺序不分先后）</string>
+    <string name="oplus_system_services">一加系统服务</string>
+    <string name="oplus_root_check">关闭Root检测</string>
+    <string name="oplus_root_check_summary">关闭内置的root检测器</string>
 </resources>
