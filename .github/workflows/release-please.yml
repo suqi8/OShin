@@ -15,11 +15,8 @@ jobs:
     steps:
       - uses: googleapis/release-please-action@v4
         with:
-          # this assumes that you have created a personal access token
-          # (PAT) and configured it as a GitHub action secret named
-          # `MY_RELEASE_PLEASE_TOKEN` (this secret name is not important).
           token: ${{ secrets.MY_RELEASE_PLEASE_TOKEN }}
-          release-type: java
-          #skip-github-release: true
+          release-type: simple
+          skip-github-release: true
           config-file: release-please-config.json
           manifest-file: .release-please-manifest.json

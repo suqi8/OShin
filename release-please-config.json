@@ -2,17 +2,17 @@
     "release-type": "java",
     "sequential-calls": true,
     "changelog-sections": [
-        {"type": "feat", "section": "Features"},
-        {"type": "fix", "section": "Bug Fixes"},
-        {"type": "perf", "section": "Performance Improvements"},
-        {"type": "revert", "section": "Reverts"},
-        {"type": "docs", "section": "Documentation"},
-        {"type": "style", "section": "Styles"},
-        {"type": "chore", "section": "Miscellaneous Chores"},
-        {"type": "refactor", "section": "Code Refactoring"},
-        {"type": "test", "section": "Tests", "hidden": true},
-        {"type": "build", "section": "Build System", "hidden": true},
-        {"type": "ci", "section": "Continuous Integration"}
+        {"type": "feat", "section": "新特性"},
+        {"type": "fix", "section": "修复问题"},
+        {"type": "perf", "section": "性能改进"},
+        {"type": "revert", "section": "撤销更改"},
+        {"type": "docs", "section": "文档"},
+        {"type": "style", "section": "样式"},
+        {"type": "chore", "section": "杂项杂务"},
+        {"type": "refactor", "section": "代码重构"},
+        {"type": "test", "section": "测试", "hidden": true},
+        {"type": "build", "section": "构建系统", "hidden": true},
+        {"type": "ci", "section": "持续集成"}
     ],
     "packages": {
         ".": {
