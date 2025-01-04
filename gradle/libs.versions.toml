@@ -12,6 +12,7 @@ composeBom = "2024.12.01"
 datastoreCoreAndroid = "1.1.1"
 datastorePreferencesCoreJvm = "1.1.1"
 lifecycleRuntimeKtxVersion = "2.8.7"
+lottieComposeVersion = "6.6.2"
 miuix = "0.3.0"
 navigationCompose = "2.8.5"
 paletteKtx = "1.0.0"
@@ -35,6 +36,7 @@ androidx-datastore-core-android = { group = "androidx.datastore", name = "datast
 androidx-datastore-preferences-core-jvm = { group = "androidx.datastore", name = "datastore-preferences-core-jvm", version.ref = "datastorePreferencesCoreJvm" }
 gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 haze = { module = "dev.chrisbanes.haze:haze", version.ref = "haze" }
+lottie-compose = { module = "com.airbnb.android:lottie-compose", version.ref = "lottieComposeVersion" }
 material3 = { module = "androidx.compose.material3:material3" }
 miuix = { module = "top.yukonga.miuix.kmp:miuix-android", version.ref = "miuix" }
 ui = { module = "androidx.compose.ui:ui" }

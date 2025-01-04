@@ -12,6 +12,25 @@ plugins {
     id("com.autonomousapps.dependency-analysis") version "2.1.4"
 }
 
+fun getAndIncrementBuildNumber(): Int {
+    val propertiesFile = file("version.properties")
+    val properties = Properties()
+    // Load existing properties
+    if (propertiesFile.exists()) {
+        properties.load(FileInputStream(propertiesFile))
+    } else {
+        // If file doesn't exist, create a new one
+        properties["BUILD_NUMBER"] = "1"
+    }
+    // Get the current build number
+    val buildNumber = properties["BUILD_NUMBER"].toString().toInt()
+    // Increment the build number
+    properties["BUILD_NUMBER"] = (buildNumber + 1).toString()
+    // Save the updated build number back to the properties file
+    properties.store(FileOutputStream(propertiesFile), null)
+    return buildNumber
+}
+
 fun getGitCommitHash(): String {
     val stdout = ByteArrayOutputStream()
     exec {
@@ -62,7 +81,7 @@ android {
             }
     }
 
-    val number = commitCount().toInt()
+    val number = commitCount().toInt()//测试构建的时候请将双斜杠与这段话删除 + getAndIncrementBuildNumber()
     defaultConfig {
         applicationId = property.project.app.packageName
         minSdk = property.project.android.minSdk
@@ -122,6 +141,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.lottie.compose)
     implementation(libs.ezxhelper)
     runtimeOnly(libs.androidx.room.runtime)
     implementation(libs.androidx.palette.ktx)
