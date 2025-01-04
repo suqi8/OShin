@@ -97,7 +97,7 @@ jobs:
           
           ${{ github.event.head_commit.message }}
           
-          🔗 **查看详情**：[点我看具体内容](${{ github.event.head_commit.url }})
+          🔗 **查看详情**：[点我看具体内容]\(${{ github.event.head_commit.url }}\)
         COMMIT_URL: ${{ github.event.head_commit.url }}
       run: |
         ESCAPED=`python3 -c 'import json, os, re, urllib.parse; msg = os.environ["COMMIT_MESSAGE"]; msg = re.sub(r"\-", r"\\-", msg); msg = re.sub(r"\.", r"\\.", msg); msg = json.dumps(msg); print(urllib.parse.quote(msg, safe=""))'`
