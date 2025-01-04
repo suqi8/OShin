@@ -212,4 +212,7 @@
     <string name="thanks_open_source_projects">OShin has used part or all of the following open source projects. Thanks to the developers of these projects (in no particular order).</string>
     <string name="coolapk">CoolApk</string>
     <string name="thanks_contributors">Thanks to the following developers or users for their contributions to OShin. OShin would not be where it is today without you! (In no particular order.)</string>
+    <string name="oplus_system_services">OnePlus System Services</string>
+    <string name="oplus_root_check">Disable Root Check</string>
+    <string name="oplus_root_check_summary">Disable root checker</string>
 </resources>

@@ -582,6 +582,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("Main") { Main1(modifier = modifier, context = context,navController,colorMode,alpha, blurRadius, noiseFactor, hazeState, hazeStyle) }
             composable("Fun_android") { Fun_android(navController) }
             composable("Fun_android_package_manager_services") { Fun_android_package_manager_services(navController = navController)}
+            composable("Fun_android_oplus_services") { Fun_android_oplus_services(navController = navController) }
             composable("systemui") { systemui(navController = navController)}
             composable("systemui\\status_bar_clock") { status_bar_clock(navController = navController) }
             composable("systemui\\hardware_indicator") { hardware_indicator(navController = navController) }
