@@ -47,9 +47,9 @@ import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
 import io.github.suqi8.opatch.R
 import io.github.suqi8.opatch.addline
+import io.github.suqi8.opatch.ui.activity.funlistui.FunNoEnable
 import io.github.suqi8.opatch.ui.tools.resetApp
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -346,22 +346,7 @@ fun hardware_indicator(navController: NavController) {
                     AnimatedVisibility(
                         visible = !power_consumption_indicator.value
                     ) {
-                        Column {
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 12.dp, vertical = 6.dp),
-                                color = Color.Red.copy(alpha = 0.1f)
-                            ) {
-                                BasicComponent(
-                                    title = stringResource(R.string.no_start_func),
-                                    titleColor = BasicComponentColors(
-                                        color = Color.Red,
-                                        disabledColor = Color.Red
-                                    )
-                                )
-                            }
-                        }
+                        FunNoEnable()
                     }
                     AnimatedVisibility(
                         visible = power_consumption_indicator.value
@@ -611,22 +596,7 @@ fun hardware_indicator(navController: NavController) {
                     AnimatedVisibility(
                         visible = !temperature_indicator.value
                     ) {
-                        Column {
-                            Card(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(horizontal = 12.dp, vertical = 6.dp),
-                                color = Color.Red.copy(alpha = 0.1f)
-                            ) {
-                                BasicComponent(
-                                    title = stringResource(R.string.no_start_func),
-                                    titleColor = BasicComponentColors(
-                                        color = Color.Red,
-                                        disabledColor = Color.Red
-                                    )
-                                )
-                            }
-                        }
+                        FunNoEnable()
                     }
                     AnimatedVisibility(
                         visible = temperature_indicator.value
