@@ -19,6 +19,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.highcapable.yukihookapi.hook.factory.prefs
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -113,6 +118,23 @@ fun about_setting(
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp)
                         .padding(top = 15.dp)
+                ) {
+                    val compositionResult =
+                        rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.setting))
+                    val progress =
+                        animateLottieCompositionAsState(composition = compositionResult.value,
+                                iterations = LottieConstants.IterateForever)
+                    LottieAnimation(
+                        composition = compositionResult.value,
+                        progress = progress.value,
+                        modifier = Modifier
+                    )
+                }
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp)
+                        .padding(bottom = 6.dp)
                 ) {
                     SuperDropdown(
                         title = stringResource(R.string.Color_Mode),
