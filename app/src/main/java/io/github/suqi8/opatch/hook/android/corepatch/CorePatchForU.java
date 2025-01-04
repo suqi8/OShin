@@ -1,11 +1,8 @@
-package io.github.suqi8.opatch.hook.corepatch;
-
-import android.util.Log;
+package io.github.suqi8.opatch.hook.android.corepatch;
 
 import java.lang.reflect.InvocationTargetException;
 
 import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 

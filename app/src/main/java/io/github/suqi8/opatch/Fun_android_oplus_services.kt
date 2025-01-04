@@ -38,7 +38,6 @@ import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
-import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
@@ -118,18 +117,15 @@ fun Fun_android_oplus_services(navController: NavController) {
         ) {
             item {
                 Column {
-                    SmallTitle(
-                        text = stringResource(R.string.oplus_root_check_summary)
-                    )
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp)
-                            .padding(bottom = 6.dp)
+                            .padding(bottom = 6.dp, top = 15.dp)
                     ) {
                         SuperSwitch(
                             title = stringResource(R.string.oplus_root_check),
-                            summary = stringResource(R.string.downgr_summary),
+                            summary = stringResource(R.string.oplus_root_check_summary),
                             onCheckedChange = {
                                 disableRootCheck.value = it
                                 context.prefs("oplus_system_services")

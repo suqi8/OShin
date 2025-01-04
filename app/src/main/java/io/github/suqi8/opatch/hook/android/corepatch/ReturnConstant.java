@@ -1,4 +1,4 @@
-package io.github.suqi8.opatch.hook.corepatch;
+package io.github.suqi8.opatch.hook.android.corepatch;
 
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XSharedPreferences;
