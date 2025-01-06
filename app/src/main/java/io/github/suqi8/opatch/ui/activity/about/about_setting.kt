@@ -1,9 +1,13 @@
 package io.github.suqi8.opatch.ui.activity.about
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -106,7 +110,7 @@ fun about_setting(
         )
     }) { padding ->
         LazyColumn(
-            contentPadding = PaddingValues(top = padding.calculateTopPadding()),
+            contentPadding = padding,
             topAppBarScrollBehavior = one, modifier = Modifier
                 .fillMaxSize()
                 .haze(state = hazeState)
@@ -122,8 +126,10 @@ fun about_setting(
                     val compositionResult =
                         rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.setting))
                     val progress =
-                        animateLottieCompositionAsState(composition = compositionResult.value,
-                                iterations = LottieConstants.IterateForever)
+                        animateLottieCompositionAsState(
+                            composition = compositionResult.value,
+                            iterations = LottieConstants.IterateForever
+                        )
                     LottieAnimation(
                         composition = compositionResult.value,
                         progress = progress.value,
@@ -235,6 +241,11 @@ fun about_setting(
                             context.prefs("settings").edit { putBoolean("auto_color", it) }
                         })
                 }
+                Spacer(
+                    Modifier.height(
+                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                    )
+                )
             }
         }
     }
