@@ -26,6 +26,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Block certain users
+      if: github.event_name == 'pull_request'
+      run: |
+        blocked_users=("suqi8")
+        if [[ " ${blocked_users[@]} " =~ " ${GITHUB_ACTOR} " ]]; then
+          echo "Pull Request from user ${GITHUB_ACTOR} is blocked."
+          exit 1
+        fi
+      shell: bash
+
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
