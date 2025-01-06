@@ -13,7 +13,6 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -41,7 +40,6 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -49,6 +47,10 @@ import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
 import kotlinx.coroutines.Dispatchers
@@ -241,17 +243,20 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior) {
                             bottom = 30.dp
                         )
                     ) {
-                        Image(
-                            painter = painterResource(
-                                id = if (YukiHookAPI.Status.isModuleActive)
-                                    R.drawable.twotone_check_circle_24
-                                else R.drawable.twotone_unpublished_24
-                            ),
-                            contentDescription = null
+                        val compositionResult =
+                            rememberLottieComposition(LottieCompositionSpec.RawRes(if (YukiHookAPI.Status.isModuleActive) R.raw.accept else R.raw.error))
+                        val progress = animateLottieCompositionAsState(
+                            composition = compositionResult.value
+                        )
+                        LottieAnimation(
+                            composition = compositionResult.value,
+                            progress = progress.value,
+                            modifier = Modifier
+                                .size(50.dp)
                         )
                         Column(
                             verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.padding(start = 30.dp)
+                            modifier = Modifier.padding(start =15.dp)
                         ) {
                             Text(
                                 text = if (YukiHookAPI.Status.isModuleActive)
