@@ -8,7 +8,7 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 
 @Composable
-fun FunSwich(title: String, summary: String? = null,category: String,key: String,defValue: Boolean = false,  enable: Boolean = true,context: Context, onCheckedChange: ((Boolean) -> Unit)? = null) {
+fun FunSwich(title: String, summary: String? = null,category: String,key: String,defValue: Boolean = false,context: Context, onCheckedChange: ((Boolean) -> Unit)? = null) {
     val isChecked = remember { mutableStateOf(context.prefs(category).getBoolean(key, defValue)) }
     SuperSwitch(
         title = title,
@@ -18,7 +18,6 @@ fun FunSwich(title: String, summary: String? = null,category: String,key: String
             isChecked.value = it
             onCheckedChange?.invoke(it)
         },
-        summary = summary,
-        enabled = enable
+        summary = summary
     )
 }

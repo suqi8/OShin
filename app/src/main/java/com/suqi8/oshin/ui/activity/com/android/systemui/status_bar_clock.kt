@@ -51,6 +51,7 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.addline
 import com.suqi8.oshin.tools.AnimTools
 import com.suqi8.oshin.ui.activity.funlistui.FunNoEnable
+import com.suqi8.oshin.ui.activity.funlistui.FunSlider
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.tools.resetApp
 import dev.chrisbanes.haze.HazeState
@@ -101,9 +102,6 @@ fun status_bar_clock(navController: NavController) {
     val HideSpace = remember { mutableStateOf(false) }
     val DualRow = remember { mutableStateOf(false) }
     val ShowMillisecond = remember { mutableStateOf(false) }
-    var com_android_systemui_status_bar_clock by remember {
-        mutableStateOf(false)
-    }
     val ClockSize = remember { mutableIntStateOf(0) }
     val ClockUpdateSpeed = remember { mutableIntStateOf(0) }
     val appList = listOf("com.android.systemui")
@@ -124,7 +122,6 @@ fun status_bar_clock(navController: NavController) {
     val showClockTopPaddingDialog = remember { mutableStateOf(false) }
     val showClockBottomPaddingDialog = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
-    val ClockSizeTitle = stringResource(R.string.clock_size)
     val ClockUpdateSpeedTitle = stringResource(R.string.clock_update_time_title)
     val ClockLeftPaddingTitle = stringResource(R.string.clock_left_margin)
     val ClockRightPaddingTitle = stringResource(R.string.clock_right_margin)
@@ -153,7 +150,6 @@ fun status_bar_clock(navController: NavController) {
         ClockTopPadding.intValue = context.prefs("settings").getInt("Status_Bar_Time_TopPadding", 0)
         ClockBottomPadding.intValue = context.prefs("settings").getInt("Status_Bar_Time_BottomPadding", 0)
         ClockStyleSelectedOption.intValue = context.prefs("settings").getInt("ClockStyleSelectedOption", 0)
-        com_android_systemui_status_bar_clock = context.prefs("settings").getBoolean("com_android_systemui_status_bar_clock", false)
         ShowYears.value = context.prefs("settings").getBoolean("Status_Bar_Time_ShowYears", false)
         ShowMonth.value = context.prefs("settings").getBoolean("Status_Bar_Time_ShowMonth", false)
         ShowDay.value = context.prefs("settings").getBoolean("Status_Bar_Time_ShowDay", false)
@@ -230,6 +226,9 @@ fun status_bar_clock(navController: NavController) {
         ) {
             item {
                 Column {
+                    var com_android_systemui_status_bar_clock by remember {
+                        mutableStateOf(context.prefs("systemui\\status_bar_clock").getBoolean("status_bar_clock", false))
+                    }
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -239,7 +238,7 @@ fun status_bar_clock(navController: NavController) {
                         FunSwich(
                             title = stringResource(R.string.status_bar_clock),
                             category = "systemui\\status_bar_clock",
-                            key = "com_android_systemui_status_bar_clock",
+                            key = "status_bar_clock",
                             defValue = false,
                             context = context,
                             onCheckedChange = {
@@ -275,24 +274,18 @@ fun status_bar_clock(navController: NavController) {
                                     }
                                 )
                                 addline()
-                                Column {
-                                    SuperArrow(
-                                        title = ClockSizeTitle,
-                                        summary = stringResource(R.string.clock_size_summary),
-                                        onClick = {
-                                            showClockSizeDialog.value = true
-                                        },
-                                        rightText = "${ClockSize.intValue}dp"
-                                    )
-                                    Slider(
-                                        progress = (ClockSize.intValue / 20.0).toFloat(),
-                                        onProgressChange = { newProgress ->
-                                            ClockSize.intValue = (newProgress * 20.0).toInt()
-                                            context.prefs("settings").edit { putInt("Status_Bar_Time_ClockSize", (newProgress * 20.0).toInt()) }
-                                        },
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
-                                    )
-                                }
+                                FunSlider(
+                                    title = stringResource(R.string.clock_size),
+                                    summary = stringResource(R.string.clock_size_summary),
+                                    category = "systemui\\Status_Bar_Time",
+                                    key = "ClockSize",
+                                    defValue = 0f,
+                                    endtype = "dp",
+                                    max = 30f,
+                                    min = 0f,
+                                    decimalPlaces = 1,
+                                    context = context
+                                )
                                 addline()
                                 Column {
                                     SuperArrow(
@@ -566,7 +559,6 @@ fun status_bar_clock(navController: NavController) {
     }
     resetApp.AppRestartScreen(appList,RestartAPP)
     CustomClockDialog(showCustomClockDialog,customClockCache,customClock,focusManager)
-    SettingIntDialog(context,showClockSizeDialog,ClockSizeTitle,ClockSize,focusManager,"Status_Bar_Time_ClockSize")
     SettingIntDialog(context,showclock_update_timeDialog,ClockUpdateSpeedTitle,ClockUpdateSpeed,focusManager,"Status_Bar_Time_ClockUpdateSpeed")
     SettingIntDialog(context,showClockTopPaddingDialog,ClockTopPaddingTitle,ClockTopPadding,focusManager,"Status_Bar_Time_TopPadding")
     SettingIntDialog(context,showClockBottomPaddingDialog,ClockBottomPaddingTitle,ClockBottomPadding,focusManager,"Status_Bar_Time_BottomPadding")
