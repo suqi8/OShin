@@ -1,7 +1,6 @@
 package com.suqi8.oshin
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,20 +23,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.ui.activity.com.android.systemui.SettingFloatDialog
+import com.suqi8.oshin.ui.activity.funlistui.FunSlider
+import com.suqi8.oshin.ui.tools.resetApp
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
-import com.suqi8.oshin.ui.tools.resetApp
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
-import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.basic.TopAppBar
-import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -52,7 +49,6 @@ fun Fun_com_android_launcher(navController: NavController) {
     val focusManager = LocalFocusManager.current
     val resetApp = resetApp()
     val isDebug = context.prefs("settings").getBoolean("Debug", false)
-    val showIconTextDialog = remember { mutableStateOf(false) }
     val iconTextTitle = stringResource(R.string.desktop_icon_and_text_size_multiplier)
     val iconText = remember { mutableFloatStateOf(1.0f) }
 
@@ -116,28 +112,21 @@ fun Fun_com_android_launcher(navController: NavController) {
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp, top = 15.dp)
                 ) {
-                    Column {
-                        SuperArrow(
-                            title = stringResource(R.string.desktop_icon_and_text_size_multiplier),
-                            summary = stringResource(R.string.icon_size_limit_note),
-                            onClick = {
-                                showIconTextDialog.value = true
-                            },
-                            rightText = "${iconText.floatValue}x"
-                        )
-                        Slider(
-                            progress = ((iconText.floatValue / 2.00).toFloat()),
-                            onProgressChange = { newProgress ->
-                                iconText.floatValue = (newProgress * 2.00).toFloat()
-                                context.prefs("settings").edit { putFloat("com_android_launcher_icon_text", (((newProgress * 2.00).toFloat()))) }
-                            },
-                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
-                        )
-                    }
+                    FunSlider(
+                        title = stringResource(R.string.desktop_icon_and_text_size_multiplier),
+                        summary = stringResource(R.string.icon_size_limit_note),
+                        category = "launcher",
+                        key = "icon_text",
+                        defValue = 1.0f,
+                        endtype = "x",
+                        max = 2f,
+                        min = 0f,
+                        decimalPlaces = 1,
+                        context = context
+                    )
                 }
             }
         }
     }
-    SettingFloatDialog(context,showIconTextDialog,iconTextTitle,iconText,focusManager,"com_android_launcher_icon_text")
     resetApp.AppRestartScreen(appList,restartAPP)
 }

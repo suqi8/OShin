@@ -113,14 +113,8 @@ fun status_bar_clock(navController: NavController) {
     val customClock = remember { mutableStateOf("HH:mm") }
     val ClockLeftPadding = remember { mutableIntStateOf(0) }
     val ClockRightPadding = remember { mutableIntStateOf(0) }
-    val ClockTopPadding = remember { mutableIntStateOf(0) }
     val ClockBottomPadding = remember { mutableIntStateOf(0) }
     val showclock_update_timeDialog = remember { mutableStateOf(false) }
-    val showClockSizeDialog = remember { mutableStateOf(false) }
-    val showClockLeftPaddingDialog = remember { mutableStateOf(false) }
-    val showClockRightPaddingDialog = remember { mutableStateOf(false) }
-    val showClockTopPaddingDialog = remember { mutableStateOf(false) }
-    val showClockBottomPaddingDialog = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     val ClockUpdateSpeedTitle = stringResource(R.string.clock_update_time_title)
     val ClockLeftPaddingTitle = stringResource(R.string.clock_left_margin)
@@ -145,26 +139,25 @@ fun status_bar_clock(navController: NavController) {
     }
 
     LaunchedEffect(Unit) {
-        ClockLeftPadding.intValue = context.prefs("settings").getInt("Status_Bar_Time_LeftPadding", 0)
-        ClockRightPadding.intValue = context.prefs("settings").getInt("Status_Bar_Time_RightPadding", 0)
-        ClockTopPadding.intValue = context.prefs("settings").getInt("Status_Bar_Time_TopPadding", 0)
-        ClockBottomPadding.intValue = context.prefs("settings").getInt("Status_Bar_Time_BottomPadding", 0)
-        ClockStyleSelectedOption.intValue = context.prefs("settings").getInt("ClockStyleSelectedOption", 0)
-        ShowYears.value = context.prefs("settings").getBoolean("Status_Bar_Time_ShowYears", false)
-        ShowMonth.value = context.prefs("settings").getBoolean("Status_Bar_Time_ShowMonth", false)
-        ShowDay.value = context.prefs("settings").getBoolean("Status_Bar_Time_ShowDay", false)
-        ShowWeek.value = context.prefs("settings").getBoolean("Status_Bar_Time_ShowWeek", false)
-        ShowCNHour.value = context.prefs("settings").getBoolean("Status_Bar_Time_ShowCNHour", false)
-        Showtime_period.value = context.prefs("settings").getBoolean("Status_Bar_Time_Showtime_period", false)
-        ShowSeconds.value = context.prefs("settings").getBoolean("Status_Bar_Time_ShowSeconds", false)
-        ShowMillisecond.value = context.prefs("settings").getBoolean("Status_Bar_Time_ShowMillisecond", false)
-        HideSpace.value = context.prefs("settings").getBoolean("Status_Bar_Time_"+"HideSpace", false)
-        DualRow.value = context.prefs("settings").getBoolean("Status_Bar_Time_"+"DualRow", false)
-        ClockSize.intValue = context.prefs("settings").getInt("Status_Bar_Time_ClockSize",0)
-        ClockUpdateSpeed.intValue = context.prefs("settings").getInt("Status_Bar_Time_ClockUpdateSpeed",0)
-        Status_Bar_Time_gravitySelectedOption.intValue = context.prefs("settings").getInt("Status_Bar_Time_alignment", 0)
-        customClock.value = context.prefs("settings").getString("Status_Bar_Time_CustomClockStyle", "HH:mm")
-        customClockCache.value = context.prefs("settings").getString("Status_Bar_Time_CustomClockStyle", "HH:mm")
+        ClockLeftPadding.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("LeftPadding", 0)
+        ClockRightPadding.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("RightPadding", 0)
+        ClockBottomPadding.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("BottomPadding", 0)
+        ClockStyleSelectedOption.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("ClockStyleSelectedOption", 0)
+        ShowYears.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowYears", false)
+        ShowMonth.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowMonth", false)
+        ShowDay.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowDay", false)
+        ShowWeek.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowWeek", false)
+        ShowCNHour.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowCNHour", false)
+        Showtime_period.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("Showtime_period", false)
+        ShowSeconds.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowSeconds", false)
+        ShowMillisecond.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowMillisecond", false)
+        HideSpace.value = context.prefs("systemui\\Status_Bar_Time").getBoolean(""+"HideSpace", false)
+        DualRow.value = context.prefs("systemui\\Status_Bar_Time").getBoolean(""+"DualRow", false)
+        ClockSize.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("ClockSize",0)
+        ClockUpdateSpeed.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("ClockUpdateSpeed",0)
+        Status_Bar_Time_gravitySelectedOption.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("alignment", 0)
+        customClock.value = context.prefs("systemui\\Status_Bar_Time").getString("CustomClockStyle", "HH:mm")
+        customClockCache.value = context.prefs("systemui\\Status_Bar_Time").getString("CustomClockStyle", "HH:mm")
     }
     val Status_Bar_Time_gravityOptions = listOf(
         stringResource(R.string.status_bar_time_gravity_center),
@@ -198,7 +191,6 @@ fun status_bar_clock(navController: NavController) {
                 }
             },
             actions = {
-                // 如果你有其他操作按钮，这里可以添加
                 IconButton(onClick = {
                     RestartAPP.value = true
                 },
@@ -226,7 +218,7 @@ fun status_bar_clock(navController: NavController) {
         ) {
             item {
                 Column {
-                    var com_android_systemui_status_bar_clock by remember {
+                    var status_bar_clock by remember {
                         mutableStateOf(context.prefs("systemui\\status_bar_clock").getBoolean("status_bar_clock", false))
                     }
                     Card(
@@ -242,17 +234,17 @@ fun status_bar_clock(navController: NavController) {
                             defValue = false,
                             context = context,
                             onCheckedChange = {
-                                com_android_systemui_status_bar_clock = it
+                                status_bar_clock = it
                             }
                         )
                     }
                     AnimatedVisibility(
-                        visible = !com_android_systemui_status_bar_clock
+                        visible = !status_bar_clock
                     ) {
                         FunNoEnable()
                     }
                     AnimatedVisibility(
-                        visible = com_android_systemui_status_bar_clock,
+                        visible = status_bar_clock,
                         enter = AnimTools().enterTransition(0),
                         exit = AnimTools().exitTransition(100)
                     ) {
@@ -269,7 +261,7 @@ fun status_bar_clock(navController: NavController) {
                                     onSelectedIndexChange = { newOption ->
                                         ClockStyleSelectedOption.intValue = newOption
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("settings").edit { putInt("ClockStyleSelectedOption", newOption) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putInt("ClockStyleSelectedOption", newOption) }
                                         }
                                     }
                                 )
@@ -279,7 +271,7 @@ fun status_bar_clock(navController: NavController) {
                                     summary = stringResource(R.string.clock_size_summary),
                                     category = "systemui\\Status_Bar_Time",
                                     key = "ClockSize",
-                                    defValue = 0f,
+                                    defValue = 0,
                                     endtype = "dp",
                                     max = 30f,
                                     min = 0f,
@@ -300,7 +292,7 @@ fun status_bar_clock(navController: NavController) {
                                         progress = (ClockUpdateSpeed.intValue / 2000.000).toFloat(),
                                         onProgressChange = { newProgress ->
                                             ClockUpdateSpeed.intValue = (newProgress * 2000).toInt()
-                                            context.prefs("settings").edit { putInt("Status_Bar_Time_ClockUpdateSpeed", (newProgress * 2000).toInt()) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putInt("ClockUpdateSpeed", (newProgress * 2000).toInt()) }
                                         },
                                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
                                     )
@@ -315,81 +307,57 @@ fun status_bar_clock(navController: NavController) {
                                     }
                                 }
                                 addline()
-                                Column {
-                                    SuperArrow(
-                                        title = stringResource(R.string.clock_top_margin),
-                                        onClick = {
-                                            showClockTopPaddingDialog.value = true
-                                        },
-                                        rightText = "${ClockTopPadding.intValue}px"
-                                    )
-                                    Slider(
-                                        progress = (ClockTopPadding.intValue / 100.000).toFloat(),
-                                        onProgressChange = { newProgress ->
-                                            ClockTopPadding.intValue = (newProgress * 100).toInt()
-                                            context.prefs("settings").edit { putInt("Status_Bar_Time_TopPadding", (newProgress * 100).toInt()) }
-                                        },
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
-                                    )
-                                }
+                                FunSlider(
+                                    title = stringResource(R.string.clock_top_margin),
+                                    category = "systemui\\Status_Bar_Time",
+                                    key = "TopPadding",
+                                    defValue = 0f,
+                                    endtype = "px",
+                                    max = 300f,
+                                    min = 0f,
+                                    decimalPlaces = 0,
+                                    context = context
+                                )
                                 addline()
-                                Column {
-                                    SuperArrow(
-                                        title = stringResource(R.string.clock_bottom_margin),
-                                        onClick = {
-                                            showClockBottomPaddingDialog.value = true
-                                        },
-                                        rightText = "${ClockBottomPadding.intValue}px"
-                                    )
-                                    Slider(
-                                        progress = (ClockBottomPadding.intValue / 100.000).toFloat(),
-                                        onProgressChange = { newProgress ->
-                                            ClockBottomPadding.intValue = (newProgress * 100).toInt()
-                                            context.prefs("settings").edit { putInt("Status_Bar_Time_BottomPadding", (newProgress * 100).toInt()) }
-                                        },
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
-                                    )
-                                }
+                                FunSlider(
+                                    title = stringResource(R.string.clock_bottom_margin),
+                                    category = "systemui\\Status_Bar_Time",
+                                    key = "BottomPadding",
+                                    defValue = 0f,
+                                    endtype = "px",
+                                    max = 300f,
+                                    min = 0f,
+                                    decimalPlaces = 0,
+                                    context = context
+                                )
                                 addline()
-                                Column {
-                                    SuperArrow(
-                                        title = stringResource(R.string.clock_left_margin),
-                                        onClick = {
-                                            showClockLeftPaddingDialog.value = true
-                                        },
-                                        rightText = "${ClockLeftPadding.intValue}px"
-                                    )
-                                    Slider(
-                                        progress = (ClockLeftPadding.intValue / 100.000).toFloat(),
-                                        onProgressChange = { newProgress ->
-                                            ClockLeftPadding.intValue = (newProgress * 100).toInt()
-                                            context.prefs("settings").edit { putInt("Status_Bar_Time_LeftPadding", (newProgress * 100).toInt()) }
-                                        },
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
-                                    )
-                                }
+                                FunSlider(
+                                    title = stringResource(R.string.clock_left_margin),
+                                    category = "systemui\\Status_Bar_Time",
+                                    key = "LeftPadding",
+                                    defValue = 0f,
+                                    endtype = "px",
+                                    max = 300f,
+                                    min = 0f,
+                                    decimalPlaces = 0,
+                                    context = context
+                                )
                                 addline()
-                                Column {
-                                    SuperArrow(
-                                        title = stringResource(R.string.clock_right_margin),
-                                        onClick = {
-                                            showClockRightPaddingDialog.value = true
-                                        },
-                                        rightText = "${ClockRightPadding.intValue}px"
-                                    )
-                                    Slider(
-                                        progress = (ClockRightPadding.intValue / 100.000).toFloat(),
-                                        onProgressChange = { newProgress ->
-                                            ClockRightPadding.intValue = (newProgress * 100).toInt()
-                                            context.prefs("settings").edit { putInt("Status_Bar_Time_RightPadding", (newProgress * 100).toInt()) }
-                                        },
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
-                                    )
-                                }
+                                FunSlider(
+                                    title = stringResource(R.string.clock_right_margin),
+                                    category = "systemui\\Status_Bar_Time",
+                                    key = "RightPadding",
+                                    defValue = 0f,
+                                    endtype = "px",
+                                    max = 300f,
+                                    min = 0f,
+                                    decimalPlaces = 0,
+                                    context = context
+                                )
                             }
                         }
                     }
-                    AnimatedVisibility(visible = ClockStyleSelectedOption.intValue == 0 && com_android_systemui_status_bar_clock) {
+                    AnimatedVisibility(visible = ClockStyleSelectedOption.intValue == 0 && status_bar_clock) {
                         Column {
                             Card(
                                 modifier = Modifier
@@ -403,7 +371,7 @@ fun status_bar_clock(navController: NavController) {
                                     onCheckedChange = {
                                         ShowYears.value = it
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("settings").edit { putBoolean("Status_Bar_Time_ShowYears", it) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowYears", it) }
                                         }
                                     }
                                 )
@@ -415,7 +383,7 @@ fun status_bar_clock(navController: NavController) {
                                     onCheckedChange = {
                                         ShowMonth.value = it
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("settings").edit { putBoolean("Status_Bar_Time_ShowMonth", it) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowMonth", it) }
                                         }
                                     }
                                 )
@@ -427,7 +395,7 @@ fun status_bar_clock(navController: NavController) {
                                     onCheckedChange = {
                                         ShowDay.value = it
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("settings").edit { putBoolean("Status_Bar_Time_ShowDay", it) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowDay", it) }
                                         }
                                     }
                                 )
@@ -439,7 +407,7 @@ fun status_bar_clock(navController: NavController) {
                                     onCheckedChange = {
                                         ShowWeek.value = it
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("settings").edit { putBoolean("Status_Bar_Time_ShowWeek", it) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowWeek", it) }
                                         }
                                     }
                                 )
@@ -451,7 +419,7 @@ fun status_bar_clock(navController: NavController) {
                                     onCheckedChange = {
                                         ShowCNHour.value = it
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("settings").edit { putBoolean("Status_Bar_Time_ShowCNHour", it) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowCNHour", it) }
                                         }
                                     }
                                 )
@@ -463,7 +431,7 @@ fun status_bar_clock(navController: NavController) {
                                     onCheckedChange = {
                                         Showtime_period.value = it
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("settings").edit { putBoolean("Status_Bar_Time_Showtime_period", it) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("Showtime_period", it) }
                                         }
                                     }
                                 )
@@ -475,7 +443,7 @@ fun status_bar_clock(navController: NavController) {
                                     onCheckedChange = {
                                         ShowSeconds.value = it
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("settings").edit { putBoolean("Status_Bar_Time_ShowSeconds", it) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowSeconds", it) }
                                         }
                                     }
                                 )
@@ -487,7 +455,7 @@ fun status_bar_clock(navController: NavController) {
                                     onCheckedChange = {
                                         ShowMillisecond.value = it
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("settings").edit { putBoolean("Status_Bar_Time_ShowMillisecond", it) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowMillisecond", it) }
                                         }
                                     }
                                 )
@@ -499,7 +467,7 @@ fun status_bar_clock(navController: NavController) {
                                     onCheckedChange = {
                                         HideSpace.value = it
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("settings").edit { putBoolean("Status_Bar_Time_HideSpace", it) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("HideSpace", it) }
                                         }
                                     }
                                 )
@@ -511,14 +479,14 @@ fun status_bar_clock(navController: NavController) {
                                     onCheckedChange = {
                                         DualRow.value = it
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("settings").edit { putBoolean("Status_Bar_Time_DualRow", it) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("DualRow", it) }
                                         }
                                     }
                                 )
                             }
                         }
                     }
-                    AnimatedVisibility(visible = ClockStyleSelectedOption.intValue == 1 && com_android_systemui_status_bar_clock,
+                    AnimatedVisibility(visible = ClockStyleSelectedOption.intValue == 1 && status_bar_clock,
                         enter = AnimTools().enterTransition(0),
                         exit = AnimTools().exitTransition(100)) {
 
@@ -535,7 +503,7 @@ fun status_bar_clock(navController: NavController) {
                                     onSelectedIndexChange = { newOption ->
                                         Status_Bar_Time_gravitySelectedOption.intValue = newOption
                                         CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("settings").edit { putInt("Status_Bar_Time_alignment", newOption) }
+                                            context.prefs("systemui\\Status_Bar_Time").edit { putInt("alignment", newOption) }
                                         }
                                     }
                                 )
@@ -559,11 +527,6 @@ fun status_bar_clock(navController: NavController) {
     }
     resetApp.AppRestartScreen(appList,RestartAPP)
     CustomClockDialog(showCustomClockDialog,customClockCache,customClock,focusManager)
-    SettingIntDialog(context,showclock_update_timeDialog,ClockUpdateSpeedTitle,ClockUpdateSpeed,focusManager,"Status_Bar_Time_ClockUpdateSpeed")
-    SettingIntDialog(context,showClockTopPaddingDialog,ClockTopPaddingTitle,ClockTopPadding,focusManager,"Status_Bar_Time_TopPadding")
-    SettingIntDialog(context,showClockBottomPaddingDialog,ClockBottomPaddingTitle,ClockBottomPadding,focusManager,"Status_Bar_Time_BottomPadding")
-    SettingIntDialog(context,showClockLeftPaddingDialog,ClockLeftPaddingTitle,ClockLeftPadding,focusManager,"Status_Bar_Time_LeftPadding")
-    SettingIntDialog(context,showClockRightPaddingDialog,ClockRightPaddingTitle,ClockRightPadding,focusManager,"Status_Bar_Time_RightPadding")
 }
 
 fun dpToPx(dp: Float, context: Context): Float {
@@ -611,121 +574,12 @@ fun CustomClockDialog(showCustomClockDialog: MutableState<Boolean>, customClockC
                 onClick = {
                     dismissDialog(showCustomClockDialog)
                     CustomClock.value = customClockCache.value
-                    context.prefs("settings").edit {
+                    context.prefs("systemui\\Status_Bar_Time").edit {
                         putString(
-                            "Status_Bar_Time_CustomClockStyle",
+                            "CustomClockStyle",
                             customClockCache.value
                         )
                     }
-                }
-            )
-        }
-    }
-}
-
-@Composable
-fun SettingIntDialog(context: Context,
-                     show: MutableState<Boolean>,
-                     title: String,
-                     set: MutableState<Int>,
-                     focusManager: FocusManager,
-                     saveName: String) {
-    if (!show.value) return
-    val cache = remember { mutableStateOf(set.value.toString()) }
-    SuperDialog(title = stringResource(R.string.settings) + " " + title,
-        show = show,
-        onDismissRequest = {
-            dismissDialog(show)
-        }) {
-        TextField(
-            value = cache.value,
-            onValueChange = { cache.value = it },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
-        )
-        AnimatedVisibility((cache.value.isEmpty())) {
-            SmallTitle(
-                text = stringResource(R.string.content_not_empty), textColor = Color.Red,
-                insideMargin = PaddingValues(0.dp, 8.dp)
-            )
-        }
-        Spacer(Modifier.height(12.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            TextButton(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(show)
-                    show.value = false
-                }
-            )
-            Spacer(Modifier.width(12.dp))
-            TextButton(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.ok),
-                colors = ButtonDefaults.textButtonColorsPrimary(),
-                enabled = (cache.value.isNotEmpty()),
-                onClick = {
-                    dismissDialog(show)
-                    set.value = cache.value.toInt()
-                    context.prefs("settings").edit { putInt(saveName, cache.value.toInt()) }
-                }
-            )
-        }
-    }
-}
-
-@Composable
-fun SettingFloatDialog(context: Context,
-                     show: MutableState<Boolean>,
-                     title: String,
-                     set: MutableState<Float>,
-                     focusManager: FocusManager,
-                     saveName: String) {
-    if (!show.value) return
-    val cache = remember { mutableStateOf(set.value.toString()) }
-    SuperDialog(title = stringResource(R.string.settings) + " " + title,
-        show = show,
-        onDismissRequest = {
-            dismissDialog(show)
-        }) {
-        TextField(
-            value = cache.value,
-            onValueChange = { cache.value = it },
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
-        )
-        AnimatedVisibility((cache.value.isEmpty())) {
-            SmallTitle(
-                text = stringResource(R.string.content_not_empty), textColor = Color.Red,
-                insideMargin = PaddingValues(0.dp, 8.dp)
-            )
-        }
-        Spacer(Modifier.height(12.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            TextButton(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(show)
-                }
-            )
-            Spacer(Modifier.width(12.dp))
-            TextButton(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.ok),
-                colors = ButtonDefaults.textButtonColorsPrimary(),
-                enabled = (cache.value.isNotEmpty()),
-                onClick = {
-                    dismissDialog(show)
-                    set.value = cache.value.toFloat()
-                    context.prefs("settings").edit { putFloat(saveName, cache.value.toFloat()) }
                 }
             )
         }

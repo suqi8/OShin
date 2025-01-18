@@ -43,6 +43,7 @@ import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunNoEnable
+import com.suqi8.oshin.ui.activity.funlistui.FunSlider
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.ui.tools.resetApp
 import dev.chrisbanes.haze.HazeState
@@ -55,7 +56,6 @@ import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
-import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
@@ -185,10 +185,6 @@ fun hardware_indicator(navController: NavController) {
         )
     }
 
-    // 控制对话框的显示
-    val show_update_time_Dialog = remember { mutableStateOf(false) }
-    val show_font_size_Dialog = remember { mutableStateOf(false) }
-
     // bold_text 和 alignment
     val power_consumption_indicator_bold_text = remember {
         mutableStateOf(
@@ -210,8 +206,8 @@ fun hardware_indicator(navController: NavController) {
     }
 
     // 温度显示相关
+
     val show_cpu_temp_data = remember { mutableStateOf(false) }
-    val show_change_cpu_temp_data = remember { mutableStateOf(false) }
     val cpu_temp_source = remember {
         mutableIntStateOf(
             context.prefs("systemui\\hardware_indicator")
@@ -268,14 +264,8 @@ fun hardware_indicator(navController: NavController) {
         )
     }
 
-    val show_tempature_update_time_Dialog = remember { mutableStateOf(false) }
     val hideBatteryUnit = remember { mutableStateOf(false) }
     val hideCpuUnit = remember { mutableStateOf(false) }
-    val show_tempature_font_size_Dialog = remember { mutableStateOf(false) }
-    val Dialog_font_size_Title = stringResource(R.string.font_size)
-    val Dialog_update_time_Title = stringResource(R.string.update_time)
-    val cpu_temp_source_title = stringResource(R.string.change_cpu_temp_source)
-
     Scaffold(topBar = {
         TopAppBar(
             scrollBehavior = topappbarzt,
@@ -418,59 +408,29 @@ fun hardware_indicator(navController: NavController) {
                                     }
                                 )
                                 addline()
-                                Column {
-                                    SuperArrow(
-                                        title = stringResource(R.string.update_time),
-                                        onClick = {
-                                            show_update_time_Dialog.value = true
-                                        },
-                                        rightText = "${power_consumption_indicator_update_time.intValue}ms"
-                                    )
-                                    Slider(
-                                        progress = ((power_consumption_indicator_update_time.intValue / 2000.00).toFloat()),
-                                        onProgressChange = { newProgress ->
-                                            power_consumption_indicator_update_time.intValue =
-                                                (newProgress * 2000.00).toInt()
-                                            context.prefs("systemui\\hardware_indicator").edit {
-                                                putInt(
-                                                    "power_consumption_indicator_update_time",
-                                                    ((newProgress * 2000.00).toInt())
-                                                )
-                                            }
-                                        },
-                                        modifier = Modifier.padding(
-                                            horizontal = 12.dp,
-                                            vertical = 12.dp
-                                        )
-                                    )
-                                }
+                                FunSlider(
+                                    title = stringResource(R.string.update_time),
+                                    category = "systemui\\hardware_indicator",
+                                    key = "power_consumption_indicator_update_time",
+                                    defValue = 1000,
+                                    endtype = "ms",
+                                    max = 2000f,
+                                    min = 0f,
+                                    decimalPlaces = 0,
+                                    context = context
+                                )
                                 addline()
-                                Column {
-                                    SuperArrow(
-                                        title = stringResource(R.string.font_size),
-                                        onClick = {
-                                            show_font_size_Dialog.value = true
-                                        },
-                                        rightText = "${power_consumption_indicator_font_size.intValue}sp"
-                                    )
-                                    Slider(
-                                        progress = ((power_consumption_indicator_font_size.intValue / 20.00).toFloat()),
-                                        onProgressChange = { newProgress ->
-                                            power_consumption_indicator_font_size.intValue =
-                                                (newProgress * 20.00).toInt()
-                                            context.prefs("systemui\\hardware_indicator").edit {
-                                                putInt(
-                                                    "power_consumption_indicator_font_size",
-                                                    ((newProgress * 20.00).toInt())
-                                                )
-                                            }
-                                        },
-                                        modifier = Modifier.padding(
-                                            horizontal = 12.dp,
-                                            vertical = 12.dp
-                                        )
-                                    )
-                                }
+                                FunSlider(
+                                    title = stringResource(R.string.font_size),
+                                    category = "systemui\\hardware_indicator",
+                                    key = "power_consumption_indicator_font_size",
+                                    defValue = 8f,
+                                    endtype = "sp",
+                                    max = 20f,
+                                    min = 0f,
+                                    decimalPlaces = 1,
+                                    context = context
+                                )
                             }
                             SmallTitle(text = stringResource(R.string.display_content))
                             Card(
@@ -614,13 +574,16 @@ fun hardware_indicator(navController: NavController) {
                                         show_cpu_temp_data.value = true
                                     })
                                 addline()
-                                SuperArrow(
+                                FunSlider(
                                     title = stringResource(R.string.change_cpu_temp_source),
                                     summary = stringResource(R.string.enter_thermal_zone_number),
-                                    onClick = {
-                                        show_change_cpu_temp_data.value = true
-                                    },
-                                    rightText = cpu_temp_source.intValue.toString()
+                                    category = "systemui\\hardware_indicator",
+                                    key = "temperature_indicator_cpu_temp_source",
+                                    defValue = 1,
+                                    max = 100f,
+                                    min = 0f,
+                                    decimalPlaces = 0,
+                                    context = context
                                 )
                                 addline()
                                 SuperSwitch(
@@ -654,59 +617,29 @@ fun hardware_indicator(navController: NavController) {
                                     }
                                 )
                                 addline()
-                                Column {
-                                    SuperArrow(
-                                        title = stringResource(R.string.update_time),
-                                        onClick = {
-                                            show_tempature_update_time_Dialog.value = true
-                                        },
-                                        rightText = "${power_consumption_indicator_update_time.intValue}ms"
-                                    )
-                                    Slider(
-                                        progress = ((power_consumption_indicator_update_time.intValue / 2000.00).toFloat()),
-                                        onProgressChange = { newProgress ->
-                                            power_consumption_indicator_update_time.intValue =
-                                                (newProgress * 2000.00).toInt()
-                                            context.prefs("systemui\\hardware_indicator").edit {
-                                                putInt(
-                                                    "temperature_indicator_update_time",
-                                                    ((newProgress * 2000.00).toInt())
-                                                )
-                                            }
-                                        },
-                                        modifier = Modifier.padding(
-                                            horizontal = 12.dp,
-                                            vertical = 12.dp
-                                        )
-                                    )
-                                }
+                                FunSlider(
+                                    title = stringResource(R.string.update_time),
+                                    category = "systemui\\hardware_indicator",
+                                    key = "temperature_indicator_update_time",
+                                    defValue = 1000,
+                                    endtype = "ms",
+                                    max = 2000f,
+                                    min = 0f,
+                                    decimalPlaces = 0,
+                                    context = context
+                                )
                                 addline()
-                                Column {
-                                    SuperArrow(
-                                        title = stringResource(R.string.font_size),
-                                        onClick = {
-                                            show_tempature_font_size_Dialog.value = true
-                                        },
-                                        rightText = "${temperature_indicator_font_size.floatValue}sp"
-                                    )
-                                    Slider(
-                                        progress = ((temperature_indicator_font_size.floatValue / 20.00).toFloat()),
-                                        onProgressChange = { newProgress ->
-                                            temperature_indicator_font_size.floatValue =
-                                                (newProgress * 20.00).toFloat()
-                                            context.prefs("systemui\\hardware_indicator").edit {
-                                                putFloat(
-                                                    "temperature_indicator_font_size",
-                                                    ((newProgress * 20.00).toFloat())
-                                                )
-                                            }
-                                        },
-                                        modifier = Modifier.padding(
-                                            horizontal = 12.dp,
-                                            vertical = 12.dp
-                                        )
-                                    )
-                                }
+                                FunSlider(
+                                    title = stringResource(R.string.font_size),
+                                    category = "systemui\\hardware_indicator",
+                                    key = "temperature_indicator_font_size",
+                                    defValue = 8f,
+                                    endtype = "sp",
+                                    max = 20f,
+                                    min = 0f,
+                                    decimalPlaces = 1,
+                                    context = context
+                                )
                             }
                             SmallTitle(text = stringResource(R.string.display_content))
                             Card(
@@ -808,46 +741,6 @@ fun hardware_indicator(navController: NavController) {
     }
     resetApp.AppRestartScreen(appList, restartAPP)
     cpu_temp_data(show_cpu_temp_data)
-    SettingFloatDialog(
-        context,
-        show_tempature_font_size_Dialog,
-        Dialog_font_size_Title,
-        temperature_indicator_font_size,
-        focusManager,
-        "temperature_indicator_font_size"
-    )
-    SettingIntDialog(
-        context,
-        show_tempature_update_time_Dialog,
-        Dialog_update_time_Title,
-        temperature_indicator_updatetime,
-        focusManager,
-        "temperature_indicator_update_time"
-    )
-    SettingIntDialog(
-        context,
-        show_change_cpu_temp_data,
-        cpu_temp_source_title,
-        cpu_temp_source,
-        focusManager,
-        "temperature_indicator_cpu_temp_source"
-    )
-    SettingIntDialog(
-        context,
-        show_font_size_Dialog,
-        Dialog_font_size_Title,
-        power_consumption_indicator_font_size,
-        focusManager,
-        "power_consumption_indicator_font_size"
-    )
-    SettingIntDialog(
-        context,
-        show_update_time_Dialog,
-        Dialog_update_time_Title,
-        power_consumption_indicator_update_time,
-        focusManager,
-        "power_consumption_indicator_update_time"
-    )
 }
 
 @Composable
