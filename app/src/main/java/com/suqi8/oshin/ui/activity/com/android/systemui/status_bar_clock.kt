@@ -48,11 +48,11 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
-import com.suqi8.oshin.addline
 import com.suqi8.oshin.tools.AnimTools
 import com.suqi8.oshin.ui.activity.funlistui.FunNoEnable
 import com.suqi8.oshin.ui.activity.funlistui.FunSlider
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.ui.tools.resetApp
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle

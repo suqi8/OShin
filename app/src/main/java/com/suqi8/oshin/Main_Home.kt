@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -56,7 +55,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.highcapable.yukihookapi.YukiHookAPI
-import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -135,25 +134,6 @@ fun Modifier.drawColoredShadow(
             paint
         )
     }
-}
-
-@Composable
-fun addline(mode: Boolean = true) {
-    val context = LocalContext.current
-    if (context.prefs("settings").getBoolean("addline", false))
-        if (mode) {
-            HorizontalDivider(
-                modifier = Modifier.padding(start = 25.dp, end = 25.dp),
-                thickness = 0.5.dp,
-                color = Color.Gray.copy(alpha = 0.2f)
-            )
-        } else {
-            HorizontalDivider(
-                modifier = Modifier.padding(start = 5.dp, end = 5.dp),
-                thickness = 0.5.dp,
-                color = Color.Gray.copy(alpha = 0.2f)
-            )
-        }
 }
 
 @SuppressLint("AutoboxingStateCreation")

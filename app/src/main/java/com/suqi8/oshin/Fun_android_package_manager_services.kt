@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.ui.tools.resetApp
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle

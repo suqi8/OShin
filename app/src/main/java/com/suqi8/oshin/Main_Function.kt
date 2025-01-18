@@ -54,6 +54,7 @@ import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Box

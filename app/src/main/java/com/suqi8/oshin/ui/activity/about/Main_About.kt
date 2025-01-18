@@ -52,8 +52,8 @@ import androidx.navigation.NavController
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI_Impl
 import com.suqi8.oshin.R
-import com.suqi8.oshin.addline
 import com.suqi8.oshin.executeCommand
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

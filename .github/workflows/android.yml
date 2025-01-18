@@ -105,7 +105,9 @@ jobs:
           *🔢 CommitID*：`${{ github.event.head_commit.id }}`  
           *📄 提交信息 📄*  
           
+          ```
           ${{ github.event.head_commit.message }}
+          ```
           
           🔗 **查看详情**：[点我看具体内容](${{ github.event.head_commit.url }})
         COMMIT_URL: ${{ github.event.head_commit.url }}
