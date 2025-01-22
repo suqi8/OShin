@@ -2,6 +2,8 @@ package com.suqi8.oshin.ui.activity.com.android.systemui
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.util.TypedValue
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -438,15 +440,19 @@ fun status_bar_clock(navController: NavController) {
                                     , rightText = customClock.value, onClick = {
                                         showCustomClockDialog.value = true
                                     })
-                                SmallTitle(text = stringResource(R.string.status_bar_clock_custom_tips), insideMargin = PaddingValues(18.dp, 8.dp))
+                                addline()
+                                SuperArrow(title = stringResource(R.string.clock_format_example), onClick = {
+                                    val intent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://oshin.mikusignal.top/docs/timeformat.html")
+                                    )
+                                    context.startActivity(intent)
+                                })
+                                //SmallTitle(text = stringResource(R.string.status_bar_clock_custom_tips), insideMargin = PaddingValues(18.dp, 8.dp))
                             }
                         }
                     }
-                    Spacer(
-                        Modifier.height(
-                            WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-                        )
-                    )
+                    Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
                 }
             }
         }

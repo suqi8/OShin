@@ -216,4 +216,5 @@
     <string name="oplus_root_check">Disable Root Check</string>
     <string name="oplus_root_check_summary">Disable root checker</string>
     <string name="clock_margin">Clock Margin</string>
+    <string name="clock_format_example">Clock Format Example</string>
 </resources>
