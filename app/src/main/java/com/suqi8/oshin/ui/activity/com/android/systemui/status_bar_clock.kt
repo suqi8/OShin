@@ -75,7 +75,6 @@ import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperDropdown
-import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -86,19 +85,8 @@ import top.yukonga.miuix.kmp.utils.getWindowSize
 @Composable
 fun status_bar_clock(navController: NavController) {
     val context = LocalContext.current
-    val topappbarzt = MiuixScrollBehavior(rememberTopAppBarState())
+    val TopAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
 
-    val ShowYears = remember { mutableStateOf(false) }
-    val ShowMonth = remember { mutableStateOf(false) }
-    val ShowDay = remember { mutableStateOf(false) }
-    val ShowWeek = remember { mutableStateOf(false) }
-    val ShowCNHour = remember { mutableStateOf(false) }
-    val Showtime_period = remember { mutableStateOf(false) }
-    val ShowSeconds = remember { mutableStateOf(false) }
-    val HideSpace = remember { mutableStateOf(false) }
-    val DualRow = remember { mutableStateOf(false) }
-    val ShowMillisecond = remember { mutableStateOf(false) }
-    val ClockUpdateSpeed = remember { mutableIntStateOf(0) }
     val appList = listOf("com.android.systemui")
     val RestartAPP = remember { mutableStateOf(false) }
     val resetApp = resetApp()
@@ -106,10 +94,6 @@ fun status_bar_clock(navController: NavController) {
     val showCustomClockDialog = remember { mutableStateOf(false) }
     val customClockCache = remember { mutableStateOf("HH:mm") }
     val customClock = remember { mutableStateOf("HH:mm") }
-    val ClockLeftPadding = remember { mutableIntStateOf(0) }
-    val ClockRightPadding = remember { mutableIntStateOf(0) }
-    val ClockBottomPadding = remember { mutableIntStateOf(0) }
-    val showclock_update_timeDialog = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
     var isDebug = context.prefs("settings").getBoolean("Debug", false)
@@ -129,20 +113,6 @@ fun status_bar_clock(navController: NavController) {
     }
 
     LaunchedEffect(Unit) {
-        ClockLeftPadding.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("LeftPadding", 0)
-        ClockRightPadding.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("RightPadding", 0)
-        ClockBottomPadding.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("BottomPadding", 0)
-        ShowYears.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowYears", false)
-        ShowMonth.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowMonth", false)
-        ShowDay.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowDay", false)
-        ShowWeek.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowWeek", false)
-        ShowCNHour.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowCNHour", false)
-        Showtime_period.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("Showtime_period", false)
-        ShowSeconds.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowSeconds", false)
-        ShowMillisecond.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowMillisecond", false)
-        HideSpace.value = context.prefs("systemui\\Status_Bar_Time").getBoolean(""+"HideSpace", false)
-        DualRow.value = context.prefs("systemui\\Status_Bar_Time").getBoolean(""+"DualRow", false)
-        ClockUpdateSpeed.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("ClockUpdateSpeed",0)
         Status_Bar_Time_gravitySelectedOption.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("alignment", 0)
         customClock.value = context.prefs("systemui\\Status_Bar_Time").getString("CustomClockStyle", "HH:mm")
         customClockCache.value = context.prefs("systemui\\Status_Bar_Time").getString("CustomClockStyle", "HH:mm")
@@ -160,7 +130,7 @@ fun status_bar_clock(navController: NavController) {
     )
     Scaffold(topBar = {
         TopAppBar(
-            scrollBehavior = topappbarzt,
+            scrollBehavior = TopAppBarState,
             title = stringResource(id = R.string.status_bar_clock),
             color = Color.Transparent,
             modifier = Modifier.hazeChild(
@@ -202,7 +172,7 @@ fun status_bar_clock(navController: NavController) {
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
             contentPadding = PaddingValues(top = padding.calculateTopPadding()),
             userScrollEnabled = true,
-            topAppBarScrollBehavior = topappbarzt
+            topAppBarScrollBehavior = TopAppBarState
         ) {
             item {
                 Column {
@@ -220,7 +190,6 @@ fun status_bar_clock(navController: NavController) {
                             category = "systemui\\status_bar_clock",
                             key = "status_bar_clock",
                             defValue = false,
-                            context = context,
                             onCheckedChange = {
                                 status_bar_clock = it
                             }
@@ -361,124 +330,84 @@ fun status_bar_clock(navController: NavController) {
                                     .fillMaxWidth()
                                     .padding(horizontal = 12.dp, vertical = 6.dp)
                             ) {
-                                SuperSwitch(
+                                FunSwich(
                                     title = stringResource(R.string.show_years_title),
                                     summary = stringResource(R.string.show_years_summary),
-                                    checked = ShowYears.value,
-                                    onCheckedChange = {
-                                        ShowYears.value = it
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowYears", it) }
-                                        }
-                                    }
+                                    category = "systemui\\status_bar_clock",
+                                    key = "ShowYears",
+                                    defValue = false
                                 )
                                 addline()
-                                SuperSwitch(
+                                FunSwich(
                                     title = stringResource(R.string.show_month_title),
                                     summary = stringResource(R.string.show_month_summary),
-                                    checked = ShowMonth.value,
-                                    onCheckedChange = {
-                                        ShowMonth.value = it
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowMonth", it) }
-                                        }
-                                    }
+                                    category = "systemui\\status_bar_clock",
+                                    key = "ShowMonth",
+                                    defValue = false
                                 )
                                 addline()
-                                SuperSwitch(
+                                FunSwich(
                                     title = stringResource(R.string.show_day_title),
                                     summary = stringResource(R.string.show_day_summary),
-                                    checked = ShowDay.value,
-                                    onCheckedChange = {
-                                        ShowDay.value = it
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowDay", it) }
-                                        }
-                                    }
+                                    category = "systemui\\status_bar_clock",
+                                    key = "ShowDay",
+                                    defValue = false
                                 )
                                 addline()
-                                SuperSwitch(
+                                FunSwich(
                                     title = stringResource(R.string.show_week_title),
                                     summary = stringResource(R.string.show_week_summary),
-                                    checked = ShowWeek.value,
-                                    onCheckedChange = {
-                                        ShowWeek.value = it
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowWeek", it) }
-                                        }
-                                    }
+                                    category = "systemui\\status_bar_clock",
+                                    key = "ShowWeek",
+                                    defValue = false
                                 )
                                 addline()
-                                SuperSwitch(
+                                FunSwich(
                                     title = stringResource(R.string.show_cn_hour_title),
                                     summary = stringResource(R.string.show_cn_hour_summary),
-                                    checked = ShowCNHour.value,
-                                    onCheckedChange = {
-                                        ShowCNHour.value = it
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowCNHour", it) }
-                                        }
-                                    }
+                                    category = "systemui\\status_bar_clock",
+                                    key = "ShowCNHour",
+                                    defValue = false
                                 )
                                 addline()
-                                SuperSwitch(
+                                FunSwich(
                                     title = stringResource(R.string.showtime_period_title),
                                     summary = stringResource(R.string.showtime_period_summary),
-                                    checked = Showtime_period.value,
-                                    onCheckedChange = {
-                                        Showtime_period.value = it
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("Showtime_period", it) }
-                                        }
-                                    }
+                                    category = "systemui\\status_bar_clock",
+                                    key = "Showtime_period",
+                                    defValue = false
                                 )
                                 addline()
-                                SuperSwitch(
+                                FunSwich(
                                     title = stringResource(R.string.show_seconds_title),
                                     summary = stringResource(R.string.show_seconds_summary),
-                                    checked = ShowSeconds.value,
-                                    onCheckedChange = {
-                                        ShowSeconds.value = it
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowSeconds", it) }
-                                        }
-                                    }
+                                    category = "systemui\\status_bar_clock",
+                                    key = "ShowSeconds",
+                                    defValue = true
                                 )
                                 addline()
-                                SuperSwitch(
+                                FunSwich(
                                     title = stringResource(R.string.show_millisecond_title),
                                     summary = stringResource(R.string.show_millisecond_summary),
-                                    checked = ShowMillisecond.value,
-                                    onCheckedChange = {
-                                        ShowMillisecond.value = it
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("ShowMillisecond", it) }
-                                        }
-                                    }
+                                    category = "systemui\\status_bar_clock",
+                                    key = "ShowMillisecond",
+                                    defValue = false
                                 )
                                 addline()
-                                SuperSwitch(
+                                FunSwich(
                                     title = stringResource(R.string.hide_space_title),
                                     summary = stringResource(R.string.hide_space_summary),
-                                    checked = HideSpace.value,
-                                    onCheckedChange = {
-                                        HideSpace.value = it
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("HideSpace", it) }
-                                        }
-                                    }
+                                    category = "systemui\\status_bar_clock",
+                                    key = "HideSpace",
+                                    defValue = false
                                 )
                                 addline()
-                                SuperSwitch(
+                                FunSwich(
                                     title = stringResource(R.string.dual_row_title),
                                     summary = stringResource(R.string.dual_row_summary),
-                                    checked = DualRow.value,
-                                    onCheckedChange = {
-                                        DualRow.value = it
-                                        CoroutineScope(Dispatchers.IO).launch {
-                                            context.prefs("systemui\\Status_Bar_Time").edit { putBoolean("DualRow", it) }
-                                        }
-                                    }
+                                    category = "systemui\\status_bar_clock",
+                                    key = "DualRow",
+                                    defValue = false
                                 )
                             }
                         }
