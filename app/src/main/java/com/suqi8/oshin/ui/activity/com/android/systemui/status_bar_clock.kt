@@ -67,9 +67,7 @@ import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
-import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.basic.SmallTitle
-import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.basic.TopAppBar
@@ -89,9 +87,7 @@ import top.yukonga.miuix.kmp.utils.getWindowSize
 fun status_bar_clock(navController: NavController) {
     val context = LocalContext.current
     val topappbarzt = MiuixScrollBehavior(rememberTopAppBarState())
-    val ClockStyle = listOf(stringResource(R.string.preset),
-        stringResource(R.string.geek))
-    val ClockStyleSelectedOption = remember { mutableIntStateOf(0) }
+
     val ShowYears = remember { mutableStateOf(false) }
     val ShowMonth = remember { mutableStateOf(false) }
     val ShowDay = remember { mutableStateOf(false) }
@@ -136,7 +132,6 @@ fun status_bar_clock(navController: NavController) {
         ClockLeftPadding.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("LeftPadding", 0)
         ClockRightPadding.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("RightPadding", 0)
         ClockBottomPadding.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("BottomPadding", 0)
-        ClockStyleSelectedOption.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("ClockStyleSelectedOption", 0)
         ShowYears.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowYears", false)
         ShowMonth.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowMonth", false)
         ShowDay.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowDay", false)
@@ -236,6 +231,8 @@ fun status_bar_clock(navController: NavController) {
                     ) {
                         FunNoEnable()
                     }
+                    val ClockStyleSelectedOption = remember { mutableIntStateOf(context.prefs("systemui\\Status_Bar_Time").getInt("ClockStyleSelectedOption", 0)) }
+                    val ClockStyle = listOf(stringResource(R.string.preset), stringResource(R.string.geek))
                     AnimatedVisibility(
                         visible = status_bar_clock,
                         enter = AnimTools().enterTransition(0),
@@ -272,39 +269,46 @@ fun status_bar_clock(navController: NavController) {
                                     context = context
                                 )
                                 addline()
-                                Column {
-                                    SuperArrow(
-                                        title = stringResource(R.string.clock_update_time_title),
-                                        summary = stringResource(R.string.clock_update_time_summary),
-                                        onClick = {
-                                            showclock_update_timeDialog.value = true
-                                        },
-                                        rightText = "${ClockUpdateSpeed.intValue}ms"
-                                    )
-                                    Slider(
-                                        progress = (ClockUpdateSpeed.intValue / 2000.000).toFloat(),
-                                        onProgressChange = { newProgress ->
-                                            ClockUpdateSpeed.intValue = (newProgress * 2000).toInt()
-                                            context.prefs("systemui\\Status_Bar_Time").edit { putInt("ClockUpdateSpeed", (newProgress * 2000).toInt()) }
-                                        },
-                                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
-                                    )
-                                }
-                                addline()
-                                Text("dp To px", modifier = Modifier.padding(start = 15.dp, top = 16.dp))
+                                FunSlider(
+                                    title = stringResource(R.string.clock_update_time_title),
+                                    summary = stringResource(R.string.clock_update_time_summary),
+                                    category = "systemui\\Status_Bar_Time",
+                                    key = "ClockUpdateSpeed",
+                                    defValue = 0,
+                                    endtype = "ms",
+                                    max = 2000f,
+                                    min = 0f,
+                                    decimalPlaces = 0,
+                                    context = context
+                                )
+                            }
+                            SmallTitle("dp To px")
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp)
+                                    .padding(bottom = 6.dp)
+                            ) {
                                 val px = remember { mutableStateOf("0") }
-                                TextField(value = px.value, onValueChange = { px.value = it }, modifier = Modifier.padding(start = 12.dp, end = 12.dp))
+                                TextField(value = px.value, onValueChange = { px.value = it }, modifier = Modifier.padding(start = 12.dp, end = 12.dp, top = 12.dp))
                                 if (px.value.isNotEmpty()) {
                                     AnimatedVisibility(visible = px.value.isNotEmpty()) {
                                         SmallTitle(text = "${px.value}dp = ${dpToPx(px.value.toFloat(),context)}px")
                                     }
                                 }
-                                addline()
+                            }
+                            SmallTitle(stringResource(R.string.clock_margin))
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp)
+                                    .padding(bottom = 6.dp)
+                            ) {
                                 FunSlider(
                                     title = stringResource(R.string.clock_top_margin),
                                     category = "systemui\\Status_Bar_Time",
                                     key = "TopPadding",
-                                    defValue = 0f,
+                                    defValue = 0,
                                     endtype = "px",
                                     max = 300f,
                                     min = 0f,
@@ -316,7 +320,7 @@ fun status_bar_clock(navController: NavController) {
                                     title = stringResource(R.string.clock_bottom_margin),
                                     category = "systemui\\Status_Bar_Time",
                                     key = "BottomPadding",
-                                    defValue = 0f,
+                                    defValue = 0,
                                     endtype = "px",
                                     max = 300f,
                                     min = 0f,
@@ -328,7 +332,7 @@ fun status_bar_clock(navController: NavController) {
                                     title = stringResource(R.string.clock_left_margin),
                                     category = "systemui\\Status_Bar_Time",
                                     key = "LeftPadding",
-                                    defValue = 0f,
+                                    defValue = 0,
                                     endtype = "px",
                                     max = 300f,
                                     min = 0f,
@@ -340,7 +344,7 @@ fun status_bar_clock(navController: NavController) {
                                     title = stringResource(R.string.clock_right_margin),
                                     category = "systemui\\Status_Bar_Time",
                                     key = "RightPadding",
-                                    defValue = 0f,
+                                    defValue = 0,
                                     endtype = "px",
                                     max = 300f,
                                     min = 0f,

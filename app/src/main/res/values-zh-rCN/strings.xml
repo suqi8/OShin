@@ -214,4 +214,5 @@
     <string name="oplus_system_services">一加系统服务</string>
     <string name="oplus_root_check">关闭Root检测</string>
     <string name="oplus_root_check_summary">关闭内置的root检测器</string>
+    <string name="clock_margin">时钟边距</string>
 </resources>
