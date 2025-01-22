@@ -102,7 +102,6 @@ fun status_bar_clock(navController: NavController) {
     val HideSpace = remember { mutableStateOf(false) }
     val DualRow = remember { mutableStateOf(false) }
     val ShowMillisecond = remember { mutableStateOf(false) }
-    val ClockSize = remember { mutableIntStateOf(0) }
     val ClockUpdateSpeed = remember { mutableIntStateOf(0) }
     val appList = listOf("com.android.systemui")
     val RestartAPP = remember { mutableStateOf(false) }
@@ -116,11 +115,6 @@ fun status_bar_clock(navController: NavController) {
     val ClockBottomPadding = remember { mutableIntStateOf(0) }
     val showclock_update_timeDialog = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
-    val ClockUpdateSpeedTitle = stringResource(R.string.clock_update_time_title)
-    val ClockLeftPaddingTitle = stringResource(R.string.clock_left_margin)
-    val ClockRightPaddingTitle = stringResource(R.string.clock_right_margin)
-    val ClockTopPaddingTitle = stringResource(R.string.clock_top_margin)
-    val ClockBottomPaddingTitle = stringResource(R.string.clock_bottom_margin)
 
     var isDebug = context.prefs("settings").getBoolean("Debug", false)
 
@@ -153,7 +147,6 @@ fun status_bar_clock(navController: NavController) {
         ShowMillisecond.value = context.prefs("systemui\\Status_Bar_Time").getBoolean("ShowMillisecond", false)
         HideSpace.value = context.prefs("systemui\\Status_Bar_Time").getBoolean(""+"HideSpace", false)
         DualRow.value = context.prefs("systemui\\Status_Bar_Time").getBoolean(""+"DualRow", false)
-        ClockSize.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("ClockSize",0)
         ClockUpdateSpeed.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("ClockUpdateSpeed",0)
         Status_Bar_Time_gravitySelectedOption.intValue = context.prefs("systemui\\Status_Bar_Time").getInt("alignment", 0)
         customClock.value = context.prefs("systemui\\Status_Bar_Time").getString("CustomClockStyle", "HH:mm")
@@ -271,7 +264,7 @@ fun status_bar_clock(navController: NavController) {
                                     summary = stringResource(R.string.clock_size_summary),
                                     category = "systemui\\Status_Bar_Time",
                                     key = "ClockSize",
-                                    defValue = 0,
+                                    defValue = 0f,
                                     endtype = "dp",
                                     max = 30f,
                                     min = 0f,

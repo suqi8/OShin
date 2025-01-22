@@ -30,7 +30,7 @@ class StatusBarClock : YukiBaseHooker() {
     val HideSpace = prefs("settings").getBoolean("Status_Bar_Time_HideSpace", false)
     val DualRow = prefs("settings").getBoolean("Status_Bar_Time_DualRow", false)
     var nowTime: Date? = null
-    var FontSize = prefs("settings").getInt("Status_Bar_Time_ClockSize", 0)
+    var FontSize = prefs("settings").getFloat("Status_Bar_Time_ClockSize", 0f)
     var updateSpeed = prefs("settings").getInt("Status_Bar_Time_ClockUpdateSpeed", 0)
     var newline = ""
     var customClockStyle = prefs("settings").getString("Status_Bar_Time_CustomClockStyle", "HH:mm")
@@ -66,11 +66,11 @@ class StatusBarClock : YukiBaseHooker() {
                             if (DualRow) {
                                 newline = "\n"
                                 var defaultSize = 8F
-                                if (FontSize != 0) defaultSize = FontSize.toFloat()
+                                if (FontSize != 0f) defaultSize = FontSize
                                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, defaultSize)
                                 setLineSpacing(0F, 0.8F)
                             } else {
-                                if (FontSize != 0) {
+                                if (FontSize != 0f) {
                                     setTextSize(
                                         TypedValue.COMPLEX_UNIT_DIP,
                                         FontSize.toFloat()
@@ -149,7 +149,7 @@ class StatusBarClock : YukiBaseHooker() {
                                 else -> Gravity.CENTER         // 默认居中对齐
                             }
 
-                            if (FontSize != 0) {
+                            if (FontSize != 0f) {
                                 setTextSize(
                                     TypedValue.COMPLEX_UNIT_DIP,
                                     FontSize.toFloat()
