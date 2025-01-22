@@ -64,12 +64,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.highcapable.yukihookapi.hook.factory.prefs
-import dev.chrisbanes.haze.HazeProgressive
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.HazeStyle
-import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
 import com.suqi8.oshin.ui.activity.about.Main_About
 import com.suqi8.oshin.ui.activity.about.about_contributors
 import com.suqi8.oshin.ui.activity.about.about_group
@@ -80,6 +74,12 @@ import com.suqi8.oshin.ui.activity.com.android.systemui.status_bar_clock
 import com.suqi8.oshin.ui.activity.com.android.systemui.statusbar_icon
 import com.suqi8.oshin.ui.activity.com.android.systemui.systemui
 import com.suqi8.oshin.ui.theme.AppTheme
+import dev.chrisbanes.haze.HazeProgressive
+import dev.chrisbanes.haze.HazeState
+import dev.chrisbanes.haze.HazeStyle
+import dev.chrisbanes.haze.HazeTint
+import dev.chrisbanes.haze.haze
+import dev.chrisbanes.haze.hazeChild
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
@@ -112,7 +112,7 @@ import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.system.exitProcess
 
-const val TAG = "OPatch"
+const val TAG = "OShin"
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

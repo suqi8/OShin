@@ -29,14 +29,14 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.R
+import com.suqi8.oshin.saveColorMode
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.haze
 import dev.chrisbanes.haze.hazeChild
-import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.activity.funlistui.addline
-import com.suqi8.oshin.saveColorMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -132,7 +132,7 @@ fun about_setting(
                         )
                     LottieAnimation(
                         composition = compositionResult.value,
-                        progress = progress.value,
+                        progress = progress.progress,
                         modifier = Modifier
                     )
                 }
