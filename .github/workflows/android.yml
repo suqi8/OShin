@@ -10,15 +10,6 @@ on:
       - '.github/**'
       - '.idea/**'
       - '!.github/workflows/**'
-  pull_request:
-    branches: [ "master" ]
-    paths-ignore:
-      - '**.md'
-      - '**.txt'
-      - '.gitignore'
-      - '.github/**'
-      - '.idea/**'
-      - '!.github/workflows/**'
 
 jobs:
   build:

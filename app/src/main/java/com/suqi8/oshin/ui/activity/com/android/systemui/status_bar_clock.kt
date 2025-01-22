@@ -213,7 +213,7 @@ fun status_bar_clock(navController: NavController) {
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
             contentPadding = PaddingValues(top = padding.calculateTopPadding()),
-            enableOverScroll = true,
+            userScrollEnabled = true,
             topAppBarScrollBehavior = topappbarzt
         ) {
             item {

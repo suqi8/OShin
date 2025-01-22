@@ -16,6 +16,7 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -74,12 +75,13 @@ import com.suqi8.oshin.ui.activity.com.android.systemui.status_bar_clock
 import com.suqi8.oshin.ui.activity.com.android.systemui.statusbar_icon
 import com.suqi8.oshin.ui.activity.com.android.systemui.systemui
 import com.suqi8.oshin.ui.theme.AppTheme
+import dev.chrisbanes.haze.HazeEffectScope
 import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
@@ -89,7 +91,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import top.yukonga.miuix.kmp.basic.Box
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.HorizontalPager
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -639,9 +640,10 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
         NavigationBar(
             items = items,
             color = Color.Transparent,
-            modifier = Modifier.hazeChild(
+            modifier = Modifier.hazeEffect(
                 state = hazeState,
-                style = hazeStyle),
+                style = hazeStyle
+            ),
             selected = targetPage,
             onClick = { index ->
                 targetPage = index
@@ -655,17 +657,20 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
             0 -> stringResource(R.string.func)
             1 -> stringResource(R.string.home)
             else -> stringResource(R.string.about)
-        }, modifier = Modifier.hazeChild(
+        }, modifier = Modifier.hazeEffect(
             state = hazeState,
-            style = hazeStyle) {
-            progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
-        }, navigationIcon = {
+            style = hazeStyle, block = fun HazeEffectScope.() {
+                progressive =
+                    HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
+            }), navigationIcon = {
             Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null,
                 modifier = Modifier.size(50.dp))
         })
     }) { padding ->
-        Box(modifier = Modifier.haze(
-            state = hazeState)) {
+        Box(modifier = Modifier.hazeSource(
+            state = hazeState
+        )
+        ) {
             AppHorizontalPager(
                 modifier = Modifier.imePadding(),
                 pagerState = pagerState,
