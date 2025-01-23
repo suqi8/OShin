@@ -133,14 +133,14 @@ fun about_setting(
                     LottieAnimation(
                         composition = compositionResult.value,
                         progress = progress.progress,
-                        modifier = Modifier
+                        modifier = Modifier.padding(1.dp)
                     )
                 }
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp)
-                        .padding(bottom = 6.dp)
+                        .padding(bottom = 6.dp, top = 6.dp)
                 ) {
                     SuperDropdown(
                         title = stringResource(R.string.Color_Mode),
@@ -241,11 +241,7 @@ fun about_setting(
                             context.prefs("settings").edit { putBoolean("auto_color", it) }
                         })
                 }
-                Spacer(
-                    Modifier.height(
-                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-                    )
-                )
+                Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
             }
         }
     }
