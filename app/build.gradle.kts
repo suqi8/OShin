@@ -94,18 +94,23 @@ android {
     }
     val keystoreFile = System.getenv("KEYSTORE_PATH")
     signingConfigs {
-        create("release") {
-            if (keystoreFile != null) {
+        if (keystoreFile != null) {
+            create("ci") {
                 storeFile = file(keystoreFile)
                 storePassword = System.getenv("KEYSTORE_PASSWORD")
                 keyAlias = System.getenv("KEY_ALIAS")
                 keyPassword = System.getenv("KEY_PASSWORD")
+                enableV4Signing = true
             }
-            enableV4Signing = true
+        } else {
+            create("release") {
+                enableV4Signing = true
+            }
         }
     }
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName(if (keystoreFile != null) "ci" else "release")
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
