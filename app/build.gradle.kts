@@ -80,8 +80,7 @@ android {
                 output.outputFileName = outputFileName
             }
     }
-
-    val number = commitCount().toInt()//测试构建的时候请将双斜杠与这段话删除 + getAndIncrementBuildNumber()
+    val number = commitCount().toInt()// + getAndIncrementBuildNumber()
     defaultConfig {
         applicationId = property.project.app.packageName
         minSdk = property.project.android.minSdk
@@ -91,6 +90,18 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
+        }
+    }
+    val keystoreFile = System.getenv("KEYSTORE_PATH")
+    signingConfigs {
+        create("release") {
+            if (keystoreFile != null) {
+                storeFile = file(keystoreFile)
+                storePassword = System.getenv("KEYSTORE_PASSWORD")
+                keyAlias = System.getenv("KEY_ALIAS")
+                keyPassword = System.getenv("KEY_PASSWORD")
+            }
+            enableV4Signing = true
         }
     }
     buildTypes {
