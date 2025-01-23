@@ -44,13 +44,14 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunNoEnable
 import com.suqi8.oshin.ui.activity.funlistui.FunSlider
+import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.ui.tools.resetApp
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
+import dev.chrisbanes.haze.hazeEffect
+import dev.chrisbanes.haze.hazeSource
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
@@ -106,13 +107,6 @@ fun hardware_indicator(navController: NavController) {
         stringResource(R.string.status_bar_time_gravity_fill_horizontal),
         stringResource(R.string.status_bar_time_gravity_fill_vertical)
     )
-    // 使用 remember 来初始化并直接获取 SharedPreferences 配置
-    val power_consumption_indicator = remember {
-        mutableStateOf(
-            context.prefs("systemui\\hardware_indicator")
-                .getBoolean("power_consumption_indicator", false)
-        )
-    }
 
     val temperature_indicator = remember {
         mutableStateOf(
@@ -271,7 +265,7 @@ fun hardware_indicator(navController: NavController) {
             scrollBehavior = topappbarzt,
             title = stringResource(id = R.string.hardware_indicator),
             color = Color.Transparent,
-            modifier = Modifier.hazeChild(
+            modifier = Modifier.hazeEffect(
                 state = hazeState,
                 style = hazeStyle
             ),
@@ -309,7 +303,7 @@ fun hardware_indicator(navController: NavController) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .haze(state = hazeState)
+                .hazeSource(state = hazeState)
                 .background(MiuixTheme.colorScheme.background)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
@@ -318,20 +312,26 @@ fun hardware_indicator(navController: NavController) {
         ) {
             item {
                 Column {
+                    val power_consumption_indicator = remember {
+                        mutableStateOf(
+                            context.prefs("systemui\\hardware_indicator")
+                                .getBoolean("power_consumption_indicator", false)
+                        )
+                    }
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp)
                             .padding(bottom = 6.dp, top = 15.dp)
                     ) {
-                        SuperSwitch(
+                        FunSwich(
                             title = stringResource(R.string.power_consumption_indicator),
+                            category = "systemui\\hardware_indicator",
+                            key = "power_consumption_indicator",
+                            defValue = false,
                             onCheckedChange = {
                                 power_consumption_indicator.value = it
-                                context.prefs("systemui\\hardware_indicator")
-                                    .edit { putBoolean("power_consumption_indicator", it) }
-                            },
-                            checked = power_consumption_indicator.value
+                            }
                         )
                     }
                     AnimatedVisibility(
@@ -416,8 +416,7 @@ fun hardware_indicator(navController: NavController) {
                                     endtype = "ms",
                                     max = 2000f,
                                     min = 0f,
-                                    decimalPlaces = 0,
-                                    context = context
+                                    decimalPlaces = 0
                                 )
                                 addline()
                                 FunSlider(
@@ -428,8 +427,7 @@ fun hardware_indicator(navController: NavController) {
                                     endtype = "sp",
                                     max = 20f,
                                     min = 0f,
-                                    decimalPlaces = 1,
-                                    context = context
+                                    decimalPlaces = 1
                                 )
                             }
                             SmallTitle(text = stringResource(R.string.display_content))
@@ -582,8 +580,7 @@ fun hardware_indicator(navController: NavController) {
                                     defValue = 1,
                                     max = 100f,
                                     min = 0f,
-                                    decimalPlaces = 0,
-                                    context = context
+                                    decimalPlaces = 0
                                 )
                                 addline()
                                 SuperSwitch(
@@ -625,8 +622,7 @@ fun hardware_indicator(navController: NavController) {
                                     endtype = "ms",
                                     max = 2000f,
                                     min = 0f,
-                                    decimalPlaces = 0,
-                                    context = context
+                                    decimalPlaces = 0
                                 )
                                 addline()
                                 FunSlider(
@@ -637,8 +633,7 @@ fun hardware_indicator(navController: NavController) {
                                     endtype = "sp",
                                     max = 20f,
                                     min = 0f,
-                                    decimalPlaces = 1,
-                                    context = context
+                                    decimalPlaces = 1
                                 )
                             }
                             SmallTitle(text = stringResource(R.string.display_content))

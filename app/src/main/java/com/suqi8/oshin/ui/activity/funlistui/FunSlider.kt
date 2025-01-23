@@ -1,6 +1,5 @@
 package com.suqi8.oshin.ui.activity.funlistui
 
-import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +12,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -28,7 +28,8 @@ import top.yukonga.miuix.kmp.extra.SuperDialogDefaults
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 
 @Composable
-fun FunSlider(title: String, summary: String? = null, category: String, key: String, defValue: Any = 0, endtype: String? = "", max: Float = 1f, min: Float = 0f,decimalPlaces: Int = 2, titlecolor: Color = SuperDialogDefaults.titleColor(), context: Context) {
+fun FunSlider(title: String, summary: String? = null, category: String, key: String, defValue: Any = 0, endtype: String? = "", max: Float = 1f, min: Float = 0f,decimalPlaces: Int = 2, titlecolor: Color = SuperDialogDefaults.titleColor()) {
+    val context = LocalContext.current
     val type = when (defValue) {
         is Int -> Int::class
         is Float -> Float::class

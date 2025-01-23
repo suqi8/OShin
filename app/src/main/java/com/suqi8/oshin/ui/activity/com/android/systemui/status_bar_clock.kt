@@ -236,8 +236,7 @@ fun status_bar_clock(navController: NavController) {
                                     endtype = "dp",
                                     max = 30f,
                                     min = 0f,
-                                    decimalPlaces = 1,
-                                    context = context
+                                    decimalPlaces = 1
                                 )
                                 addline()
                                 FunSlider(
@@ -249,8 +248,7 @@ fun status_bar_clock(navController: NavController) {
                                     endtype = "ms",
                                     max = 2000f,
                                     min = 0f,
-                                    decimalPlaces = 0,
-                                    context = context
+                                    decimalPlaces = 0
                                 )
                             }
                             SmallTitle("dp To px")
@@ -283,8 +281,7 @@ fun status_bar_clock(navController: NavController) {
                                     endtype = "px",
                                     max = 300f,
                                     min = 0f,
-                                    decimalPlaces = 0,
-                                    context = context
+                                    decimalPlaces = 0
                                 )
                                 addline()
                                 FunSlider(
@@ -295,8 +292,7 @@ fun status_bar_clock(navController: NavController) {
                                     endtype = "px",
                                     max = 300f,
                                     min = 0f,
-                                    decimalPlaces = 0,
-                                    context = context
+                                    decimalPlaces = 0
                                 )
                                 addline()
                                 FunSlider(
@@ -307,8 +303,7 @@ fun status_bar_clock(navController: NavController) {
                                     endtype = "px",
                                     max = 300f,
                                     min = 0f,
-                                    decimalPlaces = 0,
-                                    context = context
+                                    decimalPlaces = 0
                                 )
                                 addline()
                                 FunSlider(
@@ -319,8 +314,7 @@ fun status_bar_clock(navController: NavController) {
                                     endtype = "px",
                                     max = 300f,
                                     min = 0f,
-                                    decimalPlaces = 0,
-                                    context = context
+                                    decimalPlaces = 0
                                 )
                             }
                         }

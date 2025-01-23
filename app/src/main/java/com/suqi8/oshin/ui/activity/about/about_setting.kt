@@ -46,6 +46,7 @@ import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDropdown
 import top.yukonga.miuix.kmp.extra.SuperSwitch
@@ -67,7 +68,7 @@ fun about_setting(
     val showNoiseDialog = remember { mutableStateOf(false) }
 
     val context = LocalContext.current
-    val one = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
+    val one = MiuixScrollBehavior(rememberTopAppBarState())
     val containerColor: Color = MiuixTheme.colorScheme.background
     val hazeState = remember { HazeState() }
     val hazeStyle = remember(containerColor, alpha.value, blur.value, noise.value) {

@@ -121,8 +121,7 @@ fun Fun_com_android_launcher(navController: NavController) {
                         endtype = "x",
                         max = 2f,
                         min = 0f,
-                        decimalPlaces = 1,
-                        context = context
+                        decimalPlaces = 1
                     )
                 }
             }
