@@ -8,10 +8,10 @@ import com.highcapable.yukihookapi.hook.factory.method
 
 class StatusBarIcon: YukiBaseHooker() {
     override fun onHook() {
-        if (prefs("settings").getBoolean("com_android_systemui_statusbar_icon", false)) {
+        if (prefs("systemui\\statusbar_icon").getBoolean("statusbar_icon", false)) {
             loadApp(name = "com.android.systemui") {
                 "com.android.systemui.statusbar.StatusBarWifiView".toClass().apply {
-                    if (prefs("settings").getInt("com_android_systemui_statusbar_icon_show_Wifi_icon",0) == 1) {
+                    if (prefs("systemui\\statusbar_icon").getInt("show_Wifi_icon",0) == 1) {
                         method {
                             name = "initViewState"
                         }.hook {
@@ -24,7 +24,7 @@ class StatusBarIcon: YukiBaseHooker() {
                             }
                         }
                     }
-                    if (prefs("settings").getInt("com_android_systemui_statusbar_icon_show_Wifi_arrow",0) == 1) {
+                    if (prefs("systemui\\statusbar_icon").getInt("icon_show_Wifi_arrow",0) == 1) {
                         method{
                             name = "updateState"
                         }.hook{
@@ -39,7 +39,7 @@ class StatusBarIcon: YukiBaseHooker() {
                         }
                     }
                 }
-                if (prefs("settings").getInt("com_android_systemui_statusbar_icon_show_Wifi_arrow",0) == 1) {
+                if (prefs("systemui\\statusbar_icon").getInt("show_Wifi_arrow",0) == 1) {
                     "com.oplus.systemui.statusbar.phone.signal.OplusStatusBarWifiViewExImpl".toClass().apply {
                         method {
                             name = "updateState"
