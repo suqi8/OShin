@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.ui.tools.resetApp
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
@@ -104,6 +105,7 @@ fun Fun_android(navController: NavController) {
                         onClick = {
                             navController.navigate("Fun_android_package_manager_services")
                         })
+                    addline()
                     SuperArrow(title = stringResource(id = R.string.oplus_system_services),
                         onClick = {
                             navController.navigate("Fun_android_oplus_services")

@@ -7,7 +7,7 @@ import com.highcapable.yukihookapi.hook.factory.method
 
 class allday_screenoff: YukiBaseHooker() {
     override fun onHook() {
-        if (prefs("settings").getBoolean("enable_all_day_screen_off", false)) {
+        if (prefs("systemui").getBoolean("enable_all_day_screen_off", false)) {
             "com.oplus.systemui.aod.display.SmoothTransitionController".toClass().apply {
                 method {
                     name = "shouldWindowBeTransparent"
@@ -18,7 +18,7 @@ class allday_screenoff: YukiBaseHooker() {
                 }
             }
         }
-        if (prefs("settings").getBoolean("force_trigger_ltpo", false)) {
+        if (prefs("systemui").getBoolean("force_trigger_ltpo", false)) {
             "com.oplus.systemui.aod.display.BaseDisplayUtil".toClass().apply {
                 constructor().hook {
                     before {

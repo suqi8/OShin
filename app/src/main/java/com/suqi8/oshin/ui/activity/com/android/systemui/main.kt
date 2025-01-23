@@ -11,7 +11,6 @@ import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -24,6 +23,7 @@ import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.GetAppIconAndName
 import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.ui.tools.resetApp
 import dev.chrisbanes.haze.HazeState
@@ -37,7 +37,6 @@ import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.extra.SuperArrow
-import top.yukonga.miuix.kmp.extra.SuperSwitch
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -51,14 +50,6 @@ fun systemui(navController: NavController) {
     val restartAPP = remember { mutableStateOf(false) }
     val resetApp = resetApp()
     val isDebug = context.prefs("settings").getBoolean("Debug", false)
-    val hide_status_bar = remember { mutableStateOf(false) }
-    val enable_all_day_screen_off = remember { mutableStateOf(false) }
-    val force_trigger_ltpo = remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        hide_status_bar.value = context.prefs("settings").getBoolean("hide_status_bar", false)
-        enable_all_day_screen_off.value = context.prefs("settings").getBoolean("enable_all_day_screen_off", false)
-        force_trigger_ltpo.value = context.prefs("settings").getBoolean("force_trigger_ltpo", false)
-    }
 
     val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
     val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
@@ -139,12 +130,12 @@ fun systemui(navController: NavController) {
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp, top = 15.dp)
                 ) {
-                    SuperSwitch(title = stringResource(id = R.string.hide_status_bar),
-                        checked = hide_status_bar.value,
-                        onCheckedChange = {
-                            hide_status_bar.value = it
-                            context.prefs("settings").edit().putBoolean("hide_status_bar", it)
-                        })
+                    FunSwich(
+                        title = stringResource(R.string.hide_status_bar),
+                        category = "systemui",
+                        key = "hide_status_bar",
+                        defValue = false
+                    )
                 }
                 Card(
                     modifier = Modifier
@@ -152,22 +143,24 @@ fun systemui(navController: NavController) {
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp, top = 15.dp)
                 ) {
-                    SuperSwitch(
+                    val enable_all_day_screen_off = remember { mutableStateOf(context.prefs("systemui").getBoolean("enable_all_day_screen_off", false)) }
+                    FunSwich(
                         title = stringResource(R.string.enable_all_day_screen_off),
+                        category = "systemui",
+                        key = "enable_all_day_screen_off",
+                        defValue = false,
                         onCheckedChange = {
                             enable_all_day_screen_off.value = it
-                            context.prefs("settings").edit { putBoolean("enable_all_day_screen_off", it) }
-                        },
-                        checked = enable_all_day_screen_off.value
+                        }
                     )
                     AnimatedVisibility(enable_all_day_screen_off.value) {
                         addline()
-                        SuperSwitch(title = stringResource(id = R.string.force_trigger_ltpo),
-                            checked = force_trigger_ltpo.value,
-                            onCheckedChange = {
-                                force_trigger_ltpo.value = it
-                                context.prefs("settings").edit { putBoolean("force_trigger_ltpo", it) }
-                            })
+                        FunSwich(
+                            title = stringResource(R.string.force_trigger_ltpo),
+                            category = "systemui",
+                            key = "force_trigger_ltpo",
+                            defValue = true
+                        )
                     }
                 }
             }
