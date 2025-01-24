@@ -51,7 +51,7 @@ fun android(navController: NavController) {
     }
     FunPage(
         title = GetAppName(packageName = "android"),
-        appList = listOf("android","com.netease.party","com.tencent.mm","com.tencent.mobileqq"),
+        appList = listOf("android"),
         navController = navController
     ) {
         Card(
