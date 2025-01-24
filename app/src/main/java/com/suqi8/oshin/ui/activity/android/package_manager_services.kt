@@ -1,4 +1,4 @@
-package com.suqi8.oshin
+package com.suqi8.oshin.ui.activity.android
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.ui.tools.resetApp
 import dev.chrisbanes.haze.HazeState
@@ -56,7 +57,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 
 @Composable
-fun Fun_android_package_manager_services(navController: NavController) {
+fun package_manager_services(navController: NavController) {
     val downgr = remember { mutableStateOf(false) }
     val authcreak = remember { mutableStateOf(false) }
     val digestCreak = remember { mutableStateOf(false) }
