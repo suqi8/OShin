@@ -259,13 +259,13 @@ fun Main_Function(
                             .padding(bottom = 6.dp)
                     ) {
                         Column {
-                            FunctionApp("android", "Fun_android", navController)
+                            FunctionApp("android", "android", navController)
                             addline()
                             FunctionApp("com.android.systemui", "systemui", navController)
                             addline()
-                            FunctionApp("com.android.settings", "Fun_com_android_settings", navController)
+                            FunctionApp("com.android.settings", "settings", navController)
                             addline()
-                            FunctionApp("com.android.launcher", "Fun_com_android_launcher", navController)
+                            FunctionApp("com.android.launcher", "launcher", navController)
                         }
                     }
                     Spacer(Modifier.size(65.dp))

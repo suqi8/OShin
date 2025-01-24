@@ -73,6 +73,7 @@ import com.suqi8.oshin.ui.activity.about.about_setting
 import com.suqi8.oshin.ui.activity.android.android
 import com.suqi8.oshin.ui.activity.android.oplus_services
 import com.suqi8.oshin.ui.activity.android.package_manager_services
+import com.suqi8.oshin.ui.activity.com.android.launcher.launcher
 import com.suqi8.oshin.ui.activity.com.android.systemui.hardware_indicator
 import com.suqi8.oshin.ui.activity.com.android.systemui.status_bar_clock
 import com.suqi8.oshin.ui.activity.com.android.systemui.statusbar_icon
@@ -585,13 +586,13 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
                 }
         ) {
             composable("Main") { Main1(modifier = modifier, context = context,navController,colorMode,alpha, blurRadius, noiseFactor, hazeState, hazeStyle) }
-            composable("Fun_android") { android(navController) }
-            composable("Fun_android_package_manager_services") { package_manager_services(navController = navController) }
-            composable("Fun_android_oplus_services") { oplus_services(navController = navController) }
+            composable("android") { android(navController) }
+            composable("android\\package_manager_services") { package_manager_services(navController = navController) }
+            composable("android\\oplus_services") { oplus_services(navController = navController) }
             composable("systemui") { systemui(navController = navController)}
             composable("systemui\\status_bar_clock") { status_bar_clock(navController = navController) }
             composable("systemui\\hardware_indicator") { hardware_indicator(navController = navController) }
-            composable("Fun_com_android_launcher") { Fun_com_android_launcher(navController = navController) }
+            composable("launcher") { launcher(navController = navController) }
             composable("systemui\\statusbar_icon") { statusbar_icon(navController = navController) }
             composable("about_setting") { about_setting(navController,alpha,blurRadius,noiseFactor,colorMode) }
             composable("about_group") { about_group(navController) }

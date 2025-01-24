@@ -28,12 +28,12 @@ fun android(navController: NavController) {
         ) {
             SuperArrow(title = stringResource(id = R.string.package_manager_services),
                 onClick = {
-                    navController.navigate("Fun_android_package_manager_services")
+                    navController.navigate("android\\package_manager_services")
                 })
             addline()
             SuperArrow(title = stringResource(id = R.string.oplus_system_services),
                 onClick = {
-                    navController.navigate("Fun_android_oplus_services")
+                    navController.navigate("android\\oplus_services")
                 })
         }
     }
