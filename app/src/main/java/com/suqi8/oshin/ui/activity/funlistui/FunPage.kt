@@ -43,7 +43,7 @@ import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
-fun FunPage(title: String, appList: List<String>, navController: NavController, content: @Composable () -> Unit) {
+fun FunPage(title: String, appList: List<String>?, navController: NavController, content: @Composable () -> Unit) {
     val context = LocalContext.current
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
     val restartAPP = remember { mutableStateOf(false) }
@@ -85,17 +85,19 @@ fun FunPage(title: String, appList: List<String>, navController: NavController, 
                 }
             },
             actions = {
-                IconButton(
-                    onClick = {
-                        restartAPP.value = true
-                    },
-                    modifier = Modifier.padding(end = 18.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Refresh,
-                        contentDescription = null,
-                        tint = MiuixTheme.colorScheme.onBackground
-                    )
+                if (!appList.isNullOrEmpty()) {
+                    IconButton(
+                        onClick = {
+                            restartAPP.value = true
+                        },
+                        modifier = Modifier.padding(end = 18.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Refresh,
+                            contentDescription = null,
+                            tint = MiuixTheme.colorScheme.onBackground
+                        )
+                    }
                 }
             }
         )
@@ -116,5 +118,5 @@ fun FunPage(title: String, appList: List<String>, navController: NavController, 
             }
         }
     }
-    resetApp.AppRestartScreen(appList, restartAPP)
+    appList?.let { resetApp.AppRestartScreen(it, restartAPP) }
 }
