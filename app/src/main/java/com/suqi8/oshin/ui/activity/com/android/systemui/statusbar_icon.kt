@@ -167,9 +167,9 @@ fun statusbar_icon(navController: NavController) {
                                         selectedIndex = show_Wifi_icon.intValue,
                                         onSelectedIndexChange = {
                                             show_Wifi_icon.intValue = it
-                                            context.prefs("settings").edit {
+                                            context.prefs("systemui\\statusbar_icon").edit {
                                                 putInt(
-                                                    "com_android_systemui_statusbar_icon_show_Wifi_icon",
+                                                    "icon_show_Wifi_icon",
                                                     it
                                                 )
                                             }
@@ -180,9 +180,9 @@ fun statusbar_icon(navController: NavController) {
                                     selectedIndex = show_Wifi_arrow.intValue,
                                     onSelectedIndexChange = {
                                         show_Wifi_arrow.intValue = it
-                                        context.prefs("settings").edit {
+                                        context.prefs("systemui\\statusbar_icon").edit {
                                             putInt(
-                                                "com_android_systemui_statusbar_icon_show_Wifi_arrow",
+                                                "show_Wifi_arrow",
                                                 it
                                             )
                                         }
