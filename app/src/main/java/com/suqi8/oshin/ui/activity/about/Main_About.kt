@@ -196,6 +196,7 @@ fun Main_About(
                     SuperArrow(title = stringResource(R.string.Device_Name), onClick = {
                         showDeviceNameDialog.value = true
                     }, rightText = deviceName.value + "")
+                    DeviceNameDialog(showDeviceNameDialog, deviceNameCache, deviceName, focusManager)
                     addline()
                     //设备内存容量
                     SuperArrow(title = stringResource(R.string.Device_Memory),
@@ -423,7 +424,6 @@ fun Main_About(
             }
         }
     }
-    DeviceNameDialog(showDeviceNameDialog, deviceNameCache, deviceName, focusManager)
 }
 
 fun timestampToDateTime(timestamp: Long): String {

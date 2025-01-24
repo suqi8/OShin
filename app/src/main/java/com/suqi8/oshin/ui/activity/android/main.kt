@@ -1,13 +1,7 @@
 package com.suqi8.oshin.ui.activity.android
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Refresh
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -19,24 +13,18 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.GetAppIconAndName
+import com.suqi8.oshin.GetAppName
 import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.ui.tools.resetApp
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.haze
-import dev.chrisbanes.haze.hazeChild
 import top.yukonga.miuix.kmp.basic.Card
-import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.basic.Scaffold
-import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperArrow
-import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
@@ -61,8 +49,29 @@ fun android(navController: NavController) {
             noiseFactor = noiseFactor
         )
     }
+    FunPage(
+        title = GetAppName(packageName = "android"),
+        appList = listOf("android","com.netease.party","com.tencent.mm","com.tencent.mobileqq"),
+        navController = navController
+    ) {
+        Card(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 6.dp,top = 15.dp)
+        ) {
+            SuperArrow(title = stringResource(id = R.string.package_manager_services),
+                onClick = {
+                    navController.navigate("Fun_android_package_manager_services")
+                })
+            addline()
+            SuperArrow(title = stringResource(id = R.string.oplus_system_services),
+                onClick = {
+                    navController.navigate("Fun_android_oplus_services")
+                })
+        }
+    }
 
-    Scaffold(topBar = { GetAppIconAndName(packageName = "android") { appName, icon ->
+    /*Scaffold(topBar = { GetAppIconAndName(packageName = "android") { appName, _ ->
         TopAppBar(
             title = appName,
             color = Color.Transparent,
@@ -115,5 +124,5 @@ fun android(navController: NavController) {
                 }
             }
         }
-    }
+    }*/
 }

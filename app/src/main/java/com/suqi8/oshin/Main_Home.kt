@@ -635,3 +635,28 @@ fun GetAppIconAndName(
         onAppInfoLoaded("noapp", ImageBitmap(1, 1))
     }
 }
+
+@Composable
+fun GetAppName(
+    packageName: String
+): String {
+    val context = LocalContext.current
+    val packageManager = context.packageManager
+    val applicationInfo = remember { mutableStateOf<android.content.pm.ApplicationInfo?>(null) }
+
+    LaunchedEffect(packageName) {
+        try {
+            applicationInfo.value = packageManager.getApplicationInfo(packageName, 0)
+        } catch (_: PackageManager.NameNotFoundException) {
+        }
+    }
+
+    if (applicationInfo.value != null) {
+        val info = applicationInfo.value!!
+        val appName = packageManager.getApplicationLabel(info).toString()
+
+        return appName
+    } else {
+        return "noapp"
+    }
+}
