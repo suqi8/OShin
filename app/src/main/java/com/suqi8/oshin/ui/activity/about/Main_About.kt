@@ -381,7 +381,7 @@ fun Main_About(
                         }, onClick = {
                             val intent = Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://github.com/suqi8/OPatch")
+                                Uri.parse("https://github.com/suqi8/OShin")
                             )
                             context.startActivity(intent)
                         })
