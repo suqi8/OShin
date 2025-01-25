@@ -33,7 +33,7 @@ fun android(navController: NavController) {
             addline()
             SuperArrow(title = stringResource(id = R.string.oplus_system_services),
                 onClick = {
-                    navController.navigate("android\\oplus_services")
+                    navController.navigate("android\\oplus_system_services")
                 })
         }
     }

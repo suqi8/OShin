@@ -3,22 +3,18 @@ package com.suqi8.oshin
 import android.annotation.SuppressLint
 import android.view.ViewTreeObserver
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -40,20 +36,17 @@ import androidx.compose.ui.graphics.BlendModeColorFilter
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
+import com.suqi8.oshin.ui.activity.funlistui.SearchList
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -67,6 +60,8 @@ import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.Search
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import java.text.Collator
+import java.util.Locale
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
@@ -78,66 +73,166 @@ fun Main_Function(
 ) {
     val context = LocalContext.current
     val features = listOf(
-        Feature(stringResource(R.string.package_manager_services), null, "Fun_android_package_manager_services"),
-        Feature(stringResource(R.string.downgr), stringResource(R.string.downgr_summary), "Fun_android_package_manager_services"),
-        Feature(stringResource(R.string.authcreak), stringResource(R.string.authcreak_summary), "Fun_android_package_manager_services"),
-        Feature(stringResource(R.string.digestCreak), stringResource(R.string.digestCreak_summary), "Fun_android_package_manager_services"),
-        Feature(stringResource(R.string.UsePreSig), stringResource(R.string.UsePreSig_summary), "Fun_android_package_manager_services"),
-        Feature(stringResource(R.string.enhancedMode), stringResource(R.string.enhancedMode_summary), "Fun_android_package_manager_services"),
-        Feature(stringResource(R.string.bypassBlock), stringResource(R.string.bypassBlock_summary), "Fun_android_package_manager_services"),
-        Feature(stringResource(R.string.shared_user_title), stringResource(R.string.shared_user_summary), "Fun_android_package_manager_services"),
-        Feature(stringResource(R.string.disable_verification_agent_title), stringResource(R.string.disable_verification_agent_summary), "Fun_android_package_manager_services"),
-        Feature(stringResource(R.string.status_bar_clock), null, "Fun_com_android_systemui_status_bar_clock"),
-        Feature(
-            stringResource(R.string.clock_style_title),
-            stringResource(R.string.clock_style_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.clock_size),
-            stringResource(R.string.clock_size_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.clock_update_time_title),
-            stringResource(R.string.clock_update_time_summary),
-            "Fun_com_android_systemui_status_bar_clock"
-        ),
-        Feature(
-            stringResource(R.string.power_consumption_indicator),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.temperature_indicator),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.show_cpu_temp_data),
-            null,
-            "Fun_com_android_systemui_hardware_indicator"
-        ),
-        Feature(
-            stringResource(R.string.hide_status_bar),
-            null,
-            "Fun_com_android_systemui"
-        ),
-        Feature(
-            stringResource(R.string.enable_all_day_screen_off),
-            null,
-            "Fun_com_android_systemui"
-        ),
-        Feature(
-            stringResource(R.string.force_trigger_ltpo),
-            null,
-            "Fun_com_android_systemui"
-        ),
-        Feature(
-            stringResource(R.string.desktop_icon_and_text_size_multiplier),
-            stringResource(R.string.icon_size_limit_note),
-            "Fun_com_android_launcher"
-        ),
+        item(title = stringResource(R.string.downgr),
+            summary = stringResource(R.string.downgr_summary),
+            category = "android\\package_manager_services"),
+        item(title = stringResource(R.string.authcreak),
+        summary = stringResource(R.string.authcreak_summary),
+        category = "android\\package_manager_services"),
+        item(
+        title = stringResource(R.string.digestCreak),
+        summary = stringResource(R.string.digestCreak_summary),
+        category = "android\\package_manager_services"),
+        item(title = stringResource(R.string.UsePreSig),
+        summary = stringResource(R.string.UsePreSig_summary),
+        category = "android\\package_manager_services"),
+        item(title = stringResource(R.string.enhancedMode),
+        summary = stringResource(R.string.enhancedMode_summary),
+        category = "android\\package_manager_services"),
+        item(title = stringResource(R.string.bypassBlock),
+            summary = stringResource(R.string.bypassBlock_summary),
+            category = "android\\package_manager_services"),
+        item(title = stringResource(R.string.shared_user_title),
+        summary = stringResource(R.string.shared_user_summary),
+        category = "android\\package_manager_services"),
+        item(title = stringResource(R.string.disable_verification_agent_title),
+        summary = stringResource(R.string.disable_verification_agent_summary),
+        category = "android\\package_manager_services"),
+        item(title = stringResource(id = R.string.package_manager_services),
+            category = "android\\package_manager_services"),
+        item(title = stringResource(id = R.string.oplus_system_services),
+            category = "android\\oplus_system_services"),
+        item(title = stringResource(R.string.oplus_root_check),
+            summary = stringResource(R.string.oplus_root_check_summary),
+            category = "android\\oplus_system_services"),
+        item(title = stringResource(R.string.desktop_icon_and_text_size_multiplier),
+            summary = stringResource(R.string.icon_size_limit_note),
+            category = "launcher"),
+        item(title = stringResource(R.string.power_consumption_indicator),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.dual_cell),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.absolute_value),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.bold_text),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.alignment),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.update_time),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.font_size),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.dual_row_title),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.first_line_content),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.second_line_content),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.power),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.current),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.voltage),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.temperature_indicator),
+        category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.show_cpu_temp_data),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.change_cpu_temp_source),
+            summary = stringResource(R.string.enter_thermal_zone_number),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.bold_text),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.alignment),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.update_time),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.font_size),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.dual_row_title),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.first_line_content),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.second_line_content),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.battery_temperature),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(R.string.cpu_temperature),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(id = R.string.status_bar_clock),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(id = R.string.hardware_indicator),
+            category = "systemui\\hardware_indicator"),
+        item(title = stringResource(id = R.string.status_bar_icon),
+            category = "systemui\\statusbar_icon"),
+        item(title = stringResource(R.string.hide_status_bar),
+        category = "systemui"),
+        item(title = stringResource(R.string.enable_all_day_screen_off),
+        category = "systemui"),
+        item(title = stringResource(R.string.force_trigger_ltpo),
+            category = "systemui"),
+        item(title = stringResource(R.string.status_bar_clock),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.clock_style),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.clock_size),
+            summary = stringResource(R.string.clock_size_summary),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.clock_update_time_title),
+            summary = stringResource(R.string.clock_update_time_summary),
+            category = "systemui\\status_bar_clock"),
+        item(title = "dp To px",
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.clock_top_margin),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.clock_bottom_margin),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.clock_left_margin),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.clock_right_margin),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.show_years_title),
+            summary = stringResource(R.string.show_years_summary),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.show_month_title),
+            summary = stringResource(R.string.show_month_summary),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.show_day_title),
+            summary = stringResource(R.string.show_day_summary),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.show_week_title),
+            summary = stringResource(R.string.show_week_summary),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.show_cn_hour_title),
+            summary = stringResource(R.string.show_cn_hour_summary),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.showtime_period_title),
+            summary = stringResource(R.string.showtime_period_summary),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.show_seconds_title),
+            summary = stringResource(R.string.show_seconds_summary),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.show_millisecond_title),
+            summary = stringResource(R.string.show_millisecond_summary),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.hide_space_title),
+            summary = stringResource(R.string.hide_space_summary),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.dual_row_title),
+            summary = stringResource(R.string.dual_row_summary),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.alignment),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.clock_format),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.clock_format_example),
+            category = "systemui\\status_bar_clock"),
+        item(title = stringResource(R.string.status_bar_icon),
+            category = "systemui\\statusbar_icon"),
+        item(title = stringResource(R.string.wifi_icon),
+            category = "systemui\\statusbar_icon"),
+        item(title = stringResource(R.string.wifi_arrow),
+            category = "systemui\\statusbar_icon"),
     )
     var miuixSearchValue by remember { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -157,9 +252,12 @@ fun Main_Function(
     }
 
     // 过滤符合搜索条件的功能
+    val collator = Collator.getInstance(Locale.CHINA)
     val filteredFeatures = features.filter {
-        it.nickname.contains(miuixSearchValue, ignoreCase = true) ||
-                it.description?.contains(miuixSearchValue, ignoreCase = true) ?: false
+        it.title.contains(miuixSearchValue, ignoreCase = true) ||
+                it.summary?.contains(miuixSearchValue, ignoreCase = true) ?: false
+    }.sortedWith { a, b ->
+        collator.compare(a.title, b.title)
     }
 
     Column(
@@ -226,14 +324,14 @@ fun Main_Function(
 
                     filteredFeatures.forEachIndexed { index, feature ->
                         item {
-                            BasicComponentre(
-                                title = highlightMatches(feature.nickname, miuixSearchValue),
-                                summary = feature.description?.let { highlightMatches(it, miuixSearchValue) },
+                            SearchList(
+                                title = highlightMatches(feature.title, miuixSearchValue),
+                                summary = feature.summary?.let { highlightMatches(it, miuixSearchValue) },
                                 modifier = Modifier.fillMaxWidth(),
                                 onClick = {
-                                    miuixSearchValue = feature.nickname
+                                    //miuixSearchValue = feature.title
                                     expanded = false
-                                    navController.navigate(feature.page)
+                                    navController.navigate(feature.category)
                                 }
                             )
                             if (index < filteredFeatures.size - 1) {
@@ -295,92 +393,6 @@ fun highlightMatches(text: String, query: String): AnnotatedString {
     annotatedStringBuilder.append(text.substring(lastIndex))
 
     return annotatedStringBuilder.toAnnotatedString()
-}
-
-@Composable
-fun BasicComponentre(
-    modifier: Modifier = Modifier,
-    insideMargin: DpSize? = null,
-    title: AnnotatedString? = null,
-    titleColor: Color = MiuixTheme.colorScheme.onSurface,
-    summary: AnnotatedString? = null,
-    summaryColor: Color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
-    leftAction: @Composable (() -> Unit?)? = null,
-    rightActions: @Composable RowScope.() -> Unit = {},
-    onClick: (() -> Unit)? = null,
-    enabled: Boolean = true,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }
-) {
-    var pointerPressed by remember { mutableStateOf(false) }
-    val insideMargin = remember { insideMargin } ?: remember { DpSize(16.dp, 16.dp) }
-    val paddingModifier = remember(insideMargin) {
-        Modifier.padding(horizontal = insideMargin.width, vertical = insideMargin.height)
-    }
-    val titleColor = if (enabled) titleColor else MiuixTheme.colorScheme.disabledOnSecondaryVariant
-    val summaryColor =
-        if (enabled) summaryColor else MiuixTheme.colorScheme.disabledOnSecondaryVariant
-    Row(
-        modifier = if (onClick != null && enabled) {
-            modifier
-                .clickable(
-                    indication = LocalIndication.current,
-                    interactionSource = interactionSource
-                ) {
-                    onClick.invoke()
-                }
-        } else {
-            modifier
-        }
-            .pointerInput(Unit) {
-                awaitPointerEventScope {
-                    while (enabled) {
-                        val event = awaitPointerEvent()
-                        pointerPressed = event.type == PointerEventType.Press
-                    }
-                }
-            }
-            .heightIn(min = 56.dp)
-            .fillMaxWidth()
-            .then(paddingModifier),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        leftAction?.let {
-            Box(
-                modifier = Modifier.padding(end = 16.dp)
-            ) {
-                it()
-            }
-        }
-        Column(
-            modifier = Modifier.weight(1f)
-        ) {
-            title?.let {
-                Text(
-                    text = it,
-                    fontSize = MiuixTheme.textStyles.headline1.fontSize,
-                    fontWeight = FontWeight.Medium,
-                    color = titleColor
-                )
-            }
-            summary?.let {
-                Text(
-                    text = it,
-                    fontSize = MiuixTheme.textStyles.body2.fontSize,
-                    color = summaryColor
-                )
-            }
-        }
-        Box(
-            modifier = Modifier.padding(start = 16.dp)
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-                content = rightActions
-            )
-        }
-    }
 }
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -484,8 +496,8 @@ suspend fun getautocolor(icon: ImageBitmap): Color {
     }
 }
 
-data class Feature(
-    val nickname: String,
-    val description: String?,
-    val page: String
+private data class item(
+    val title: String,
+    val summary: String? = null,
+    val category: String
 )

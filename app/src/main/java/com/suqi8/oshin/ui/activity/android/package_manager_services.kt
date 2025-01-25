@@ -47,28 +47,28 @@ fun package_manager_services(navController: NavController) {
                 FunSwich(
                     title = stringResource(R.string.downgr),
                     summary = stringResource(R.string.downgr_summary),
-                    category = "android\\corepatch",
+                    category = "android\\package_manager_services",
                     key = "downgrade"
                 )
                 addline()
                 FunSwich(
                     title = stringResource(R.string.authcreak),
                     summary = stringResource(R.string.authcreak_summary),
-                    category = "android\\corepatch",
+                    category = "android\\package_manager_services",
                     key = "authcreak"
                 )
                 addline()
                 FunSwich(
                     title = stringResource(R.string.digestCreak),
                     summary = stringResource(R.string.digestCreak_summary),
-                    category = "android\\corepatch",
+                    category = "android\\package_manager_services",
                     key = "digestCreak"
                 )
                 addline()
                 FunSwich(
                     title = stringResource(R.string.UsePreSig),
                     summary = stringResource(R.string.UsePreSig_summary),
-                    category = "android\\UsePreSig",
+                    category = "android\\package_manager_services",
                     key = "UsePreSig",
                     onCheckedChange = {
                         showUsePreSigDialog.value = it
@@ -78,7 +78,7 @@ fun package_manager_services(navController: NavController) {
                 FunSwich(
                     title = stringResource(R.string.enhancedMode),
                     summary = stringResource(R.string.enhancedMode_summary),
-                    category = "android\\corepatch",
+                    category = "android\\package_manager_services",
                     key = "enhancedMode"
                 )
             }
@@ -94,21 +94,21 @@ fun package_manager_services(navController: NavController) {
                 FunSwich(
                     title = stringResource(R.string.bypassBlock),
                     summary = stringResource(R.string.bypassBlock_summary),
-                    category = "android\\corepatch",
+                    category = "android\\package_manager_services",
                     key = "bypassBlock"
                 )
                 addline()
                 FunSwich(
                     title = stringResource(R.string.shared_user_title),
                     summary = stringResource(R.string.shared_user_summary),
-                    category = "android\\corepatch",
+                    category = "android\\package_manager_services",
                     key = "sharedUser"
                 )
                 addline()
                 FunSwich(
                     title = stringResource(R.string.disable_verification_agent_title),
                     summary = stringResource(R.string.disable_verification_agent_summary),
-                    category = "android\\corepatch",
+                    category = "android\\package_manager_services",
                     key = "disableVerificationAgent"
                 )
             }

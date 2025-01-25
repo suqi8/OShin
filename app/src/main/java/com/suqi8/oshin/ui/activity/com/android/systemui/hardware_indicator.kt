@@ -7,12 +7,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
@@ -417,11 +414,6 @@ fun hardware_indicator(navController: NavController) {
                     }
                 }
             }
-            Spacer(
-                Modifier.height(
-                    WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-                )
-            )
         }
     }
     cpu_temp_data(show_cpu_temp_data)
