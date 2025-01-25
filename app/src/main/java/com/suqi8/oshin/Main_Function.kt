@@ -54,7 +54,6 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
-import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -389,8 +388,8 @@ fun BasicComponentre(
 fun FunctionApp(packageName: String, activityName: String, navController: NavController) {
     GetAppIconAndName(packageName = packageName) { appName, icon ->
         if (appName != "noapp") {
-            val context = LocalContext.current
-            val auto_color = context.prefs("settings").getBoolean("auto_color", true)
+            //val context = LocalContext.current
+            //val auto_color = context.prefs("settings").getBoolean("auto_color", true)
             val defaultColor = MiuixTheme.colorScheme.primary
             val dominantColor: MutableState<Color> = remember { mutableStateOf(defaultColor) }
             val isLoading = remember { mutableStateOf(true) }
@@ -398,7 +397,8 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
             LaunchedEffect(icon) {
 
                 withContext(Dispatchers.IO) {
-                    if (auto_color) dominantColor.value = getautocolor(icon)
+                    //if (auto_color)
+                    dominantColor.value = getautocolor(icon)
                     isLoading.value = false
                 }
                 /*val bitmap = icon.asAndroidBitmap() // 假设 icon 是一个 Bitmap 类型
