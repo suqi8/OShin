@@ -13,6 +13,7 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSlider
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.extra.SuperArrow
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -27,6 +28,17 @@ fun launcher(navController: NavController) {
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
                 .padding(bottom = 6.dp, top = 15.dp)
+        ) {
+            SuperArrow(title = stringResource(id = R.string.recent_tasks),
+                onClick = {
+                    navController.navigate("launcher\\recent_task")
+                })
+        }
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 6.dp, top = 6.dp)
         ) {
             FunSlider(
                 title = stringResource(R.string.desktop_icon_and_text_size_multiplier),

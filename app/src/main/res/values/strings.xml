@@ -217,4 +217,6 @@
     <string name="oplus_root_check_summary">Disable root checker</string>
     <string name="clock_margin">Clock Margin</string>
     <string name="clock_format_example">Clock Format Example</string>
+    <string name="recent_tasks">Recent Tasks</string>
+    <string name="force_display_memory">Force Display Memory</string>
 </resources>

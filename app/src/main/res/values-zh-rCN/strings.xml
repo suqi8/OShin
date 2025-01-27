@@ -216,4 +216,6 @@
     <string name="oplus_root_check_summary">关闭内置的root检测器</string>
     <string name="clock_margin">时钟边距</string>
     <string name="clock_format_example">时钟格式示例</string>
+    <string name="recent_tasks">最近任务</string>
+    <string name="force_display_memory">强制显示运行内存</string>
 </resources>

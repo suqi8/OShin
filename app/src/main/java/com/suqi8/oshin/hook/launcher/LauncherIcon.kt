@@ -12,7 +12,7 @@ class LauncherIcon: YukiBaseHooker() {
     @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
     override fun onHook() {
         loadApp("com.android.launcher"){
-            if (prefs("settings").getFloat("com_android_launcher_icon_text", 1.00f) != 1.00f) {
+            if (prefs("launcher").getFloat("icon_text", 1.00f) != 1.00f) {
                 "com.android.launcher3.DeviceProfile".toClass().apply {
                     method {
                         name = "updateIconSize"
@@ -30,7 +30,7 @@ class LauncherIcon: YukiBaseHooker() {
                         iconScaleField.set(instance,scale)
                             field.get(instance).set(2.0f)*/
                         before {
-                            args[0] = prefs("settings").getFloat("com_android_launcher_icon_text", 1.00f)
+                            args[0] = prefs("launcher").getFloat("icon_text", 1.00f)
                         }
                     }
                 }

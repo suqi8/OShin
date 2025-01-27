@@ -233,6 +233,10 @@ fun Main_Function(
             category = "systemui\\statusbar_icon"),
         item(title = stringResource(R.string.wifi_arrow),
             category = "systemui\\statusbar_icon"),
+        item(title = stringResource(R.string.force_display_memory),
+            category = "launcher\\recent_task"),
+        item(title = stringResource(id = R.string.recent_tasks),
+            category = "launcher\\recent_task"),
     )
     var miuixSearchValue by remember { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(false) }

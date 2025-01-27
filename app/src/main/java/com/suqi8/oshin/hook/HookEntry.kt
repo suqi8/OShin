@@ -8,15 +8,16 @@ import com.highcapable.yukihookapi.hook.factory.configs
 import com.highcapable.yukihookapi.hook.factory.encase
 import com.highcapable.yukihookapi.hook.xposed.bridge.event.YukiXposedEvent
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
-import de.robv.android.xposed.IXposedHookZygoteInit
-import de.robv.android.xposed.callbacks.XC_LoadPackage
 import com.suqi8.oshin.hook.android.OplusRootCheck
 import com.suqi8.oshin.hook.launcher.LauncherIcon
+import com.suqi8.oshin.hook.launcher.recent_task
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBar
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarClock
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarIcon
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarhardware_indicator
 import com.suqi8.oshin.hook.systemui.aod.allday_screenoff
+import de.robv.android.xposed.IXposedHookZygoteInit
+import de.robv.android.xposed.callbacks.XC_LoadPackage
 
 @InjectYukiHookWithXposed(entryClassName = "opatch", isUsingResourcesHook = true)
 class HookEntry : IYukiHookXposedInit {
@@ -44,6 +45,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = StatusBarhardware_indicator())
         loadApp(hooker = LauncherIcon())
         loadApp(hooker = StatusBarIcon())
+        loadApp(hooker = recent_task())
         loadApp(name = "com.android.systemui") {
             /*"com.android.systemui.statusbar.phone.StatusBarIconController".toClass().apply {
                 method {
