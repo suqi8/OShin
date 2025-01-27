@@ -13,6 +13,7 @@ import java.io.File
 import java.util.Locale
 
 class StatusBartemperature_indicator: YukiBaseHooker() {
+    @SuppressLint("DiscouragedApi")
     @OptIn(LegacyHookApi::class)
     override fun onHook() {
         val isdual_raw = prefs("systemui\\hardware_indicator").getBoolean("temperature_indicator_dual_row", false)
@@ -24,7 +25,7 @@ class StatusBartemperature_indicator: YukiBaseHooker() {
         val alignment = prefs("systemui\\hardware_indicator").getInt("temperature_indicator_alignment", 0)
         val cpu_temp_source = prefs("systemui\\hardware_indicator").getInt("temperature_indicator_cpu_temp_source", 0)
         val hideBatteryUnit = prefs("systemui\\hardware_indicator").getBoolean("hideBatteryUnit", false)
-        val hidecpuUnit = prefs("systemui\\hardware_indicator").getBoolean("com_android_systemui_hideCpuUnit", false)
+        val hidecpuUnit = prefs("systemui\\hardware_indicator").getBoolean("hideCpuUnit", false)
         "com.android.systemui.statusbar.policy.Clock".toClass().apply {
             hook {
                 injectMember {

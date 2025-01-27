@@ -10,7 +10,6 @@ import android.widget.TextView
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.CharSequenceClass
-import com.highcapable.yukihookapi.hook.type.java.CharSequenceType
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -20,27 +19,27 @@ import java.util.TimerTask
 
 class StatusBarClock : YukiBaseHooker() {
     val ClockStyleSelectedOption = prefs("systemui\\status_bar_clock").getInt("ClockStyleSelectedOption", 0)
-    val ShowYears = prefs("systemui\\status_bar_clock").getBoolean("Status_Bar_Time_ShowYears", false)
-    val ShowMonth = prefs("systemui\\status_bar_clock").getBoolean("Status_Bar_Time_ShowMonth", false)
-    val ShowDay = prefs("systemui\\status_bar_clock").getBoolean("Status_Bar_Time_ShowDay", false)
-    val ShowWeek = prefs("systemui\\status_bar_clock").getBoolean("Status_Bar_Time_ShowWeek", false)
-    val ShowCNHour = prefs("systemui\\status_bar_clock").getBoolean("Status_Bar_Time_ShowCNHour", false)
-    val Showtime_period = prefs("systemui\\status_bar_clock").getBoolean("Status_Bar_Time_Showtime_period", false)
-    val ShowSeconds = prefs("systemui\\status_bar_clock").getBoolean("Status_Bar_Time_ShowSeconds", false)
-    val ShowMillisecond = prefs("systemui\\status_bar_clock").getBoolean("Status_Bar_Time_ShowMillisecond", false)
-    val HideSpace = prefs("systemui\\status_bar_clock").getBoolean("Status_Bar_Time_HideSpace", false)
-    val DualRow = prefs("systemui\\status_bar_clock").getBoolean("Status_Bar_Time_DualRow", false)
+    val ShowYears = prefs("systemui\\status_bar_clock").getBoolean("ShowYears", false)
+    val ShowMonth = prefs("systemui\\status_bar_clock").getBoolean("ShowMonth", false)
+    val ShowDay = prefs("systemui\\status_bar_clock").getBoolean("ShowDay", false)
+    val ShowWeek = prefs("systemui\\status_bar_clock").getBoolean("ShowWeek", false)
+    val ShowCNHour = prefs("systemui\\status_bar_clock").getBoolean("ShowCNHour", false)
+    val Showtime_period = prefs("systemui\\status_bar_clock").getBoolean("Showtime_period", false)
+    val ShowSeconds = prefs("systemui\\status_bar_clock").getBoolean("ShowSeconds", false)
+    val ShowMillisecond = prefs("systemui\\status_bar_clock").getBoolean("ShowMillisecond", false)
+    val HideSpace = prefs("systemui\\status_bar_clock").getBoolean("HideSpace", false)
+    val DualRow = prefs("systemui\\status_bar_clock").getBoolean("DualRow", false)
     var nowTime: Date? = null
-    var FontSize = prefs("systemui\\status_bar_clock").getFloat("Status_Bar_Time_ClockSize", 0f)
-    var updateSpeed = prefs("systemui\\status_bar_clock").getInt("Status_Bar_Time_ClockUpdateSpeed", 0)
+    var FontSize = prefs("systemui\\status_bar_clock").getFloat("ClockSize", 0f)
+    var updateSpeed = prefs("systemui\\status_bar_clock").getInt("ClockUpdateSpeed", 0)
     var newline = ""
-    var customClockStyle = prefs("systemui\\status_bar_clock").getString("Status_Bar_Time_CustomClockStyle", "HH:mm")
-    var customAlignment = prefs("systemui\\status_bar_clock").getInt("Status_Bar_Time_alignment", 0)
-    var ClockLeftPadding = prefs("systemui\\status_bar_clock").getInt("Status_Bar_Time_LeftPadding", 0)
-    var ClockRightPadding = prefs("systemui\\status_bar_clock").getInt("Status_Bar_Time_RightPadding", 0)
-    var ClockTopPadding = prefs("systemui\\status_bar_clock").getInt("Status_Bar_Time_TopPadding", 0)
-    var ClockBottomPadding = prefs("systemui\\status_bar_clock").getInt("Status_Bar_Time_BottomPadding", 0)
-    var ClockColor = prefs("systemui\\status_bar_clock").getString("Status_Bar_Time_Color", "null")
+    var customClockStyle = prefs("systemui\\status_bar_clock").getString("CustomClockStyle", "HH:mm")
+    var customAlignment = prefs("systemui\\status_bar_clock").getInt("alignment", 0)
+    var ClockLeftPadding = prefs("systemui\\status_bar_clock").getInt("LeftPadding", 0)
+    var ClockRightPadding = prefs("systemui\\status_bar_clock").getInt("RightPadding", 0)
+    var ClockTopPadding = prefs("systemui\\status_bar_clock").getInt("TopPadding", 0)
+    var ClockBottomPadding = prefs("systemui\\status_bar_clock").getInt("BottomPadding", 0)
+    var ClockColor = prefs("systemui\\status_bar_clock").getString("Color", "null")
 
     @SuppressLint("SetTextI18n", "ResourceType")
     override fun onHook() {
@@ -185,7 +184,7 @@ class StatusBarClock : YukiBaseHooker() {
                 }
                 method {
                     name = "getSmallTime"
-                    returnType = CharSequenceType
+                    returnType = CharSequenceClass
                 }.hook {
                     after {
                         instance<TextView>().apply {
