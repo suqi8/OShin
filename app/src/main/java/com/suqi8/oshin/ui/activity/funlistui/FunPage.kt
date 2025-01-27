@@ -28,6 +28,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.ui.tools.resetApp
+import dev.chrisbanes.haze.ExperimentalHazeApi
+import dev.chrisbanes.haze.HazeEffectScope
+import dev.chrisbanes.haze.HazeInputScale
+import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
@@ -42,6 +46,7 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.ArrowBack
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
+@OptIn(ExperimentalHazeApi::class)
 @Composable
 fun FunPage(title: String, appList: List<String>? = listOf(), navController: NavController, content: @Composable () -> Unit) {
     val context = LocalContext.current
@@ -68,7 +73,11 @@ fun FunPage(title: String, appList: List<String>? = listOf(), navController: Nav
             color = Color.Transparent,
             modifier = Modifier.hazeEffect(
                 state = hazeState,
-                style = hazeStyle
+                style = hazeStyle, block = fun HazeEffectScope.() {
+                    inputScale = HazeInputScale.Auto
+                    progressive =
+                        HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
+                }
             ),
             navigationIcon = {
                 IconButton(

@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -132,15 +133,26 @@ fun Main_About(
                                     .fillMaxWidth()
                                     .height(200.dp) // 设定 Box 的高度
                             ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.ic_launcher_foreground),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(250.dp)
-                                        .align(Alignment.Center)
-                                    /*.offset(y = (-20).dp)*/,
-                                    contentScale = ContentScale.Crop
-                                )
+                                Card(modifier = Modifier
+                                        .size(130.dp)
+                                        .align(Alignment.Center)) {
+                                    Box(modifier = Modifier.fillMaxSize()) {
+                                        Image(
+                                            painter = painterResource(id = R.drawable.icon_background_newyear),
+                                            contentDescription = null,
+                                            modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
+                                            /*.offset(y = (-20).dp)*/,
+                                            contentScale = ContentScale.Crop
+                                        )
+                                        Image(
+                                            painter = painterResource(id = R.drawable.ic_launcher_foreground_newyear),
+                                            contentDescription = null,
+                                            modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
+                                            /*.offset(y = (-20).dp)*/,
+                                            contentScale = ContentScale.Crop
+                                        )
+                                    }
+                                }
                                 Text(
                                     text = context.packageManager.getPackageInfo(
                                         context.packageName,

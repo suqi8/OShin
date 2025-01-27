@@ -100,7 +100,7 @@ fun status_bar_clock(navController: NavController) {
             ) {
                 FunNoEnable()
             }
-            val ClockStyleSelectedOption = remember { mutableIntStateOf(context.prefs("systemui\\Status_Bar_Time").getInt("ClockStyleSelectedOption", 0)) }
+            val ClockStyleSelectedOption = remember { mutableIntStateOf(context.prefs("systemui\\status_bar_clock").getInt("ClockStyleSelectedOption", 0)) }
             val ClockStyle = listOf(stringResource(R.string.preset), stringResource(R.string.geek))
             AnimatedVisibility(
                 visible = status_bar_clock,
@@ -120,7 +120,7 @@ fun status_bar_clock(navController: NavController) {
                             onSelectedIndexChange = { newOption ->
                                 ClockStyleSelectedOption.intValue = newOption
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    context.prefs("systemui\\Status_Bar_Time").edit { putInt("ClockStyleSelectedOption", newOption) }
+                                    context.prefs("systemui\\status_bar_clock").edit { putInt("ClockStyleSelectedOption", newOption) }
                                 }
                             }
                         )
@@ -128,7 +128,7 @@ fun status_bar_clock(navController: NavController) {
                         FunSlider(
                             title = stringResource(R.string.clock_size),
                             summary = stringResource(R.string.clock_size_summary),
-                            category = "systemui\\Status_Bar_Time",
+                            category = "systemui\\status_bar_clock",
                             key = "ClockSize",
                             defValue = 0f,
                             endtype = "dp",
@@ -140,13 +140,13 @@ fun status_bar_clock(navController: NavController) {
                         FunSlider(
                             title = stringResource(R.string.clock_update_time_title),
                             summary = stringResource(R.string.clock_update_time_summary),
-                            category = "systemui\\Status_Bar_Time",
+                            category = "systemui\\status_bar_clock",
                             key = "ClockUpdateSpeed",
                             defValue = 0,
                             endtype = "ms",
                             max = 2000f,
                             min = 0f,
-                            decimalPlaces = 0
+                            decimalPlaces = -1
                         )
                     }
                     SmallTitle("dp To px")
@@ -173,7 +173,7 @@ fun status_bar_clock(navController: NavController) {
                     ) {
                         FunSlider(
                             title = stringResource(R.string.clock_top_margin),
-                            category = "systemui\\Status_Bar_Time",
+                            category = "systemui\\status_bar_clock",
                             key = "TopPadding",
                             defValue = 0,
                             endtype = "px",
@@ -184,7 +184,7 @@ fun status_bar_clock(navController: NavController) {
                         addline()
                         FunSlider(
                             title = stringResource(R.string.clock_bottom_margin),
-                            category = "systemui\\Status_Bar_Time",
+                            category = "systemui\\status_bar_clock",
                             key = "BottomPadding",
                             defValue = 0,
                             endtype = "px",
@@ -195,7 +195,7 @@ fun status_bar_clock(navController: NavController) {
                         addline()
                         FunSlider(
                             title = stringResource(R.string.clock_left_margin),
-                            category = "systemui\\Status_Bar_Time",
+                            category = "systemui\\status_bar_clock",
                             key = "LeftPadding",
                             defValue = 0,
                             endtype = "px",
@@ -206,7 +206,7 @@ fun status_bar_clock(navController: NavController) {
                         addline()
                         FunSlider(
                             title = stringResource(R.string.clock_right_margin),
-                            category = "systemui\\Status_Bar_Time",
+                            category = "systemui\\status_bar_clock",
                             key = "RightPadding",
                             defValue = 0,
                             endtype = "px",
@@ -323,7 +323,7 @@ fun status_bar_clock(navController: NavController) {
                             onSelectedIndexChange = { newOption ->
                                 Status_Bar_Time_gravitySelectedOption.intValue = newOption
                                 CoroutineScope(Dispatchers.IO).launch {
-                                    context.prefs("systemui\\Status_Bar_Time").edit { putInt("alignment", newOption) }
+                                    context.prefs("systemui\\status_bar_clock").edit { putInt("alignment", newOption) }
                                 }
                             }
                         )
@@ -394,7 +394,7 @@ fun CustomClockDialog(showCustomClockDialog: MutableState<Boolean>, customClockC
                 onClick = {
                     dismissDialog(showCustomClockDialog)
                     CustomClock.value = customClockCache.value
-                    context.prefs("systemui\\Status_Bar_Time").edit {
+                    context.prefs("systemui\\status_bar_clock").edit {
                         putString(
                             "CustomClockStyle",
                             customClockCache.value

@@ -9,6 +9,7 @@ import android.view.Gravity
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
+import com.highcapable.yukihookapi.hook.type.java.CharSequenceClass
 import com.highcapable.yukihookapi.hook.type.java.CharSequenceType
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
@@ -108,7 +109,7 @@ class StatusBarClock : YukiBaseHooker() {
 
                 method {
                     name = "getSmallTime"
-                    returnType = CharSequenceType
+                    returnType = CharSequenceClass
                 }.hook {
                     after {
                         instance<TextView>().apply {
