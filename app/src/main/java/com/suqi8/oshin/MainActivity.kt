@@ -77,6 +77,7 @@ import com.suqi8.oshin.ui.activity.android.android
 import com.suqi8.oshin.ui.activity.android.oplus_services
 import com.suqi8.oshin.ui.activity.android.package_manager_services
 import com.suqi8.oshin.ui.activity.com.android.launcher.launcher
+import com.suqi8.oshin.ui.activity.com.android.settings.settings
 import com.suqi8.oshin.ui.activity.com.android.systemui.hardware_indicator
 import com.suqi8.oshin.ui.activity.com.android.systemui.status_bar_clock
 import com.suqi8.oshin.ui.activity.com.android.systemui.statusbar_icon
@@ -604,6 +605,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("about_group") { about_group(navController) }
             composable("about_references") { about_references(navController) }
             composable("about_contributors") { about_contributors(navController) }
+            composable("settings") { settings(navController) }
         }
     }
 }
