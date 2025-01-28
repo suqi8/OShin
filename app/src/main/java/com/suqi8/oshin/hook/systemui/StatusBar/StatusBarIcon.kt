@@ -20,7 +20,6 @@ class StatusBarIcon: YukiBaseHooker() {
                                 field {
                                     name = "mWifiIcon"
                                 }.get(wifiView).cast<View>()?.isVisible = false
-
                             }
                         }
                     }

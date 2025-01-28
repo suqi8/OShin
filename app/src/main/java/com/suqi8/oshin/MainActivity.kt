@@ -80,6 +80,7 @@ import com.suqi8.oshin.ui.activity.com.android.launcher.launcher
 import com.suqi8.oshin.ui.activity.com.android.launcher.recent_task
 import com.suqi8.oshin.ui.activity.com.android.settings.settings
 import com.suqi8.oshin.ui.activity.com.android.systemui.hardware_indicator
+import com.suqi8.oshin.ui.activity.com.android.systemui.notification
 import com.suqi8.oshin.ui.activity.com.android.systemui.status_bar_clock
 import com.suqi8.oshin.ui.activity.com.android.systemui.statusbar_icon
 import com.suqi8.oshin.ui.activity.com.android.systemui.systemui
@@ -600,9 +601,10 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("systemui") { systemui(navController = navController)}
             composable("systemui\\status_bar_clock") { status_bar_clock(navController = navController) }
             composable("systemui\\hardware_indicator") { hardware_indicator(navController = navController) }
+            composable("systemui\\statusbar_icon") { statusbar_icon(navController = navController) }
+            composable("systemui\\notification") { notification(navController = navController) }
             composable("launcher") { launcher(navController = navController) }
             composable("launcher\\recent_task") { recent_task(navController = navController) }
-            composable("systemui\\statusbar_icon") { statusbar_icon(navController = navController) }
             composable("about_setting") { about_setting(navController,alpha,blurRadius,noiseFactor,colorMode) }
             composable("about_group") { about_group(navController) }
             composable("about_references") { about_references(navController) }

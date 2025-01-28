@@ -50,12 +50,17 @@ fun systemui(navController: NavController) {
                 onClick = {
                     navController.navigate("systemui\\statusbar_icon")
                 })
+            addline()
+            SuperArrow(title = stringResource(id = R.string.status_bar_notification),
+                onClick = {
+                    navController.navigate("systemui\\notification")
+                })
         }
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp, top = 15.dp)
+                .padding(bottom = 6.dp, top = 6.dp)
         ) {
             FunSwich(
                 title = stringResource(R.string.hide_status_bar),
@@ -68,7 +73,7 @@ fun systemui(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp, top = 15.dp)
+                .padding(bottom = 6.dp, top = 6.dp)
         ) {
             val enable_all_day_screen_off = remember { mutableStateOf(context.prefs("systemui").getBoolean("enable_all_day_screen_off", false)) }
             FunSwich(

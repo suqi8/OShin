@@ -237,6 +237,10 @@ fun Main_Function(
             category = "launcher\\recent_task"),
         item(title = stringResource(id = R.string.recent_tasks),
             category = "launcher\\recent_task"),
+        item(title = stringResource(id = R.string.status_bar_notification),
+            category = "systemui\\notification"),
+        item(title = stringResource(R.string.remove_developer_options_notification),
+            category = "systemui\\notification"),
     )
     var miuixSearchValue by remember { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(false) }

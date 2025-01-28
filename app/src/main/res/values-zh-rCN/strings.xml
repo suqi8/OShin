@@ -218,4 +218,6 @@
     <string name="clock_format_example">时钟格式示例</string>
     <string name="recent_tasks">最近任务</string>
     <string name="force_display_memory">强制显示运行内存</string>
+    <string name="status_bar_notification">状态栏通知</string>
+    <string name="remove_developer_options_notification">移除开发者选项通知</string>
 </resources>

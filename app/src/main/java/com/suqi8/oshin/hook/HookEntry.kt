@@ -15,6 +15,7 @@ import com.suqi8.oshin.hook.systemui.StatusBar.StatusBar
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarClock
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarIcon
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarhardware_indicator
+import com.suqi8.oshin.hook.systemui.StatusBar.notification
 import com.suqi8.oshin.hook.systemui.aod.allday_screenoff
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -46,6 +47,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = LauncherIcon())
         loadApp(hooker = StatusBarIcon())
         loadApp(hooker = recent_task())
+        loadApp(hooker = notification())
         loadApp(name = "com.android.systemui") {
             /*"com.android.systemui.statusbar.phone.StatusBarIconController".toClass().apply {
                 method {
