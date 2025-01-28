@@ -127,6 +127,11 @@ fun about_references(navController: NavController) {
                 username = "Flyfish233",
                 url = "https://github.com/Flyfish233/coloros-aod"
             )
+            addline()
+            about_references_item(
+                name = "QAuxiliary",
+                username = "cinit",
+                url = "https://github.com/cinit/QAuxiliary")
         }
         SmallTitle(text = stringResource(R.string.closed_source_project))
         Card(
