@@ -9,6 +9,7 @@ import com.highcapable.yukihookapi.hook.factory.encase
 import com.highcapable.yukihookapi.hook.xposed.bridge.event.YukiXposedEvent
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import com.suqi8.oshin.hook.android.OplusRootCheck
+import com.suqi8.oshin.hook.com.oplus.battery.battery
 import com.suqi8.oshin.hook.launcher.LauncherIcon
 import com.suqi8.oshin.hook.launcher.recent_task
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBar
@@ -48,6 +49,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = StatusBarIcon())
         loadApp(hooker = recent_task())
         loadApp(hooker = notification())
+        loadApp(hooker = battery())
         loadApp(name = "com.android.systemui") {
             /*"com.android.systemui.statusbar.phone.StatusBarIconController".toClass().apply {
                 method {

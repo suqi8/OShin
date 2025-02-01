@@ -221,4 +221,5 @@
     <string name="force_display_memory">Force Display Memory</string>
     <string name="status_bar_notification">Status Bar Notification</string>
     <string name="remove_developer_options_notification">Remove Developer Options Notification</string>
+    <string name="low_battery_fluid_cloud_off">Disable Fluid Cloud below 20%% battery</string>
 </resources>

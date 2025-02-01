@@ -5,5 +5,6 @@
         <item>com.android.settings</item>
         <item>com.android.systemui</item>
         <item>com.android.launcher</item>
+        <item>com.oplus.battery</item>
     </string-array>
 </resources>

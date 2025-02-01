@@ -241,6 +241,8 @@ fun Main_Function(
             category = "systemui\\notification"),
         item(title = stringResource(R.string.remove_developer_options_notification),
             category = "systemui\\notification"),
+        item(title = stringResource(R.string.low_battery_fluid_cloud_off),
+            category = "battery")
     )
     var miuixSearchValue by remember { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -371,6 +373,8 @@ fun Main_Function(
                             FunctionApp("com.android.settings", "settings", navController)
                             addline()
                             FunctionApp("com.android.launcher", "launcher", navController)
+                            addline()
+                            FunctionApp("com.oplus.battery", "battery", navController)
                         }
                     }
                     Spacer(Modifier.size(65.dp))
