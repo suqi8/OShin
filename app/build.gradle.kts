@@ -1,7 +1,7 @@
 import java.io.ByteArrayOutputStream
-import java.util.Properties
 import java.io.FileInputStream
 import java.io.FileOutputStream
+import java.util.Properties
 
 plugins {
     autowire(libs.plugins.android.application)
@@ -85,7 +85,7 @@ android {
         applicationId = property.project.app.packageName
         minSdk = property.project.android.minSdk
         targetSdk = property.project.android.targetSdk
-        versionName = property.project.app.versionName+".b"+number+"."+getGitCommitHash()
+        versionName = property.project.app.versionName+"."+number+"."+getGitCommitHash()
         versionCode = number
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
