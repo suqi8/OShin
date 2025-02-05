@@ -27,6 +27,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -414,16 +415,22 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
         if (appName != "noapp") {
             //val context = LocalContext.current
             //val auto_color = context.prefs("settings").getBoolean("auto_color", true)
+            val colorSaver = Saver<Color, List<Float>>(
+                save = { listOf(it.red, it.green, it.blue, it.alpha) },
+                restore = { Color(it[0], it[1], it[2], it[3]) }
+            )
             val defaultColor = MiuixTheme.colorScheme.primary
-            val dominantColor: MutableState<Color> = remember { mutableStateOf(defaultColor) }
-            val isLoading = remember { mutableStateOf(true) }
+            val dominantColor: MutableState<Color> = rememberSaveable(stateSaver = colorSaver) { mutableStateOf(defaultColor) }
+            val isLoading = rememberSaveable { mutableStateOf(true) }
 
             LaunchedEffect(icon) {
 
-                withContext(Dispatchers.IO) {
-                    //if (auto_color)
-                    dominantColor.value = getautocolor(icon)
-                    isLoading.value = false
+                if (isLoading.value) {
+                    withContext(Dispatchers.IO) {
+                        //if (auto_color)
+                        dominantColor.value = getautocolor(icon)
+                        isLoading.value = false
+                    }
                 }
                 /*val bitmap = icon.asAndroidBitmap() // 假设 icon 是一个 Bitmap 类型
                 withContext(Dispatchers.IO) {
