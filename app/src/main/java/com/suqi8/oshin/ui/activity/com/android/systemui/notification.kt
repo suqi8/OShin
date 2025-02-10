@@ -29,8 +29,16 @@ fun notification(navController: NavController) {
         ) {
             FunSwich(
                 title = stringResource(R.string.remove_developer_options_notification),
+                summary = stringResource(R.string.notification_restriction_message),
                 category = "systemui\\notification",
                 key = "remove_developer_options_notification",
+                defValue = false
+            )
+            FunSwich(
+                title = stringResource(R.string.remove_and_do_not_disturb_notification),
+                summary = stringResource(R.string.notification_restriction_message),
+                category = "systemui\\notification",
+                key = "remove_and_do_not_disturb_notification",
                 defValue = false
             )
         }

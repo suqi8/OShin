@@ -221,4 +221,6 @@
     <string name="status_bar_notification">状态栏通知</string>
     <string name="remove_developer_options_notification">移除开发者选项通知</string>
     <string name="low_battery_fluid_cloud_off">关闭电量低于20%流体云</string>
+    <string name="notification_restriction_message">此功能限制该通知的后续弹出，已有的通知请自行关闭</string>
+    <string name="remove_and_do_not_disturb_notification">移除通知勿扰通知</string>
 </resources>

@@ -241,9 +241,13 @@ fun Main_Function(
         item(title = stringResource(id = R.string.status_bar_notification),
             category = "systemui\\notification"),
         item(title = stringResource(R.string.remove_developer_options_notification),
+            summary = stringResource(R.string.notification_restriction_message),
             category = "systemui\\notification"),
         item(title = stringResource(R.string.low_battery_fluid_cloud_off),
-            category = "battery")
+            category = "battery"),
+        item(title = stringResource(R.string.remove_and_do_not_disturb_notification),
+            summary = stringResource(R.string.notification_restriction_message),
+            category = "systemui\\notification")
     )
     var miuixSearchValue by remember { mutableStateOf("") }
     var expanded by rememberSaveable { mutableStateOf(false) }

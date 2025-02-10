@@ -18,5 +18,18 @@ class notification: YukiBaseHooker() {
                 }
             }
         }
+        if (prefs("systemui\\notification").getBoolean("remove_and_do_not_disturb_notification", false)) {
+            loadApp(name = "com.android.systemui") {
+                "com.oplus.systemui.statusbar.controller.NoDisturbController".toClass().apply {
+                    method {
+                        name = "sendNotification"
+                    }.hook {
+                        replaceUnit {
+
+                        }
+                    }
+                }
+            }
+        }
     }
 }

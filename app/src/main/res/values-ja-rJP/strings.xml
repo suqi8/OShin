@@ -217,4 +217,11 @@
     <string name="oplus_root_check_summary">Root チェッカーを無効化します</string>
     <string name="clock_margin">Clock Margin</string>
     <string name="clock_format_example">Clock Format Example</string>
+    <string name="recent_tasks">Recent Tasks</string>
+    <string name="force_display_memory">Force Display Memory</string>
+    <string name="status_bar_notification">Status Bar Notification</string>
+    <string name="remove_developer_options_notification">Remove Developer Options Notification</string>
+    <string name="low_battery_fluid_cloud_off">Disable Fluid Cloud below 20% battery</string>
+    <string name="notification_restriction_message">This feature restricts the subsequent pop-up of this notification. Please close any existing notifications manually.</string>
+    <string name="remove_and_do_not_disturb_notification">Remove Do Not Disturb Notification</string>
 </resources>

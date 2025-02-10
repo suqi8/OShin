@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OShin</string>
     <string name="xposed_desc">System support module for ColorOS, RealmeUI, and OxygenOS. Free software – redistribution, sharing, or selling is prohibited! Contact: github@suqi8</string>
@@ -9,8 +10,7 @@
     <string name="hide_app_icon_on_launcher">Hide app icons on launcher</string>
     <string name="hide_app_icon_on_launcher_tip">After hiding the app icon, the interface may be closed and will no longer be displayed on the launcher. You can find and open the module settings in EdXposed or LSPosed.</string>
     <string name="hide_app_icon_on_launcher_notice">Note: Be sure to turn off the \"Force apps to show launcher icons\" feature in LSPosed</string>
-    <string name="title_activity_main" translatable="false">MainActivity</string>
-    <string name="package_manager_services" >Package Management Services</string>
+    <string name="package_manager_services">Package Management Services</string>
     <string name="Color_Mode">Color Mode</string>
     <string name="Night_Mode">Night Mode</string>
     <string name="Light_Mode">Light Mode</string>
@@ -90,7 +90,7 @@
     <string name="status_bar_time_gravity_fill">FILL Fill the Whole Space</string>
     <string name="status_bar_time_gravity_fill_horizontal">FILL_HORIZONTAL Fill Horizontally</string>
     <string name="status_bar_time_gravity_fill_vertical">FILL_VERTICAL Fill Vertically</string>
-    <string name="enter_thermal_zone_number">Enter the number after "thermal_zone" in the /sys/devices/virtual/thermal/ folder to specify the source.</string>
+    <string name="enter_thermal_zone_number">Enter the number after \"thermal_zone\" in the /sys/devices/virtual/thermal/ folder to specify the source.</string>
     <string name="show_cpu_temp_data">Displaying CPU temperature source data.</string>
     <string name="change_cpu_temp_source">Change CPU temperature source</string>
     <string name="battery_temperature">Battery Temperature</string>
