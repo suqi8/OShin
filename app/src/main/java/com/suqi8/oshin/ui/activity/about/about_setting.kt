@@ -1,5 +1,7 @@
 package com.suqi8.oshin.ui.activity.about
 
+import android.content.ComponentName
+import android.content.pm.PackageManager
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -31,6 +33,7 @@ import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDropdown
+import top.yukonga.miuix.kmp.extra.SuperSwitch
 
 @Composable
 fun about_setting(
@@ -158,6 +161,32 @@ fun about_setting(
                     modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
                 )
             }
+            addline()
+            val componentName = ComponentName(context, "com.suqi8.oshin.Home")
+            val pm = context.packageManager
+            val ishide = remember {
+                mutableStateOf(
+                    try {
+                        val state = pm.getComponentEnabledSetting(componentName)
+                        state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                    } catch (e: PackageManager.NameNotFoundException) {
+                        false
+                    }
+                )
+            }
+            SuperSwitch(title = stringResource(R.string.hide_launcher_icon),
+                checked = !ishide.value,
+                onCheckedChange = {
+                    ishide.value = !ishide.value
+                    context.packageManager.setComponentEnabledSetting(
+                        componentName,
+                        if (ishide.value)
+                            PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                        else
+                            PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                        PackageManager.DONT_KILL_APP
+                    )
+                })
             /*addline()
             SuperSwitch(title = stringResource(R.string.feature_auto_color_picking_enabled),
                 summary = stringResource(R.string.feature_auto_color_picking_warning),

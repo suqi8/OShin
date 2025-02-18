@@ -78,6 +78,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity-alias>
+        <activity-alias
+                android:name=".XposedHome"
+                android:exported="true"
+                android:label="@string/app_name"
+                android:windowSoftInputMode="adjustResize"
+                android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="de.robv.android.xposed.category.MODULE_SETTINGS" />
+            </intent-filter>
+        </activity-alias>
     </application>
 
 </manifest>
