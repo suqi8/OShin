@@ -24,7 +24,7 @@ class StatusBarConsumption_indicator: YukiBaseHooker() {
         val hidePowerUnit = prefs("systemui\\hardware_indicator").getBoolean("hidePowerUnit", false)
         val hideCurrentUnit = prefs("systemui\\hardware_indicator").getBoolean("hideCurrentUnit", false)
         val hideVoltageUnit = prefs("systemui\\hardware_indicator").getBoolean("hideVoltageUnit", false)
-        val power_consumption_indicator_font_size = prefs("systemui\\hardware_indicator").getInt("power_consumption_indicator_font_size", 0)
+        val font_size = prefs("systemui\\hardware_indicator").getFloat("power_consumption_indicator_font_size", 0f)
         val absolute = prefs("systemui\\hardware_indicator").getBoolean("power_consumption_indicator_absolute", false)
         val bold_text = prefs("systemui\\hardware_indicator").getBoolean("power_consumption_indicator_bold_text", false)
         val power_consumption_indicator_update_time = prefs("systemui\\hardware_indicator").getInt("power_consumption_indicator_update_time", 0)
@@ -62,7 +62,7 @@ class StatusBarConsumption_indicator: YukiBaseHooker() {
                                 9 -> Gravity.FILL_VERTICAL     // 垂直填满
                                 else -> Gravity.CENTER         // 默认居中对齐
                             }
-                            textSize = if (power_consumption_indicator_font_size == 0) 8f else power_consumption_indicator_font_size.toFloat()
+                            textSize = if (font_size == 0f) 8f else font_size
                             isSingleLine = false
                             setTypeface(typeface, if (bold_text) Typeface.BOLD else Typeface.NORMAL)
                         }
