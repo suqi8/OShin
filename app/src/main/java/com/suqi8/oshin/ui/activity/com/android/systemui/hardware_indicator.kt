@@ -226,21 +226,21 @@ fun hardware_indicator(navController: NavController) {
                         FunSwich(
                             title = stringResource(R.string.power),
                             category = "systemui\\hardware_indicator",
-                            key = "hidePowerUnit",
+                            key = "power_consumption_hidePowerUnit",
                             defValue = false
                         )
                         addline()
                         FunSwich(
                             title = stringResource(R.string.current),
                             category = "systemui\\hardware_indicator",
-                            key = "hideCurrentUnit",
+                            key = "power_consumption_hideCurrentUnit",
                             defValue = false
                         )
                         addline()
                         FunSwich(
                             title = stringResource(R.string.voltage),
                             category = "systemui\\hardware_indicator",
-                            key = "hideVoltageUnit",
+                            key = "power_consumption_hideVoltageUnit",
                             defValue = false
                         )
                     }
@@ -401,14 +401,14 @@ fun hardware_indicator(navController: NavController) {
                         FunSwich(
                             title = stringResource(R.string.battery_temperature),
                             category = "systemui\\hardware_indicator",
-                            key = "hideBatteryUnit",
+                            key = "temperature_indicator_hideBatteryUnit",
                             defValue = false
                         )
                         addline()
                         FunSwich(
                             title = stringResource(R.string.cpu_temperature),
                             category = "systemui\\hardware_indicator",
-                            key = "hideCpuUnit",
+                            key = "temperature_indicator_hideCpuUnit",
                             defValue = false
                         )
                     }

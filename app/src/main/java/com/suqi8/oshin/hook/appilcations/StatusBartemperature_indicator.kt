@@ -24,8 +24,8 @@ class StatusBartemperature_indicator: YukiBaseHooker() {
         val update_time = prefs("systemui\\hardware_indicator").getInt("temperature_indicator_update_time", 0)
         val alignment = prefs("systemui\\hardware_indicator").getInt("temperature_indicator_alignment", 0)
         val cpu_temp_source = prefs("systemui\\hardware_indicator").getInt("temperature_indicator_cpu_temp_source", 0)
-        val hideBatteryUnit = prefs("systemui\\hardware_indicator").getBoolean("hideBatteryUnit", false)
-        val hidecpuUnit = prefs("systemui\\hardware_indicator").getBoolean("hideCpuUnit", false)
+        val hideBatteryUnit = prefs("systemui\\hardware_indicator").getBoolean("temperature_indicator_hideBatteryUnit", false)
+        val hidecpuUnit = prefs("systemui\\hardware_indicator").getBoolean("temperature_indicator_hideCpuUnit", false)
         "com.android.systemui.statusbar.policy.Clock".toClass().apply {
             hook {
                 injectMember {
