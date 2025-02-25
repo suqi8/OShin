@@ -677,7 +677,7 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
     }, topBar = {
         TopAppBar(scrollBehavior = currentScrollBehavior,color = Color.Transparent,title = when (pagerState.currentPage) {
             0 -> stringResource(R.string.func)
-            1 -> stringResource(R.string.home)
+            1 -> stringResource(R.string.app_name)
             else -> stringResource(R.string.about)
         }, modifier = Modifier.hazeEffect(
             state = hazeState,
