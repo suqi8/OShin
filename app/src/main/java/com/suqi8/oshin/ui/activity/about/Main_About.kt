@@ -19,12 +19,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -105,7 +102,7 @@ fun Main_About(
 
     Scaffold() {
         LazyColumn(
-            contentPadding = PaddingValues(top = padding.calculateTopPadding()),
+            contentPadding = padding,
             topAppBarScrollBehavior = topAppBarScrollBehavior, modifier = Modifier.fillMaxSize()
         ) {
             item {
@@ -418,20 +415,13 @@ fun Main_About(
                             context.startActivity(intent)
                         })
                 }
-                Spacer(Modifier.size(20.dp))
                 Text(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
                     text = "Powered By SYC Team",
                     fontSize = MiuixTheme.textStyles.subtitle.fontSize,
                     fontWeight = FontWeight.Medium,
                     color = MiuixTheme.colorScheme.onBackgroundVariant,
                     textAlign = TextAlign.Center
-                )
-                Spacer(Modifier.size(89.dp))
-                Spacer(
-                    Modifier.height(
-                        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-                    )
                 )
             }
         }

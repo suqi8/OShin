@@ -17,12 +17,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
@@ -70,72 +65,6 @@ import java.io.BufferedReader
 import java.io.InputStreamReader
 import kotlin.random.Random
 
-/**
- * 绘制阴影范围
- * [top] 顶部范围
- * [start] 开始范围
- * [bottom] 底部范围
- * [end] 结束范围
- * Create empty Shadow elevation
- */
-open class ShadowElevation(
-    val top: Dp = 0.dp,
-    private val start: Dp = 0.dp,
-    private val bottom: Dp = 0.dp,
-    private val end: Dp = 0.dp
-) {
-    companion object : ShadowElevation()
-}
-
-/**
- * 绘制基础阴影
- * @param color 颜色
- * @param alpha 颜色透明度
- * @param borderRadius 阴影便捷圆角
- * @param shadowRadius 阴影圆角
- * @param offsetX 偏移X轴
- * @param offsetY 偏移Y轴
- * @param roundedRect 是否绘制圆角就行
- */
-fun Modifier.drawColoredShadow(
-    color: Color,
-    alpha: Float = 0.2f,
-    borderRadius: Dp = 0.dp,
-    shadowRadius: Dp = 0.dp,
-    offsetX: Dp = 0.dp,
-    offsetY: Dp = 0.dp,
-    roundedRect: Boolean = true
-) = this.drawBehind {
-    /**将颜色转换为Argb的Int类型*/
-    val transparentColor = android.graphics.Color.toArgb(color.copy(alpha = .0f).value.toLong())
-    val shadowColor = android.graphics.Color.toArgb(color.copy(alpha = alpha).value.toLong())
-    /**调用Canvas绘制*/
-    this.drawIntoCanvas {
-        val paint = Paint()
-        paint.color = Color.Transparent
-        /**调用底层fragment Paint绘制*/
-        val frameworkPaint = paint.asFrameworkPaint()
-        frameworkPaint.color = transparentColor
-        /**绘制阴影*/
-        frameworkPaint.setShadowLayer(
-            shadowRadius.toPx(),
-            offsetX.toPx(),
-            offsetY.toPx(),
-            shadowColor
-        )
-        /**形状绘制*/
-        it.drawRoundRect(
-            0f,
-            0f,
-            this.size.width,
-            this.size.height,
-            if (roundedRect) this.size.height / 2 else borderRadius.toPx(),
-            if (roundedRect) this.size.height / 2 else borderRadius.toPx(),
-            paint
-        )
-    }
-}
-
 @SuppressLint("AutoboxingStateCreation")
 @Composable
 fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior) {
@@ -145,14 +74,13 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior) {
             Text(text = "Loading...", modifier = Modifier.align(Alignment.Center))
         }
     }*/
+    val cardVisible = remember { mutableStateOf(false) }
+    val cardVisible1 = remember { mutableStateOf(false) }
     LazyColumn(
-        contentPadding = PaddingValues(top = padding.calculateTopPadding()),
+        contentPadding = padding,
         topAppBarScrollBehavior = topAppBarScrollBehavior
     ) {
         item {
-            val cardVisible = remember { mutableStateOf(false) }
-            val cardVisible1 = remember { mutableStateOf(false) }
-
             LaunchedEffect(Unit) {
                 cardVisible.value = true
                 //loading.value = false
@@ -240,7 +168,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior) {
                         )
                         Column(
                             verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.padding(start =15.dp)
+                            modifier = Modifier.padding(start = 15.dp)
                         ) {
                             Text(
                                 text = if (YukiHookAPI.Status.isModuleActive)
@@ -281,6 +209,8 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior) {
                 }
             }
 
+        }
+        item {
             // 卡片2动画
             AnimatedVisibility(
                 visible = cardVisible.value,
@@ -540,16 +470,8 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior) {
                     }
                 }
             }
-
-            Spacer(Modifier.size(65.dp))
-            Spacer(
-                Modifier.height(
-                    WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-                )
-            )
         }
     }
-
 }
 
 @SuppressLint("DefaultLocale")
@@ -659,5 +581,71 @@ fun GetAppName(
         return appName
     } else {
         return "noapp"
+    }
+}
+
+/**
+ * 绘制阴影范围
+ * [top] 顶部范围
+ * [start] 开始范围
+ * [bottom] 底部范围
+ * [end] 结束范围
+ * Create empty Shadow elevation
+ */
+open class ShadowElevation(
+    val top: Dp = 0.dp,
+    private val start: Dp = 0.dp,
+    private val bottom: Dp = 0.dp,
+    private val end: Dp = 0.dp
+) {
+    companion object : ShadowElevation()
+}
+
+/**
+ * 绘制基础阴影
+ * @param color 颜色
+ * @param alpha 颜色透明度
+ * @param borderRadius 阴影便捷圆角
+ * @param shadowRadius 阴影圆角
+ * @param offsetX 偏移X轴
+ * @param offsetY 偏移Y轴
+ * @param roundedRect 是否绘制圆角就行
+ */
+fun Modifier.drawColoredShadow(
+    color: Color,
+    alpha: Float = 0.2f,
+    borderRadius: Dp = 0.dp,
+    shadowRadius: Dp = 0.dp,
+    offsetX: Dp = 0.dp,
+    offsetY: Dp = 0.dp,
+    roundedRect: Boolean = true
+) = this.drawBehind {
+    /**将颜色转换为Argb的Int类型*/
+    val transparentColor = android.graphics.Color.toArgb(color.copy(alpha = .0f).value.toLong())
+    val shadowColor = android.graphics.Color.toArgb(color.copy(alpha = alpha).value.toLong())
+    /**调用Canvas绘制*/
+    this.drawIntoCanvas {
+        val paint = Paint()
+        paint.color = Color.Transparent
+        /**调用底层fragment Paint绘制*/
+        val frameworkPaint = paint.asFrameworkPaint()
+        frameworkPaint.color = transparentColor
+        /**绘制阴影*/
+        frameworkPaint.setShadowLayer(
+            shadowRadius.toPx(),
+            offsetX.toPx(),
+            offsetY.toPx(),
+            shadowColor
+        )
+        /**形状绘制*/
+        it.drawRoundRect(
+            0f,
+            0f,
+            this.size.width,
+            this.size.height,
+            if (roundedRect) this.size.height / 2 else borderRadius.toPx(),
+            if (roundedRect) this.size.height / 2 else borderRadius.toPx(),
+            paint
+        )
     }
 }
