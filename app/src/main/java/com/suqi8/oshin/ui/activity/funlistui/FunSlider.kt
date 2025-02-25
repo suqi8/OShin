@@ -64,7 +64,7 @@ fun FunSlider(title: String, summary: String? = null, category: String, key: Str
         Slider(
             progress = if (cachevalue.value.isNotEmpty()) cachevalue.value.toFloat() else 0f,
             onProgressChange = {
-                cachevalue.value = it.toString()
+                cachevalue.value = if (type == Int::class) it.toInt().toString() else String.format("%.${decimalPlaces}f", it)
             },
             minValue = min,
             maxValue = max,
