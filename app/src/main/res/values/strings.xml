@@ -225,4 +225,5 @@
     <string name="notification_restriction_message">This feature restricts the subsequent pop-up of this notification. Please close any existing notifications manually.</string>
     <string name="remove_and_do_not_disturb_notification">Remove Do Not Disturb Notification</string>
     <string name="hide_launcher_icon">Hide Launcher Icon</string>
+    <string name="recommended_features">Recommended Features</string>
 </resources>
