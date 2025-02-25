@@ -224,4 +224,5 @@
     <string name="notification_restriction_message">此功能限制该通知的后续弹出，已有的通知请自行关闭</string>
     <string name="remove_and_do_not_disturb_notification">移除通知勿扰通知</string>
     <string name="hide_launcher_icon">隐藏桌面图标</string>
+    <string name="recommended_features">推荐功能</string>
 </resources>

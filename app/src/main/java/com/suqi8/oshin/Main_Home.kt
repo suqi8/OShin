@@ -13,6 +13,8 @@ import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -20,6 +22,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -38,13 +42,16 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
@@ -67,7 +74,7 @@ import kotlin.random.Random
 
 @SuppressLint("AutoboxingStateCreation")
 @Composable
-fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior) {
+fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, navController: NavController) {
     /*val loading = remember { mutableStateOf(true) }
     if (loading.value) {
         Box(modifier = Modifier.fillMaxSize().background(Color.Transparent)) {
@@ -208,7 +215,54 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior) {
                     )
                 }
             }
-
+        }
+        item {
+            AnimatedVisibility(
+                visible = cardVisible.value,
+                enter = slideInVertically(
+                    initialOffsetY = { -it },
+                    animationSpec = tween(durationMillis = 500)
+                ) + fadeIn(animationSpec = tween(durationMillis = 500))
+            ) {
+                LazyRow(modifier = Modifier.fillMaxWidth()) {
+                    item {
+                        Card(modifier = Modifier.widthIn(max = 230.dp).padding(start = 20.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
+                            val randomFeature = features(LocalContext.current)
+                                .filter { it.summary != null }
+                                .takeIf { it.isNotEmpty() }
+                                ?.random()
+                            Column(modifier = Modifier.clickable {
+                                navController.navigate(randomFeature!!.category)
+                            }) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Image(painter = painterResource(id = R.drawable.recommend), contentDescription = null, modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 5.dp).size(30.dp), contentScale = androidx.compose.ui.layout.ContentScale.FillBounds)
+                                    Text(text = stringResource(R.string.recommended_features), modifier = Modifier.padding(top = 10.dp, end = 10.dp), fontSize = 15.sp)
+                                }
+                                Text(randomFeature!!.title+"", modifier = Modifier.padding(start = 15.dp, end = 10.dp), fontSize = 17.sp)
+                                Text(randomFeature.summary+"", modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp), fontSize = 13.sp, color = MiuixTheme.colorScheme.onSurfaceContainerHigh)
+                            }
+                        }
+                    }
+                    item {
+                        Card(modifier = Modifier.widthIn(max = 230.dp).padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
+                            val randomFeature = features(LocalContext.current)
+                                .filter { it.summary != null }
+                                .takeIf { it.isNotEmpty() }
+                                ?.random()
+                            Column(modifier = Modifier.clickable {
+                                navController.navigate(randomFeature!!.category)
+                            }) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Image(painter = painterResource(id = R.drawable.recommend), contentDescription = null, modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 5.dp).size(30.dp), contentScale = androidx.compose.ui.layout.ContentScale.FillBounds)
+                                    Text(text = stringResource(R.string.recommended_features), modifier = Modifier.padding(top = 10.dp, end = 10.dp), fontSize = 15.sp)
+                                }
+                                Text(randomFeature!!.title+"", modifier = Modifier.padding(start = 15.dp, end = 10.dp), fontSize = 17.sp)
+                                Text(randomFeature.summary+"", modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp), fontSize = 13.sp, color = MiuixTheme.colorScheme.onSurfaceContainerHigh)
+                            }
+                        }
+                    }
+                }
+            }
         }
         item {
             // 卡片2动画
