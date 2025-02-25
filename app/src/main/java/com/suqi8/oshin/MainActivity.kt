@@ -763,7 +763,8 @@ fun AppHorizontalPager(
 
                 1 -> Main_Home(
                     topAppBarScrollBehavior = topAppBarScrollBehaviorList[1],
-                    padding = padding
+                    padding = padding,
+                    navController = navController
                 )
 
                 else -> Main_About(
