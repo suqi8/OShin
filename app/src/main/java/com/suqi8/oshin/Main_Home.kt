@@ -19,10 +19,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -32,11 +34,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.asImageBitmap
@@ -44,6 +48,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -81,8 +86,8 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
             Text(text = "Loading...", modifier = Modifier.align(Alignment.Center))
         }
     }*/
-    val cardVisible = remember { mutableStateOf(false) }
-    val cardVisible1 = remember { mutableStateOf(false) }
+    val cardVisible = rememberSaveable { mutableStateOf(false) }
+    val cardVisible1 = rememberSaveable { mutableStateOf(false) }
     LazyColumn(
         contentPadding = padding,
         topAppBarScrollBehavior = topAppBarScrollBehavior
@@ -92,10 +97,12 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                 cardVisible.value = true
                 //loading.value = false
             }
-            LaunchedEffect(Unit) {
-                cardVisible1.value = true
-                delay(6000)
-                cardVisible1.value = false
+            LaunchedEffect(cardVisible1.value) {
+                if (!cardVisible.value) {
+                    cardVisible1.value = true
+                    delay(6000)
+                    cardVisible1.value = false
+                }
             }
 
             // 卡片1动画
@@ -226,38 +233,33 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
             ) {
                 LazyRow(modifier = Modifier.fillMaxWidth()) {
                     item {
-                        Card(modifier = Modifier.widthIn(max = 230.dp).padding(start = 20.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
+                        Card(modifier = Modifier.width(230.dp).height(165.dp).padding(start = 20.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
                             val randomFeature = features(LocalContext.current)
                                 .filter { it.summary != null }
                                 .takeIf { it.isNotEmpty() }
                                 ?.random()
                             Column(modifier = Modifier.clickable {
                                 navController.navigate(randomFeature!!.category)
-                            }) {
+                            }.fillMaxSize()) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Image(painter = painterResource(id = R.drawable.recommend), contentDescription = null, modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 5.dp).size(30.dp), contentScale = androidx.compose.ui.layout.ContentScale.FillBounds)
+                                    Image(painter = painterResource(id = R.drawable.recommend),
+                                        contentDescription = null,
+                                        modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 5.dp).size(30.dp),
+                                        colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface))
                                     Text(text = stringResource(R.string.recommended_features), modifier = Modifier.padding(top = 10.dp, end = 10.dp), fontSize = 15.sp)
                                 }
-                                Text(randomFeature!!.title+"", modifier = Modifier.padding(start = 15.dp, end = 10.dp), fontSize = 17.sp)
-                                Text(randomFeature.summary+"", modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp), fontSize = 13.sp, color = MiuixTheme.colorScheme.onSurfaceContainerHigh)
-                            }
-                        }
-                    }
-                    item {
-                        Card(modifier = Modifier.widthIn(max = 230.dp).padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
-                            val randomFeature = features(LocalContext.current)
-                                .filter { it.summary != null }
-                                .takeIf { it.isNotEmpty() }
-                                ?.random()
-                            Column(modifier = Modifier.clickable {
-                                navController.navigate(randomFeature!!.category)
-                            }) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Image(painter = painterResource(id = R.drawable.recommend), contentDescription = null, modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 5.dp).size(30.dp), contentScale = androidx.compose.ui.layout.ContentScale.FillBounds)
-                                    Text(text = stringResource(R.string.recommended_features), modifier = Modifier.padding(top = 10.dp, end = 10.dp), fontSize = 15.sp)
-                                }
-                                Text(randomFeature!!.title+"", modifier = Modifier.padding(start = 15.dp, end = 10.dp), fontSize = 17.sp)
-                                Text(randomFeature.summary+"", modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp), fontSize = 13.sp, color = MiuixTheme.colorScheme.onSurfaceContainerHigh)
+                                Text(randomFeature!!.title+"",
+                                    modifier = Modifier.padding(start = 15.dp, end = 10.dp),
+                                    fontSize = 17.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis)
+                                //Spacer(modifier = Modifier.weight(1f))
+                                Text(randomFeature.summary+"",
+                                    modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp),
+                                    fontSize = 14.sp,
+                                    color = MiuixTheme.colorScheme.onSurfaceContainerHigh,
+                                    maxLines = 3,
+                                    overflow = TextOverflow.Ellipsis)
                             }
                         }
                     }
