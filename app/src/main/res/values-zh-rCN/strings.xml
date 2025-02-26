@@ -225,4 +225,5 @@
     <string name="remove_and_do_not_disturb_notification">移除通知勿扰通知</string>
     <string name="hide_launcher_icon">隐藏桌面图标</string>
     <string name="recommended_features">推荐功能</string>
+    <string name="force_enable_xiaobu_call">强制启用小布通话</string>
 </resources>

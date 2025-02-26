@@ -226,4 +226,5 @@
     <string name="remove_and_do_not_disturb_notification">Remove Do Not Disturb Notification</string>
     <string name="hide_launcher_icon">Hide Launcher Icon</string>
     <string name="recommended_features">Recommended Features</string>
+    <string name="force_enable_xiaobu_call">Force enable Xiaobu call</string>
 </resources>

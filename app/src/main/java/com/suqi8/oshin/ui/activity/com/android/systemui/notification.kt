@@ -25,7 +25,7 @@ fun notification(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp, top = 15.dp)
+                .padding(bottom = 6.dp, top = 6.dp)
         ) {
             FunSwich(
                 title = stringResource(R.string.remove_developer_options_notification),
