@@ -259,7 +259,9 @@ fun features(context: Context) = listOf(
         category = "battery"),
     item(title = context.getString(R.string.remove_and_do_not_disturb_notification),
         summary = context.getString(R.string.notification_restriction_message),
-        category = "systemui\\notification")
+        category = "systemui\\notification"),
+    item(title = context.getString(R.string.force_enable_xiaobu_call),
+        category = "speechassist")
 )
 
 @Composable
@@ -402,6 +404,8 @@ fun Main_Function(
                             FunctionApp("com.android.launcher", "launcher", navController)
                             addline()
                             FunctionApp("com.oplus.battery", "battery", navController)
+                            addline()
+                            FunctionApp("com.heytap.speechassist", "speechassist", navController)
                         }
                     }
                     Spacer(modifier = Modifier.padding(padding.calculateBottomPadding()))

@@ -9,6 +9,7 @@ import com.highcapable.yukihookapi.hook.factory.encase
 import com.highcapable.yukihookapi.hook.xposed.bridge.event.YukiXposedEvent
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import com.suqi8.oshin.hook.android.OplusRootCheck
+import com.suqi8.oshin.hook.com.heytap.speechassist.ai_call
 import com.suqi8.oshin.hook.com.oplus.battery.battery
 import com.suqi8.oshin.hook.launcher.LauncherIcon
 import com.suqi8.oshin.hook.launcher.recent_task
@@ -21,7 +22,7 @@ import com.suqi8.oshin.hook.systemui.aod.allday_screenoff
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
-@InjectYukiHookWithXposed(entryClassName = "opatch", isUsingResourcesHook = true)
+@InjectYukiHookWithXposed(entryClassName = "oshin", isUsingResourcesHook = true)
 class HookEntry : IYukiHookXposedInit {
 
     override fun onInit() = configs {
@@ -62,6 +63,7 @@ class HookEntry : IYukiHookXposedInit {
                 }
             }*/
         }
+        loadApp(hooker = ai_call())
         /*loadApp(name = "com.android.settings") {
             resources().hook {
                 injectResource {

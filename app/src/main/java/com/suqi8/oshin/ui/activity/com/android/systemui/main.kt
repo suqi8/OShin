@@ -34,7 +34,7 @@ fun systemui(navController: NavController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp, top = 15.dp)
+                .padding(bottom = 6.dp, top = 6.dp)
         ) {
             SuperArrow(title = stringResource(id = R.string.status_bar_clock),
                 onClick = {
