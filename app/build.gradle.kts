@@ -1,34 +1,12 @@
 import java.io.ByteArrayOutputStream
-import java.io.FileInputStream
-import java.io.FileOutputStream
-import java.util.Properties
 
 plugins {
     autowire(libs.plugins.android.application)
     autowire(libs.plugins.kotlin.android)
     autowire(libs.plugins.kotlin.ksp)
     id("com.github.ben-manes.versions") version "0.51.0"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.0.20"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.1.10"
     id("com.autonomousapps.dependency-analysis") version "2.1.4"
-}
-
-fun getAndIncrementBuildNumber(): Int {
-    val propertiesFile = file("version.properties")
-    val properties = Properties()
-    // Load existing properties
-    if (propertiesFile.exists()) {
-        properties.load(FileInputStream(propertiesFile))
-    } else {
-        // If file doesn't exist, create a new one
-        properties["BUILD_NUMBER"] = "1"
-    }
-    // Get the current build number
-    val buildNumber = properties["BUILD_NUMBER"].toString().toInt()
-    // Increment the build number
-    properties["BUILD_NUMBER"] = (buildNumber + 1).toString()
-    // Save the updated build number back to the properties file
-    properties.store(FileOutputStream(propertiesFile), null)
-    return buildNumber
 }
 
 fun getGitCommitHash(): String {
@@ -80,7 +58,7 @@ android {
                 output.outputFileName = outputFileName
             }
     }
-    val number = commitCount().toInt()// + getAndIncrementBuildNumber()
+    val number = commitCount().toInt()
     defaultConfig {
         applicationId = property.project.app.packageName
         minSdk = property.project.android.minSdk
@@ -157,6 +135,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.okhttp)
     implementation(libs.lottie.compose)
     implementation(libs.ezxhelper)
     runtimeOnly(libs.androidx.room.runtime)
