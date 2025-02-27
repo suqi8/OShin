@@ -239,7 +239,6 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                     item {
                         Card(modifier = Modifier.width(230.dp).height(165.dp).padding(start = 20.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
                             val randomFeature = features(LocalContext.current)
-                                .filter { it.summary != null }
                                 .takeIf { it.isNotEmpty() }
                                 ?.random()
                             Column(modifier = Modifier.clickable {
@@ -258,7 +257,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis)
                                 //Spacer(modifier = Modifier.weight(1f))
-                                Text(randomFeature.summary+"",
+                                Text(randomFeature.summary ?: stringResource(R.string.no_introduction),
                                     modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp),
                                     fontSize = 14.sp,
                                     color = MiuixTheme.colorScheme.onSurfaceContainerHigh,
