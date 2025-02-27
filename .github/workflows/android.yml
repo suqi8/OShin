@@ -25,7 +25,10 @@ jobs:
     - name: Cache Gradle dependencies
       uses: actions/cache@v2
       with:
-        path: ~/.gradle/caches
+        path: |
+          ~/.gradle/wrapper
+          ~/.gradle/caches
+          build
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
