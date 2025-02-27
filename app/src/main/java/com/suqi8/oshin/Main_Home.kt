@@ -267,6 +267,37 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                             }
                         }
                     }
+                    item {
+                        Card(modifier = Modifier.width(230.dp).height(165.dp).padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
+                            val recent_Feature = features(LocalContext.current)
+                                .takeIf { it.isNotEmpty() }
+                                ?.last()
+                            Column(modifier = Modifier.clickable {
+                                navController.navigate("recent_update")
+                            }.fillMaxSize()) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Image(painter = painterResource(id = R.drawable.recent_update),
+                                        contentDescription = null,
+                                        modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 5.dp).size(30.dp).padding(5.dp),
+                                        colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface))
+                                    Text(text = stringResource(R.string.recent_update), modifier = Modifier.padding(top = 10.dp, end = 10.dp), fontSize = 15.sp)
+                                }
+                                Text(recent_Feature!!.title+"",
+                                    modifier = Modifier.padding(start = 15.dp, end = 10.dp),
+                                    fontSize = 17.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis)
+                                //Spacer(modifier = Modifier.weight(1f))
+                                Text(
+                                    recent_Feature.summary ?: stringResource(R.string.no_introduction),
+                                    modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp),
+                                    fontSize = 14.sp,
+                                    color = MiuixTheme.colorScheme.onSurfaceContainerHigh,
+                                    maxLines = 3,
+                                    overflow = TextOverflow.Ellipsis)
+                            }
+                        }
+                    }
                 }
             }
         }
