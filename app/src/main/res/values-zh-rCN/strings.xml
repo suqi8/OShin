@@ -226,4 +226,6 @@
     <string name="hide_launcher_icon">隐藏桌面图标</string>
     <string name="recommended_features">推荐功能</string>
     <string name="force_enable_xiaobu_call">强制启用小布通话</string>
+    <string name="recent_update">最近更新</string>
+    <string name="no_introduction">暂时还没有介绍╥﹏╥...</string>
 </resources>

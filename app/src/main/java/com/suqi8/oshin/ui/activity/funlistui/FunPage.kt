@@ -1,7 +1,6 @@
 package com.suqi8.oshin.ui.activity.funlistui
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
@@ -118,7 +117,7 @@ fun FunPage(title: String, appList: List<String>? = listOf(), navController: Nav
                 .background(MiuixTheme.colorScheme.background)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
-            contentPadding = PaddingValues(top = padding.calculateTopPadding()),
+            contentPadding = padding,
             topAppBarScrollBehavior = topAppBarState
         ) {
             item {

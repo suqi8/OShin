@@ -227,4 +227,6 @@
     <string name="hide_launcher_icon">Hide Launcher Icon</string>
     <string name="recommended_features">Recommended Features</string>
     <string name="force_enable_xiaobu_call">Force enable Xiaobu call</string>
+    <string name="recent_update">Recent Updates</string>
+    <string name="no_introduction">No introduction available yet... 😢</string>
 </resources>

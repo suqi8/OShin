@@ -86,6 +86,7 @@ import com.suqi8.oshin.ui.activity.com.android.systemui.statusbar_icon
 import com.suqi8.oshin.ui.activity.com.android.systemui.systemui
 import com.suqi8.oshin.ui.activity.com.heytap.speechassist.speechassist
 import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
+import com.suqi8.oshin.ui.activity.recent_update
 import com.suqi8.oshin.ui.theme.AppTheme
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeEffectScope
@@ -597,6 +598,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
                 }
         ) {
             composable("Main") { Main1(modifier = modifier, context = context,navController,colorMode,alpha, blurRadius, noiseFactor, hazeState, hazeStyle) }
+            composable("recent_update") { recent_update(navController) }
             composable("android") { android(navController) }
             composable("android\\package_manager_services") { package_manager_services(navController = navController) }
             composable("android\\oplus_system_services") { oplus_services(navController = navController) }
