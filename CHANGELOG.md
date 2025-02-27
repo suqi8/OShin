@@ -1,5 +1,35 @@
 # Changelog
 
+## [15.1.0](https://github.com/suqi8/OShin/compare/v15.0.0...v15.1.0) (2025-02-27)
+
+
+### Features
+
+* **app:** 优化功能页面性能 ([1047471](https://github.com/suqi8/OShin/commit/10474717268a2b8677bf0cf4d5b0f89ede7af092))
+* **app:** 优化界面逻辑 ([80e643d](https://github.com/suqi8/OShin/commit/80e643d0cfebb7841c8626817d1f6500c58a596b))
+* **app:** 修改版本号逻辑，并提交忘了提交的东西 ([bbd9c69](https://github.com/suqi8/OShin/commit/bbd9c69bd642b00c861102cc40b756be27d9ac2b))
+* **app:** 再次提交忘了提交的东西 ([ce7bd09](https://github.com/suqi8/OShin/commit/ce7bd096b2b0ec1e68d1533fb6e1ffa3a6a46b99))
+* **app:** 在关于页面添加QAuxiliary开源项目 ([0fc4744](https://github.com/suqi8/OShin/commit/0fc4744399e854c9202108545ff8e85d90ac0e22))
+* **app:** 将推荐功能添加到主页 ([3cde15c](https://github.com/suqi8/OShin/commit/3cde15c6c4c462957d17377fbb6bd8bb32b82d89))
+* **app:** 改进卡片功能，优化性能 ([ab89dc3](https://github.com/suqi8/OShin/commit/ab89dc3d7bf095d3027cddb033caa03a7018d957))
+* **app:** 改进推荐功能卡片，优化动画逻辑 ([0c17647](https://github.com/suqi8/OShin/commit/0c176477262d3bc55c76a4831cc1ff25f1da7e44))
+* **app:** 添加 强制启用小布助手，优化界面，更改xposed_init入口 ([aa8c860](https://github.com/suqi8/OShin/commit/aa8c860b7ef9f960628ea1d5aa01b4ac638e485c))
+* **app:** 添加“Recommended Features”字符串 ([99cd9e6](https://github.com/suqi8/OShin/commit/99cd9e696606d5cc334a73d4df9e0f72986dbff5))
+* **app:** 添加关闭低电量流体云 感谢Telegram@psychosispy ([8e47f38](https://github.com/suqi8/OShin/commit/8e47f3876036a9a024e7ad527c74184e1cab69ec))
+* **app:** 添加最近更新功能卡片和页面 ([390362d](https://github.com/suqi8/OShin/commit/390362d902b11bf35e2dd97455777971fa7e97b5))
+* **app:** 添加移除通知勿扰通知 ([9923bcd](https://github.com/suqi8/OShin/commit/9923bcd1bd3e547baa01d74f8eeaeb2cfdc59893))
+* **app:** 添加隐藏启动器图标功能 ([ca58fc4](https://github.com/suqi8/OShin/commit/ca58fc4a87db4cf8d159fcb4d1d621772617c014))
+* **app:** 调整推荐功能卡片，更新构建缓存 ([2ab5828](https://github.com/suqi8/OShin/commit/2ab582838af0ba4a5a14e4de88453269f9522b4d))
+* **ci:** 优化 Gradle 缓存策略以提升构建速度 ([a882d57](https://github.com/suqi8/OShin/commit/a882d57c89c553d1a763c97199ca37dfce1319a5))
+* **gradle:** Update dependency versions ([222fe83](https://github.com/suqi8/OShin/commit/222fe833049d4df43153342ed7bfe1ddad1edb48))
+* **gradle:** 更新依赖项和构建配置，大幅优化构建速度 ([631a3d7](https://github.com/suqi8/OShin/commit/631a3d790a4421389519c97f0eccfa378a0f292f))
+* **gradle:** 更新依赖项和构建配置，大幅优化构建速度 ([fd3c99b](https://github.com/suqi8/OShin/commit/fd3c99bcb7a1b16a105fcd85eb643f4d581f6bbf))
+* **indicator:** 修复功耗指示器的自定义字体大小 ([67cac35](https://github.com/suqi8/OShin/commit/67cac350a54e101426ae8ddfb465080f5fea3971))
+* **slider:** 修复滑块进度更改的小数点 ([73d2f48](https://github.com/suqi8/OShin/commit/73d2f48632a905942c637772cb455250095475c7))
+* **systemui:** 添加 移除开发者选项通知 ([d26ff48](https://github.com/suqi8/OShin/commit/d26ff486773cf8a36c53a0a2dd8debd2dc18b752))
+* 升级到 Kotlin 2.1.10 并更新依赖项，修改项目昵称 ([88d208e](https://github.com/suqi8/OShin/commit/88d208e23870ba4bfb28367191432b7c2031eae6))
+* 更新了版本号，移除了him ([892d242](https://github.com/suqi8/OShin/commit/892d2421d184fb227a3f098b84cb028e4e974e4b))
+
 ## [1.2.0](https://github.com/suqi8/OPatch/compare/v1.1.0...v1.2.0) (2025-01-03)
 
 
