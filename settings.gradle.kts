@@ -14,5 +14,5 @@ plugins {
 sweetProperty {
     rootProject { all { isEnable = false } }
 }
-rootProject.name = "OPatch"
+rootProject.name = "OShin"
 include(":app")
