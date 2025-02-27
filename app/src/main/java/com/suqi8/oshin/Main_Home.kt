@@ -26,14 +26,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -65,6 +68,7 @@ import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Card
@@ -267,6 +271,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
             }
         }
         item {
+            val context = LocalContext.current
             // 卡片2动画
             AnimatedVisibility(
                 visible = cardVisible.value,
@@ -280,86 +285,136 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                         .padding(start = 20.dp, top = 10.dp, end = 20.dp, bottom = 20.dp)
                         .fillMaxWidth()
                 ) {
-                    var nvid by remember { mutableStateOf("0") }
-
-                    val country: String = when (nvid) {
-                        "10010111" -> stringResource(R.string.nvid_CN)
-                        "00011010" -> stringResource(R.string.nvid_TW)
-                        "00110111" -> stringResource(R.string.nvid_RU)
-                        "01000100" -> stringResource(R.string.nvid_GDPR_EU)
-                        "10001101" -> stringResource(R.string.nvid_GDPR_Europe)
-                        "00011011" -> stringResource(R.string.nvid_IN)
-                        "00110011" -> stringResource(R.string.nvid_ID)
-                        "00111000" -> stringResource(R.string.nvid_MY)
-                        "00111001" -> stringResource(R.string.nvid_TH)
-                        "00111110" -> stringResource(R.string.nvid_PH)
-                        "10000011" -> stringResource(R.string.nvid_SA)
-                        "10011010" -> stringResource(R.string.nvid_LATAM)
-                        "10011110" -> stringResource(R.string.nvid_BR)
-                        "10100110" -> stringResource(R.string.nvid_ME)
-                        else -> stringResource(R.string.nvid_unknown, nvid)
+                    data class BatteryStatus(
+                        val current: String = "0 mAh",
+                        val full: String = "0 mAh",
+                        val health: String = "0%"
+                    )
+                    var nvid by rememberSaveable { mutableStateOf("0") } // 使用 rememberSaveable 保持状态
+                    val country by remember(nvid) { // 使用记忆函数优化计算
+                        derivedStateOf {
+                            when (nvid) {
+                                "10010111" -> context.getString(R.string.nvid_CN)
+                                "00011010" -> context.getString(R.string.nvid_TW)
+                                "00110111" -> context.getString(R.string.nvid_RU)
+                                "01000100" -> context.getString(R.string.nvid_GDPR_EU)
+                                "10001101" -> context.getString(R.string.nvid_GDPR_Europe)
+                                "00011011" -> context.getString(R.string.nvid_IN)
+                                "00110011" -> context.getString(R.string.nvid_ID)
+                                "00111000" -> context.getString(R.string.nvid_MY)
+                                "00111001" -> context.getString(R.string.nvid_TH)
+                                "00111110" -> context.getString(R.string.nvid_PH)
+                                "10000011" -> context.getString(R.string.nvid_SA)
+                                "10011010" -> context.getString(R.string.nvid_LATAM)
+                                "10011110" -> context.getString(R.string.nvid_BR)
+                                "10100110" -> context.getString(R.string.nvid_ME)
+                                else -> context.getString(R.string.nvid_unknown, nvid)
+                            }
+                        }
                     }
-                    var health by remember { mutableStateOf("0") }
-                    var versionMessage by remember { mutableStateOf("0") }
-                    var ksuVersion by remember { mutableStateOf("0") }
-                    var battery_cc: Int by remember { mutableIntStateOf(0) }
-                    var charge_full_design: Int by remember { mutableIntStateOf(0) }
+
+                    var health by rememberSaveable { mutableStateOf("0") }
+                    var versionMessage by rememberSaveable { mutableStateOf("0") }
+                    var ksuVersion by rememberSaveable { mutableStateOf("0") }
+                    var battery_cc by rememberSaveable { mutableIntStateOf(0) }
+                    var charge_full_design by rememberSaveable { mutableIntStateOf(0) }
+
+                    // 合并电池状态更新
+                    val batteryStatus = remember { mutableStateOf(BatteryStatus()) }
+
+                    // 生命周期管理
+                    val lifecycleOwner = LocalLifecycleOwner.current
+                    var isForeground by remember { mutableStateOf(false) }
+
+                    // 初始化只执行一次的操作
                     LaunchedEffect(Unit) {
                         withContext(Dispatchers.IO) {
                             nvid = getSystemProperty("ro.build.oplus_nv_id")
-                            health =
-                                executeCommand("cat /sys/class/power_supply/battery/health").trim()
-                            ksuVersion = executeCommand("/data/adb/ksud -V")
-                            versionMessage = if (ksuVersion.isEmpty()) {
-                                val magiskVersion = executeCommand("magisk -v")
-                                magiskVersion + " " + executeCommand("magisk -V").trim()
-                            } else {
-                                val version = ksuVersion.substringAfter("ksud ").substring(0, 4)
-                                version
+                            health = executeCommand("cat /sys/class/power_supply/battery/health").trim()
+
+                            // 合并版本信息获取
+                            ksuVersion = executeCommand("/data/adb/ksud -V").let {
+                                if (it.isEmpty()) {
+                                    "0"
+                                } else {
+                                    it.substringAfter("ksud ").take(4)
+                                }
                             }
+                            versionMessage = executeCommand("/data/adb/ksud -V").let {
+                                if (it.isEmpty()) {
+                                    val magiskVersion = executeCommand("magisk -v")
+                                    "$magiskVersion ${executeCommand("magisk -V").trim()}"
+                                } else {
+                                    it.substringAfter("ksud ").take(4)
+                                }
+                            }
+
+                            // 合并电池信息获取
                             battery_cc = try {
-                                executeCommand("cat /sys/class/oplus_chg/battery/battery_cc").trim()
-                                    .toInt()
-                            } catch (e: Exception) {
-                                0
-                            }
+                                executeCommand("cat /sys/class/oplus_chg/battery/battery_cc").trim().toInt()
+                            } catch (e: Exception) { 0 }
+
                             charge_full_design = try {
-                                executeCommand("cat /sys/class/power_supply/battery/charge_full_design").trim()
-                                    .toInt() / 1000
-                            } catch (e: Exception) {
-                                0
+                                executeCommand("cat /sys/class/power_supply/battery/charge_full_design")
+                                    .trim().toInt() / 1000
+                            } catch (e: Exception) { 0 }
+                        }
+                    }
+
+                    // 优化电池信息更新
+                    LaunchedEffect(isForeground) {
+                        if (isForeground) {
+                            while (true) {
+                                withContext(Dispatchers.IO) {
+                                    // 使用单次命令获取所有电池信息
+                                    val rawData = executeCommand("""
+                        echo "charge_full=$(cat /sys/class/oplus_chg/battery/charge_full)"
+                        echo "charge_full1=$(cat /sys/class/power_supply/battery/charge_counter)"
+                        echo "fcc=$(cat /sys/class/oplus_chg/battery/battery_fcc)"
+                        echo "design=$(cat /sys/class/power_supply/battery/charge_full_design)"
+                    """.trimIndent())
+
+                                    // 解析数据
+                                    val data = rawData.lines()
+                                        .associate { it.split("=").let { parts -> parts[0] to parts[1] } }
+                                    val charge_fulldata0 = try {
+                                        (data["charge_full"]?.toIntOrNull() ?: 0) / 1000
+                                    } catch (e: Exception) { 0 }
+                                    val charge_fulldata1 = try {
+                                        (data["charge_full1"]?.toIntOrNull() ?: 0) / 1000
+                                    } catch (e: Exception) { 0 }
+                                    val charge_fulldata = if (charge_fulldata0 != 0) {
+                                        charge_fulldata0
+                                    } else {
+                                        charge_fulldata1
+                                    }
+
+                                    val newStatus = BatteryStatus(
+                                        current = "$charge_fulldata mAh",
+                                        full = (data["fcc"]?.toIntOrNull() ?: 0).toString() + " mAh",
+                                        health = try {
+                                            val design = data["design"]?.toFloatOrNull() ?: 1f
+                                            val soh = (data["fcc"]?.toFloatOrNull() ?: 0f) / (design / 100000)
+                                            "${getSOH()}% / ${soh}%"
+                                        } catch (e: Exception) { "ERROR" }
+                                    )
+
+                                    // 单次状态更新
+                                    batteryStatus.value = newStatus
+                                    println(batteryStatus.value.toString() + "111" + newStatus.toString())
+                                }
+                                delay(10000L)
                             }
                         }
-
-
                     }
-                    val batteryHealthString = when (health) {
-                        "Good" -> stringResource(R.string.battery_health_good)
-                        "Overheat" -> stringResource(R.string.battery_health_overheat)
-                        "Dead" -> stringResource(R.string.battery_health_dead)
-                        "Over Voltage" -> stringResource(R.string.battery_health_over_voltage)
-                        "Cold" -> stringResource(R.string.battery_health_cold)
-                        "Unknown" -> stringResource(R.string.battery_health_unknown)
-                        else -> stringResource(R.string.battery_health_not_found)
-                    }
-                    // 使用 MutableState 存储电池信息
-                    val currentCapacity = remember { mutableStateOf("0 mAh") }
-                    val fullCapacity = remember { mutableStateOf("0 mAh") }
-                    val batteryHealth = remember { mutableStateOf("0%") }
-                    val lifecycleOwner = LocalLifecycleOwner.current
-                    val isForeground = remember { mutableStateOf(false) }
-                    DisposableEffect(Unit) {
+
+                    // 生命周期观察器
+                    DisposableEffect(lifecycleOwner) {
                         val observer = LifecycleEventObserver { _, event ->
-                            when (event) {
-                                Lifecycle.Event.ON_START -> {
-                                    isForeground.value = true
-                                }
-
-                                Lifecycle.Event.ON_STOP -> {
-                                    isForeground.value = false
-                                }
-
-                                else -> {}
+                            isForeground = when (event) {
+                                Lifecycle.Event.ON_START -> true
+                                Lifecycle.Event.ON_STOP -> false
+                                else -> isForeground
                             }
                         }
                         lifecycleOwner.lifecycle.addObserver(observer)
@@ -367,49 +422,16 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                             lifecycleOwner.lifecycle.removeObserver(observer)
                         }
                     }
-                    LaunchedEffect(Unit) {
-                        withContext(Dispatchers.IO) {
-                            while (true) {
-                                if (isForeground.value) {
-                                    currentCapacity.value = try {
-                                        when {
-                                            executeCommand("cat /sys/class/oplus_chg/battery/charge_full").isNotEmpty() -> {
-                                                (executeCommand("cat /sys/class/oplus_chg/battery/charge_full").trim()
-                                                    .toInt() / 1000).toString()
-                                            }
-
-                                            executeCommand("cat /sys/class/power_supply/battery/charge_counter").isNotEmpty() -> {
-                                                (executeCommand("cat /sys/class/power_supply/battery/charge_counter").trim()
-                                                    .toInt() / 1000).toString()
-                                            }
-
-                                            executeCommand("cat /sys/class/power_supply/battery/charge_now").isNotEmpty() -> {
-                                                (executeCommand("cat /sys/class/power_supply/battery/charge_now").trim()
-                                                    .toInt() / 1000).toString()
-                                            }
-
-                                            else -> "ERROR"
-                                        }
-                                    } catch (e: Exception) {
-                                        e.message
-                                    } + " mAh"
-                                    fullCapacity.value = try {
-                                        executeCommand("cat /sys/class/oplus_chg/battery/battery_fcc").trim()
-                                            .toInt().toString()
-                                    } catch (e: Exception) {
-                                        e.message
-                                    } + " mAh"
-                                    batteryHealth.value = try {
-                                        getSOH() + "% / " +
-                                                (executeCommand("cat /sys/class/oplus_chg/battery/battery_fcc").trim()
-                                                    .toFloat() /
-                                                        (executeCommand("cat /sys/class/power_supply/battery/charge_full_design").trim()
-                                                            .toFloat() / 100000)).toString()
-                                    } catch (e: Exception) {
-                                        e.message
-                                    } + "%"
-                                }
-                                delay(10000L)
+                    val batteryHealthString by remember(health) {
+                        derivedStateOf {
+                            when (health) {
+                                "Good" -> context.getString(R.string.battery_health_good)
+                                "Overheat" -> context.getString(R.string.battery_health_overheat)
+                                "Dead" -> context.getString(R.string.battery_health_dead)
+                                "Over Voltage" -> context.getString(R.string.battery_health_over_voltage)
+                                "Cold" -> context.getString(R.string.battery_health_cold)
+                                "Unknown" -> context.getString(R.string.battery_health_unknown)
+                                else -> context.getString(R.string.battery_health_not_found)
                             }
                         }
                     }
@@ -478,7 +500,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                             modifier = Modifier.padding(top = 5.dp)
                         )
                         SmallTitle(
-                            text = currentCapacity.value,
+                            text = batteryStatus.value.current,
                             insideMargin = PaddingValues(0.dp, 0.dp),
                             modifier = Modifier.padding(bottom = 5.dp)
                         )
@@ -488,7 +510,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                             modifier = Modifier.padding(top = 5.dp)
                         )
                         SmallTitle(
-                            text = fullCapacity.value,
+                            text = batteryStatus.value.full,
                             insideMargin = PaddingValues(0.dp, 0.dp),
                             modifier = Modifier.padding(bottom = 5.dp)
                         )
@@ -498,7 +520,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                             modifier = Modifier.padding(top = 5.dp)
                         )
                         SmallTitle(
-                            text = batteryHealth.value,
+                            text = batteryStatus.value.health,
                             insideMargin = PaddingValues(0.dp, 0.dp),
                             modifier = Modifier.padding(bottom = 5.dp)
                         )
@@ -514,7 +536,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                         )
                         addline(false)
                         Text(
-                            text = if (ksuVersion.isEmpty()) stringResource(id = R.string.magisk_version) else stringResource(
+                            text = if (ksuVersion == "0") stringResource(id = R.string.magisk_version) else stringResource(
                                 id = R.string.ksu_version
                             ), modifier = Modifier.padding(top = 5.dp)
                         )
@@ -594,24 +616,44 @@ fun GetAppIconAndName(
     onAppInfoLoaded: @Composable (String, ImageBitmap) -> Unit
 ) {
     val context = LocalContext.current
-    val packageManager = context.packageManager
-    val applicationInfo = remember { mutableStateOf<android.content.pm.ApplicationInfo?>(null) }
+    val coroutineScope = rememberCoroutineScope()
 
-    LaunchedEffect(packageName) {
-        try {
-            applicationInfo.value = packageManager.getApplicationInfo(packageName, 0)
-        } catch (_: PackageManager.NameNotFoundException) {
+    // 使用 remember + key 实现缓存
+    val cachedAppInfo = remember(packageName) {
+        mutableStateOf<Pair<String, ImageBitmap>?>(null)
+    }
+
+    DisposableEffect(packageName) {
+        val job = coroutineScope.launch(Dispatchers.IO) {
+            try {
+                val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
+                val icon = appInfo.loadIcon(context.packageManager)
+                val appName = context.packageManager.getApplicationLabel(appInfo).toString()
+
+                // 转换到主线程更新UI
+                withContext(Dispatchers.Main) {
+                    cachedAppInfo.value = appName to icon.toBitmap().asImageBitmap()
+                }
+            } catch (e: Exception) {
+                withContext(Dispatchers.Main) {
+                    cachedAppInfo.value = "noapp" to ImageBitmap(1, 1)
+                }
+            }
+        }
+
+        onDispose {
+            job.cancel()
         }
     }
 
-    if (applicationInfo.value != null) {
-        val info = applicationInfo.value!!
-        val icon = info.loadIcon(packageManager)
-        val appName = packageManager.getApplicationLabel(info).toString()
-
-        onAppInfoLoaded(appName, icon.toBitmap().asImageBitmap())
-    } else {
-        onAppInfoLoaded("noapp", ImageBitmap(1, 1))
+    when (val result = cachedAppInfo.value) {
+        null -> {
+            // 加载状态显示
+            CircularProgressIndicator(modifier = Modifier.size(24.dp))
+        }
+        else -> {
+            onAppInfoLoaded(result.first, result.second)
+        }
     }
 }
 
