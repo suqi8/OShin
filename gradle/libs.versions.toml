@@ -4,6 +4,7 @@ composeBomVersion = "2025.02.00"
 composeneumorphism = "1.0.0-alpha02"
 composeShimmer = "1.3.1"
 datastorePreferences = "1.1.2"
+desugar_jdk_libsVersion = "2.1.5"
 expandablebottombar = "1.5.4"
 ezxhelper = "2.2.0"
 gson = "2.11.0"
@@ -31,6 +32,7 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "composeShimmer" }
 composeneumorphism = { module = "me.nikhilchaudhari:composeNeumorphism", version.ref = "composeneumorphism" }
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugar_jdk_libsVersion" }
 expandablebottombar = { module = "com.github.st235:expandablebottombar", version.ref = "expandablebottombar" }
 ezxhelper = { module = "com.github.kyuubiran:EzXHelper", version.ref = "ezxhelper" }
 androidx-datastore-core-android = { group = "androidx.datastore", name = "datastore-core-android", version.ref = "datastoreCoreAndroid" }

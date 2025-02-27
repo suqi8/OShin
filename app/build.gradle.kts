@@ -1,30 +1,36 @@
+@file:Suppress("DSL_SCOPE_VIOLATION")
 import java.io.ByteArrayOutputStream
 
 plugins {
-    autowire(libs.plugins.android.application)
-    autowire(libs.plugins.kotlin.android)
-    autowire(libs.plugins.kotlin.ksp)
+    alias(libs.plugins.android.application) apply true
+    alias(libs.plugins.kotlin.android) apply true
+    alias(libs.plugins.kotlin.ksp) apply true
     id("com.github.ben-manes.versions") version "0.51.0"
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.10"
     id("com.autonomousapps.dependency-analysis") version "2.1.4"
 }
 
-fun getGitCommitHash(): String {
-    val stdout = ByteArrayOutputStream()
-    exec {
-        commandLine = "git rev-parse --short HEAD".split(" ")
-        standardOutput = stdout
-    }
-    return stdout.toString().trim()
-}
+apply(plugin = libs.plugins.android.application.get().pluginId)
+apply(plugin = libs.plugins.kotlin.android.get().pluginId)
+apply(plugin = libs.plugins.kotlin.ksp.get().pluginId)
 
-fun commitCount(): String {
-    val stdout = ByteArrayOutputStream()
-    exec {
-        commandLine = "git rev-list --count HEAD".split(" ")
-        standardOutput = stdout
+abstract class GitHashService @Inject constructor(private val execOps: ExecOperations) {
+    fun getCommitHash(): String {
+        val stdout = ByteArrayOutputStream()
+        execOps.exec {
+            commandLine("git", "rev-parse", "--short", "HEAD")
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
     }
-    return stdout.toString().trim()
+    fun commitCount(): String {
+        val stdout = ByteArrayOutputStream()
+        execOps.exec {
+            commandLine("git", "rev-list", "--count", "HEAD")
+            standardOutput = stdout
+        }
+        return stdout.toString().trim()
+    }
 }
 
 android {
@@ -50,20 +56,21 @@ android {
             .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
             .forEach { output ->
                 val name = "OShin"
-                var abi = output.getFilter(com.android.build.OutputFile.ABI)
-                if (abi == null) abi = "all" //兼容
+                val abi = output.getFilter("ABI") ?: "all"
                 val version = variant.versionName
                 val versionCode = variant.versionCode
                 val outputFileName = "${name}_${abi}_${"v"}${version}(${versionCode}).apk"
                 output.outputFileName = outputFileName
             }
     }
-    val number = commitCount().toInt()
+
+    val gitHashService = project.objects.newInstance(GitHashService::class.java)
+    val number = gitHashService.commitCount().toInt()
     defaultConfig {
         applicationId = property.project.app.packageName
         minSdk = property.project.android.minSdk
         targetSdk = property.project.android.targetSdk
-        versionName = property.project.app.versionName+"."+number+"."+getGitCommitHash()
+        versionName = property.project.app.versionName+"."+number+"."+gitHashService.getCommitHash()
         versionCode = number
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -101,6 +108,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
+        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "21"
@@ -125,9 +133,13 @@ android {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
+        jniLibs {
+            useLegacyPackaging = false
+        }
     }
     androidResources {
-        noCompress("webp")
+        ignoreAssetsPattern = "!*.ttf:!*.json:!*.bin"
+        noCompress += listOf("zip", "txt", "raw")
     }
     // TODO Please visit https://highcapable.github.io/YukiHookAPI/en/api/special-features/host-inject
     // TODO 请参考 https://highcapable.github.io/YukiHookAPI/zh-cn/api/special-features/host-inject
@@ -135,6 +147,7 @@ android {
 }
 
 dependencies {
+    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.okhttp)
     implementation(libs.lottie.compose)
     implementation(libs.ezxhelper)
