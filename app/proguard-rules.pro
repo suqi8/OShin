@@ -37,3 +37,4 @@
     <init>();
     *** inflate(android.view.LayoutInflater);
 }
+-keep class com.android.tools.desugar.runtime.** { *; }
