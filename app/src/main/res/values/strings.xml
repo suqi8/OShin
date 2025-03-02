@@ -229,4 +229,5 @@
     <string name="force_enable_xiaobu_call">Force enable Xiaobu call</string>
     <string name="recent_update">Recent Updates</string>
     <string name="no_introduction">No introduction available yet... 😢</string>
+    <string name="remove_full_screen_translation_restriction">Remove full-screen translation restriction</string>
 </resources>
