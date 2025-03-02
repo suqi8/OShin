@@ -228,4 +228,5 @@
     <string name="force_enable_xiaobu_call">强制启用小布通话</string>
     <string name="recent_update">最近更新</string>
     <string name="no_introduction">暂时还没有介绍╥﹏╥...</string>
+    <string name="remove_full_screen_translation_restriction">去除全屏翻译限制</string>
 </resources>

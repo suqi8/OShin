@@ -7,5 +7,6 @@
         <item>com.android.launcher</item>
         <item>com.oplus.battery</item>
         <item>com.heytap.speechassist</item>
+        <item>com.coloros.ocrscanner</item>
     </string-array>
 </resources>

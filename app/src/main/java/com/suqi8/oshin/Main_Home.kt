@@ -640,6 +640,18 @@ suspend fun executeCommand(command: String): String {
     }
 }
 
+object AppInfoCache {
+    private val cache = mutableMapOf<String, Pair<String, ImageBitmap>>()
+
+    fun getCached(packageName: String): Pair<String, ImageBitmap>? {
+        return cache[packageName]
+    }
+
+    fun updateCache(packageName: String, info: Pair<String, ImageBitmap>) {
+        cache[packageName] = info
+    }
+}
+
 @Composable
 fun GetAppIconAndName(
     packageName: String,
@@ -648,41 +660,53 @@ fun GetAppIconAndName(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
-    // 使用 remember + key 实现缓存
-    val cachedAppInfo = remember(packageName) {
-        mutableStateOf<Pair<String, ImageBitmap>?>(null)
+    // 当前加载状态（非缓存状态）
+    val loadingState = remember(packageName) {
+        mutableStateOf<Pair<String, ImageBitmap>?>(AppInfoCache.getCached(packageName))
     }
 
     DisposableEffect(packageName) {
-        val job = coroutineScope.launch(Dispatchers.IO) {
-            try {
-                val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
-                val icon = appInfo.loadIcon(context.packageManager)
-                val appName = context.packageManager.getApplicationLabel(appInfo).toString()
+        if (loadingState.value == null) {
+            val job = coroutineScope.launch {
+                try {
+                    // 真实加载逻辑
+                    val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
+                    val icon = appInfo.loadIcon(context.packageManager)
+                    val appName = context.packageManager.getApplicationLabel(appInfo).toString()
+                    val bitmap = icon.toBitmap().asImageBitmap()
 
-                // 转换到主线程更新UI
-                withContext(Dispatchers.Main) {
-                    cachedAppInfo.value = appName to icon.toBitmap().asImageBitmap()
+                    // 更新缓存和状态
+                    AppInfoCache.updateCache(packageName, appName to bitmap)
+                    loadingState.value = appName to bitmap
+                } catch (e: PackageManager.NameNotFoundException) {
+                    // 应用未安装的特殊处理
+                    loadingState.value = "noapp" to ImageBitmap(1, 1)
+                } catch (e: Exception) {
+                    // 其他错误保持加载状态
                 }
-            } catch (e: Exception) {
-                withContext(Dispatchers.Main) {
-                    cachedAppInfo.value = "noapp" to ImageBitmap(1, 1)
-                }
+            }
+
+            onDispose {
+                job.cancel()
             }
         }
 
-        onDispose {
-            job.cancel()
-        }
+        onDispose {}
     }
 
-    when (val result = cachedAppInfo.value) {
+    when (val result = loadingState.value) {
         null -> {
-            // 加载状态显示
+            // 加载中状态
             CircularProgressIndicator(modifier = Modifier.size(24.dp))
         }
         else -> {
-            onAppInfoLoaded(result.first, result.second)
+            if (result.first == "noapp") {
+                // 触发未安装UI
+                onAppInfoLoaded("noapp", result.second)
+            } else {
+                // 正常显示应用信息
+                onAppInfoLoaded(result.first, result.second)
+            }
         }
     }
 }

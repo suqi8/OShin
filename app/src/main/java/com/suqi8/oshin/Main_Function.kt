@@ -29,12 +29,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -261,7 +259,9 @@ fun features(context: Context) = listOf(
         summary = context.getString(R.string.notification_restriction_message),
         category = "systemui\\notification"),
     item(title = context.getString(R.string.force_enable_xiaobu_call),
-        category = "speechassist")
+        category = "speechassist"),
+    item(title = context.getString(R.string.remove_full_screen_translation_restriction),
+        category = "ocrscanner")
 )
 
 @Composable
@@ -290,11 +290,15 @@ fun Main_Function(
 
     // 过滤符合搜索条件的功能
     val collator = Collator.getInstance(Locale.CHINA)
-    val filteredFeatures = features(context).filter {
-        it.title.contains(miuixSearchValue, ignoreCase = true) ||
-                it.summary?.contains(miuixSearchValue, ignoreCase = true) ?: false
-    }.sortedWith { a, b ->
-        collator.compare(a.title, b.title)
+    val filteredFeatures by remember(miuixSearchValue) {
+        derivedStateOf {
+            features(context)
+                .filter {
+                    it.title.contains(miuixSearchValue, ignoreCase = true) ||
+                            it.summary?.contains(miuixSearchValue, ignoreCase = true) ?: false
+                }
+                .sortedWith(compareBy(collator) { it.title })
+        }
     }
 
     Box(
@@ -406,6 +410,8 @@ fun Main_Function(
                             FunctionApp("com.oplus.battery", "battery", navController)
                             addline()
                             FunctionApp("com.heytap.speechassist", "speechassist", navController)
+                            addline()
+                            FunctionApp("com.coloros.ocrscanner", "ocrscanner", navController)
                         }
                     }
                     Spacer(modifier = Modifier.padding(padding.calculateBottomPadding()))
@@ -445,40 +451,37 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
         if (appName != "noapp") {
             //val context = LocalContext.current
             //val auto_color = context.prefs("settings").getBoolean("auto_color", true)
-            val colorSaver = Saver<Color, List<Float>>(
-                save = { listOf(it.red, it.green, it.blue, it.alpha) },
-                restore = { Color(it[0], it[1], it[2], it[3]) }
-            )
             val defaultColor = MiuixTheme.colorScheme.primary
-            val dominantColor: MutableState<Color> = rememberSaveable(stateSaver = colorSaver) { mutableStateOf(defaultColor) }
+
+            // 通过 remember 保持单次运行中的状态
+            val dominantColor = remember(packageName) {
+                mutableStateOf(colorCache[packageName] ?: defaultColor)
+            }
+
+            // 自动更新缓存
+            LaunchedEffect(dominantColor.value) {
+                colorCache[packageName] = dominantColor.value
+            }
+
+            // 异步计算颜色
+            if (dominantColor.value == defaultColor) {
+                LaunchedEffect(icon) {
+                    val newColor = withContext(Dispatchers.Default) {
+                        getautocolor(icon) ?: defaultColor
+                    }
+                    dominantColor.value = newColor
+                }
+            }
+            //val dominantColor: MutableState<Color> = rememberSaveable(stateSaver = colorSaver) { mutableStateOf(defaultColor) }
             val isLoading = rememberSaveable { mutableStateOf(true) }
 
             LaunchedEffect(icon) {
-
                 if (isLoading.value) {
-                    withContext(Dispatchers.IO) {
-                        //if (auto_color)
-                        dominantColor.value = getautocolor(icon)
-                        isLoading.value = false
+                    dominantColor.value = withContext(Dispatchers.Default) {
+                        getautocolor(icon)
                     }
+                    isLoading.value = false
                 }
-                /*val bitmap = icon.asAndroidBitmap() // 假设 icon 是一个 Bitmap 类型
-                withContext(Dispatchers.IO) {
-                    if (auto_color) {
-                        withContext(Dispatchers.IO) {
-                            Palette.from(bitmap).generate { palette ->
-                                val colorSwatch = palette?.dominantSwatch
-                                if (colorSwatch != null) {
-                                    val newColor = Color(colorSwatch.rgb)
-                                    dominantColor.value = newColor
-                                }
-                                isLoading.value = false
-                            }
-                        }
-                    } else {
-                        isLoading.value = false
-                    }
-                }*/
             }
 
             Row(
@@ -524,6 +527,8 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
         }
     }
 }
+
+private val colorCache = mutableMapOf<String, Color>()
 
 suspend fun getautocolor(icon: ImageBitmap): Color {
     return withContext(Dispatchers.IO) {
