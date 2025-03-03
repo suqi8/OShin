@@ -23,7 +23,7 @@ jobs:
 
     steps:
     - name: Cache Gradle dependencies
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/wrapper
@@ -77,7 +77,7 @@ jobs:
         echo "|metadata|${metadata%% *}|" >> $GITHUB_STEP_SUMMARY
 
     - name: Cache Gradle wrapper and build output
-      uses: actions/cache@v2
+      uses: actions/cache@v4
       with:
         path: |
           ~/.gradle/wrapper
