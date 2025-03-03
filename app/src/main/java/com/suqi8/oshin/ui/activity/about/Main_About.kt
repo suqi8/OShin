@@ -134,15 +134,15 @@ fun Main_About(
                                         .size(130.dp)
                                         .align(Alignment.Center)) {
                                     Box(modifier = Modifier.fillMaxSize()) {
-                                        Image(
+                                        /*Image(
                                             painter = painterResource(id = R.drawable.icon_background_newyear),
                                             contentDescription = null,
                                             modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
-                                            /*.offset(y = (-20).dp)*/,
+                                            *//*.offset(y = (-20).dp)*//*,
                                             contentScale = ContentScale.Crop
-                                        )
+                                        )*/
                                         Image(
-                                            painter = painterResource(id = R.drawable.ic_launcher_foreground_newyear),
+                                            painter = painterResource(id = R.drawable.icon),
                                             contentDescription = null,
                                             modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
                                             /*.offset(y = (-20).dp)*/,
