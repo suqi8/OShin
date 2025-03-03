@@ -87,6 +87,7 @@ import com.suqi8.oshin.ui.activity.com.android.systemui.systemui
 import com.suqi8.oshin.ui.activity.com.coloros.ocrscanner.ocrscanner
 import com.suqi8.oshin.ui.activity.com.heytap.speechassist.speechassist
 import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
+import com.suqi8.oshin.ui.activity.com.oplus.games.games
 import com.suqi8.oshin.ui.activity.recent_update
 import com.suqi8.oshin.ui.theme.AppTheme
 import dev.chrisbanes.haze.ExperimentalHazeApi
@@ -618,6 +619,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("battery") { battery(navController) }
             composable("speechassist") { speechassist(navController) }
             composable("ocrscanner") { ocrscanner(navController) }
+            composable("games") { games(navController) }
         }
     }
 }
