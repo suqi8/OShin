@@ -261,7 +261,9 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.force_enable_xiaobu_call),
         category = "speechassist"),
     item(title = context.getString(R.string.remove_full_screen_translation_restriction),
-        category = "ocrscanner")
+        category = "ocrscanner"),
+    item(title = context.getString(R.string.enable_ultra_combo),
+        category = "games")
 )
 
 @Composable
@@ -412,9 +414,11 @@ fun Main_Function(
                             FunctionApp("com.heytap.speechassist", "speechassist", navController)
                             addline()
                             FunctionApp("com.coloros.ocrscanner", "ocrscanner", navController)
+                            addline()
+                            FunctionApp("com.oplus.games", "games", navController)
                         }
                     }
-                    Spacer(modifier = Modifier.padding(padding.calculateBottomPadding()))
+                    Spacer(modifier = Modifier.padding(bottom = padding.calculateBottomPadding()))
                 }
             }
         }

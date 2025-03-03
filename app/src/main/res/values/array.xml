@@ -8,5 +8,6 @@
         <item>com.oplus.battery</item>
         <item>com.heytap.speechassist</item>
         <item>com.coloros.ocrscanner</item>
+        <item>com.oplus.games</item>
     </string-array>
 </resources>

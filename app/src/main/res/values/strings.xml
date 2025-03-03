@@ -230,4 +230,5 @@
     <string name="recent_update">Recent Updates</string>
     <string name="no_introduction">No introduction available yet... 😢</string>
     <string name="remove_full_screen_translation_restriction">Remove full-screen translation restriction</string>
+    <string name="enable_ultra_combo">Enable Ultra Combo</string>
 </resources>

@@ -12,6 +12,7 @@ import com.suqi8.oshin.hook.android.OplusRootCheck
 import com.suqi8.oshin.hook.com.coloros.ocrscanner.ocrscanner
 import com.suqi8.oshin.hook.com.heytap.speechassist.ai_call
 import com.suqi8.oshin.hook.com.oplus.battery.battery
+import com.suqi8.oshin.hook.com.oplus.games.games
 import com.suqi8.oshin.hook.launcher.LauncherIcon
 import com.suqi8.oshin.hook.launcher.recent_task
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBar
@@ -76,6 +77,7 @@ class HookEntry : IYukiHookXposedInit {
                 }
             }
         }*/
+        loadApp(hooker = games())
         loadApp(hooker = ocrscanner())
         loadApp(hooker = StatusBar())
         loadApp(hooker = allday_screenoff())
