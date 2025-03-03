@@ -667,13 +667,15 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
         }*/
         NavigationBar(
             items = items,
-            color = Color.Transparent,
-            modifier = Modifier.hazeEffect(
-                state = hazeState,
-                style = hazeStyle, block = fun HazeEffectScope.() {
-                    inputScale = HazeInputScale.Auto
-                }
-            ),
+            color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.surfaceContainer,
+            modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
+                Modifier.hazeEffect(
+                    state = hazeState,
+                    style = hazeStyle, block = fun HazeEffectScope.() {
+                        inputScale = HazeInputScale.Auto
+                    }
+                )
+            } else Modifier,
             selected = targetPage,
             onClick = { index ->
                 targetPage = index
@@ -683,17 +685,19 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
             }
         )
     }, topBar = {
-        TopAppBar(scrollBehavior = currentScrollBehavior,color = Color.Transparent,title = when (pagerState.currentPage) {
+        TopAppBar(scrollBehavior = currentScrollBehavior,color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.background,
+            title = when (pagerState.currentPage) {
             0 -> stringResource(R.string.func)
             1 -> stringResource(R.string.app_name)
             else -> stringResource(R.string.about)
-        }, modifier = Modifier.hazeEffect(
-            state = hazeState,
-            style = hazeStyle, block = fun HazeEffectScope.() {
-                inputScale = HazeInputScale.Auto
-                progressive =
-                    HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
-            }), navigationIcon = {
+        }, modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
+            Modifier.hazeEffect(
+                state = hazeState,
+                style = hazeStyle, block = fun HazeEffectScope.() {
+                    inputScale = HazeInputScale.Auto
+                    if (context.prefs("settings").getBoolean("enable_gradient_blur", true)) progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
+                })
+        } else Modifier, navigationIcon = {
             /*Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null,
                 modifier = Modifier.size(50.dp))*/
             Card(modifier = Modifier
