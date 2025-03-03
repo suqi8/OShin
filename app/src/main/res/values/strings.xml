@@ -231,4 +231,6 @@
     <string name="no_introduction">No introduction available yet... 😢</string>
     <string name="remove_full_screen_translation_restriction">Remove full-screen translation restriction</string>
     <string name="enable_ultra_combo">Enable Ultra Combo</string>
+    <string name="enable_blur">Enable Blur Effect</string>
+    <string name="enable_gradient_blur">Enable Gradient Blur</string>
 </resources>

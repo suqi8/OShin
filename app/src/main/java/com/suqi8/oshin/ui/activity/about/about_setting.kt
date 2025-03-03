@@ -2,6 +2,7 @@ package com.suqi8.oshin.ui.activity.about
 
 import android.content.ComponentName
 import android.content.pm.PackageManager
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -187,6 +188,25 @@ fun about_setting(
                         PackageManager.DONT_KILL_APP
                     )
                 })
+            addline()
+            val enable_blur = remember { mutableStateOf(context.prefs("settings").getBoolean("enable_blur", true)) }
+            FunSwich(
+                title = stringResource(R.string.enable_blur),
+                category = "settings",
+                key = "enable_blur",
+                defValue = true,
+                onCheckedChange = {
+                    enable_blur.value = it
+                }
+            )
+            AnimatedVisibility(enable_blur.value) {
+                FunSwich(
+                    title = stringResource(R.string.enable_gradient_blur),
+                    category = "settings",
+                    key = "enable_gradient_blur",
+                    defValue = true
+                )
+            }
             /*addline()
             SuperSwitch(title = stringResource(R.string.feature_auto_color_picking_enabled),
                 summary = stringResource(R.string.feature_auto_color_picking_warning),

@@ -230,4 +230,6 @@
     <string name="no_introduction">暂时还没有介绍╥﹏╥...</string>
     <string name="remove_full_screen_translation_restriction">去除全屏翻译限制</string>
     <string name="enable_ultra_combo">启用超神一键连招</string>
+    <string name="enable_blur">开启模糊</string>
+    <string name="enable_gradient_blur">开启渐变模糊</string>
 </resources>

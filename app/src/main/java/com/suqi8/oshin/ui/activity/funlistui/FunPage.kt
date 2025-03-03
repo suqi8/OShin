@@ -69,15 +69,15 @@ fun FunPage(title: String, appList: List<String>? = listOf(), navController: Nav
         TopAppBar(
             scrollBehavior = topAppBarState,
             title = title,
-            color = Color.Transparent,
-            modifier = Modifier.hazeEffect(
-                state = hazeState,
-                style = hazeStyle, block = fun HazeEffectScope.() {
-                    inputScale = HazeInputScale.Auto
-                    progressive =
-                        HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
-                }
-            ),
+            color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.background,
+            modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
+                Modifier.hazeEffect(
+                    state = hazeState,
+                    style = hazeStyle, block = fun HazeEffectScope.() {
+                        inputScale = HazeInputScale.Auto
+                        if (context.prefs("settings").getBoolean("enable_gradient_blur", true)) progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
+                    })
+            } else Modifier,
             navigationIcon = {
                 IconButton(
                     onClick = {
