@@ -273,6 +273,13 @@ fun features(context: Context) = listOf(
         category = "games"),
     item(title = context.getString(R.string.hok_ai_assistant_remove_pkg_restriction),
         summary = context.getString(R.string.ai_assistant_global_display),
+        category = "games"),
+    item(title = context.getString(R.string.feature_disable_cloud_control),
+        category = "games"),
+    item(title = context.getString(R.string.remove_package_restriction),
+        category = "games"),
+    item(title = context.getString(R.string.enable_all_features),
+        summary = context.getString(R.string.enable_all_features_warning),
         category = "games")
 )
 
