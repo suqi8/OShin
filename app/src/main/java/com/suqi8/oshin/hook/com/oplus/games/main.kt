@@ -20,17 +20,19 @@ class games: YukiBaseHooker() {
                     }
                 }
             }
-            /*"v20.b".toClass().apply {
-                method {
-                    name = "b"
-                    param("android.content.ContentResolver", "java.lang.String")
-                    returnType = BooleanType
-                }.hook {
-                    before {
-                        result = true
+            if (prefs("games").getBoolean("enable_all_features", false)) {
+                "v20.b".toClass().apply {
+                    method {
+                        name = "b"
+                        param("android.content.ContentResolver", "java.lang.String")
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
                     }
                 }
-            }*/
+            }
             if (prefs("games").getBoolean("hok_ai_v1", false)) {
                 "business.module.aiplay.sgame.AIPlayFeature".toClass().apply {
                     method {
@@ -75,6 +77,32 @@ class games: YukiBaseHooker() {
                     method {
                         name = "isFeatureEnabled"
                         param("java.lang.String")
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("games").getBoolean("feature_disable_cloud_control", false)) {
+                "com.coloros.gamespaceui.config.cloud.CloudConditionUtil".toClass().apply {
+                    method {
+                        name = "j"
+                        param("java.lang.String", "java.util.Map")
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("games").getBoolean("remove_package_restriction", false)) {
+                "com.coloros.gamespaceui.config.cloud.CloudConditionUtil".toClass().apply {
+                    method {
+                        name = "a"
+                        param("java.util.Set", "java.util.Map")
                         returnType = BooleanType
                     }.hook {
                         before {

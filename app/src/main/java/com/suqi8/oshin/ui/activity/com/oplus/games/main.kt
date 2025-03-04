@@ -14,6 +14,7 @@ import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.SmallTitle
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -35,6 +36,32 @@ fun games(navController: NavController) {
                 key = "ultra_combo"
             )
             addline()
+            FunSwich(
+                title = stringResource(R.string.feature_disable_cloud_control),
+                category = "games",
+                key = "feature_disable_cloud_control"
+            )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.remove_package_restriction),
+                category = "games",
+                key = "remove_package_restriction"
+            )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.enable_all_features),
+                summary = stringResource(R.string.enable_all_features_warning),
+                category = "games",
+                key = "enable_all_features"
+            )
+        }
+        SmallTitle(stringResource(R.string.hok))
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 6.dp)
+        ) {
             FunSwich(
                 title = stringResource(R.string.enable_hok_ai_v1),
                 category = "games",
