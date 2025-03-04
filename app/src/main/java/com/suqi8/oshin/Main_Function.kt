@@ -282,7 +282,10 @@ fun features(context: Context) = listOf(
         summary = context.getString(R.string.enable_all_features_warning),
         category = "games"),
     item(title = context.getString(R.string.enable_pubg_ai),
-        category = "games")
+        category = "games"),
+    item(title = context.getString(R.string.auto_start_max_limit),
+        summary = context.getString(R.string.auto_start_default_hint),
+        category = "battery")
 )
 
 @Composable
