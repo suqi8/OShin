@@ -88,5 +88,18 @@ fun games(navController: NavController) {
                 key = "hok_ai_remove_pkg_restriction"
             )
         }
+        SmallTitle(stringResource(R.string.pubg))
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 6.dp)
+        ) {
+            FunSwich(
+                title = stringResource(R.string.enable_pubg_ai),
+                category = "games",
+                key = "pubg_ai"
+            )
+        }
     }
 }
