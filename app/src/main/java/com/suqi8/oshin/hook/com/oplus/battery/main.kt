@@ -5,8 +5,8 @@ import com.highcapable.yukihookapi.hook.factory.method
 
 class battery: YukiBaseHooker() {
     override fun onHook() {
-        if (prefs("battery").getBoolean("low_battery_fluid_cloud", false)) {
-            loadApp(name = "com.oplus.battery") {
+        loadApp(name = "com.oplus.battery") {
+            if (prefs("battery").getBoolean("low_battery_fluid_cloud", false)) {
                 "com.oplus.pantanal.seedling.intent.a".toClass().apply {
                     method {
                         name = "sendSeedling"
@@ -14,6 +14,16 @@ class battery: YukiBaseHooker() {
                         before {
                             result = 0
                         }
+                    }
+                }
+            }
+            if (prefs("battery").getInt("auto_start_max_limit", 5) != 5) {
+                "qa.c".toClass().apply {
+                    method {
+                        name = "k"
+                        emptyParam()
+                    }.hook {
+                        replaceTo(prefs("battery").getInt("auto_start_max_limit", 5))
                     }
                 }
             }

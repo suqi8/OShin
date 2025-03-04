@@ -245,4 +245,6 @@
     <string name="enable_all_features_warning">可能会有未知问题，谨慎开启</string>
     <string name="pubg">和平精英</string>
     <string name="enable_pubg_ai">开启AI大神辅助</string>
+    <string name="auto_start_max_limit">自启动最大数量</string>
+    <string name="auto_start_default_hint">默认5为不更改</string>
 </resources>

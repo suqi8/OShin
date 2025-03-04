@@ -246,4 +246,6 @@
     <string name="enable_all_features_warning">May cause unexpected issues. Enable with caution.</string>
     <string name="pubg">PUBG Mobile</string>
     <string name="enable_pubg_ai">Enable AI Pro Assistant</string>
+    <string name="auto_start_max_limit">Auto-start max limit</string>
+    <string name="auto_start_default_hint">Default is 5. No change will keep this value.</string>
 </resources>
