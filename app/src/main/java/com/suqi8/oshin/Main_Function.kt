@@ -263,6 +263,16 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.remove_full_screen_translation_restriction),
         category = "ocrscanner"),
     item(title = context.getString(R.string.enable_ultra_combo),
+        category = "games"),
+    item(title = context.getString(R.string.enable_hok_ai_v1),
+        category = "games"),
+    item(title = context.getString(R.string.enable_hok_ai_v2),
+        summary = context.getString(R.string.realme_gt7pro_feature_unlock_device_restriction),
+        category = "games"),
+    item(title = context.getString(R.string.enable_hok_ai_v3),
+        category = "games"),
+    item(title = context.getString(R.string.hok_ai_assistant_remove_pkg_restriction),
+        summary = context.getString(R.string.ai_assistant_global_display),
         category = "games")
 )
 

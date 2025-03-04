@@ -233,4 +233,10 @@
     <string name="enable_ultra_combo">Enable Ultra Combo</string>
     <string name="enable_blur">Enable Blur Effect</string>
     <string name="enable_gradient_blur">Enable Gradient Blur</string>
+    <string name="enable_hok_ai_v1">Enable Honor of Kings AI Pro Assistant V1</string>
+    <string name="enable_hok_ai_v2">Enable Honor of Kings AI Pro Assistant V2</string>
+    <string name="enable_hok_ai_v3">Enable Honor of Kings AI Pro Assistant V3</string>
+    <string name="hok_ai_assistant_remove_pkg_restriction">Remove package name restriction for Honor of Kings AI God Assistant</string>
+    <string name="realme_gt7pro_feature_unlock_device_restriction">Realme GT7 Pro Exclusive: Enabling this feature will remove device model restrictions</string>
+    <string name="ai_assistant_global_display">Enabling this feature will display "AI Pro Assistant" in all games</string>
 </resources>
