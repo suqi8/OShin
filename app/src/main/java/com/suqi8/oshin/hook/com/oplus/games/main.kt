@@ -111,6 +111,30 @@ class games: YukiBaseHooker() {
                     }
                 }
             }
+            if (prefs("games").getBoolean("pubg_ai", false)) {
+                "business.module.aiplay.pubg.AIPlayPubgFeature".toClass().apply {
+                    method {
+                        name = "Z"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+                "business.module.aiplay.pubg.AIPlayPubgFeature".toClass().apply {
+                    method {
+                        name = "isFeatureEnabled"
+                        param("java.lang.String")
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
         }
     }
 }

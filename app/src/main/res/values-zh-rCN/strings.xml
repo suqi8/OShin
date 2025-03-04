@@ -243,4 +243,6 @@
     <string name="remove_package_restriction">移除包名限制</string>
     <string name="enable_all_features">启用全部特性</string>
     <string name="enable_all_features_warning">可能会有未知问题，谨慎开启</string>
+    <string name="pubg">和平精英</string>
+    <string name="enable_pubg_ai">开启AI大神辅助</string>
 </resources>

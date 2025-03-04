@@ -244,4 +244,6 @@
     <string name="remove_package_restriction">Remove package name restrictions</string>
     <string name="enable_all_features">Enable All Features</string>
     <string name="enable_all_features_warning">May cause unexpected issues. Enable with caution.</string>
+    <string name="pubg">PUBG Mobile</string>
+    <string name="enable_pubg_ai">Enable AI Pro Assistant</string>
 </resources>
