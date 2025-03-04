@@ -11,6 +11,7 @@ import androidx.navigation.NavController
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
 
 @SuppressLint("SuspiciousIndentation")
@@ -34,6 +35,7 @@ fun notification(navController: NavController) {
                 key = "remove_developer_options_notification",
                 defValue = false
             )
+            addline()
             FunSwich(
                 title = stringResource(R.string.remove_and_do_not_disturb_notification),
                 summary = stringResource(R.string.notification_restriction_message),
