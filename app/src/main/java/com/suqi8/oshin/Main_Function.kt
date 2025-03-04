@@ -280,6 +280,8 @@ fun features(context: Context) = listOf(
         category = "games"),
     item(title = context.getString(R.string.enable_all_features),
         summary = context.getString(R.string.enable_all_features_warning),
+        category = "games"),
+    item(title = context.getString(R.string.enable_pubg_ai),
         category = "games")
 )
 
