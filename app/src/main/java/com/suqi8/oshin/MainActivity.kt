@@ -92,6 +92,7 @@ import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
 import com.suqi8.oshin.ui.activity.com.oplus.games.games
 import com.suqi8.oshin.ui.activity.recent_update
 import com.suqi8.oshin.ui.theme.AppTheme
+import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeEffectScope
@@ -142,6 +143,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         window.isNavigationBarContrastEnforced = false
         UMConfigure.preInit(this,"67c7dea68f232a05f127781e","android")
+        UMConfigure.setProcessEvent(true)
         setContent {
             val colorMode = remember { mutableIntStateOf(0) }
             val darkMode = colorMode.intValue == 2 || (isSystemInDarkTheme() && colorMode.intValue == 0)
@@ -579,8 +581,14 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
     val privacy = rememberSaveable { mutableStateOf(false) }
     LaunchedEffect(privacy.value) {
         privacy.value = context.prefs("settings").getBoolean("privacy",true)
-        if (context.prefs("settings").getBoolean("privacy",true) == false) {
+        if (!context.prefs("settings").getBoolean("privacy",true)) {
             UMConfigure.init(context, "67c7dea68f232a05f127781e", "android", UMConfigure.DEVICE_TYPE_PHONE, "");
+            withContext(Dispatchers.IO) {
+                val lsposed_versionname = executeCommand("awk -F= '/version=/ {print \$2}' /data/adb/modules/zygisk_lsposed/module.prop")
+                if (lsposed_versionname != "") {
+                    MobclickAgent.onEvent(context,"lsposed_usage", mapOf("lsposed_versionname" to lsposed_versionname))
+                }
+            }
         }
     }
     SuperDialog(
@@ -762,7 +770,7 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
                         painter = painterResource(id = R.drawable.icon),
                         contentDescription = null,
                         modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f).clickable {
-                            context.prefs("settings").edit { putBoolean("privacy",true) }
+                            //context.prefs("settings").edit { putBoolean("privacy",true) }
                         }
                         /*.offset(y = (-20).dp)*/,
                         contentScale = ContentScale.Crop
