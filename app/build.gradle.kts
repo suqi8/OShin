@@ -147,6 +147,10 @@ android {
 }
 
 dependencies {
+    implementation(fileTree("libs") { include("*.jar") })
+    implementation(libs.common)
+    implementation(libs.umsdk.asms)
+    implementation(libs.umsdk.uyumao)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.okhttp)
     implementation(libs.lottie.compose)

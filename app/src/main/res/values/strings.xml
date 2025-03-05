@@ -248,4 +248,15 @@
     <string name="enable_pubg_ai">Enable AI Pro Assistant</string>
     <string name="auto_start_max_limit">Auto-start max limit</string>
     <string name="auto_start_default_hint">Default is 5. No change will keep this value.</string>
+    <string name="privacy_title">Privacy Consent Notice</string>
+    <string name="privacy_content">
+To ensure proper functionality and service quality, we collect specific device information for statistical analysis and optimization purposes:\n
+- Device identifier (e.g., Android ID)\n
+- App version and runtime status\n
+- Device model and OS version\n
+- LSPosed version\n
+- Magisk/KernelSU version\n
+- Network type and carrier information\n\n
+All data will be encrypted and processed anonymously, never associated with personal identities. This information is strictly used for product optimization and will not be shared with third parties.
+</string>
 </resources>

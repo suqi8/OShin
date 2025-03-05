@@ -14,6 +14,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -44,6 +45,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -90,6 +92,7 @@ import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
 import com.suqi8.oshin.ui.activity.com.oplus.games.games
 import com.suqi8.oshin.ui.activity.recent_update
 import com.suqi8.oshin.ui.theme.AppTheme
+import com.umeng.commonsdk.UMConfigure
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeEffectScope
 import dev.chrisbanes.haze.HazeInputScale
@@ -120,6 +123,7 @@ import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
+import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
@@ -137,6 +141,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         window.isNavigationBarContrastEnforced = false
+        UMConfigure.preInit(this,"67c7dea68f232a05f127781e","android")
         setContent {
             val colorMode = remember { mutableIntStateOf(0) }
             val darkMode = colorMode.intValue == 2 || (isSystemInDarkTheme() && colorMode.intValue == 0)
@@ -570,6 +575,49 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
         blurRadius.value = context.prefs("settings").getInt("AppblurRadius", 25).dp
         noiseFactor.floatValue = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
     }
+
+    val privacy = rememberSaveable { mutableStateOf(false) }
+    LaunchedEffect(privacy.value) {
+        privacy.value = context.prefs("settings").getBoolean("privacy",true)
+        if (context.prefs("settings").getBoolean("privacy",true) == false) {
+            UMConfigure.init(context, "67c7dea68f232a05f127781e", "android", UMConfigure.DEVICE_TYPE_PHONE, "");
+        }
+    }
+    SuperDialog(
+        show = privacy,
+        title = stringResource(R.string.privacy_title),
+        //summary = stringResource(R.string.privacy_content),
+        onDismissRequest = {
+
+        }
+    ) {
+        Text(stringResource(R.string.privacy_content))
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextButton(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.exit),
+                onClick = {
+                    exitProcess(0)
+                }
+            )
+            Spacer(Modifier.width(12.dp))
+            TextButton(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                colors = ButtonDefaults.textButtonColorsPrimary(),
+                onClick = {
+                    dismissDialog(privacy)
+                    context.prefs("settings").edit { putBoolean("privacy",false) }
+                }
+            )
+        }
+    }
+
     Column {
         NavHost(navController = navController, startDestination = "Main",enterTransition = {
                 slideInHorizontally(
@@ -632,9 +680,9 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
 fun Main1(modifier: Modifier,context: Context,navController: NavController,colorMode: MutableState<Int>,
           alpha: MutableFloatState, blurRadius: MutableState<Dp>, noiseFactor: MutableFloatState,
           hazeState: HazeState, hazeStyle: HazeStyle) {
-    val topAppBarScrollBehavior0 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
-    val topAppBarScrollBehavior1 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
-    val topAppBarScrollBehavior2 = MiuixScrollBehavior(top.yukonga.miuix.kmp.basic.rememberTopAppBarState())
+    val topAppBarScrollBehavior0 = MiuixScrollBehavior(rememberTopAppBarState())
+    val topAppBarScrollBehavior1 = MiuixScrollBehavior(rememberTopAppBarState())
+    val topAppBarScrollBehavior2 = MiuixScrollBehavior(rememberTopAppBarState())
 
     val topAppBarScrollBehaviorList = listOf(
         topAppBarScrollBehavior0, topAppBarScrollBehavior1, topAppBarScrollBehavior2
@@ -713,7 +761,9 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
                     Image(
                         painter = painterResource(id = R.drawable.icon),
                         contentDescription = null,
-                        modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
+                        modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f).clickable {
+                            context.prefs("settings").edit { putBoolean("privacy",true) }
+                        }
                         /*.offset(y = (-20).dp)*/,
                         contentScale = ContentScale.Crop
                     )
