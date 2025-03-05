@@ -247,4 +247,15 @@
     <string name="enable_pubg_ai">开启AI大神辅助</string>
     <string name="auto_start_max_limit">自启动最大数量</string>
     <string name="auto_start_default_hint">默认5为不更改</string>
+    <string name="privacy_title">隐私授权提示</string>
+    <string name="privacy_content">
+为保障应用正常运行与服务质量，我们需要收集您的部分设备信息用于数据统计和分析，具体包括：\n
+- 设备标识符（如Android ID）\n
+- 应用版本及运行状态\n
+- 设备型号和系统版本\n
+- LSPosed 版本\n
+- Magisk/KernelSU版本等\n
+- 网络类型及运营商信息\n\n
+所有数据均会进行加密处理，不会关联个人身份，数据仅用于产品功能优化，不会共享给第三方
+</string>
 </resources>

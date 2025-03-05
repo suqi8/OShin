@@ -3,6 +3,7 @@ pluginManagement {
         gradlePluginPortal()
         google()
         mavenCentral()
+        maven("https://repo1.maven.org/maven2/")
         maven("https://oss.sonatype.org/content/repositories/snapshots/")
         
     }
