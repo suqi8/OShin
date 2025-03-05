@@ -52,3 +52,4 @@
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
+-dontwarn com.umeng.ccg.ActionInfo
