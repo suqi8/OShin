@@ -22,16 +22,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Cache Gradle dependencies
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/wrapper
-          ~/.gradle/caches
-          build
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0
@@ -76,16 +66,6 @@ jobs:
         echo "metadata=${metadata%% *}" >> $GITHUB_ENV  # Export to environment variable
         echo "|metadata|${metadata%% *}|" >> $GITHUB_STEP_SUMMARY
 
-    - name: Cache Gradle wrapper and build output
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.gradle/wrapper
-          ~/.gradle/caches
-          build
-        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-        restore-keys: |
-          ${{ runner.os }}-gradle-
     - name: Upload All APK
       uses: actions/upload-artifact@v4
       with:
