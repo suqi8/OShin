@@ -4,6 +4,7 @@ import android.provider.Settings
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.constructor
 import com.highcapable.yukihookapi.hook.factory.method
+import com.highcapable.yukihookapi.hook.type.java.BooleanType
 
 class allday_screenoff: YukiBaseHooker() {
     override fun onHook() {
@@ -11,9 +12,11 @@ class allday_screenoff: YukiBaseHooker() {
             "com.oplus.systemui.aod.display.SmoothTransitionController".toClass().apply {
                 method {
                     name = "shouldWindowBeTransparent"
+                    emptyParam()
+                    returnType = BooleanType
                 }.hook {
-                    after {
-                        resultTrue()
+                    before {
+                        result = true
                     }
                 }
             }
