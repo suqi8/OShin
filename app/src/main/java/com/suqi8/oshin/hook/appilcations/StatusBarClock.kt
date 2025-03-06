@@ -9,8 +9,9 @@ import android.util.TypedValue
 import android.view.Gravity
 import android.widget.TextView
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.factory.constructor
 import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.type.java.CharSequenceClass
+import com.highcapable.yukihookapi.hook.type.java.IntType
 import java.lang.reflect.Method
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -49,11 +50,11 @@ class StatusBarClock : YukiBaseHooker() {
         var context: Context? = null
         "com.android.systemui.statusbar.policy.Clock".toClass().apply {
             if (ClockStyleSelectedOption == 0) {
-                method {
-                    paramCount = 3
+                constructor {
+                    param("android.content.Context", "android.util.AttributeSet", IntType)
                 }.hook {
                     after {
-                        context = args(0).cast<Context>()
+                        context = args(0).cast()
                         val clockView = instance<TextView>()
                         clockView.apply {
                             if (this.resources.getResourceEntryName(id) != "clock") return@after
@@ -109,21 +110,24 @@ class StatusBarClock : YukiBaseHooker() {
                     }
                 }
 
-                method {
-                    name = "getSmallTime"
-                    returnType = CharSequenceClass
-                }.hook {
-                    after {
-                        instance<TextView>().apply {
-                            if (this.resources.getResourceEntryName(id) != "clock") return@after
+                "com.android.systemui.statusbar.policy.Clock".toClass().apply {
+                    method {
+                        name = "getSmallTime"
+                        emptyParam()
+                        returnType = "java.lang.CharSequence"
+                    }.hook {
+                        after {
+                            instance<TextView>().apply {
+                                if (this.resources.getResourceEntryName(id) != "clock") return@after
+                            }
+                            nowTime = Calendar.getInstance().time
+                            result = getDate(context!!) + newline + getTime(context!!)
                         }
-                        nowTime = Calendar.getInstance().time
-                        result = getDate(context!!) + newline + getTime(context!!)
                     }
                 }
             } else {
-                method {
-                    paramCount = 3
+                constructor {
+                    param("android.content.Context", "android.util.AttributeSet", IntType)
                 }.hook {
                     after {
                         context = args(0).cast<Context>()
@@ -185,16 +189,19 @@ class StatusBarClock : YukiBaseHooker() {
                         }
                     }
                 }
-                method {
-                    name = "getSmallTime"
-                    returnType = CharSequenceClass
-                }.hook {
-                    after {
-                        instance<TextView>().apply {
-                            if (this.resources.getResourceEntryName(id) != "clock") return@after
+                "com.android.systemui.statusbar.policy.Clock".toClass().apply {
+                    method {
+                        name = "getSmallTime"
+                        emptyParam()
+                        returnType = "java.lang.CharSequence"
+                    }.hook {
+                        after {
+                            instance<TextView>().apply {
+                                if (this.resources.getResourceEntryName(id) != "clock") return@after
+                            }
+                            nowTime = Calendar.getInstance().time
+                            result = getCustomDate(customClockStyle)//.replace("\\n", "\n")
                         }
-                        nowTime = Calendar.getInstance().time
-                        result = getCustomDate(customClockStyle)//.replace("\\n", "\n")
                     }
                 }
             }
