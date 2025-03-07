@@ -1,6 +1,7 @@
 *.iml
 .gradle
 /local.properties
+/.idea
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -9,6 +10,7 @@
 /.idea/assetWizardSettings.xml
 .DS_Store
 /build
+/.kotlin
 /captures
 /app/release
 crowdin.yml
