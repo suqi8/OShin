@@ -6,29 +6,18 @@ import android.content.Intent
 import android.net.Uri
 import android.util.TypedValue
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
@@ -37,30 +26,23 @@ import com.suqi8.oshin.tools.AnimTools
 import com.suqi8.oshin.ui.activity.funlistui.FunNoEnable
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSlider
+import com.suqi8.oshin.ui.activity.funlistui.FunString
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.SmallTitle
-import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.SuperArrow
-import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperDropdown
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 
 @SuppressLint("RtlHardcoded")
 @Composable
 fun status_bar_clock(navController: NavController) {
     val context = LocalContext.current
     val Status_Bar_Time_gravitySelectedOption = remember { mutableIntStateOf(context.prefs("systemui\\Status_Bar_Time").getInt("alignment", 0)) }
-    val showCustomClockDialog = remember { mutableStateOf(false) }
-    val customClockCache = remember { mutableStateOf(context.prefs("systemui\\Status_Bar_Time").getString("CustomClockStyle", "HH:mm")) }
-    val customClock = remember { mutableStateOf(context.prefs("systemui\\Status_Bar_Time").getString("CustomClockStyle", "HH:mm")) }
-    val focusManager = LocalFocusManager.current
     val Status_Bar_Time_gravityOptions = listOf(
         stringResource(R.string.status_bar_time_gravity_center),
         stringResource(R.string.status_bar_time_gravity_top),
@@ -328,10 +310,12 @@ fun status_bar_clock(navController: NavController) {
                             }
                         )
                         addline()
-                        SuperArrow(title = stringResource(R.string.clock_format)
-                            , rightText = customClock.value, onClick = {
-                                showCustomClockDialog.value = true
-                            })
+                        FunString(
+                            title = stringResource(R.string.clock_format),
+                            category = "systemui\\status_bar_clock",
+                            key = "CustomClockStyle",
+                            defValue = "HH:mm"
+                        )
                         addline()
                         SuperArrow(title = stringResource(R.string.clock_format_example), onClick = {
                             val intent = Intent(
@@ -346,7 +330,6 @@ fun status_bar_clock(navController: NavController) {
             }
         }
     }
-    CustomClockDialog(showCustomClockDialog,customClockCache,customClock,focusManager)
 }
 
 fun dpToPx(dp: Float, context: Context): Float {
@@ -355,53 +338,4 @@ fun dpToPx(dp: Float, context: Context): Float {
         dp,
         context.resources.displayMetrics
     )
-}
-
-@Composable
-fun CustomClockDialog(showCustomClockDialog: MutableState<Boolean>, customClockCache: MutableState<String>, CustomClock: MutableState<String>, focusManager: FocusManager) {
-    val context = LocalContext.current
-    if (!showCustomClockDialog.value) return
-    SuperDialog(title = stringResource(R.string.clock_format),
-        show = showCustomClockDialog,
-        onDismissRequest = {
-            showCustomClockDialog.value = false
-        }) {
-        TextField(
-            value = customClockCache.value,
-            onValueChange = { customClockCache.value = it },
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
-            singleLine = false
-        )
-        Spacer(Modifier.height(12.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            TextButton(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(showCustomClockDialog)
-                }
-            )
-            Spacer(Modifier.width(12.dp))
-            TextButton(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.ok),
-                colors = ButtonDefaults.textButtonColorsPrimary(),
-                onClick = {
-                    dismissDialog(showCustomClockDialog)
-                    CustomClock.value = customClockCache.value
-                    context.prefs("systemui\\status_bar_clock").edit {
-                        putString(
-                            "CustomClockStyle",
-                            customClockCache.value
-                        )
-                    }
-                }
-            )
-        }
-    }
 }

@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.tools
+package com.suqi8.oshin.ui.activity.funlistui
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -30,7 +30,6 @@ import com.suqi8.oshin.GetAppIconAndName
 import com.suqi8.oshin.R
 import com.suqi8.oshin.drawColoredShadow
 import com.suqi8.oshin.getautocolor
-import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
