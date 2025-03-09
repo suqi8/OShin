@@ -17,6 +17,7 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.features
 import com.suqi8.oshin.item
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Card
@@ -43,7 +44,7 @@ fun recent_update(navController: NavController) {
                         ?.reversed()
                 }
             }
-            recentFeatureState.value?.forEach { feature ->
+            recentFeatureState.value?.forEachIndexed() { index, feature ->
                 key(feature.title) {  // 使用唯一标识作为 key
                     val onClick by remember(feature.category) {
                         mutableStateOf({
@@ -56,6 +57,9 @@ fun recent_update(navController: NavController) {
                         summary = feature.summary,
                         onClick = onClick
                     )
+                    if (index < recentFeatureState.value!!.size - 1) {
+                        addline()
+                    }
                 }
             }
         }

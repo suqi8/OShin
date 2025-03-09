@@ -24,7 +24,7 @@ fun android(navController: NavController) {
         Card(
             modifier = Modifier.fillMaxWidth()
                 .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp,top = 15.dp)
+                .padding(bottom = 6.dp,top = 6.dp)
         ) {
             SuperArrow(title = stringResource(id = R.string.package_manager_services),
                 onClick = {
@@ -34,6 +34,16 @@ fun android(navController: NavController) {
             SuperArrow(title = stringResource(id = R.string.oplus_system_services),
                 onClick = {
                     navController.navigate("android\\oplus_system_services")
+                })
+        }
+        Card(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 6.dp,top = 6.dp)
+        ) {
+            SuperArrow(title = stringResource(id = R.string.split_screen_multi_window),
+                onClick = {
+                    navController.navigate("android\\split_screen_multi_window")
                 })
         }
     }
