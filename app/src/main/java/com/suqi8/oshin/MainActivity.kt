@@ -78,6 +78,7 @@ import com.suqi8.oshin.ui.activity.about.about_setting
 import com.suqi8.oshin.ui.activity.android.android
 import com.suqi8.oshin.ui.activity.android.oplus_services
 import com.suqi8.oshin.ui.activity.android.package_manager_services
+import com.suqi8.oshin.ui.activity.android.split_screen_multi_window
 import com.suqi8.oshin.ui.activity.com.android.launcher.launcher
 import com.suqi8.oshin.ui.activity.com.android.launcher.recent_task
 import com.suqi8.oshin.ui.activity.com.android.settings.settings
@@ -661,6 +662,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("android") { android(navController) }
             composable("android\\package_manager_services") { package_manager_services(navController = navController) }
             composable("android\\oplus_system_services") { oplus_services(navController = navController) }
+            composable("android\\split_screen_multi_window") { split_screen_multi_window(navController = navController) }
             composable("systemui") { systemui(navController = navController)}
             composable("systemui\\status_bar_clock") { status_bar_clock(navController = navController) }
             composable("systemui\\hardware_indicator") { hardware_indicator(navController = navController) }

@@ -9,6 +9,7 @@ import com.highcapable.yukihookapi.hook.factory.encase
 import com.highcapable.yukihookapi.hook.xposed.bridge.event.YukiXposedEvent
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import com.suqi8.oshin.hook.android.OplusRootCheck
+import com.suqi8.oshin.hook.android.split_screen_multi_window
 import com.suqi8.oshin.hook.com.coloros.ocrscanner.ocrscanner
 import com.suqi8.oshin.hook.com.heytap.speechassist.ai_call
 import com.suqi8.oshin.hook.com.oplus.battery.battery
@@ -81,6 +82,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = ocrscanner())
         loadApp(hooker = StatusBar())
         loadApp(hooker = allday_screenoff())
+        loadApp(hooker = split_screen_multi_window())
     }
 
     override fun onXposedEvent() {

@@ -200,6 +200,7 @@ fun about_setting(
                 }
             )
             AnimatedVisibility(enable_blur.value) {
+                addline()
                 FunSwich(
                     title = stringResource(R.string.enable_gradient_blur),
                     category = "settings",

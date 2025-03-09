@@ -259,4 +259,13 @@ To ensure proper functionality and service quality, we collect specific device i
 - Network type and carrier information\n\n
 All data will be encrypted and processed anonymously, never associated with personal identities. This information is strictly used for product optimization and will not be shared with third parties.
 </string>
+    <string name="split_screen_multi_window">Split Screen &amp; Multi-Window</string>
+    <string name="remove_all_small_window_restrictions">Remove All Small Window Restrictions</string>
+    <string name="force_multi_window_mode">Force Enable Multi-Window Mode</string>
+    <string name="max_simultaneous_small_windows">Maximum Simultaneous Small Windows</string>
+    <string name="small_window_corner_radius">Small Window Corner Radius</string>
+    <string name="small_window_focused_shadow">Shadow When Focused</string>
+    <string name="small_window_unfocused_shadow">Shadow When Unfocused</string>
+    <string name="floating_window">Floating Window</string>
+    <string name="default_value_hint_negative_one">-1 for default</string>
 </resources>

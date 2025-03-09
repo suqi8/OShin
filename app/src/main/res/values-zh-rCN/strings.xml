@@ -258,4 +258,13 @@
 - 网络类型及运营商信息\n\n
 所有数据均会进行加密处理，不会关联个人身份，数据仅用于产品功能优化，不会共享给第三方
 </string>
+    <string name="split_screen_multi_window">分屏与小窗</string>
+    <string name="remove_all_small_window_restrictions">移除全部开启小窗限制</string>
+    <string name="force_multi_window_mode">强制启动多窗口模式</string>
+    <string name="max_simultaneous_small_windows">最大同时开启小窗数量</string>
+    <string name="small_window_corner_radius">小窗圆角半径</string>
+    <string name="small_window_focused_shadow">小窗获取焦点时阴影</string>
+    <string name="small_window_unfocused_shadow">小窗未获取焦点时阴影</string>
+    <string name="floating_window">浮动窗口</string>
+    <string name="default_value_hint_negative_one">-1为默认</string>
 </resources>

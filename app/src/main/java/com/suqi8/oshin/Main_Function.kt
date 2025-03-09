@@ -285,7 +285,26 @@ fun features(context: Context) = listOf(
         category = "games"),
     item(title = context.getString(R.string.auto_start_max_limit),
         summary = context.getString(R.string.auto_start_default_hint),
-        category = "battery")
+        category = "battery"),
+    item(title = context.getString(R.string.split_screen_multi_window),
+        category = "android\\split_screen_multi_window"),
+    item(title = context.getString(R.string.remove_all_small_window_restrictions),
+        category = "android\\split_screen_multi_window",
+    ),
+    item(title = context.getString(R.string.force_multi_window_mode),
+    category = "android\\split_screen_multi_window"),
+    item(title = context.getString(R.string.max_simultaneous_small_windows),
+        category = "android\\split_screen_multi_window",
+        summary = context.getString(R.string.default_value_hint_negative_one)),
+    item(title = context.getString(R.string.small_window_corner_radius),
+        category = "android\\split_screen_multi_window",
+        summary = context.getString(R.string.default_value_hint_negative_one)),
+    item(title = context.getString(R.string.small_window_focused_shadow),
+        category = "android\\split_screen_multi_window",
+        summary = context.getString(R.string.default_value_hint_negative_one)),
+    item(title = context.getString(R.string.small_window_unfocused_shadow),
+        category = "android\\split_screen_multi_window",
+        summary = context.getString(R.string.default_value_hint_negative_one))
 )
 
 @Composable
