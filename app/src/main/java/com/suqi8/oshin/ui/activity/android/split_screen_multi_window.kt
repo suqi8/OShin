@@ -12,6 +12,7 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSlider
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.SmallTitle
 
@@ -35,11 +36,13 @@ fun split_screen_multi_window(navController: NavController) {
                     category = "android\\split_screen_multi_window",
                     key = "remove_all_small_window_restrictions"
                 )
+                addline()
                 FunSwich(
                     title = stringResource(R.string.force_multi_window_mode),
                     category = "android\\split_screen_multi_window",
                     key = "force_multi_window_mode"
                 )
+                addline()
                 FunSlider(
                     title = stringResource(R.string.max_simultaneous_small_windows),
                     category = "android\\split_screen_multi_window",
@@ -50,6 +53,7 @@ fun split_screen_multi_window(navController: NavController) {
                     min = -1f,
                     decimalPlaces = 0
                 )
+                addline()
                 FunSlider(
                     title = stringResource(R.string.small_window_corner_radius),
                     category = "android\\split_screen_multi_window",
@@ -61,6 +65,7 @@ fun split_screen_multi_window(navController: NavController) {
                     min = -1f,
                     decimalPlaces = 0
                 )
+                addline()
                 FunSlider(
                     title = stringResource(R.string.small_window_focused_shadow),
                     category = "android\\split_screen_multi_window",
@@ -72,6 +77,7 @@ fun split_screen_multi_window(navController: NavController) {
                     min = -1f,
                     decimalPlaces = 0
                 )
+                addline()
                 FunSlider(
                     title = stringResource(R.string.small_window_unfocused_shadow),
                     category = "android\\split_screen_multi_window",
