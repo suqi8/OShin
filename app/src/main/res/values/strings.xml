@@ -268,4 +268,7 @@ All data will be encrypted and processed anonymously, never associated with pers
     <string name="small_window_unfocused_shadow">Shadow When Unfocused</string>
     <string name="floating_window">Floating Window</string>
     <string name="default_value_hint_negative_one">-1 for default</string>
+    <string name="custom_display_model">Custom Display Model</string>
+    <string name="hint_empty_content_default">Use default if empty</string>
+    <string name="prompt_search_other_settings">Looking for other settings?</string>
 </resources>

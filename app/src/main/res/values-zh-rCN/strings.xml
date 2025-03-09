@@ -267,4 +267,7 @@
     <string name="small_window_unfocused_shadow">小窗未获取焦点时阴影</string>
     <string name="floating_window">浮动窗口</string>
     <string name="default_value_hint_negative_one">-1为默认</string>
+    <string name="custom_display_model">自定义显示型号</string>
+    <string name="hint_empty_content_default">空内容为默认</string>
+    <string name="prompt_search_other_settings">在找其他设置吗？</string>
 </resources>

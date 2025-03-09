@@ -25,7 +25,7 @@ import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
 
 @Composable
-fun FunString(title: String, summary: String? = null, category: String, key: String, defValue: String = "") {
+fun FunString(title: String, summary: String? = null, category: String, key: String, defValue: String = "", nullable: Boolean = false) {
     val context = LocalContext.current
 
     val value = remember { mutableStateOf(context.prefs(category).getString(key, defValue)) }
@@ -70,7 +70,7 @@ fun FunString(title: String, summary: String? = null, category: String, key: Str
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
-                enabled = (cachevalue.value.isNotEmpty()),
+                enabled = (if (nullable) true else cachevalue.value.isNotEmpty()),
                 onClick = {
                     dismissDialog(Dialog)
                     value.value = cachevalue.value
