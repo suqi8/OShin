@@ -10,6 +10,7 @@ import com.highcapable.yukihookapi.hook.xposed.bridge.event.YukiXposedEvent
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import com.suqi8.oshin.hook.android.OplusRootCheck
 import com.suqi8.oshin.hook.android.split_screen_multi_window
+import com.suqi8.oshin.hook.com.android.settings.settings
 import com.suqi8.oshin.hook.com.coloros.ocrscanner.ocrscanner
 import com.suqi8.oshin.hook.com.heytap.speechassist.ai_call
 import com.suqi8.oshin.hook.com.oplus.battery.battery
@@ -34,18 +35,6 @@ class HookEntry : IYukiHookXposedInit {
 
     @SuppressLint("RestrictedApi")
     override fun onHook() = encase {
-        // Your code here.
-        /*loadApp(name = "com.android.settings") {
-            "com.oplus.settings.feature.deviceinfo.controller.OplusDeviceModelPreferenceController".toClass().apply {
-                method{
-                    name = "getStatusText"
-                    emptyParam()
-                    returnType = StringClass
-                }.hook {
-                    replaceTo("原神手机酸奶独家定制版")
-                }
-            }
-        }*/
         loadApp(hooker = OplusRootCheck())
         loadApp(hooker = StatusBarClock())
         loadApp(hooker = StatusBarhardware_indicator())
@@ -83,6 +72,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = StatusBar())
         loadApp(hooker = allday_screenoff())
         loadApp(hooker = split_screen_multi_window())
+        loadApp(hooker = settings())
     }
 
     override fun onXposedEvent() {
