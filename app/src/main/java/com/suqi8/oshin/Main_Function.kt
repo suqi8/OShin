@@ -304,7 +304,10 @@ fun features(context: Context) = listOf(
         summary = context.getString(R.string.default_value_hint_negative_one)),
     item(title = context.getString(R.string.small_window_unfocused_shadow),
         category = "android\\split_screen_multi_window",
-        summary = context.getString(R.string.default_value_hint_negative_one))
+        summary = context.getString(R.string.default_value_hint_negative_one)),
+    item(title = context.getString(R.string.custom_display_model),
+        summary = context.getString(R.string.hint_empty_content_default),
+        category = "settings")
 )
 
 @Composable
