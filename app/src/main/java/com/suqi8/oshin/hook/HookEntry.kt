@@ -12,6 +12,7 @@ import com.suqi8.oshin.hook.android.OplusRootCheck
 import com.suqi8.oshin.hook.android.split_screen_multi_window
 import com.suqi8.oshin.hook.com.android.settings.settings
 import com.suqi8.oshin.hook.com.coloros.ocrscanner.ocrscanner
+import com.suqi8.oshin.hook.com.finshell.wallet.wallet
 import com.suqi8.oshin.hook.com.heytap.speechassist.ai_call
 import com.suqi8.oshin.hook.com.oplus.battery.battery
 import com.suqi8.oshin.hook.com.oplus.games.games
@@ -30,7 +31,10 @@ import de.robv.android.xposed.callbacks.XC_LoadPackage
 class HookEntry : IYukiHookXposedInit {
 
     override fun onInit() = configs {
-        // Your code here.
+        debugLog {
+            tag = "OShin"
+        }
+        isDebug = false
     }
 
     @SuppressLint("RestrictedApi")
@@ -73,6 +77,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = allday_screenoff())
         loadApp(hooker = split_screen_multi_window())
         loadApp(hooker = settings())
+        loadApp(hooker = wallet())
     }
 
     override fun onXposedEvent() {

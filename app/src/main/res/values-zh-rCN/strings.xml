@@ -270,4 +270,6 @@
     <string name="custom_display_model">自定义显示型号</string>
     <string name="hint_empty_content_default">空内容为默认</string>
     <string name="prompt_search_other_settings">在找其他设置吗？</string>
+    <string name="remove_swipe_page_ads">移除刷卡页面广告</string>
+    <string name="clear_wallet_data_notice">开启后需清除一次钱包数据</string>
 </resources>

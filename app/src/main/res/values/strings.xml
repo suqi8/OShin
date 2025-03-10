@@ -271,4 +271,6 @@ All data will be encrypted and processed anonymously, never associated with pers
     <string name="custom_display_model">Custom Display Model</string>
     <string name="hint_empty_content_default">Use default if empty</string>
     <string name="prompt_search_other_settings">Looking for other settings?</string>
+    <string name="remove_swipe_page_ads">Remove ads from swipe page</string>
+    <string name="clear_wallet_data_notice">Clear wallet data once after enabling</string>
 </resources>
