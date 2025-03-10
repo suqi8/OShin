@@ -307,7 +307,10 @@ fun features(context: Context) = listOf(
         summary = context.getString(R.string.default_value_hint_negative_one)),
     item(title = context.getString(R.string.custom_display_model),
         summary = context.getString(R.string.hint_empty_content_default),
-        category = "settings")
+        category = "settings"),
+    item(title = context.getString(R.string.remove_swipe_page_ads),
+        summary = context.getString(R.string.clear_wallet_data_notice),
+        category = "wallet")
 )
 
 @Composable
@@ -460,6 +463,8 @@ fun Main_Function(
                             FunctionApp("com.coloros.ocrscanner", "ocrscanner", navController)
                             addline()
                             FunctionApp("com.oplus.games", "games", navController)
+                            addline()
+                            FunctionApp("com.finshell.wallet", "wallet", navController)
                         }
                     }
                     Spacer(modifier = Modifier.padding(bottom = padding.calculateBottomPadding()))

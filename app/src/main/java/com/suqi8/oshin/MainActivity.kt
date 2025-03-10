@@ -88,6 +88,7 @@ import com.suqi8.oshin.ui.activity.com.android.systemui.status_bar_clock
 import com.suqi8.oshin.ui.activity.com.android.systemui.statusbar_icon
 import com.suqi8.oshin.ui.activity.com.android.systemui.systemui
 import com.suqi8.oshin.ui.activity.com.coloros.ocrscanner.ocrscanner
+import com.suqi8.oshin.ui.activity.com.finshell.wallet.wallet
 import com.suqi8.oshin.ui.activity.com.heytap.speechassist.speechassist
 import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
 import com.suqi8.oshin.ui.activity.com.oplus.games.games
@@ -679,6 +680,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("speechassist") { speechassist(navController) }
             composable("ocrscanner") { ocrscanner(navController) }
             composable("games") { games(navController) }
+            composable("wallet") { wallet(navController) }
         }
     }
 }
