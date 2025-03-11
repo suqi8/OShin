@@ -19,6 +19,7 @@ import com.suqi8.oshin.GetAppName
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunPicSele
+import com.suqi8.oshin.ui.activity.funlistui.FunSlider
 import com.suqi8.oshin.ui.activity.funlistui.FunString
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.WantFind
@@ -58,12 +59,24 @@ fun settings(navController: NavController) {
                     }
                 )
                 AnimatedVisibility(ota_card_bg.value) {
-                    FunPicSele(
-                        title = stringResource(R.string.select_background_btn),
-                        category = "settings",
-                        key = "ota_card_bg",
-                        route = "${Environment.getExternalStorageDirectory()}/.OShin/settings/ota_card.png"
-                    )
+                    Column {
+                        FunPicSele(
+                            title = stringResource(R.string.select_background_btn),
+                            category = "settings",
+                            key = "ota_card_bg",
+                            route = "${Environment.getExternalStorageDirectory()}/.OShin/settings/ota_card.png"
+                        )
+                        FunSlider(
+                            title = stringResource(R.string.corner_radius_title),
+                            category = "settings",
+                            key = "ota_corner_radius",
+                            defValue = 0f,
+                            endtype = "px",
+                            max = 300f,
+                            min = 0f,
+                            decimalPlaces = 1
+                        )
+                    }
                 }
             }
             WantFind(

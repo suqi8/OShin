@@ -591,6 +591,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
                     MobclickAgent.onEvent(context,"lsposed_usage", mapOf("version_name" to lsposed_versionname))
                     context.prefs("settings").edit { putString("privacy_lspvername",lsposed_versionname) }
                 }
+                MobclickAgent.onEvent(context,"lsposed_usage", mapOf("lsposed_versionname" to lsposed_versionname))
             }
         }
     }
