@@ -36,7 +36,9 @@ class settings: YukiBaseHooker() {
                             val itemView = holder.javaClass.getField("itemView").get(holder) as View
                             File("${Environment.getExternalStorageDirectory()}/.OShin/settings/ota_card.png").takeIf { it.exists() }?.let { file ->
                                 val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(file))
-                                RoundedBitmapDrawableFactory.create(appContext!!.resources, bitmap).apply { cornerRadius = 0f }.also { itemView.post { itemView.background = it } }
+                                RoundedBitmapDrawableFactory.create(appContext!!.resources, bitmap).apply {
+                                    cornerRadius = prefs("settings").getFloat("ota_corner_radius", 0f)
+                                }.also { itemView.post { itemView.background = it } }
                             }
                         }
                     }

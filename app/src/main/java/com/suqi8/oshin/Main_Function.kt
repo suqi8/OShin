@@ -314,6 +314,8 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.enable_ota_card_bg),
         category = "settings"),
     item(title = context.getString(R.string.select_background_btn),
+        category = "settings"),
+    item(title = context.getString(R.string.corner_radius_title),
         category = "settings")
 )
 
