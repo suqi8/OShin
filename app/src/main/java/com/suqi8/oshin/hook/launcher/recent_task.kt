@@ -8,7 +8,7 @@ class recent_task: YukiBaseHooker() {
     @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
     override fun onHook() {
         loadApp("com.android.launcher"){
-            if (prefs("launcher\\recent_task").getBoolean("com_android_launcher_icon_text", false)) {
+            if (prefs("launcher\\recent_task").getBoolean("force_display_memory", false)) {
                 "com.oplus.quickstep.memory.MemoryInfoManager".toClass().apply {
                     method {
                         name = "isAllowMemoryInfoDisplay"
