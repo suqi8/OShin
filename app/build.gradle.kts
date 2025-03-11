@@ -147,7 +147,7 @@ android {
 }
 
 dependencies {
-    //implementation(fileTree("libs") { include("*.jar") })
+    implementation(libs.xxpermissions)
     implementation(libs.common)
     implementation(libs.umsdk.asms)
     implementation(libs.umsdk.uyumao)

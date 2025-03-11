@@ -79,6 +79,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = split_screen_multi_window())
         loadApp(hooker = settings())
         loadApp(hooker = wallet())
+
     }
 
     override fun onXposedEvent() {
