@@ -2,7 +2,7 @@ package com.suqi8.oshin.hook.com.android.settings
 
 import android.graphics.ImageDecoder
 import android.os.Environment
-import android.view.View
+import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
@@ -33,7 +33,7 @@ class settings: YukiBaseHooker() {
                     }.hook {
                         after {
                             val holder = args[0] as Any
-                            val itemView = holder.javaClass.getField("itemView").get(holder) as View
+                            val itemView = holder.javaClass.getField("itemView").get(holder) as RelativeLayout
                             File("${Environment.getExternalStorageDirectory()}/.OShin/settings/ota_card.png").takeIf { it.exists() }?.let { file ->
                                 val bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(file))
                                 RoundedBitmapDrawableFactory.create(appContext!!.resources, bitmap).apply {

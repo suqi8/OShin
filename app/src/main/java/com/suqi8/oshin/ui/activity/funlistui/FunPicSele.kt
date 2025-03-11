@@ -1,10 +1,8 @@
 package com.suqi8.oshin.ui.activity.funlistui
 
-import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,9 +21,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.hjq.permissions.OnPermissionCallback
 import com.hjq.permissions.Permission
-import com.hjq.permissions.XXPermissions
+import com.suqi8.oshin.utils.requestPermissions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.BasicComponent
@@ -63,7 +60,7 @@ fun FunPicSele(title: String? = null, summary: String? = null, category: String,
     LaunchedEffect(reloadImg.value) {
         if (reloadImg.value) {
             withContext(Dispatchers.IO) {
-                requestPermissions(context) {
+                requestPermissions(context, arrayOf(Permission.MANAGE_EXTERNAL_STORAGE)) {
                     reloadImg.value = true
                 }
                 try {
@@ -94,39 +91,4 @@ fun FunPicSele(title: String? = null, summary: String? = null, category: String,
             )
         }
     )
-}
-
-fun requestPermissions(context: Context, onGranted: () -> Unit = {}) {
-    val permissions = arrayOf(
-        Permission.MANAGE_EXTERNAL_STORAGE
-    )
-    XXPermissions.with(context)
-        .permission(*permissions)
-        .request(object : OnPermissionCallback {
-            override fun onGranted(grantedPermissions: MutableList<String>, allGranted: Boolean) {
-                if (allGranted) {
-                    onGranted()
-                } else {
-                    toast(
-                        context,
-                        "获取部分权限成功，但部分权限未正常授予\n这可能会导致部分功能无法正常使用"
-                    )
-                }
-            }
-
-            override fun onDenied(deniedPermissions: MutableList<String>, doNotAskAgain: Boolean) {
-                if (doNotAskAgain) {
-                    toast(context, "被永久拒绝授权，请手动授予读取和写入文件权限")
-                    // 如果权限被永久拒绝，重定向到设置
-                    XXPermissions.startPermissionActivity(context, deniedPermissions)
-                } else {
-                    toast(context, "获取读取和写入文件权限失败")
-                }
-            }
-        })
-
-}
-
-fun toast(context: Context, message: String) {
-    Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
 }
