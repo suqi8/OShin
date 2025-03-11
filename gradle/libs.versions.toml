@@ -22,6 +22,7 @@ okhttpVersion = "5.0.0-alpha.14"
 paletteKtx = "1.0.0"
 roomRuntime = "2.6.1"
 uyumao = "1.1.4"
+xxpermissionsVersion = "20.0"
 [libraries]
 androidx-activity-compose-v190 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
 androidx-compose-bom-v20240600 = { module = "androidx.compose:compose-bom", version.ref = "composeBomVersion" }
@@ -55,5 +56,6 @@ ui-tooling = { module = "androidx.compose.ui:ui-tooling" }
 ui-tooling-preview = { module = "androidx.compose.ui:ui-tooling-preview" }
 umsdk-uyumao = { module = "com.umeng.umsdk:uyumao", version.ref = "uyumao" }
 umsdk-asms = { module = "com.umeng.umsdk:asms", version.ref = "asms" }
+xxpermissions = { module = "com.github.getActivity:XXPermissions", version.ref = "xxpermissionsVersion" }
 
 [plugins]

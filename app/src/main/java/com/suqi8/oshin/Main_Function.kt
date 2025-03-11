@@ -310,7 +310,11 @@ fun features(context: Context) = listOf(
         category = "settings"),
     item(title = context.getString(R.string.remove_swipe_page_ads),
         summary = context.getString(R.string.clear_wallet_data_notice),
-        category = "wallet")
+        category = "wallet"),
+    item(title = context.getString(R.string.enable_ota_card_bg),
+        category = "settings"),
+    item(title = context.getString(R.string.select_background_btn),
+        category = "settings")
 )
 
 @Composable
