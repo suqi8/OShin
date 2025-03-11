@@ -50,6 +50,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI_Impl
+import com.suqi8.oshin.BuildConfig
 import com.suqi8.oshin.R
 import com.suqi8.oshin.executeCommand
 import com.suqi8.oshin.ui.activity.funlistui.addline
@@ -154,7 +155,7 @@ fun Main_About(
                                     text = context.packageManager.getPackageInfo(
                                         context.packageName,
                                         0
-                                    ).versionName.toString(),
+                                    ).versionName.toString() + " | " + BuildConfig.BUILD_TYPE_TAG,
                                     fontSize = 14.sp,
                                     color = Color.Gray,
                                     modifier = Modifier

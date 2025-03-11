@@ -1,4 +1,5 @@
 @file:Suppress("DSL_SCOPE_VIOLATION")
+import com.android.build.gradle.internal.dsl.SigningConfig
 import java.io.ByteArrayOutputStream
 
 plugins {
@@ -96,6 +97,7 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName(if (keystoreFile != null) "ci" else "release")
+            buildConfigField("String", "BUILD_TYPE_TAG", "\"${(signingConfig as SigningConfig).name}\"")
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
@@ -103,6 +105,9 @@ android {
             isCrunchPngs = true
             multiDexEnabled = true
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+        debug {
+            buildConfigField("String", "BUILD_TYPE_TAG", "\"debug\"")
         }
     }
     compileOptions {
