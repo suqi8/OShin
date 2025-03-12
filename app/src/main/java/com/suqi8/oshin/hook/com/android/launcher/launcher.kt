@@ -35,6 +35,17 @@ class launcher: YukiBaseHooker() {
                         }
                     }
                 }
+                "com.android.common.util.ScreenUtils".toClass().apply {
+                    method {
+                        name = "isSupportDockerExpandScreen"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
             }
         }
     }
