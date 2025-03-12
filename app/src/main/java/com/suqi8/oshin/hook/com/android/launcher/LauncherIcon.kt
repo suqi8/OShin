@@ -1,4 +1,4 @@
-package com.suqi8.oshin.hook.launcher
+package com.suqi8.oshin.hook.com.android.launcher
 
 import android.annotation.SuppressLint
 import com.highcapable.yukihookapi.hook.core.annotation.LegacyHookApi
