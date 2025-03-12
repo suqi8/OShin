@@ -44,6 +44,9 @@ fun FunPicSele(title: String? = null, summary: String? = null, category: String,
             uri?.let {
                 selectedImageUri = it
                 val targetFile = File(route)
+                if (!targetFile.exists()) {
+                    targetFile.parentFile?.mkdirs()
+                }
 
                 try {
                     contentResolver.openInputStream(uri)?.use { input ->
