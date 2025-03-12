@@ -281,4 +281,5 @@ All data will be encrypted and processed anonymously, never associated with pers
     <string name="unfold">Unfold</string>
     <string name="fold">Fold</string>
     <string name="force_enable_fold_dock">Force enable Fold Dock</string>
+    <string name="adjust_dock_transparency">Adjust Dock Transparency</string>
 </resources>

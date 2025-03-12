@@ -79,10 +79,22 @@ fun launcher(navController: NavController) {
                     selectedList = listOf(stringResource(R.string.unfold), stringResource(R.string.fold))
                 )
             }
+            addline()
             FunSwich(
                 title = stringResource(R.string.force_enable_fold_dock),
                 category = "launcher",
                 key = "force_enable_fold_dock"
+            )
+            addline()
+            FunSlider(
+                title = stringResource(R.string.adjust_dock_transparency),
+                category = "launcher",
+                key = "dock_transparency",
+                defValue = 1f,
+                endtype = "f",
+                max = 10f,
+                min = 0f,
+                decimalPlaces = 2
             )
         }
     }

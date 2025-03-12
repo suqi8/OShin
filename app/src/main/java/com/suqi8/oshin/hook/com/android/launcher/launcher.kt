@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
+import com.highcapable.yukihookapi.hook.type.java.FloatType
 import com.highcapable.yukihookapi.hook.type.java.UnitType
 
 class launcher: YukiBaseHooker() {
@@ -57,6 +58,19 @@ class launcher: YukiBaseHooker() {
                     }.hook {
                         before {
                             method { name = "setDockerBackground" }.get(instance).call()
+                        }
+                    }
+                }
+            }
+            if (prefs("launcher").getFloat("dock_transparency", 1f) != 1f) {
+                "com.android.launcher3.OplusHotseat".toClass().apply {
+                    method {
+                        name = "setBackgroundAlpha"
+                        param(FloatType)
+                        returnType = UnitType
+                    }.hook {
+                        before {
+                            args[0] = prefs("launcher").getFloat("dock_transparency", 1f)
                         }
                     }
                 }
