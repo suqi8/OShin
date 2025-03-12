@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Icon
@@ -19,6 +20,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -46,7 +48,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @OptIn(ExperimentalHazeApi::class)
 @Composable
-fun FunPage(title: String, appList: List<String>? = listOf(), navController: NavController, content: @Composable () -> Unit) {
+fun FunPage(title: String, appList: List<String>? = listOf(), navController: NavController, isItem: Boolean = false, content: @Composable () -> Unit) {
     val context = LocalContext.current
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
     val restartAPP = remember { mutableStateOf(false) }
@@ -63,6 +65,9 @@ fun FunPage(title: String, appList: List<String>? = listOf(), navController: Nav
             blurRadius = blurRadius,
             noiseFactor = noiseFactor
         )
+    }
+    val lazyListState = rememberSaveable(saver = LazyListState.Saver) {
+        LazyListState(firstVisibleItemIndex = 0) // 初始位置
     }
     Scaffold(topBar = {
         TopAppBar(
@@ -117,7 +122,8 @@ fun FunPage(title: String, appList: List<String>? = listOf(), navController: Nav
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
                 .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
             contentPadding = padding,
-            topAppBarScrollBehavior = topAppBarState
+            topAppBarScrollBehavior = topAppBarState,
+            state = lazyListState
         ) {
             item {
                 content()
