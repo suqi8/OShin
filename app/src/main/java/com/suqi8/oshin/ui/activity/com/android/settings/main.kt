@@ -23,6 +23,7 @@ import com.suqi8.oshin.ui.activity.funlistui.FunSlider
 import com.suqi8.oshin.ui.activity.funlistui.FunString
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.WantFind
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
 
 @SuppressLint("SuspiciousIndentation")
@@ -49,6 +50,7 @@ fun settings(navController: NavController) {
                     defValue = "",
                     nullable = true
                 )
+                addline()
                 val ota_card_bg = remember { mutableStateOf(context.prefs("settings").getBoolean("enable_ota_card_bg", false)) }
                 FunSwich(
                     title = stringResource(R.string.enable_ota_card_bg),
@@ -60,12 +62,14 @@ fun settings(navController: NavController) {
                 )
                 AnimatedVisibility(ota_card_bg.value) {
                     Column {
+                        addline()
                         FunPicSele(
                             title = stringResource(R.string.select_background_btn),
                             category = "settings",
                             key = "ota_card_bg",
                             route = "${Environment.getExternalStorageDirectory()}/.OShin/settings/ota_card.png"
                         )
+                        addline()
                         FunSlider(
                             title = stringResource(R.string.corner_radius_title),
                             category = "settings",
