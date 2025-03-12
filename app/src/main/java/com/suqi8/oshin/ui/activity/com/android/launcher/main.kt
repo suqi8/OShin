@@ -12,6 +12,8 @@ import com.suqi8.oshin.GetAppName
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSlider
+import com.suqi8.oshin.ui.activity.funlistui.FunSwich
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.extra.SuperArrow
 
@@ -50,6 +52,12 @@ fun launcher(navController: NavController) {
                 max = 2f,
                 min = 0f,
                 decimalPlaces = 1
+            )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.force_enable_fold_mode),
+                category = "launcher",
+                key = "force_enable_fold_mode"
             )
         }
     }

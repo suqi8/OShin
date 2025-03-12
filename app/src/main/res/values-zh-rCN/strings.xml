@@ -275,4 +275,5 @@
     <string name="enable_ota_card_bg">开启自定义OTA卡片背景</string>
     <string name="select_background_btn">选择背景图片</string>
     <string name="corner_radius_title">图片圆角大小</string>
+    <string name="force_enable_fold_mode">强制开启Fold模式</string>
 </resources>

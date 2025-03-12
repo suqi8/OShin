@@ -1,4 +1,4 @@
-package com.suqi8.oshin.hook.launcher
+package com.suqi8.oshin.hook.com.android.launcher
 
 import android.annotation.SuppressLint
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
@@ -30,6 +30,17 @@ class recent_task: YukiBaseHooker() {
                         before {
                             result = true
                         }
+                    }
+                }
+            }
+            "com.android.common.util.ScreenUtils".toClass().apply {
+                method {
+                    name = "isFoldScreenExpanded"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        result = true
                     }
                 }
             }
