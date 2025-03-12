@@ -2,16 +2,10 @@ package com.suqi8.oshin.ui.activity.about
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
@@ -23,6 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
@@ -67,15 +62,25 @@ fun about_contributors(navController: NavController) {
             )
             addline()
             item(
-                name = "凌逸",
-                coolapk = "网恋秀牛被骗",
-                coolapkid = 34081897
+                name = "YuKong_A",
+                github = "YuKongA"
             )
             addline()
             item(
-                name = "YuKong_A",
-                coolapkid = 27385711,
-                github = "YuKongA"
+                name = "天伞桜",
+                coolapk = "天伞桜",
+                coolapkid = 540690
+            )
+            addline()
+            item(
+                name = "shadow3",
+                github = "shadow3aaa"
+            )
+            addline()
+            item(
+                name = "凌逸",
+                coolapk = "网恋秀牛被骗",
+                coolapkid = 34081897
             )
         }
     }
@@ -107,7 +112,7 @@ private fun item(
             if (coolapk != null && github != null) {
                 showtwo.value = !showtwo.value
             } else if (coolapk != null) {
-                val coolApkUri = Uri.parse("coolmarket://u/${coolapkid}")
+                val coolApkUri = "coolmarket://u/${coolapkid}".toUri()
                 val intent = Intent(Intent.ACTION_VIEW, coolApkUri)
 
                 try {
@@ -120,7 +125,7 @@ private fun item(
             } else if (github != null) {
                 val intent = Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse("https://github.com/${github}")
+                    "https://github.com/${github}".toUri()
                 )
                 context.startActivity(intent)
             }
@@ -145,7 +150,7 @@ private fun item(
             },
                 onClick = {
                     coolapkid?.let {
-                        val coolApkUri = Uri.parse("coolmarket://u/${it}")
+                        val coolApkUri = "coolmarket://u/${it}".toUri()
                         val intent = Intent(Intent.ACTION_VIEW, coolApkUri)
 
                         try {
@@ -173,16 +178,11 @@ private fun item(
                     github?.let {
                         val intent = Intent(
                             Intent.ACTION_VIEW,
-                            Uri.parse("https://github.com/${it}")
+                            "https://github.com/${it}".toUri()
                         )
                         context.startActivity(intent)
                     }
                 }
-            )
-            Spacer(
-                Modifier.height(
-                    WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-                )
             )
         }
     }
