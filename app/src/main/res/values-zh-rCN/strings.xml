@@ -276,4 +276,7 @@
     <string name="select_background_btn">选择背景图片</string>
     <string name="corner_radius_title">图片圆角大小</string>
     <string name="force_enable_fold_mode">强制开启Fold模式</string>
+    <string name="fold_mode">Fold模式</string>
+    <string name="unfold">展开</string>
+    <string name="fold">折叠</string>
 </resources>

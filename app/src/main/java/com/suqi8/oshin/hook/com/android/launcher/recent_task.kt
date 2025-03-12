@@ -33,17 +33,6 @@ class recent_task: YukiBaseHooker() {
                     }
                 }
             }
-            "com.android.common.util.ScreenUtils".toClass().apply {
-                method {
-                    name = "isFoldScreenExpanded"
-                    emptyParam()
-                    returnType = BooleanType
-                }.hook {
-                    before {
-                        result = true
-                    }
-                }
-            }
         }
     }
 }
