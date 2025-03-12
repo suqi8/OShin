@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
+import com.highcapable.yukihookapi.hook.type.java.UnitType
 
 class launcher: YukiBaseHooker() {
     @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
@@ -43,6 +44,19 @@ class launcher: YukiBaseHooker() {
                     }.hook {
                         before {
                             result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("launcher").getBoolean("force_enable_fold_dock", false)) {
+                "com.android.launcher3.OplusHotseat".toClass().apply {
+                    method {
+                        name = "init"
+                        param("android.content.Context")
+                        returnType = UnitType
+                    }.hook {
+                        before {
+                            method { name = "setDockerBackground" }.get(instance).call()
                         }
                     }
                 }

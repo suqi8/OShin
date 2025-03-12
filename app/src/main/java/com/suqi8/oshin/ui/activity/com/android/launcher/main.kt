@@ -79,6 +79,11 @@ fun launcher(navController: NavController) {
                     selectedList = listOf(stringResource(R.string.unfold), stringResource(R.string.fold))
                 )
             }
+            FunSwich(
+                title = stringResource(R.string.force_enable_fold_dock),
+                category = "launcher",
+                key = "force_enable_fold_dock"
+            )
         }
     }
 }
