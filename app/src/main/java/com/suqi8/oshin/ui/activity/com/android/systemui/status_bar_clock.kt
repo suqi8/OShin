@@ -3,7 +3,6 @@ package com.suqi8.oshin.ui.activity.com.android.systemui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.util.TypedValue
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
@@ -19,10 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.tools.AnimTools
+import com.suqi8.oshin.ui.activity.funlistui.FunDropdown
 import com.suqi8.oshin.ui.activity.funlistui.FunNoEnable
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSlider
@@ -42,18 +43,6 @@ import top.yukonga.miuix.kmp.extra.SuperDropdown
 @Composable
 fun status_bar_clock(navController: NavController) {
     val context = LocalContext.current
-    val Status_Bar_Time_gravitySelectedOption = remember { mutableIntStateOf(context.prefs("systemui\\Status_Bar_Time").getInt("alignment", 0)) }
-    val Status_Bar_Time_gravityOptions = listOf(
-        stringResource(R.string.status_bar_time_gravity_center),
-        stringResource(R.string.status_bar_time_gravity_top),
-        stringResource(R.string.status_bar_time_gravity_bottom),
-        stringResource(R.string.status_bar_time_gravity_end),
-        stringResource(R.string.status_bar_time_gravity_center_horizontal),
-        stringResource(R.string.status_bar_time_gravity_center_vertical),
-        stringResource(R.string.status_bar_time_gravity_fill),
-        stringResource(R.string.status_bar_time_gravity_fill_horizontal),
-        stringResource(R.string.status_bar_time_gravity_fill_vertical)
-    )
     FunPage(
         title = stringResource(id = R.string.status_bar_clock),
         appList = listOf("com.android.systemui"),
@@ -298,16 +287,21 @@ fun status_bar_clock(navController: NavController) {
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp, vertical = 6.dp)
                     ) {
-                        SuperDropdown(
+                        FunDropdown(
                             title = stringResource(R.string.alignment),
-                            items = Status_Bar_Time_gravityOptions,
-                            selectedIndex = Status_Bar_Time_gravitySelectedOption.intValue,
-                            onSelectedIndexChange = { newOption ->
-                                Status_Bar_Time_gravitySelectedOption.intValue = newOption
-                                CoroutineScope(Dispatchers.IO).launch {
-                                    context.prefs("systemui\\status_bar_clock").edit { putInt("alignment", newOption) }
-                                }
-                            }
+                            category = "systemui\\status_bar_clock",
+                            key = "alignment",
+                            selectedList = listOf(
+                                stringResource(R.string.status_bar_time_gravity_center),
+                                stringResource(R.string.status_bar_time_gravity_top),
+                                stringResource(R.string.status_bar_time_gravity_bottom),
+                                stringResource(R.string.status_bar_time_gravity_end),
+                                stringResource(R.string.status_bar_time_gravity_center_horizontal),
+                                stringResource(R.string.status_bar_time_gravity_center_vertical),
+                                stringResource(R.string.status_bar_time_gravity_fill),
+                                stringResource(R.string.status_bar_time_gravity_fill_horizontal),
+                                stringResource(R.string.status_bar_time_gravity_fill_vertical)
+                            )
                         )
                         addline()
                         FunString(
@@ -320,7 +314,7 @@ fun status_bar_clock(navController: NavController) {
                         SuperArrow(title = stringResource(R.string.clock_format_example), onClick = {
                             val intent = Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://oshin.mikusignal.top/docs/timeformat.html")
+                                "https://oshin.mikusignal.top/docs/timeformat.html".toUri()
                             )
                             context.startActivity(intent)
                         })

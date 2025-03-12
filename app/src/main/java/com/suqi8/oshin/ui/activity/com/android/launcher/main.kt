@@ -1,15 +1,21 @@
 package com.suqi8.oshin.ui.activity.com.android.launcher
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.GetAppName
 import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.activity.funlistui.FunDropdown
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSlider
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
@@ -54,11 +60,25 @@ fun launcher(navController: NavController) {
                 decimalPlaces = 1
             )
             addline()
+            val context = LocalContext.current
+            val force_enable_fold_mode = remember { mutableStateOf(context.prefs("launcher").getBoolean("force_enable_fold_mode", false)) }
             FunSwich(
                 title = stringResource(R.string.force_enable_fold_mode),
                 category = "launcher",
-                key = "force_enable_fold_mode"
+                key = "force_enable_fold_mode",
+                onCheckedChange = {
+                    force_enable_fold_mode.value = it
+                }
             )
+            AnimatedVisibility(force_enable_fold_mode.value) {
+                addline()
+                FunDropdown(
+                    title = stringResource(R.string.fold_mode),
+                    category = "launcher",
+                    key = "fold_mode",
+                    selectedList = listOf(stringResource(R.string.unfold), stringResource(R.string.fold))
+                )
+            }
         }
     }
 }

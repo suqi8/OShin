@@ -11,6 +11,7 @@ import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import com.suqi8.oshin.hook.android.OplusRootCheck
 import com.suqi8.oshin.hook.android.split_screen_multi_window
 import com.suqi8.oshin.hook.com.android.launcher.LauncherIcon
+import com.suqi8.oshin.hook.com.android.launcher.launcher
 import com.suqi8.oshin.hook.com.android.launcher.recent_task
 import com.suqi8.oshin.hook.com.android.settings.settings
 import com.suqi8.oshin.hook.com.coloros.ocrscanner.ocrscanner
@@ -68,7 +69,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = split_screen_multi_window())
         loadApp(hooker = settings())
         loadApp(hooker = wallet())
-
+        loadApp(hooker = launcher())
     }
 
     override fun onXposedEvent() {
