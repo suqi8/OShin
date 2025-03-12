@@ -279,4 +279,5 @@
     <string name="fold_mode">Fold模式</string>
     <string name="unfold">展开</string>
     <string name="fold">折叠</string>
+    <string name="force_enable_fold_dock">强制开启Fold Dock</string>
 </resources>
