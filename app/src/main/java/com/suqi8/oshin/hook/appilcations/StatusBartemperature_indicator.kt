@@ -5,12 +5,13 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.content.res.Resources
 import android.os.Handler
 import android.os.Looper
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.view.children
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.UnitType
@@ -36,11 +37,11 @@ class StatusBartemperature_indicator: YukiBaseHooker() {
                 emptyParam()
                 returnType = UnitType
             }.hook {
-                before {
+                after {
                     // 获取 Clock（时间显示的 TextView 控件）
                     val clockTextView = instance as TextView
-
-                    // 获取状态栏父布局
+                    if (clockTextView.javaClass.name != "com.oplus.systemui.statusbar.widget.StatClock") return@after
+                     // 获取状态栏父布局
                     val parentViewGroup = clockTextView.parent as ViewGroup
 
                     // 创建一个新的 TextView 控件
@@ -66,7 +67,7 @@ class StatusBartemperature_indicator: YukiBaseHooker() {
                     }
 
                     // 在 Clock 后面插入新控件
-                    parentViewGroup.addView(newTextView)
+                    parentViewGroup.addView(newTextView,calculateInsertPosition(clockTextView))
                     clockTextView.post {
                         newTextView.x = clockTextView.x + clockTextView.width + 8 // 添加8个像素的间距
                     }
@@ -105,6 +106,24 @@ class StatusBartemperature_indicator: YukiBaseHooker() {
                     handler.post(runnable)
                 }
             }
+        }
+    }
+    // 计算插入位置的函数
+    fun calculateInsertPosition(clock: View): Int {
+        // 获取父容器中所有子View
+        val children = (clock.parent as ViewGroup).children.toList()
+
+        // 寻找通知图标区域的起始位置
+        val notificationAreaIndex = children.indexOfFirst {
+            it.javaClass.simpleName.contains("NotificationIconContainer")
+        }
+
+        // 如果找到通知区域，插入到时钟和通知区域之间
+        return if (notificationAreaIndex > 0) {
+            notificationAreaIndex
+        } else {
+            // 默认插入到时钟之后
+            children.indexOf(clock) + 1
         }
     }
     // 启动颜色同步
@@ -159,14 +178,4 @@ class StatusBartemperature_indicator: YukiBaseHooker() {
         }
         context.registerReceiver(receiver, IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED))
     }
-
-    // 调整视图位置（保持原有逻辑）
-    private fun adjustViewPosition(clock: TextView, newView: TextView) {
-        clock.post {
-            newView.x = clock.x + clock.width + dip2px(8)
-        }
-    }
-
-    // 工具函数
-    private fun dip2px(dp: Int): Int = (dp * Resources.getSystem().displayMetrics.density).toInt()
 }
