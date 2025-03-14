@@ -284,4 +284,5 @@ All data will be encrypted and processed anonymously, never associated with pers
     <string name="adjust_dock_transparency">Adjust Dock Transparency</string>
     <string name="force_enable_dock_blur">Force enable Dock blur</string>
     <string name="force_enable_dock_blur_undevice">Enabling on unsupported devices will cause the Dock not to be displayed</string>
+    <string name="remove_game_filter_root_detection">Remove Root detection for Game Filter</string>
 </resources>

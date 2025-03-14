@@ -2,6 +2,7 @@ package com.suqi8.oshin.hook.com.oplus.games
 
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
+import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 
 class games: YukiBaseHooker() {
@@ -131,6 +132,21 @@ class games: YukiBaseHooker() {
                     }.hook {
                         before {
                             result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("games").getBoolean("remove_game_filter_root_detection", false)) {
+                "business.module.gamefilter.GameFilterFeature".toClass().apply {
+                    method {
+                        name = "R"
+                        emptyParam()
+                        returnType = "java.lang.Integer"
+                    }.hook {
+                        after {
+                            val Rresult = result
+                            YLog.info("Root返回模式：$Rresult")
+                            if (Rresult == 1) result = 0
                         }
                     }
                 }

@@ -327,7 +327,9 @@ fun features(context: Context) = listOf(
         category = "launcher"),
     item(title = context.getString(R.string.force_enable_dock_blur),
         summary = context.getString(R.string.force_enable_dock_blur_undevice),
-        category = "launcher")
+        category = "launcher"),
+    item(title = context.getString(R.string.remove_game_filter_root_detection),
+        category = "games")
 )
 
 @Composable
