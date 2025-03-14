@@ -54,6 +54,12 @@ fun games(navController: NavController) {
                 category = "games",
                 key = "enable_all_features"
             )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.remove_game_filter_root_detection),
+                category = "games",
+                key = "remove_game_filter_root_detection"
+            )
         }
         SmallTitle(stringResource(R.string.hok))
         Card(
