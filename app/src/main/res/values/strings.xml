@@ -282,4 +282,6 @@ All data will be encrypted and processed anonymously, never associated with pers
     <string name="fold">Fold</string>
     <string name="force_enable_fold_dock">Force enable Fold Dock</string>
     <string name="adjust_dock_transparency">Adjust Dock Transparency</string>
+    <string name="force_enable_dock_blur">Force enable Dock blur</string>
+    <string name="force_enable_dock_blur_undevice">Enabling on unsupported devices will cause the Dock not to be displayed</string>
 </resources>

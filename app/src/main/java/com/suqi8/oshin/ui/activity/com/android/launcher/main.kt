@@ -96,6 +96,13 @@ fun launcher(navController: NavController) {
                 min = 0f,
                 decimalPlaces = 2
             )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.force_enable_dock_blur),
+                summary = stringResource(R.string.force_enable_dock_blur_undevice),
+                category = "launcher",
+                key = "force_enable_dock_blur"
+            )
         }
     }
 }

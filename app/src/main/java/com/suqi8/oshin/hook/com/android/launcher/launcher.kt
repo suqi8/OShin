@@ -75,6 +75,30 @@ class launcher: YukiBaseHooker() {
                     }
                 }
             }
+            if (prefs("launcher").getBoolean("force_enable_dock_blur", false)) {
+                "com.android.launcher3.uioverrides.states.blurdrawable.OplusBlurProperties".toClass().apply {
+                    method {
+                        name = "isSupportNewBlur"
+                        param("android.content.Context", BooleanType)
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+                "com.android.common.util.ScreenUtils".toClass().apply {
+                    method {
+                        name = "hasLargeDisplayFeatures"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
         }
     }
 }

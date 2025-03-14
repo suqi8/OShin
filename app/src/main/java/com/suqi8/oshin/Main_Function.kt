@@ -316,7 +316,18 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.select_background_btn),
         category = "settings"),
     item(title = context.getString(R.string.corner_radius_title),
-        category = "settings")
+        category = "settings"),
+    item(title = context.getString(R.string.force_enable_fold_mode),
+        category = "launcher"),
+    item(title = context.getString(R.string.fold_mode),
+            category = "launcher"),
+    item(title = context.getString(R.string.force_enable_fold_dock),
+    category = "launcher"),
+    item(title = context.getString(R.string.adjust_dock_transparency),
+        category = "launcher"),
+    item(title = context.getString(R.string.force_enable_dock_blur),
+        summary = context.getString(R.string.force_enable_dock_blur_undevice),
+        category = "launcher")
 )
 
 @Composable
