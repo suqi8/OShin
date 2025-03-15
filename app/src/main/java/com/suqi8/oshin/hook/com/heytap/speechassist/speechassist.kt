@@ -3,7 +3,7 @@ package com.suqi8.oshin.hook.com.heytap.speechassist
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 
-class ai_call: YukiBaseHooker() {
+class speechassist: YukiBaseHooker() {
     override fun onHook() {
         if (prefs("speechassist").getBoolean("ai_call", false)) {
             loadApp(name = "com.heytap.speechassist") {

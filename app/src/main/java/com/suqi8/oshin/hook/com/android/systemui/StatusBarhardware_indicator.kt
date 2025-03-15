@@ -1,4 +1,4 @@
-package com.suqi8.oshin.hook.systemui.StatusBar
+package com.suqi8.oshin.hook.com.android.systemui
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver

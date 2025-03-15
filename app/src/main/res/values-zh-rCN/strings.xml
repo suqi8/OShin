@@ -284,4 +284,6 @@
     <string name="force_enable_dock_blur">强制启用Dock模糊</string>
     <string name="force_enable_dock_blur_undevice">在不支持的设备上开启将导致Dock不会显示</string>
     <string name="remove_game_filter_root_detection">移除游戏滤镜Root检测</string>
+    <string name="remove_all_popup_delays">移除所有弹窗延迟</string>
+    <string name="remove_all_popup_delays_eg">例如：风险应用添加白名单</string>
 </resources>
