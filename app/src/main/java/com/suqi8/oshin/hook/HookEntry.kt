@@ -9,10 +9,12 @@ import com.highcapable.yukihookapi.hook.factory.encase
 import com.highcapable.yukihookapi.hook.xposed.bridge.event.YukiXposedEvent
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import com.suqi8.oshin.hook.android.OplusRootCheck
+import com.suqi8.oshin.hook.android.corepatch.CorePatchForV
 import com.suqi8.oshin.hook.android.split_screen_multi_window
 import com.suqi8.oshin.hook.com.android.launcher.LauncherIcon
 import com.suqi8.oshin.hook.com.android.launcher.launcher
 import com.suqi8.oshin.hook.com.android.launcher.recent_task
+import com.suqi8.oshin.hook.com.android.mms.mms
 import com.suqi8.oshin.hook.com.android.settings.settings
 import com.suqi8.oshin.hook.com.android.systemui.StatusBarhardware_indicator
 import com.suqi8.oshin.hook.com.coloros.ocrscanner.ocrscanner
@@ -74,6 +76,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = launcher())
         loadApp(hooker = phonemanager())
         loadApp(hooker = oplusphonemanager())
+        loadApp(hooker = mms())
     }
 
     override fun onXposedEvent() {
@@ -81,7 +84,7 @@ class HookEntry : IYukiHookXposedInit {
             run {
                 if (lpparam.packageName == "android" && lpparam.processName == "android") {
                     if (Build.VERSION.SDK_INT == VANILLA_ICE_CREAM) {
-                        com.suqi8.oshin.hook.android.corepatch.CorePatchForV()
+                        CorePatchForV()
                             .handleLoadPackage(lpparam)
                     }
                 }
