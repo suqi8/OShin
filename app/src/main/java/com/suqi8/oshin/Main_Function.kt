@@ -335,7 +335,9 @@ fun features(context: Context) = listOf(
         category = "phonemanager"),
     item(title = context.getString(R.string.remove_all_popup_delays),
         summary = context.getString(R.string.remove_all_popup_delays_eg),
-        category = "oplusphonemanager")
+        category = "oplusphonemanager"),
+    item(title = context.getString(R.string.remove_message_ads),
+        category = "mms")
 )
 
 @Composable
@@ -494,6 +496,8 @@ fun Main_Function(
                             FunctionApp("com.coloros.phonemanager", "phonemanager", navController)
                             addline()
                             FunctionApp("com.oplus.phonemanager", "oplusphonemanager", navController)
+                            addline()
+                            FunctionApp("com.android.mms", "mms", navController)
                         }
                     }
                     Spacer(modifier = Modifier.padding(bottom = padding.calculateBottomPadding()))

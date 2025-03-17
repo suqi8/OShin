@@ -11,5 +11,6 @@
         <item>com.oplus.games</item>
         <item>com.finshell.wallet</item>
         <item>com.coloros.phonemanager</item>
+        <item>com.android.mms</item>
     </string-array>
 </resources>

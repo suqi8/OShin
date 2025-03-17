@@ -81,6 +81,7 @@ import com.suqi8.oshin.ui.activity.android.package_manager_services
 import com.suqi8.oshin.ui.activity.android.split_screen_multi_window
 import com.suqi8.oshin.ui.activity.com.android.launcher.launcher
 import com.suqi8.oshin.ui.activity.com.android.launcher.recent_task
+import com.suqi8.oshin.ui.activity.com.android.mms.mms
 import com.suqi8.oshin.ui.activity.com.android.settings.settings
 import com.suqi8.oshin.ui.activity.com.android.systemui.hardware_indicator
 import com.suqi8.oshin.ui.activity.com.android.systemui.notification
@@ -686,6 +687,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("wallet") { wallet(navController) }
             composable("phonemanager") { phonemanager(navController) }
             composable("oplusphonemanager") { oplusphonemanager(navController) }
+            composable("mms") { mms(navController) }
         }
     }
 }

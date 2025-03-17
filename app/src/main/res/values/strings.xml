@@ -287,4 +287,5 @@ All data will be encrypted and processed anonymously, never associated with pers
     <string name="remove_game_filter_root_detection">Remove Root detection for Game Filter</string>
     <string name="remove_all_popup_delays">Remove all popup delays</string>
     <string name="remove_all_popup_delays_eg">Example: Add risky apps to whitelist</string>
+    <string name="remove_message_ads">Remove additional message ads</string>
 </resources>
