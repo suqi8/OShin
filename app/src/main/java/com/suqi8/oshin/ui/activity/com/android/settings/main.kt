@@ -82,6 +82,12 @@ fun settings(navController: NavController) {
                         )
                     }
                 }
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_show_nfc_security_chip),
+                    category = "settings",
+                    key = "force_show_nfc_security_chip"
+                )
             }
             WantFind(
                 listOf(
