@@ -337,7 +337,9 @@ fun features(context: Context) = listOf(
         summary = context.getString(R.string.remove_all_popup_delays_eg),
         category = "oplusphonemanager"),
     item(title = context.getString(R.string.remove_message_ads),
-        category = "mms")
+        category = "mms"),
+    item(title = context.getString(R.string.force_show_nfc_security_chip),
+        category = "settings")
 )
 
 @Composable

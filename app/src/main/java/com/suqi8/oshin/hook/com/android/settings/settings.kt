@@ -6,6 +6,7 @@ import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
+import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.StringClass
 import com.highcapable.yukihookapi.hook.type.java.UnitType
 import java.io.File
@@ -40,6 +41,19 @@ class settings: YukiBaseHooker() {
                                     cornerRadius = prefs("settings").getFloat("ota_corner_radius", 0f)
                                 }.also { itemView.post { itemView.background = it } }
                             }
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_show_nfc_security_chip", false)) {
+                "com.oplus.settings.feature.deviceinfo.DeviceInfoUtils".toClass().apply {
+                    method {
+                        name = "isSupportNfcEse"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
                         }
                     }
                 }
