@@ -93,6 +93,7 @@ import com.suqi8.oshin.ui.activity.com.finshell.wallet.wallet
 import com.suqi8.oshin.ui.activity.com.heytap.speechassist.speechassist
 import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
 import com.suqi8.oshin.ui.activity.com.oplus.games.games
+import com.suqi8.oshin.ui.activity.com.oplus.phonemanager.oplusphonemanager
 import com.suqi8.oshin.ui.activity.recent_update
 import com.suqi8.oshin.ui.theme.AppTheme
 import com.umeng.analytics.MobclickAgent
@@ -684,6 +685,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("games") { games(navController) }
             composable("wallet") { wallet(navController) }
             composable("phonemanager") { phonemanager(navController) }
+            composable("oplusphonemanager") { oplusphonemanager(navController) }
         }
     }
 }

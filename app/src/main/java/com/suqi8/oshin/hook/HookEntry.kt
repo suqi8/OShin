@@ -21,6 +21,7 @@ import com.suqi8.oshin.hook.com.finshell.wallet.wallet
 import com.suqi8.oshin.hook.com.heytap.speechassist.speechassist
 import com.suqi8.oshin.hook.com.oplus.battery.battery
 import com.suqi8.oshin.hook.com.oplus.games.games
+import com.suqi8.oshin.hook.com.oplus.phonemanager.oplusphonemanager
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBar
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarClock
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarIcon
@@ -72,6 +73,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = wallet())
         loadApp(hooker = launcher())
         loadApp(hooker = phonemanager())
+        loadApp(hooker = oplusphonemanager())
     }
 
     override fun onXposedEvent() {

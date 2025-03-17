@@ -332,7 +332,10 @@ fun features(context: Context) = listOf(
         category = "games"),
     item(title = context.getString(R.string.remove_all_popup_delays),
         summary = context.getString(R.string.remove_all_popup_delays_eg),
-        category = "phonemanager")
+        category = "phonemanager"),
+    item(title = context.getString(R.string.remove_all_popup_delays),
+        summary = context.getString(R.string.remove_all_popup_delays_eg),
+        category = "oplusphonemanager")
 )
 
 @Composable
@@ -489,6 +492,8 @@ fun Main_Function(
                             FunctionApp("com.finshell.wallet", "wallet", navController)
                             addline()
                             FunctionApp("com.coloros.phonemanager", "phonemanager", navController)
+                            addline()
+                            FunctionApp("com.oplus.phonemanager", "oplusphonemanager", navController)
                         }
                     }
                     Spacer(modifier = Modifier.padding(bottom = padding.calculateBottomPadding()))
