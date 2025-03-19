@@ -339,7 +339,9 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.remove_message_ads),
         category = "mms"),
     item(title = context.getString(R.string.force_show_nfc_security_chip),
-        category = "settings")
+        category = "settings"),
+    item(title = context.getString(R.string.security_payment_remove_risky_fluid_cloud),
+        category = "securepay")
 )
 
 @Composable
@@ -500,6 +502,8 @@ fun Main_Function(
                             FunctionApp("com.oplus.phonemanager", "oplusphonemanager", navController)
                             addline()
                             FunctionApp("com.android.mms", "mms", navController)
+                            addline()
+                            FunctionApp("com.coloros.securepay", "securepay", navController)
                         }
                     }
                     Spacer(modifier = Modifier.padding(bottom = padding.calculateBottomPadding()))

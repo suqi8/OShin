@@ -288,4 +288,5 @@
     <string name="remove_all_popup_delays_eg">例如：风险应用添加白名单</string>
     <string name="remove_message_ads">移除信息附加广告</string>
     <string name="force_show_nfc_security_chip">强制开启 NFC 安全芯片显示</string>
+    <string name="security_payment_remove_risky_fluid_cloud">移除支付环境有风险流体云</string>
 </resources>
