@@ -17,6 +17,7 @@ import com.suqi8.oshin.GetAppName
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
+import com.suqi8.oshin.ui.activity.funlistui.WantFind
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.extra.SuperArrow
@@ -95,5 +96,12 @@ fun systemui(navController: NavController) {
                 )
             }
         }
+        WantFind(
+            listOf(
+                WantFind(stringResource(R.string.security_payment_remove_risky_fluid_cloud),"securepay"),
+                WantFind(stringResource(R.string.low_battery_fluid_cloud_off),"battery")
+            ),
+            navController
+        )
     }
 }

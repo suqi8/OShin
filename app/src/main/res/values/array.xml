@@ -12,5 +12,6 @@
         <item>com.finshell.wallet</item>
         <item>com.coloros.phonemanager</item>
         <item>com.android.mms</item>
+        <item>security_payment_remove_risky_fluid_cloud</item>
     </string-array>
 </resources>
