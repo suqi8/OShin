@@ -25,6 +25,7 @@ import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.WantFind
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.SmallTitle
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -87,6 +88,141 @@ fun settings(navController: NavController) {
                     title = stringResource(R.string.force_show_nfc_security_chip),
                     category = "settings",
                     key = "force_show_nfc_security_chip"
+                )
+            }
+            SmallTitle(stringResource(R.string.feature))
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp)
+                    .padding(bottom = 6.dp)
+            ) {
+                FunSwich(
+                    title = stringResource(R.string.force_enable_all_features),
+                    summary = stringResource(R.string.enable_all_features_warning),
+                    category = "settings",
+                    key = "force_enable_all_features"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.demo_only_device),
+                    category = "settings",
+                    key = "retail_locked_terminal"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.demo_only_device),
+                    category = "settings",
+                    key = "retail_locked_terminal"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_enable_karaoke),
+                    category = "settings",
+                    key = "force_enable_karaoke"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_enable_3d_camera_color),
+                    category = "settings",
+                    key = "force_enable_3d_camera_color"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_aon_explorer),
+                    category = "settings",
+                    key = "force_aon_explorer"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_enable_app_freeze),
+                    category = "settings",
+                    key = "force_enable_app_freeze"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.check_ble_audio_whitelist),
+                    category = "settings",
+                    key = "check_ble_audio_whitelist"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_breathing_light_sync),
+                    category = "settings",
+                    key = "force_breathing_light_sync"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_breathing_light_color),
+                    category = "settings",
+                    key = "force_breathing_light_color"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_breathing_light_color),
+                    category = "settings",
+                    key = "force_breathing_light_color"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_support_wide_gamut),
+                    category = "settings",
+                    key = "force_support_wide_gamut"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_support_color_mode),
+                    category = "settings",
+                    key = "force_support_color_mode"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_support_hidden_app_feature),
+                    category = "settings",
+                    key = "force_support_hidden_app_feature"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_support_smart_case),
+                    category = "settings",
+                    key = "force_support_smart_case"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_dirac_audio),
+                    category = "settings",
+                    key = "force_dirac_audio"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_dolby_audio),
+                    category = "settings",
+                    key = "force_dolby_audio"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_dual_earbuds),
+                    category = "settings",
+                    key = "force_dual_earbuds"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_foldable_screen),
+                    category = "settings",
+                    key = "force_foldable_screen"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_fold_or_flip_screen),
+                    category = "settings",
+                    key = "force_fold_or_flip_screen"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_display_remapping),
+                    summary = stringResource(R.string.disable_ui_remap_when_unfolded),
+                    category = "settings",
+                    key = "disable_display_remapping"
                 )
             }
             WantFind(
