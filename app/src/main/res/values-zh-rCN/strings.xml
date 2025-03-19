@@ -289,4 +289,7 @@
     <string name="remove_message_ads">移除信息附加广告</string>
     <string name="force_show_nfc_security_chip">强制开启 NFC 安全芯片显示</string>
     <string name="security_payment_remove_risky_fluid_cloud">移除支付环境有风险流体云</string>
+    <string name="custom_score">自定义分数</string>
+    <string name="custom_prompt_content">自定义提示内容</string>
+    <string name="custom_animation_duration">自定义动画时长</string>
 </resources>
