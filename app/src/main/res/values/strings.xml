@@ -289,4 +289,5 @@ All data will be encrypted and processed anonymously, never associated with pers
     <string name="remove_all_popup_delays_eg">Example: Add risky apps to whitelist</string>
     <string name="remove_message_ads">Remove additional message ads</string>
     <string name="force_show_nfc_security_chip">Force show NFC security chip</string>
+    <string name="security_payment_remove_risky_fluid_cloud">Remove Fluid Cloud with Payment Environment Having Risks</string>
 </resources>
