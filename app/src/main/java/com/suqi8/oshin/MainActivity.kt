@@ -90,6 +90,7 @@ import com.suqi8.oshin.ui.activity.com.android.systemui.statusbar_icon
 import com.suqi8.oshin.ui.activity.com.android.systemui.systemui
 import com.suqi8.oshin.ui.activity.com.coloros.ocrscanner.ocrscanner
 import com.suqi8.oshin.ui.activity.com.coloros.phonemanager.phonemanager
+import com.suqi8.oshin.ui.activity.com.coloros.securepay.securepay
 import com.suqi8.oshin.ui.activity.com.finshell.wallet.wallet
 import com.suqi8.oshin.ui.activity.com.heytap.speechassist.speechassist
 import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
@@ -688,6 +689,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("phonemanager") { phonemanager(navController) }
             composable("oplusphonemanager") { oplusphonemanager(navController) }
             composable("mms") { mms(navController) }
+            composable("securepay") { securepay(navController) }
         }
     }
 }
