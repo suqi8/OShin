@@ -14,6 +14,7 @@ import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSlider
 import com.suqi8.oshin.ui.activity.funlistui.FunString
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
 
 @SuppressLint("SuspiciousIndentation")
@@ -36,6 +37,7 @@ fun oplusphonemanager(navController: NavController) {
                 category = "oplusphonemanager",
                 key = "remove_all_popup_delays"
             )
+            addline()
             FunSlider(
                 title = stringResource(R.string.custom_score),
                 summary = stringResource(R.string.default_value_hint_negative_one),
@@ -46,6 +48,7 @@ fun oplusphonemanager(navController: NavController) {
                 max = 100f,
                 decimalPlaces = 0
             )
+            addline()
             FunString(
                 title = stringResource(R.string.custom_prompt_content),
                 category = "oplusphonemanager",
@@ -53,6 +56,7 @@ fun oplusphonemanager(navController: NavController) {
                 defValue = "",
                 nullable = true
             )
+            addline()
             FunSlider(
                 title = stringResource(R.string.custom_animation_duration),
                 summary = stringResource(R.string.default_value_hint_negative_one),

@@ -58,6 +58,287 @@ class settings: YukiBaseHooker() {
                     }
                 }
             }
+            "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                method {
+                    name = "hasAllClientFeature"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        if (prefs("settings").getBoolean("demo_only_device", false)) result = false
+                        if (prefs("settings").getBoolean("retail_locked_terminal", false)) result = true
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_enable_karaoke", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "hasSupportKaraokeFeature"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_enable_all_features", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "hasOplusFeature"
+                        param("java.lang.String")
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_enable_3d_camera_color", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "is3DCameraColorSupport"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_aon_explorer", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isAonExplorerEnable"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_enable_app_freeze", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isAppFrozenSupport"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("check_ble_audio_whitelist", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isBleAudioWhiteListEnable"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isBtLeAudioWhiteList"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isBtLeAudioWhiteListEnable"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_breathing_light_sync", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isBreathLightMusicSupport"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_breathing_light_color", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isBreathingLightColorSupport"
+                        param("android.content.Context")
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_breathing_light_color", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isBreathingLightSupport"
+                        param("android.content.Context")
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_support_wide_gamut", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isColorManagementSupprot"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_support_color_mode", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isColorModeSupport"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_support_hidden_app_feature", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isCustomHideAppSupport"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_support_smart_case", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isDeviceCaseSupport"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_dirac_audio", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isDiracSupported"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_dolby_audio", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isDolbySupported"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_dual_earbuds", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isDualheadphone"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_foldable_screen", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isFoldDevice"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("force_fold_or_flip_screen", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isFoldOrFlipDevice"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("disable_display_remapping", false)) {
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
+                    method {
+                        name = "isFoldRemapDisableDevice"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
         }
     }
 }
