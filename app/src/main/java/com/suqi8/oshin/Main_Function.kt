@@ -341,7 +341,23 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.force_show_nfc_security_chip),
         category = "settings"),
     item(title = context.getString(R.string.security_payment_remove_risky_fluid_cloud),
-        category = "securepay")
+        category = "securepay"),
+    item(title = context.getString(R.string.custom_score),
+        summary = context.getString(R.string.default_value_hint_negative_one),
+        category = "phonemanager"),
+    item(title = context.getString(R.string.custom_prompt_content),
+    category = "phonemanager"),
+    item(title = context.getString(R.string.custom_animation_duration),
+        summary = context.getString(R.string.default_value_hint_negative_one),
+        category = "phonemanager"),
+    item(title = context.getString(R.string.custom_score),
+        summary = context.getString(R.string.default_value_hint_negative_one),
+        category = "oplusphonemanager"),
+    item(title = context.getString(R.string.custom_prompt_content),
+        category = "oplusphonemanager"),
+    item(title = context.getString(R.string.custom_animation_duration),
+        summary = context.getString(R.string.default_value_hint_negative_one),
+        category = "oplusphonemanager")
 )
 
 @Composable
