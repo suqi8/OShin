@@ -95,6 +95,7 @@ import com.suqi8.oshin.ui.activity.com.coloros.securepay.securepay
 import com.suqi8.oshin.ui.activity.com.finshell.wallet.wallet
 import com.suqi8.oshin.ui.activity.com.heytap.health.health
 import com.suqi8.oshin.ui.activity.com.heytap.speechassist.speechassist
+import com.suqi8.oshin.ui.activity.com.oplus.appdetail.appdetail
 import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
 import com.suqi8.oshin.ui.activity.com.oplus.games.games
 import com.suqi8.oshin.ui.activity.com.oplus.phonemanager.oplusphonemanager
@@ -694,6 +695,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("mms") { mms(navController) }
             composable("securepay") { securepay(navController) }
             composable("health") { health(navController) }
+            composable("appdetail") { appdetail(navController) }
         }
     }
 }
