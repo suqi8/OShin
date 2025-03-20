@@ -82,6 +82,7 @@ import com.suqi8.oshin.ui.activity.android.split_screen_multi_window
 import com.suqi8.oshin.ui.activity.com.android.launcher.launcher
 import com.suqi8.oshin.ui.activity.com.android.launcher.recent_task
 import com.suqi8.oshin.ui.activity.com.android.mms.mms
+import com.suqi8.oshin.ui.activity.com.android.settings.feature
 import com.suqi8.oshin.ui.activity.com.android.settings.settings
 import com.suqi8.oshin.ui.activity.com.android.systemui.hardware_indicator
 import com.suqi8.oshin.ui.activity.com.android.systemui.notification
@@ -681,6 +682,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("about_references") { about_references(navController) }
             composable("about_contributors") { about_contributors(navController) }
             composable("settings") { settings(navController) }
+            composable("settings\\feature") { feature(navController) }
             composable("battery") { battery(navController) }
             composable("speechassist") { speechassist(navController) }
             composable("ocrscanner") { ocrscanner(navController) }
