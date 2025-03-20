@@ -547,4 +547,5 @@
     <string name="palm_unlock">掌纹解锁</string>
     <string name="enable_redpacket_helper">启用红包助手</string>
     <string name="disable_root_dialog">移除Root检测弹窗</string>
+    <string name="remove_recommendations">移除\"大家也喜欢\"</string>
 </resources>

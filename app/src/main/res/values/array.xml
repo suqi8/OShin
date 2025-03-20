@@ -14,5 +14,6 @@
         <item>com.android.mms</item>
         <item>com.coloros.securepay</item>
         <item>com.heytap.health</item>
+        <item>com.oplus.appdetail</item>
     </string-array>
 </resources>

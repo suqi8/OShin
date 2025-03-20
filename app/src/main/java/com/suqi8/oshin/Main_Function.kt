@@ -611,7 +611,9 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.anti_voyeur), category = "settings\\feature"),
     item(title = context.getString(R.string.enable_redpacket_helper), category = "settings\\feature"),
     item(title = context.getString(R.string.disable_root_dialog),
-        category = "health")
+        category = "health"),
+    item(title = context.getString(R.string.remove_recommendations),
+        category = "appdetail")
 )
 
 @Composable
@@ -776,6 +778,8 @@ fun Main_Function(
                             FunctionApp("com.coloros.securepay", "securepay", navController)
                             addline()
                             FunctionApp("com.heytap.health", "health", navController)
+                            addline()
+                            FunctionApp("com.oplus.appdetail", "appdetail", navController)
                         }
                     }
                     Spacer(modifier = Modifier.padding(bottom = padding.calculateBottomPadding()))
