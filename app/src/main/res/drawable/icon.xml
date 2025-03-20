@@ -6,9 +6,9 @@
                   
             <gradient android:endX="94.5" android:endY="94.5" android:startX="13.5" android:startY="13.5" android:type="linear">
                         
-                <item android:color="#FFE3F2FD" android:offset="0"/>
+                <item android:color="#1F1F1F" android:offset="0"/>
                         
-                <item android:color="#FFE6B8A0" android:offset="1"/>
+                <item android:color="#3D3D3D" android:offset="1"/>
                       
             </gradient>
                 
@@ -22,9 +22,9 @@
                   
             <gradient android:endX="71.95" android:endY="72.03" android:startX="36.49" android:startY="36.57" android:type="linear">
                         
-                <item android:color="#FFE6F4FF" android:offset="0"/>
+                <item android:color="#FFB347" android:offset="0"/>
                         
-                <item android:color="#FFB3D8FF" android:offset="1"/>
+                <item android:color="#E63946" android:offset="1"/>
                       
             </gradient>
                 
@@ -38,9 +38,9 @@
                   
             <gradient android:endX="54" android:endY="78.44" android:startX="54" android:startY="29.56" android:type="linear">
                         
-                <item android:color="#FFF8F5F2" android:offset="0"/>
+                <item android:color="#A8DADC" android:offset="0"/>
                         
-                <item android:color="#FFD4B996" android:offset="1"/>
+                <item android:color="#F4A261" android:offset="1"/>
                       
             </gradient>
                 
@@ -48,7 +48,7 @@
           
     </path>
       
-    <path android:fillColor="#4A4A4A" android:pathData="M64.01,54.19c0,5.29 -4.27,9.45 -9.45,9.56 -5.4,0 -9.67,-4.39 -9.67,-9.56s4.27,-9.45 9.56,-9.45 9.67,4.27 9.56,9.56h0v-0.11Z" android:strokeWidth="0"/>
+    <path android:fillColor="#2A9D8F" android:pathData="M64.01,54.19c0,5.29 -4.27,9.45 -9.45,9.56 -5.4,0 -9.67,-4.39 -9.67,-9.56s4.27,-9.45 9.56,-9.45 9.67,4.27 9.56,9.56h0v-0.11Z" android:strokeWidth="0"/>
       
     <path android:fillAlpha="0.8" android:fillColor="#A0A0A0" android:pathData="M54.44,60.26c-3.38,0 -6.08,-2.7 -6.08,-6.08s2.7,-6.19 6.19,-6.19 6.08,2.7 6.08,6.19 -2.7,6.08 -6.08,6.08h-0.11Z" android:strokeAlpha="0.8" android:strokeWidth="0"/>
       
