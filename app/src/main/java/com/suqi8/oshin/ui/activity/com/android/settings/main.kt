@@ -1348,349 +1348,377 @@ fun settings(navController: NavController) {
                 addline()
                 FunSwich(
                     title = stringResource(R.string.show_kernel_time),
-                    category = "advanced",
+                    category = "settings",
                     key = "show_kernel_time"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.show_net_unlock),
-                    category = "advanced",
+                    category = "settings",
                     key = "show_net_unlock"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.show_never_timeout),
-                    category = "display",
+                    category = "settings",
                     key = "show_never_timeout"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.hide_npu_detail),
-                    category = "system",
+                    category = "settings",
                     key = "hide_npu_detail"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.show_processor),
-                    category = "about",
+                    category = "settings",
                     key = "show_processor"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.show_processor_gen2),
-                    category = "about",
+                    category = "settings",
                     key = "show_processor_gen2"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.screen_size_cm),
-                    category = "display",
+                    category = "settings",
                     key = "screen_size_cm"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.show_sw_version),
-                    category = "about",
+                    category = "settings",
                     key = "show_sw_version"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.sw_instead_build),
-                    category = "about",
+                    category = "settings",
                     key = "sw_instead_build"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.show_uicc_unlock),
-                    category = "security",
+                    category = "settings",
                     key = "show_uicc_unlock"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.enable_sim_lock),
-                    category = "security",
+                    category = "settings",
                     key = "enable_sim_lock"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.hide_sim_toolkit),
-                    category = "system",
+                    category = "settings",
                     key = "hide_sim_toolkit"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.force_software_conf),
-                    category = "debug",
+                    category = "settings",
                     key = "force_software_conf"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.special_side_finger),
-                    category = "biometrics",
+                    category = "settings",
                     key = "special_side_finger"
                 )
                 addline()
                 FunSwich(
                     title = stringResource(R.string.enable_circle_search),
-                    category = "features",
+                    category = "settings",
                     key = "enable_circle_search"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.show_custom_ver),
-                    category = "system",
+                    category = "settings",
                     key = "show_custom_ver"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.enable_electronic_label),
-                    category = "about",
+                    category = "settings",
                     key = "enable_electronic_label"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.fullscreen_apps),
-                    category = "display",
+                    category = "settings",
                     key = "fullscreen_apps"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.smart_gesture),
-                    category = "gesture",
+                    category = "settings",
                     key = "smart_gesture"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.show_imsi),
-                    category = "network",
+                    category = "settings",
                     key = "show_imsi"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.show_meid),
-                    category = "network",
+                    category = "settings",
                     key = "show_meid"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.member_rcc_show),
-                    category = "members",
+                    category = "settings",
                     key = "member_rcc_show"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.mini_capsule),
-                    category = "features",
+                    category = "settings",
                     key = "mini_capsule"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.number_recognition),
-                    category = "messaging",
+                    category = "settings",
                     key = "number_recognition"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.enable_oguard),
-                    category = "security",
+                    category = "settings",
                     key = "enable_oguard"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.oh_india_version),
-                    category = "region",
+                    category = "settings",
                     key = "oh_india_version"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.usb_tether_boot),
-                    category = "network",
+                    category = "settings",
                     key = "usb_tether_boot"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.quick_app_support),
-                    category = "apps",
+                    category = "settings",
                     key = "quick_app_support"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.region_picker),
-                    category = "region",
+                    category = "settings",
                     key = "region_picker"
                 )
                 addline()
                 FunSwich(
                     title = stringResource(R.string.enable_roulette),
-                    category = "features",
+                    category = "settings",
                     key = "enable_roulette"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.show_wfc_dialog),
-                    category = "network",
+                    category = "settings",
                     key = "show_wfc_dialog"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.smart_touch),
-                    category = "gesture",
+                    category = "settings",
                     key = "smart_touch"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.smart_touch_v2),
-                    category = "gesture",
+                    category = "settings",
                     key = "smart_touch_v2"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.show_sms_number),
-                    category = "messaging",
+                    category = "settings",
                     key = "show_sms_number"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.ai_eye_protect),
-                    category = "display",
+                    category = "settings",
                     key = "ai_eye_protect"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.disable_edge_panel),
-                    category = "system",
+                    category = "settings",
                     key = "disable_edge_panel"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.disable_stable_plan),
-                    category = "system",
+                    category = "settings",
                     key = "disable_stable_plan"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.disable_time_change),
-                    category = "datetime",
+                    category = "settings",
                     key = "disable_time_change"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.disable_gaze_ringtone),
-                    category = "sound",
+                    category = "settings",
                     key = "disable_gaze_ringtone"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.disable_user_exp),
-                    category = "privacy",
+                    category = "settings",
                     key = "disable_user_exp"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.disable_verify_dialog),
-                    category = "security",
+                    category = "settings",
                     key = "disable_verify_dialog"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.virtual_comm_device),
-                    category = "network",
+                    category = "settings",
                     key = "virtual_comm_device"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.virtual_comm_service),
-                    category = "network",
+                    category = "settings",
                     key = "virtual_comm_service"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.disable_vowifi_setting),
-                    category = "network",
+                    category = "settings",
                     key = "disable_vowifi_setting"
                 )
                 addline()
                 FunSwich(
                     title = stringResource(R.string.disable_volte_setting),
-                    category = "network",
+                    category = "settings",
                     key = "disable_volte_setting"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.volte_icon_off),
-                    category = "statusbar",
+                    category = "settings",
                     key = "volte_icon_off"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.disable_wifi_setting),
-                    category = "network",
+                    category = "settings",
                     key = "disable_wifi_setting"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.hide_install_sources),
-                    category = "security",
+                    category = "settings",
                     key = "hide_install_sources"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.biometric_privacy),
-                    category = "privacy",
+                    category = "settings",
                     key = "biometric_privacy"
                 )
 
                 addline()
                 FunSwich(
                     title = stringResource(R.string.upload_error_log),
-                    category = "system",
+                    category = "settings",
                     key = "upload_error_log"
                 )
+                addline()
+                FunSwich(title = stringResource(R.string.dirac_sound), category = "settings", key = "dirac_sound")
+                addline()
+                FunSwich(title = stringResource(R.string.dolby_support), category = "settings", key = "dolby_sound")
+                addline()
+                FunSwich(title = stringResource(R.string.edge_panel), category = "settings", key = "edge_panel")
+                addline()
+                FunSwich(title = stringResource(R.string.resolution_pic), category = "settings", key = "resolution_pic")
+                addline()
+                FunSwich(title = stringResource(R.string.sharpness_switch), category = "settings", key = "sharpness_switch")
+                addline()
+                FunSwich(title = stringResource(R.string.hyper_mode), category = "settings", key = "hyper_mode")
+                addline()
+                FunSwich(title = stringResource(R.string.fluid_cloud), category = "settings", key = "fluid_cloud")
+                addline()
+                FunSwich(title = stringResource(R.string.linear_vibration), category = "settings", key = "linear_vibration")
+                addline()
+                FunSwich(title = stringResource(R.string.op7_vibration), category = "settings", key = "op7_vibration")
+                addline()
+                FunSwich(title = stringResource(R.string.palm_unlock), category = "settings", key = "palm_unlock")
+                addline()
+                FunSwich(title = stringResource(R.string.stealth_security), category = "settings", key = "stealth_security")
+                addline()
+                FunSwich(title = stringResource(R.string.pwm_reboot), category = "settings", key = "pwm_reboot")
+                addline()
+                FunSwich(title = stringResource(R.string.anti_voyeur), category = "settings", key = "anti_voyeur")
+                addline()
+                FunSwich(title = stringResource(R.string.enable_redpacket_helper), category = "settings", key = "enable_redpacket_helper")
             }
             WantFind(
                 listOf(

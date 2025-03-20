@@ -530,4 +530,20 @@
     <string name="hide_install_sources">隐藏安装来源</string>
     <string name="biometric_privacy">生物识别隐私声明</string>
     <string name="upload_error_log">错误日志上传</string>
+    <string name="dirac_sound">Dirac音效支持</string>
+    <string name="fluid_cloud">流体云功能</string>
+    <string name="hyper_mode">超频模式</string>
+    <string name="edge_panel">边缘面板功能</string>
+    <string name="linear_vibration">线性震动</string>
+    <string name="op7_vibration">一加7震动</string>
+    <string name="dolby_support">杜比全景声</string>
+    <string name="stealth_security">隐身安全模式</string>
+    <string name="pwm_reboot">PWM重启关闭</string>
+    <string name="anti_voyeur">智能防窥</string>
+    <string name="taskbar_support">任务栏支持</string>
+    <string name="resolution_pic">分辨率图片</string>
+    <string name="brightness_rm">二级亮度调节</string>
+    <string name="sharpness_switch">锐度切换</string>
+    <string name="palm_unlock">掌纹解锁</string>
+    <string name="enable_redpacket_helper">启用红包助手</string>
 </resources>
