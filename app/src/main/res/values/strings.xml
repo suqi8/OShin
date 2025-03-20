@@ -58,7 +58,7 @@
     <string name="compiled_time">Compiled Time</string>
     <string name="official_channel">Official Channel</string>
     <string name="contribute_translation">Contribute to Translation</string>
-    <string name="crowdin_contribute_summary">Go to Crowdin to contribute your language translation</string>
+    <string name="crowdin_contribute_summary">Go to Github to contribute your language translation</string>
     <string name="go_to_his_homepage">Go to His Homepage</string>
     <string name="please_install_cool_apk">Please install the CoolAPK app first</string>
     <string name="home">Home</string>
@@ -547,4 +547,5 @@ All data will be encrypted and processed anonymously, never associated with pers
     <string name="sharpness_switch">Sharpness Switch</string>
     <string name="palm_unlock">Palm Unlock</string>
     <string name="enable_redpacket_helper">Enable Red Packet Assistant</string>
+    <string name="disable_root_dialog">Remove Root Detection Popup</string>
 </resources>

@@ -93,6 +93,7 @@ import com.suqi8.oshin.ui.activity.com.coloros.ocrscanner.ocrscanner
 import com.suqi8.oshin.ui.activity.com.coloros.phonemanager.phonemanager
 import com.suqi8.oshin.ui.activity.com.coloros.securepay.securepay
 import com.suqi8.oshin.ui.activity.com.finshell.wallet.wallet
+import com.suqi8.oshin.ui.activity.com.heytap.health.health
 import com.suqi8.oshin.ui.activity.com.heytap.speechassist.speechassist
 import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
 import com.suqi8.oshin.ui.activity.com.oplus.games.games
@@ -692,6 +693,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("oplusphonemanager") { oplusphonemanager(navController) }
             composable("mms") { mms(navController) }
             composable("securepay") { securepay(navController) }
+            composable("health") { health(navController) }
         }
     }
 }

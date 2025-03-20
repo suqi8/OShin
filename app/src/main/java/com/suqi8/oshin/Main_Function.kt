@@ -609,7 +609,9 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.stealth_security), category = "settings\\feature"),
     item(title = context.getString(R.string.pwm_reboot), category = "settings\\feature"),
     item(title = context.getString(R.string.anti_voyeur), category = "settings\\feature"),
-    item(title = context.getString(R.string.enable_redpacket_helper), category = "settings\\feature")
+    item(title = context.getString(R.string.enable_redpacket_helper), category = "settings\\feature"),
+    item(title = context.getString(R.string.disable_root_dialog),
+        category = "health")
 )
 
 @Composable
@@ -772,6 +774,8 @@ fun Main_Function(
                             FunctionApp("com.android.mms", "mms", navController)
                             addline()
                             FunctionApp("com.coloros.securepay", "securepay", navController)
+                            addline()
+                            FunctionApp("com.heytap.health", "health", navController)
                         }
                     }
                     Spacer(modifier = Modifier.padding(bottom = padding.calculateBottomPadding()))
