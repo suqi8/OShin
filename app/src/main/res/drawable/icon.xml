@@ -6,9 +6,9 @@
                   
             <gradient android:endX="94.5" android:endY="94.5" android:startX="13.5" android:startY="13.5" android:type="linear">
                         
-                <item android:color="#FF3C4043" android:offset="0"/>
+                <item android:color="#FFE3F2FD" android:offset="0"/>
                         
-                <item android:color="#FF202124" android:offset="1"/>
+                <item android:color="#FFE6B8A0" android:offset="1"/>
                       
             </gradient>
                 
@@ -22,9 +22,9 @@
                   
             <gradient android:endX="71.95" android:endY="72.03" android:startX="36.49" android:startY="36.57" android:type="linear">
                         
-                <item android:color="#FF8CD3FF" android:offset="0"/>
+                <item android:color="#FFE6F4FF" android:offset="0"/>
                         
-                <item android:color="#FF44B6FF" android:offset="1"/>
+                <item android:color="#FFB3D8FF" android:offset="1"/>
                       
             </gradient>
                 
@@ -38,9 +38,9 @@
                   
             <gradient android:endX="54" android:endY="78.44" android:startX="54" android:startY="29.56" android:type="linear">
                         
-                <item android:color="#FFA6E1FF" android:offset="0"/>
+                <item android:color="#FFF8F5F2" android:offset="0"/>
                         
-                <item android:color="#FF0078D4" android:offset="1"/>
+                <item android:color="#FFD4B996" android:offset="1"/>
                       
             </gradient>
                 
@@ -48,9 +48,9 @@
           
     </path>
       
-    <path android:fillColor="#0078d4" android:pathData="M64.01,54.19c0,5.29 -4.27,9.45 -9.45,9.56 -5.4,0 -9.67,-4.39 -9.67,-9.56s4.27,-9.45 9.56,-9.45 9.67,4.27 9.56,9.56h0v-0.11Z" android:strokeWidth="0"/>
+    <path android:fillColor="#4A4A4A" android:pathData="M64.01,54.19c0,5.29 -4.27,9.45 -9.45,9.56 -5.4,0 -9.67,-4.39 -9.67,-9.56s4.27,-9.45 9.56,-9.45 9.67,4.27 9.56,9.56h0v-0.11Z" android:strokeWidth="0"/>
       
-    <path android:fillAlpha="0.8" android:fillColor="#44b6ff" android:pathData="M54.44,60.26c-3.38,0 -6.08,-2.7 -6.08,-6.08s2.7,-6.19 6.19,-6.19 6.08,2.7 6.08,6.19 -2.7,6.08 -6.08,6.08h-0.11Z" android:strokeAlpha="0.8" android:strokeWidth="0"/>
+    <path android:fillAlpha="0.8" android:fillColor="#A0A0A0" android:pathData="M54.44,60.26c-3.38,0 -6.08,-2.7 -6.08,-6.08s2.7,-6.19 6.19,-6.19 6.08,2.7 6.08,6.19 -2.7,6.08 -6.08,6.08h-0.11Z" android:strokeAlpha="0.8" android:strokeWidth="0"/>
       
     <path android:fillColor="#45d299" android:pathData="M54.44,56.44h-4.61c-0.23,0 -0.34,-0.11 -0.34,-0.34 0.23,-1.46 1.01,-2.59 2.25,-3.38 0.23,-0.15 0.23,-0.34 0,-0.56 -0.23,-0.34 -0.45,-0.67 -0.56,-1.01h0v-0.23h0.23c0,0.23 0.23,0.45 0.34,0.56 0,0.23 0.23,0.34 0.34,0.56 0,0.23 0.23,0.23 0.34,0 0.45,-0.23 0.9,-0.34 1.46,-0.34s1.58,0 2.36,0.34h0.34c0.23,-0.34 0.45,-0.79 0.67,-1.12h0.23v0.56c-0.23,0.34 -0.34,0.56 -0.56,0.9v0.34c0.56,0.34 1.01,0.79 1.46,1.35 0.45,0.67 0.79,1.35 0.9,2.14 0,0.15 -0.08,0.22 -0.23,0.23h-4.73,0.11Z" android:strokeWidth="0"/>
       

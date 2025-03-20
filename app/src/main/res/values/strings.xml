@@ -531,4 +531,20 @@ All data will be encrypted and processed anonymously, never associated with pers
     <string name="hide_install_sources">Hide Install Sources</string>
     <string name="biometric_privacy">Biometric Privacy</string>
     <string name="upload_error_log">Upload Error Logs</string>
+    <string name="dirac_sound">Dirac Sound</string>
+    <string name="fluid_cloud">Fluid Cloud</string>
+    <string name="hyper_mode">Hyper Mode</string>
+    <string name="edge_panel">Edge Panel</string>
+    <string name="linear_vibration">Linear Vibration</string>
+    <string name="op7_vibration">OP7 Vibration</string>
+    <string name="dolby_support">Dolby Atmos</string>
+    <string name="stealth_security">Stealth Security</string>
+    <string name="pwm_reboot">PWM Reboot</string>
+    <string name="anti_voyeur">Anti-Voyeur</string>
+    <string name="taskbar_support">Taskbar</string>
+    <string name="resolution_pic">Resolution Picture</string>
+    <string name="brightness_rm">Brightness RM</string>
+    <string name="sharpness_switch">Sharpness Switch</string>
+    <string name="palm_unlock">Palm Unlock</string>
+    <string name="enable_redpacket_helper">Enable Red Packet Assistant</string>
 </resources>
