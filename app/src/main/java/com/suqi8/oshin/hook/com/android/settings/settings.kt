@@ -2,6 +2,7 @@ package com.suqi8.oshin.hook.com.android.settings
 
 import android.graphics.ImageDecoder
 import android.os.Environment
+import android.os.PersistableBundle
 import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
@@ -1219,18 +1220,1051 @@ class settings: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {}
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {}
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {}
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {}
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {}
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {}
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {}
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {}
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {}
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {}
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {}
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {}
+            if (prefs("settings").getBoolean("disable_deactivate_app", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                    method {
+                        name = "disableDeactivateApp"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before { result = true }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("disable_haptic_preview", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                    method {
+                        name = "disableHapticPreview"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before { result = true }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("disable_modify_devname", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                    method {
+                        name = "disableModifyDeviceName"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before { result = true }
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("enable_super_sleep", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                    method {
+                        name = "hasSuperSleepFeature"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook {
+                        before { result = true } // 强制开启超级睡眠
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("disable_5g_reminder", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "is5gGuidanceReminder"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = false } } // 禁用提醒
+            }
+            if (prefs("settings").getBoolean("disable_account_dialog", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isAccountDialogDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } } // 强制禁用弹窗
+            }
+            if (prefs("settings").getBoolean("enable_app_disable", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isAppDisallowDisable"
+                    returnType = BooleanType
+                }.hook { before { result = false } } // 允许禁用任意应用
+            }
+            if (prefs("settings").getBoolean("hide_cmiit_auth", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isAuthenticationCmiitInvisible"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_hyper_vision", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isCWSupport"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_carrier", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isCarrierDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("locale_uk_to_en", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isCastLocaleNameFromUkEnToEn"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_clear_cache", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isClearCacheDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_colorful_real", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isColorfulShowReal"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_confidential", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isConfidentialVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        result = false
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("enable_cyberpunk", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isCyberpunkCustomizeVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("auto_resolution", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isDefaultResolutionAuto"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+
+            if (prefs("settings").getBoolean("enable_oem_unlock", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isDisableOemUnlock"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = false } } // 返回false表示不禁用OEM解锁
+            }
+
+            if (prefs("settings").getBoolean("disable_auto_rotate", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isDisableShowAutoRotate"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } } // 返回true表示隐藏选项
+            }
+
+            if (prefs("settings").getBoolean("disable_app_switch", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isDisallowSwitchToPreviousApp"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+
+            if (prefs("settings").getBoolean("enable_euex", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isEuexVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+
+            if (prefs("settings").getBoolean("force_exp_version", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isExpVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } } // 覆盖CN版本检测
+            }
+
+            if (prefs("settings").getBoolean("enable_film_finger", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isFilmEffectFingerFeature"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_finger_anim", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isFingerprintAnimStyleDisable"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = false } } // 返回false表示不禁用
+            }
+            if (prefs("settings").getBoolean("enable_fintech_nfc", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isFintechLifeNfcSupport"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("force_flip_device", false)) {
+                // 同时Hook两个相关类
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isFlipDevice"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+
+                "com.oplus.settings.utils.SysFeatureUtils".toClass().method {
+                    name = "isFoldRemapDisableDevice"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_gesture", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isGestureDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("keep_gesture_up", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isGestureUpForceKeeped"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("more_gesture_up", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isGestureUpMore"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_gota_update", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isGotaUpdateSupport"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        result = true
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("enable_business_state", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isHasBusinessStatementFeature"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_ultimate_clean", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isHasUltimateCleanupFeature"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_hw_version", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isHiddenHardWareVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_device_id", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isHideDevicesIdentify"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_ktv_loopback", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isHideKtvLoopback"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_mms_ringtone", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isHideMmsRingtone"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("move_dc_to_dev", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isHideMoveDcToDevelop"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_network_speed", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isHideNetworkSpeed"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_power_wake3", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isHidePowerWakeUpItem3"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_sim_signal", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isHideSimSignalStrength"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_humming", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isHummingEnabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("show_kernel_id", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isIdKernelVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("ignore_repeat_click", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isIgnoreRepeatClickSupport"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("imei_sv_from_ota", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isImeiSvFromOtaVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_light_func", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isLightFunc"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_marvel", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isMarvelVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_portrait_center", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isNeedHidePortraitCenter"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_video_beauty", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isNeedHideVideoBeauty"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("show_2g3g", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isNeedShow2g3g"
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_ocloud", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isOCloudDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("force_oh_device", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isOHDeviceExp"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } } // 覆盖硬编码的false
+            }
+            if (prefs("settings").getBoolean("only_hw_version", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isOnlyShowHardwareVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_kddi_au", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isOperatorKDDIShowAU"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("show_operator", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isOperatorSupport"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_privacy_email", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isOplusPrivacyEmailNotSupport"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("keep_swipe_up", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isOplusSwipeUpForceKeeped"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_ota", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isOtaDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_otg_alarm", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isOtgAutoCloseAlarmDisable"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_otg_entry", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isOtgEntryDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_pac_custom", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isPacCustomizeVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_privacy", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isPrivacyDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_fake_base", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isPseudoBaseStationInvisible"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_rl_delete", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isRLDeleteLanguages"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("force_rlm_device", false)) {
+                // 同时Hook两个相关方法
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                    method { name = "isRLMDevice"; emptyParam() }.hook { before { result = true } }
+                    method { name = "isRLMDeviceExp"; emptyParam() }.hook { before { result = true } }
+                }
+            }
+            if (prefs("settings").getBoolean("enable_raise_wake", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isRaiseToWakeSupported"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_recent_task", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isRecentTaskManagementUnavailable"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("remove_cota_home", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isRemoveCotaHomeTag"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_resize_screen", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isResizeableScreenDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_rlm_feedback", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isRlmSupportFeedbackV2"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_screen_pin", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isScreenPinningDisable"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("disable_search_index", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSearchIndexDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_seedling_exp", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSeedlingExpRegion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_custom_devname", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSetCustomizeDeviceName"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("enable_cota_devname", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSetDeviceNameByCOTA"
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        result = true
+                    }
+                }
+            }
+            if (prefs("settings").getBoolean("disable_set_password", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSetPasswordDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_all_anr", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowAllAnrDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("show_brand_name", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowBrandName"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("show_carrier_config", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowCarrierConfigVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("show_carrier_update", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowCarrierSystemUpdate"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("show_custom_details", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowCustomDetails"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("hide_data_usage", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowDataUsageInfoInvisible"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("show_diagnostic", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowDiagnostic"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("show_os_firstname", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowFirstNameOfOsVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("show_hw_version", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowHardWareVersionInAboutDevice"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("settings").getBoolean("show_ims_status", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowImsRegistrationStatus"
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        val bundle = args[0] as? PersistableBundle
+                        bundle?.putBoolean("show_ims_registration_status_bool", true)
+                        result = true
+                    }
+                }
+            }
+            if (prefs("advanced").getBoolean("show_kernel_time", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowKernelVersionTime"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("advanced").getBoolean("show_net_unlock", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowNetworkUnlock"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("display").getBoolean("show_never_timeout", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowNeverTimeout"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("system").getBoolean("hide_npu_detail", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowNpuDetailDisable"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("about").getBoolean("show_processor", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                    method { name = "isShowProcessorDetails" }.hook {
+                        before {
+                            // 覆盖保密版本检测
+                            method { name = "isConfidentialVersion" }.hook { before { result = false } }
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("about").getBoolean("show_processor_gen2", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowProcessorDetailsGen2"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("display").getBoolean("screen_size_cm", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowScreenPhysicsSizeUnitCM"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("about").getBoolean("show_sw_version", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowSoftWareVersionInAboutDevice"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("about").getBoolean("sw_instead_build", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowSwVersionInsteadOfBuildNumber"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("security").getBoolean("show_uicc_unlock", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isShowUICCUnlock"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("security").getBoolean("enable_sim_lock", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                    method { name = "isSimLockStateSupport" }.hook {
+                        before {
+                            "com.oplus.settings.utils.SettingsPackageUtils".toClass()
+                                .method { name = "isActionSupported" }
+                                .hook { before { result = true } }
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("system").getBoolean("hide_sim_toolkit", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSimToolkitInvisible"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("debug").getBoolean("force_software_conf", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                    method {
+                        name = "isSoftwareConfidention"
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook { before { result = true } }
+                }
+            }
+            if (prefs("biometrics").getBoolean("special_side_finger", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSpecialSideFinger"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("features").getBoolean("enable_circle_search", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportCircleToSearch"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        result = true
+                    }
+                }
+            }
+            if (prefs("system").getBoolean("show_custom_ver", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportCustomVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("about").getBoolean("enable_electronic_label", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                    method { name = "isSupportElectronicLabel" }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                    "com.oplus.settings.utils.RegionUtils".toClass()
+                        .method { name = "getRegion"; emptyParam() }
+                        .hook { before { result = "IN_SYSTEM_REGION_ID" } }
+                }
+            }
+            if (prefs("display").getBoolean("fullscreen_apps", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportFullScreenDisplay"
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        // 强制所有应用返回true
+                        result = true
+                    }
+                }
+            }
+            if (prefs("gesture").getBoolean("smart_gesture", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportGestureIntelligentPerception"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            arrayOf("show_imsi", "show_meid").forEach { key ->
+                if (prefs("network").getBoolean(key, false)) {
+                    "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                        name = when(key) {
+                            "show_imsi" -> "isSupportImsi"
+                            else -> "isSupportMeid"
+                        }
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook { before { result = true } }
+                }
+            }
+            if (prefs("members").getBoolean("member_rcc_show", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportMemberRccShow"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("features").getBoolean("mini_capsule", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportMiniCapsule"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("messaging").getBoolean("number_recognition", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportNumberRecognition"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("security").getBoolean("enable_oguard", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportOGuardInfo"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                            method {
+                                name = "isExpVersion"
+                                emptyParam()
+                                returnType = BooleanType
+                            }.hook {
+                                before { result = true }
+                            }
+                        }
+                        result = true
+                    }
+                }
+            }
+            if (prefs("region").getBoolean("oh_india_version", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportOHIndiaVersion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("network").getBoolean("usb_tether_boot", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportOpenUsbTetheringBoot"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("apps").getBoolean("quick_app_support", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                    method { name = "isSupportQuickApp" }.hook {
+                        before {
+                            result = true
+                        }
+                    }
+                }
+            }
+            if (prefs("region").getBoolean("region_picker", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportRegion"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        result = true
+                    }
+                }
+            }
+            if (prefs("features").getBoolean("enable_roulette", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                    method { name = "isSupportRouletteSupport" }.hook {
+                        before {
+                            // 覆盖特性检测和包安装检查
+                            method { name = "isExpVersion" }.hook { before { result = true } }
+                            "com.oplus.settings.utils.SettingsPackageUtils".toClass()
+                                .method { name = "isPackageInstalled" }
+                                .hook { before { result = false } }
+                            result = true
+                        }
+                    }
+                }
+            }
+
+            if (prefs("network").getBoolean("show_wfc_dialog", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportShowWfcTipDialog"
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+
+            arrayOf("smart_touch", "smart_touch_v2").forEach { key ->
+                if (prefs("gesture").getBoolean(key, false)) {
+                    "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                        name = when(key) {
+                            "smart_touch" -> "isSupportSmartTouch"
+                            else -> "isSupportSmartTouchV2"
+                        }
+                        emptyParam()
+                        returnType = BooleanType
+                    }.hook { before { result = true } }
+                }
+            }
+
+            if (prefs("messaging").getBoolean("show_sms_number", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSupportSmsNumber"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+
+            if (prefs("display").getBoolean("ai_eye_protect", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSuppprtAiIntelligentEyeProtect"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+
+            if (prefs("system").getBoolean("disable_edge_panel", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSystemEdgePanel"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("system").getBoolean("disable_stable_plan", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isSystemStablePlanDisable"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("datetime").getBoolean("disable_time_change", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isTimeChangeDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+
+            if (prefs("sound").getBoolean("disable_gaze_ringtone", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isUnSupportGazeFadeRingtone"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+
+            if (prefs("privacy").getBoolean("disable_user_exp", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isUserExperienceDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+
+            if (prefs("security").getBoolean("disable_verify_dialog", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isVerificationDialogDisabled"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+
+            if (prefs("network").getBoolean("virtual_comm_device", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
+                    method { name = "initVirtualComm" }.hook { before { } } // 跳过初始化
+                    method { name = "isVirtualCommConsumerDevice" }.hook { before { result = true } }
+                }
+            }
+
+            if (prefs("network").getBoolean("virtual_comm_service", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isVirtualCommInService"
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        // 强制返回服务可用状态
+                        result = true
+                    }
+                }
+            }
+
+            if (prefs("network").getBoolean("disable_vowifi_setting", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isVoWifiSettingUnavailable"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("network").getBoolean("disable_volte_setting", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isVolteSettingUnavailable"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("statusbar").getBoolean("volte_icon_off", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isVolteStatusIconDefaultOff"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("network").getBoolean("disable_wifi_setting", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "isWifiSettingsUnavailable"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("security").getBoolean("hide_install_sources", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "needHideInstallationSources"
+                    emptyParam()
+                    returnType = List::class.java
+                }.hook {
+                    before {
+                        // 返回空列表隐藏所有安装来源
+                        result = emptyList<String>()
+                    }
+                }
+            }
+            if (prefs("privacy").getBoolean("biometric_privacy", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "needPrivacyStatementWithBiometricUnlock"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
+            if (prefs("system").getBoolean("upload_error_log", false)) {
+                "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
+                    name = "supportUploadErrorLog"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook { before { result = true } }
+            }
         }
     }
 }

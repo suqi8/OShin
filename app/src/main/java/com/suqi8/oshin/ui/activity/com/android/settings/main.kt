@@ -765,6 +765,932 @@ fun settings(navController: NavController) {
                     category = "settings",
                     key = "enable_video_sr"
                 )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_deactivate_app),
+                    category = "settings",
+                    key = "disable_deactivate_app"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_haptic_preview),
+                    category = "settings",
+                    key = "disable_haptic_preview"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_modify_devname),
+                    category = "settings",
+                    key = "disable_modify_devname"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_super_sleep),
+                    category = "settings",
+                    key = "enable_super_sleep"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_5g_reminder),
+                    category = "settings",
+                    key = "disable_5g_reminder"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_account_dialog),
+                    category = "settings",
+                    key = "disable_account_dialog"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_app_disable),
+                    category = "settings",
+                    key = "enable_app_disable"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_cmiit_auth),
+                    category = "settings",
+                    key = "hide_cmiit_auth"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_hyper_vision),
+                    category = "settings",
+                    key = "enable_hyper_vision"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_carrier),
+                    category = "settings",
+                    key = "disable_carrier"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.locale_uk_to_en),
+                    category = "settings",
+                    key = "locale_uk_to_en"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_clear_cache),
+                    category = "settings",
+                    key = "disable_clear_cache"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_colorful_real),
+                    category = "settings",
+                    key = "enable_colorful_real"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_confidential),
+                    category = "settings",
+                    key = "disable_confidential"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_cyberpunk),
+                    category = "settings",
+                    key = "enable_cyberpunk"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.auto_resolution),
+                    category = "settings",
+                    key = "auto_resolution"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_oem_unlock),
+                    category = "settings",
+                    key = "enable_oem_unlock"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_auto_rotate),
+                    category = "settings",
+                    key = "disable_auto_rotate"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_app_switch),
+                    category = "settings",
+                    key = "disable_app_switch"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_euex),
+                    category = "settings",
+                    key = "enable_euex"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_exp_version),
+                    category = "settings",
+                    key = "force_exp_version"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_film_finger),
+                    category = "settings",
+                    key = "enable_film_finger"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_finger_anim),
+                    category = "settings",
+                    key = "enable_finger_anim"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_fintech_nfc),
+                    category = "settings",
+                    key = "enable_fintech_nfc"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_flip_device),
+                    category = "settings",
+                    key = "force_flip_device"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_gesture),
+                    category = "settings",
+                    key = "disable_gesture"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.keep_gesture_up),
+                    category = "settings",
+                    key = "keep_gesture_up"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.more_gesture_up),
+                    category = "settings",
+                    key = "more_gesture_up"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_gota_update),
+                    category = "settings",
+                    key = "enable_gota_update"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_business_state),
+                    category = "settings",
+                    key = "enable_business_state"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_ultimate_clean),
+                    category = "settings",
+                    key = "enable_ultimate_clean"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_hw_version),
+                    category = "settings",
+                    key = "hide_hw_version"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_device_id),
+                    category = "settings",
+                    key = "hide_device_id"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_ktv_loopback),
+                    category = "settings",
+                    key = "hide_ktv_loopback"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_mms_ringtone),
+                    category = "settings",
+                    key = "hide_mms_ringtone"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.move_dc_to_dev),
+                    category = "settings",
+                    key = "move_dc_to_dev"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_network_speed),
+                    category = "settings",
+                    key = "hide_network_speed"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_power_wake3),
+                    category = "settings",
+                    key = "hide_power_wake3"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_sim_signal),
+                    category = "settings",
+                    key = "hide_sim_signal"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_humming),
+                    category = "settings",
+                    key = "enable_humming"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_kernel_id),
+                    category = "settings",
+                    key = "show_kernel_id"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.ignore_repeat_click),
+                    category = "settings",
+                    key = "ignore_repeat_click"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.imei_sv_from_ota),
+                    category = "settings",
+                    key = "imei_sv_from_ota"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_light_func),
+                    category = "settings",
+                    key = "enable_light_func"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_marvel),
+                    category = "settings",
+                    key = "enable_marvel"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_portrait_center),
+                    category = "settings",
+                    key = "hide_portrait_center"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_video_beauty),
+                    category = "settings",
+                    key = "hide_video_beauty"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_2g3g),
+                    category = "settings",
+                    key = "show_2g3g"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_ocloud),
+                    category = "settings",
+                    key = "disable_ocloud"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_oh_device),
+                    category = "settings",
+                    key = "force_oh_device"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.only_hw_version),
+                    category = "settings",
+                    key = "only_hw_version"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_kddi_au),
+                    category = "settings",
+                    key = "enable_kddi_au"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_operator),
+                    category = "settings",
+                    key = "show_operator"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_privacy_email),
+                    category = "settings",
+                    key = "hide_privacy_email"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.keep_swipe_up),
+                    category = "settings",
+                    key = "keep_swipe_up"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_ota),
+                    category = "settings",
+                    key = "disable_ota"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_otg_alarm),
+                    category = "settings",
+                    key = "disable_otg_alarm"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_otg_entry),
+                    category = "settings",
+                    key = "disable_otg_entry"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_pac_custom),
+                    category = "settings",
+                    key = "enable_pac_custom"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_privacy),
+                    category = "settings",
+                    key = "disable_privacy"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_fake_base),
+                    category = "settings",
+                    key = "hide_fake_base"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_rl_delete),
+                    category = "settings",
+                    key = "enable_rl_delete"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_rlm_device),
+                    category = "settings",
+                    key = "force_rlm_device"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_raise_wake),
+                    category = "settings",
+                    key = "enable_raise_wake"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_recent_task),
+                    category = "settings",
+                    key = "disable_recent_task"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.remove_cota_home),
+                    category = "settings",
+                    key = "remove_cota_home"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_resize_screen),
+                    category = "settings",
+                    key = "disable_resize_screen"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_rlm_feedback),
+                    category = "settings",
+                    key = "enable_rlm_feedback"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_screen_pin),
+                    category = "settings",
+                    key = "disable_screen_pin"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_search_index),
+                    category = "settings",
+                    key = "disable_search_index"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_seedling_exp),
+                    category = "settings",
+                    key = "enable_seedling_exp"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_custom_devname),
+                    category = "settings",
+                    key = "enable_custom_devname"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_cota_devname),
+                    category = "settings",
+                    key = "enable_cota_devname"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_set_password),
+                    category = "settings",
+                    key = "disable_set_password"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_all_anr),
+                    category = "settings",
+                    key = "hide_all_anr"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_brand_name),
+                    category = "settings",
+                    key = "show_brand_name"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_carrier_config),
+                    category = "settings",
+                    key = "show_carrier_config"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_carrier_update),
+                    category = "settings",
+                    key = "show_carrier_update"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_custom_details),
+                    category = "settings",
+                    key = "show_custom_details"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_data_usage),
+                    category = "settings",
+                    key = "hide_data_usage"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_diagnostic),
+                    category = "settings",
+                    key = "show_diagnostic"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_os_firstname),
+                    category = "settings",
+                    key = "show_os_firstname"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_hw_version),
+                    category = "settings",
+                    key = "show_hw_version"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_ims_status),
+                    category = "settings",
+                    key = "show_ims_status"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_kernel_time),
+                    category = "advanced",
+                    key = "show_kernel_time"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_net_unlock),
+                    category = "advanced",
+                    key = "show_net_unlock"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_never_timeout),
+                    category = "display",
+                    key = "show_never_timeout"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_npu_detail),
+                    category = "system",
+                    key = "hide_npu_detail"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_processor),
+                    category = "about",
+                    key = "show_processor"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_processor_gen2),
+                    category = "about",
+                    key = "show_processor_gen2"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.screen_size_cm),
+                    category = "display",
+                    key = "screen_size_cm"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_sw_version),
+                    category = "about",
+                    key = "show_sw_version"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.sw_instead_build),
+                    category = "about",
+                    key = "sw_instead_build"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_uicc_unlock),
+                    category = "security",
+                    key = "show_uicc_unlock"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_sim_lock),
+                    category = "security",
+                    key = "enable_sim_lock"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_sim_toolkit),
+                    category = "system",
+                    key = "hide_sim_toolkit"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.force_software_conf),
+                    category = "debug",
+                    key = "force_software_conf"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.special_side_finger),
+                    category = "biometrics",
+                    key = "special_side_finger"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_circle_search),
+                    category = "features",
+                    key = "enable_circle_search"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_custom_ver),
+                    category = "system",
+                    key = "show_custom_ver"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_electronic_label),
+                    category = "about",
+                    key = "enable_electronic_label"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.fullscreen_apps),
+                    category = "display",
+                    key = "fullscreen_apps"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.smart_gesture),
+                    category = "gesture",
+                    key = "smart_gesture"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_imsi),
+                    category = "network",
+                    key = "show_imsi"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_meid),
+                    category = "network",
+                    key = "show_meid"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.member_rcc_show),
+                    category = "members",
+                    key = "member_rcc_show"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.mini_capsule),
+                    category = "features",
+                    key = "mini_capsule"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.number_recognition),
+                    category = "messaging",
+                    key = "number_recognition"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_oguard),
+                    category = "security",
+                    key = "enable_oguard"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.oh_india_version),
+                    category = "region",
+                    key = "oh_india_version"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.usb_tether_boot),
+                    category = "network",
+                    key = "usb_tether_boot"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.quick_app_support),
+                    category = "apps",
+                    key = "quick_app_support"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.region_picker),
+                    category = "region",
+                    key = "region_picker"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.enable_roulette),
+                    category = "features",
+                    key = "enable_roulette"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_wfc_dialog),
+                    category = "network",
+                    key = "show_wfc_dialog"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.smart_touch),
+                    category = "gesture",
+                    key = "smart_touch"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.smart_touch_v2),
+                    category = "gesture",
+                    key = "smart_touch_v2"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.show_sms_number),
+                    category = "messaging",
+                    key = "show_sms_number"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.ai_eye_protect),
+                    category = "display",
+                    key = "ai_eye_protect"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_edge_panel),
+                    category = "system",
+                    key = "disable_edge_panel"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_stable_plan),
+                    category = "system",
+                    key = "disable_stable_plan"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_time_change),
+                    category = "datetime",
+                    key = "disable_time_change"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_gaze_ringtone),
+                    category = "sound",
+                    key = "disable_gaze_ringtone"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_user_exp),
+                    category = "privacy",
+                    key = "disable_user_exp"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_verify_dialog),
+                    category = "security",
+                    key = "disable_verify_dialog"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.virtual_comm_device),
+                    category = "network",
+                    key = "virtual_comm_device"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.virtual_comm_service),
+                    category = "network",
+                    key = "virtual_comm_service"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_vowifi_setting),
+                    category = "network",
+                    key = "disable_vowifi_setting"
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_volte_setting),
+                    category = "network",
+                    key = "disable_volte_setting"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.volte_icon_off),
+                    category = "statusbar",
+                    key = "volte_icon_off"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.disable_wifi_setting),
+                    category = "network",
+                    key = "disable_wifi_setting"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.hide_install_sources),
+                    category = "security",
+                    key = "hide_install_sources"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.biometric_privacy),
+                    category = "privacy",
+                    key = "biometric_privacy"
+                )
+
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.upload_error_log),
+                    category = "system",
+                    key = "upload_error_log"
+                )
             }
             WantFind(
                 listOf(
