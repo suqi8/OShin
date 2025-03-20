@@ -58,7 +58,7 @@
     <string name="compiled_time">コンパイルされた日時</string>
     <string name="official_channel">公式チャンネル</string>
     <string name="contribute_translation">翻訳に貢献する</string>
-    <string name="crowdin_contribute_summary">Crowdin で言語の翻訳に貢献しましょう</string>
+    <string name="crowdin_contribute_summary">Github で言語の翻訳に貢献しましょう</string>
     <string name="go_to_his_homepage">Go to His Homepage</string>
     <string name="please_install_cool_apk">Please install the CoolAPK app first</string>
     <string name="home">ホーム</string>

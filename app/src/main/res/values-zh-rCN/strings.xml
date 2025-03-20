@@ -92,7 +92,7 @@
     <string name="compiled_time">编译时间</string>
     <string name="official_channel">官方频道</string>
     <string name="contribute_translation">参与翻译</string>
-    <string name="crowdin_contribute_summary">前往 Crowdin 贡献您的语言翻译</string>
+    <string name="crowdin_contribute_summary">前往 Github 贡献您的语言翻译</string>
     <string name="go_to_his_homepage">前往他的主页</string>
     <string name="please_install_cool_apk">请先安装酷安应用</string>
     <string name="clock_update_time_title">时钟更新时间</string>
@@ -546,4 +546,5 @@
     <string name="sharpness_switch">锐度切换</string>
     <string name="palm_unlock">掌纹解锁</string>
     <string name="enable_redpacket_helper">启用红包助手</string>
+    <string name="disable_root_dialog">移除Root检测弹窗</string>
 </resources>

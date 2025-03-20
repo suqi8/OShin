@@ -75,7 +75,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UseKtx")
 @Composable
 fun Main_About(
     topAppBarScrollBehavior: ScrollBehavior,
@@ -411,7 +411,7 @@ fun Main_About(
                         onClick = {
                             val intent = Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://crowdin.com/project/opatch")
+                                Uri.parse("https://github.com/suqi8/OShin/tree/master/app/src/main/res")
                             )
                             context.startActivity(intent)
                         })
