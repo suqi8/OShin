@@ -16,12 +16,12 @@ class feature: YukiBaseHooker() {
                     returnType = BooleanType
                 }.hook {
                     before {
-                        if (prefs("settings").getBoolean("demo_only_device", false)) result = false
-                        if (prefs("settings").getBoolean("retail_locked_terminal", false)) result = true
+                        if (prefs("settings\\feature").getBoolean("demo_only_device", false)) result = false
+                        if (prefs("settings\\feature").getBoolean("retail_locked_terminal", false)) result = true
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_enable_karaoke", false)) {
+            if (prefs("settings\\feature").getBoolean("force_enable_karaoke", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "hasSupportKaraokeFeature"
@@ -34,7 +34,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_enable_all_features", false)) {
+            if (prefs("settings\\feature").getBoolean("force_enable_all_features", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "hasOplusFeature"
@@ -58,7 +58,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_enable_3d_camera_color", false)) {
+            if (prefs("settings\\feature").getBoolean("force_enable_3d_camera_color", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "is3DCameraColorSupport"
@@ -71,7 +71,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_aon_explorer", false)) {
+            if (prefs("settings\\feature").getBoolean("force_aon_explorer", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isAonExplorerEnable"
@@ -95,7 +95,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_enable_app_freeze", false)) {
+            if (prefs("settings\\feature").getBoolean("force_enable_app_freeze", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isAppFrozenSupport"
@@ -108,7 +108,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("check_ble_audio_whitelist", false)) {
+            if (prefs("settings\\feature").getBoolean("check_ble_audio_whitelist", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isBleAudioWhiteListEnable"
@@ -143,7 +143,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_breathing_light_sync", false)) {
+            if (prefs("settings\\feature").getBoolean("force_breathing_light_sync", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isBreathLightMusicSupport"
@@ -156,7 +156,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_breathing_light_color", false)) {
+            if (prefs("settings\\feature").getBoolean("force_breathing_light_color", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isBreathingLightColorSupport"
@@ -169,7 +169,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_support_wide_gamut", false)) {
+            if (prefs("settings\\feature").getBoolean("force_support_wide_gamut", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isColorManagementSupprot"
@@ -182,7 +182,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_support_color_mode", false)) {
+            if (prefs("settings\\feature").getBoolean("force_support_color_mode", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isColorModeSupport"
@@ -195,7 +195,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_support_hidden_app_feature", false)) {
+            if (prefs("settings\\feature").getBoolean("force_support_hidden_app_feature", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isCustomHideAppSupport"
@@ -208,7 +208,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_support_smart_case", false)) {
+            if (prefs("settings\\feature").getBoolean("force_support_smart_case", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isDeviceCaseSupport"
@@ -221,7 +221,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_dirac_audio", false)) {
+            if (prefs("settings\\feature").getBoolean("force_dirac_audio", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isDiracSupported"
@@ -234,7 +234,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_dolby_audio", false)) {
+            if (prefs("settings\\feature").getBoolean("force_dolby_audio", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isDolbySupported"
@@ -247,7 +247,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_dual_earbuds", false)) {
+            if (prefs("settings\\feature").getBoolean("force_dual_earbuds", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isDualheadphone"
@@ -260,7 +260,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_foldable_screen", false)) {
+            if (prefs("settings\\feature").getBoolean("force_foldable_screen", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isFoldDevice"
@@ -273,7 +273,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_fold_or_flip_screen", false)) {
+            if (prefs("settings\\feature").getBoolean("force_fold_or_flip_screen", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isFoldOrFlipDevice"
@@ -286,7 +286,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("disable_display_remapping", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_display_remapping", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isFoldRemapDisableDevice"
@@ -299,7 +299,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("disable_gesture_navigation", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_gesture_navigation", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isGestureNavigationDisable"
@@ -312,7 +312,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("disable_google_mobile_services", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_google_mobile_services", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isGmsControlSupport"
@@ -325,7 +325,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("hide_storage_info", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_storage_info", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isHideStorage"
@@ -338,7 +338,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_holo_audio", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_holo_audio", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isHoloAudioSupported"
@@ -384,7 +384,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_hd_video", false)) {
+            if (prefs("settings\\feature").getBoolean("force_hd_video", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isHqvPlan"
@@ -397,7 +397,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("auto_grant_install", false)) {
+            if (prefs("settings\\feature").getBoolean("auto_grant_install", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isInstallPermissionAutoAllowed"
@@ -410,7 +410,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("disable_lock_wallpaper", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_lock_wallpaper", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isKeyguardPictorialDisabled"
@@ -423,7 +423,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("light_os", false)) {
+            if (prefs("settings\\feature").getBoolean("light_os", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isLightOS"
@@ -436,7 +436,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_multi_volume", false)) {
+            if (prefs("settings\\feature").getBoolean("force_multi_volume", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isMultiAppVolumeAdjustmentSupport"
@@ -449,7 +449,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_app_clone", false)) {
+            if (prefs("settings\\feature").getBoolean("force_app_clone", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isMultiappSupport"
@@ -462,7 +462,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_adaptive_brightness", false)) {
+            if (prefs("settings\\feature").getBoolean("force_adaptive_brightness", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isMultibitsSupport"
@@ -475,7 +475,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("disable_ota", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_ota", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isOTANotSupport"
@@ -488,7 +488,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_audio_boost", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_audio_boost", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isOrealitySupported"
@@ -501,7 +501,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_ai_image", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_ai_image", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isOsieAipqSupport"
@@ -514,7 +514,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_osie_tech", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_osie_tech", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isOsieSupported"
@@ -527,7 +527,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("force_shutdown_key", false)) {
+            if (prefs("settings\\feature").getBoolean("force_shutdown_key", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isPressPowerButtonThreeSecondsToShutDownSupport"
@@ -540,7 +540,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("single_pulse_pwm", false)) {
+            if (prefs("settings\\feature").getBoolean("single_pulse_pwm", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isPwmSinglePulseSupport"
@@ -564,7 +564,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("disable_res_switch", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_res_switch", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isResolutionAutoDisableSupport"
@@ -577,7 +577,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("manual_refresh_rate", false)) {
+            if (prefs("settings\\feature").getBoolean("manual_refresh_rate", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isScreenHighRefreshChoiceSupport"
@@ -590,7 +590,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("default_smart_refresh", false)) {
+            if (prefs("settings\\feature").getBoolean("default_smart_refresh", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isScreenRateRefreshAsAuto"
@@ -603,7 +603,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("refresh_rate_notify", false)) {
+            if (prefs("settings\\feature").getBoolean("refresh_rate_notify", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isScreenRateRefreshAsAutoNotification"
@@ -616,7 +616,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_sell_mode", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_sell_mode", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSellModeVersion" // 原方法名保持
@@ -625,7 +625,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } } // 强制返回已启用状态
                 }
             }
-            if (prefs("settings").getBoolean("enable_dual_sim", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_dual_sim", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSimGeminiSupport"
@@ -634,7 +634,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } } // 欺骗系统支持双卡
                 }
             }
-            if (prefs("settings").getBoolean("disable_single_sim_check", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_single_sim_check", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSingleCardPhone"
@@ -643,7 +643,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = false } } // 强制返回非单卡状态
                 }
             }
-            if (prefs("settings").getBoolean("enable_anti_voyeur", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_anti_voyeur", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSmartAntiVoyeurEnabled"
@@ -652,7 +652,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } } // 强制启用防偷窥
                 }
             }
-            if (prefs("settings").getBoolean("enable_snc_content", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_snc_content", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSncSupport"
@@ -661,7 +661,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } } // 伪装支持 SNC
                 }
             }
-            if (prefs("settings").getBoolean("enable_sound_combo", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_sound_combo", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSoundEffectCombinedSupport"
@@ -670,7 +670,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } } // 激活组合音效
                 }
             }
-            if (prefs("settings").getBoolean("enable_sound_settings", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_sound_settings", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSoundEffectSettingsSupported"
@@ -679,7 +679,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } } // 解锁音效设置
                 }
             }
-            if (prefs("settings").getBoolean("enable_audio_input", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_audio_input", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSoundInputDeviceSupport"
@@ -688,7 +688,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } } // 强制支持输入设备
                 }
             }
-            if (prefs("settings").getBoolean("enable_1.5k_resolution", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_1.5k_resolution", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupport15Resolution"
@@ -697,7 +697,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_adfr", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_adfr", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportADFR"
@@ -706,7 +706,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_aod", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_aod", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportAod"
@@ -715,7 +715,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_aon_face", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_aon_face", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportAonFace"
@@ -724,7 +724,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_autolayout", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_autolayout", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportAutoLayout"
@@ -733,7 +733,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_blade_colormode", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_blade_colormode", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportBladeColorMode"
@@ -742,7 +742,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_breeno_suggest", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_breeno_suggest", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportBreenoSuggest"
@@ -751,7 +751,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_brightness_anim", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_brightness_anim", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportBrightnessNewAnimation"
@@ -760,7 +760,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_cinema_mode", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_cinema_mode", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportColorModeCinema"
@@ -769,7 +769,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_oled_colorful", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_oled_colorful", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportColorModeColorful"
@@ -778,7 +778,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_custom_color", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_custom_color", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportColorModeCustomize"
@@ -786,7 +786,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_colorful_mode", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_colorful_mode", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportColorModeOplusColorful"
@@ -795,7 +795,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_powersaving_color", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_powersaving_color", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportColorModePowerSaving"
@@ -804,7 +804,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_compact_window", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_compact_window", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportCompactWindow"
@@ -813,7 +813,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_dc_backlight", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_dc_backlight", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportDCBacklight"
@@ -822,7 +822,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_dynamic_brightness", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_dynamic_brightness", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportDevelopmentAdjustBrightnessBarRange"
@@ -831,7 +831,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_dirac_a2dp", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_dirac_a2dp", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportDirac"
@@ -840,7 +840,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_dynamic_fps", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_dynamic_fps", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportDynamicFpsMode"
@@ -849,7 +849,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_edge_anti_touch", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_edge_anti_touch", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportEdgePreventMistouch"
@@ -858,7 +858,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_5g_support", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_5g_support", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportFiveG"
@@ -867,7 +867,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("disable_fold_remap", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_fold_remap", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportFoldRemapDisable"
@@ -876,7 +876,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } } // 开启此开关会激活禁用逻辑
                 }
             }
-            if (prefs("settings").getBoolean("enable_gt_mode", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_gt_mode", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportGTMode"
@@ -885,7 +885,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_hdr_alwayson", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_hdr_alwayson", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportHdrAlwayson"
@@ -894,7 +894,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_hdr_highlight", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_hdr_highlight", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportHdrVideoHighLightMode"
@@ -903,7 +903,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_smart_color_temp2", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_smart_color_temp2", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportIntelligentColorTemperature2"
@@ -912,7 +912,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_linear_vibration", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_linear_vibration", false)) {
                 // 需要同时Hook两个类的方法
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
@@ -929,7 +929,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_luxun_vibration", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_luxun_vibration", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportLuXunVibration"
@@ -938,7 +938,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_multi_led_breathing", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_multi_led_breathing", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportMultiLedBreathingLight"
@@ -947,7 +947,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_phone_limit", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_phone_limit", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportPhoneLimit"
@@ -956,7 +956,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_pixelworks_x7", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_pixelworks_x7", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportPixelworksX7Enable"
@@ -965,7 +965,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_resolution_switch", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_resolution_switch", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportResolution"
@@ -974,7 +974,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_ringtone_vibration", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_ringtone_vibration", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportRingtoneVibration"
@@ -983,7 +983,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_satellite_network", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_satellite_network", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportSatelliteNetwork"
@@ -996,7 +996,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_spatializer_speaker", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_spatializer_speaker", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportSpatializerSpeaker"
@@ -1006,7 +1006,7 @@ class feature: YukiBaseHooker() {
                 }
             }
             arrayOf("enable_super_volume2x", "enable_super_volume3x").forEach { key ->
-                if (prefs("settings").getBoolean(key, false)) {
+                if (prefs("settings\\feature").getBoolean(key, false)) {
                     "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                         method {
                             name = when (key) {
@@ -1019,7 +1019,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_temp_adjust", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_temp_adjust", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportTemperatureAdjustment"
@@ -1028,7 +1028,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_touchpad_split", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_touchpad_split", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportTouchpadSplitView"
@@ -1041,7 +1041,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_ultrasonic_fp", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_ultrasonic_fp", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportUltrasonicFP"
@@ -1051,7 +1051,7 @@ class feature: YukiBaseHooker() {
                 }
             }
 
-            if (prefs("settings").getBoolean("enable_volume_boost", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_volume_boost", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSupportVolumeBoost"
@@ -1064,7 +1064,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_color_ball", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_color_ball", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSuppprtColorTemperateBall" 
@@ -1073,7 +1073,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_surround_effect", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_surround_effect", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isSurroundEffectSupport"
@@ -1082,7 +1082,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_tablet_mode", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_tablet_mode", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isTabletDevice"
@@ -1091,7 +1091,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_typec_menu", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_typec_menu", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isTypecSupported"
@@ -1100,7 +1100,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_ultrasonic_security", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_ultrasonic_security", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isUltrasonicFPConfidential"
@@ -1109,7 +1109,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_vibrator_style", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_vibrator_style", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "isVibratorStyleSwitchSupport"
@@ -1118,7 +1118,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_smart_screenoff", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_smart_screenoff", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "sIsSmartScreenOffSupport"
@@ -1127,7 +1127,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_richtap_vibrate", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_richtap_vibrate", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "sRichtapSupport"
@@ -1136,7 +1136,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_dirac_v2", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_dirac_v2", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "supportDiracVersion2"
@@ -1145,7 +1145,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_iris5_display", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_iris5_display", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "supportIris5"
@@ -1154,7 +1154,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_ring_haptic", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_ring_haptic", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "supportRingingWithHaptic"
@@ -1163,7 +1163,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_video_osie", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_video_osie", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "supportVideoOsie"
@@ -1172,7 +1172,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_video_sr", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_video_sr", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method {
                         name = "supportVideoSuperResolution"
@@ -1181,7 +1181,7 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("disable_deactivate_app", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_deactivate_app", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
                     method {
                         name = "disableDeactivateApp"
@@ -1192,7 +1192,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("disable_haptic_preview", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_haptic_preview", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
                     method {
                         name = "disableHapticPreview"
@@ -1203,7 +1203,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("disable_modify_devname", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_modify_devname", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
                     method {
                         name = "disableModifyDeviceName"
@@ -1214,7 +1214,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_super_sleep", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_super_sleep", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
                     method {
                         name = "hasSuperSleepFeature"
@@ -1225,69 +1225,69 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("disable_5g_reminder", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_5g_reminder", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "is5gGuidanceReminder"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = false } } // 禁用提醒
             }
-            if (prefs("settings").getBoolean("disable_account_dialog", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_account_dialog", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isAccountDialogDisabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } } // 强制禁用弹窗
             }
-            if (prefs("settings").getBoolean("enable_app_disable", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_app_disable", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isAppDisallowDisable"
                     returnType = BooleanType
                 }.hook { before { result = false } } // 允许禁用任意应用
             }
-            if (prefs("settings").getBoolean("hide_cmiit_auth", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_cmiit_auth", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isAuthenticationCmiitInvisible"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_hyper_vision", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_hyper_vision", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isCWSupport"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_carrier", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_carrier", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isCarrierDisabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("locale_uk_to_en", false)) {
+            if (prefs("settings\\feature").getBoolean("locale_uk_to_en", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isCastLocaleNameFromUkEnToEn"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_clear_cache", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_clear_cache", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isClearCacheDisabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_colorful_real", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_colorful_real", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isColorfulShowReal"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_confidential", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_confidential", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isConfidentialVersion"
                     emptyParam()
@@ -1298,14 +1298,14 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_cyberpunk", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_cyberpunk", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isCyberpunkCustomizeVersion"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("auto_resolution", false)) {
+            if (prefs("settings\\feature").getBoolean("auto_resolution", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isDefaultResolutionAuto"
                     emptyParam()
@@ -1313,7 +1313,7 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = true } }
             }
 
-            if (prefs("settings").getBoolean("enable_oem_unlock", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_oem_unlock", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isDisableOemUnlock"
                     emptyParam()
@@ -1321,7 +1321,7 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = false } } // 返回false表示不禁用OEM解锁
             }
 
-            if (prefs("settings").getBoolean("disable_auto_rotate", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_auto_rotate", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isDisableShowAutoRotate"
                     emptyParam()
@@ -1329,7 +1329,7 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = true } } // 返回true表示隐藏选项
             }
 
-            if (prefs("settings").getBoolean("disable_app_switch", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_app_switch", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isDisallowSwitchToPreviousApp"
                     emptyParam()
@@ -1337,7 +1337,7 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = true } }
             }
 
-            if (prefs("settings").getBoolean("enable_euex", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_euex", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isEuexVersion"
                     emptyParam()
@@ -1345,7 +1345,7 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = true } }
             }
 
-            if (prefs("settings").getBoolean("force_exp_version", false)) {
+            if (prefs("settings\\feature").getBoolean("force_exp_version", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isExpVersion"
                     emptyParam()
@@ -1353,28 +1353,28 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = true } } // 覆盖CN版本检测
             }
 
-            if (prefs("settings").getBoolean("enable_film_finger", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_film_finger", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isFilmEffectFingerFeature"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_finger_anim", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_finger_anim", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isFingerprintAnimStyleDisable"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = false } } // 返回false表示不禁用
             }
-            if (prefs("settings").getBoolean("enable_fintech_nfc", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_fintech_nfc", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isFintechLifeNfcSupport"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("force_flip_device", false)) {
+            if (prefs("settings\\feature").getBoolean("force_flip_device", false)) {
                 // 同时Hook两个相关类
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isFlipDevice"
@@ -1388,28 +1388,28 @@ class feature: YukiBaseHooker() {
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_gesture", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_gesture", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isGestureDisabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("keep_gesture_up", false)) {
+            if (prefs("settings\\feature").getBoolean("keep_gesture_up", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isGestureUpForceKeeped"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("more_gesture_up", false)) {
+            if (prefs("settings\\feature").getBoolean("more_gesture_up", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isGestureUpMore"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_gota_update", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_gota_update", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isGotaUpdateSupport"
                     emptyParam()
@@ -1420,307 +1420,307 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_business_state", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_business_state", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isHasBusinessStatementFeature"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_ultimate_clean", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_ultimate_clean", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isHasUltimateCleanupFeature"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_hw_version", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_hw_version", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isHiddenHardWareVersion"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_device_id", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_device_id", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isHideDevicesIdentify"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_ktv_loopback", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_ktv_loopback", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isHideKtvLoopback"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_mms_ringtone", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_mms_ringtone", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isHideMmsRingtone"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("move_dc_to_dev", false)) {
+            if (prefs("settings\\feature").getBoolean("move_dc_to_dev", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isHideMoveDcToDevelop"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_network_speed", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_network_speed", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isHideNetworkSpeed"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_power_wake3", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_power_wake3", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isHidePowerWakeUpItem3"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_sim_signal", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_sim_signal", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isHideSimSignalStrength"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_humming", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_humming", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isHummingEnabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_kernel_id", false)) {
+            if (prefs("settings\\feature").getBoolean("show_kernel_id", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isIdKernelVersion"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("ignore_repeat_click", false)) {
+            if (prefs("settings\\feature").getBoolean("ignore_repeat_click", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isIgnoreRepeatClickSupport"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("imei_sv_from_ota", false)) {
+            if (prefs("settings\\feature").getBoolean("imei_sv_from_ota", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isImeiSvFromOtaVersion"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_light_func", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_light_func", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isLightFunc"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_marvel", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_marvel", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isMarvelVersion"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_portrait_center", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_portrait_center", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isNeedHidePortraitCenter"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_video_beauty", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_video_beauty", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isNeedHideVideoBeauty"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_2g3g", false)) {
+            if (prefs("settings\\feature").getBoolean("show_2g3g", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isNeedShow2g3g"
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_ocloud", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_ocloud", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isOCloudDisabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("force_oh_device", false)) {
+            if (prefs("settings\\feature").getBoolean("force_oh_device", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isOHDeviceExp"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } } // 覆盖硬编码的false
             }
-            if (prefs("settings").getBoolean("only_hw_version", false)) {
+            if (prefs("settings\\feature").getBoolean("only_hw_version", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isOnlyShowHardwareVersion"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_kddi_au", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_kddi_au", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isOperatorKDDIShowAU"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_operator", false)) {
+            if (prefs("settings\\feature").getBoolean("show_operator", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isOperatorSupport"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_privacy_email", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_privacy_email", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isOplusPrivacyEmailNotSupport"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("keep_swipe_up", false)) {
+            if (prefs("settings\\feature").getBoolean("keep_swipe_up", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isOplusSwipeUpForceKeeped"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_ota", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_ota", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isOtaDisabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_otg_alarm", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_otg_alarm", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isOtgAutoCloseAlarmDisable"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_otg_entry", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_otg_entry", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isOtgEntryDisabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_pac_custom", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_pac_custom", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isPacCustomizeVersion"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_privacy", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_privacy", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isPrivacyDisabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_fake_base", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_fake_base", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isPseudoBaseStationInvisible"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_rl_delete", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_rl_delete", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isRLDeleteLanguages"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("force_rlm_device", false)) {
+            if (prefs("settings\\feature").getBoolean("force_rlm_device", false)) {
                 // 同时Hook两个相关方法
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
                     method { name = "isRLMDevice"; emptyParam() }.hook { before { result = true } }
                     method { name = "isRLMDeviceExp"; emptyParam() }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("enable_raise_wake", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_raise_wake", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isRaiseToWakeSupported"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_recent_task", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_recent_task", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isRecentTaskManagementUnavailable"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("remove_cota_home", false)) {
+            if (prefs("settings\\feature").getBoolean("remove_cota_home", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isRemoveCotaHomeTag"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_resize_screen", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_resize_screen", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isResizeableScreenDisabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_rlm_feedback", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_rlm_feedback", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isRlmSupportFeedbackV2"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_screen_pin", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_screen_pin", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isScreenPinningDisable"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_search_index", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_search_index", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSearchIndexDisabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_seedling_exp", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_seedling_exp", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSeedlingExpRegion"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_custom_devname", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_custom_devname", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSetCustomizeDeviceName"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_cota_devname", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_cota_devname", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSetDeviceNameByCOTA"
                     returnType = BooleanType
@@ -1730,77 +1730,77 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("disable_set_password", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_set_password", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSetPasswordDisabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_all_anr", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_all_anr", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowAllAnrDisabled"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_brand_name", false)) {
+            if (prefs("settings\\feature").getBoolean("show_brand_name", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowBrandName"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_carrier_config", false)) {
+            if (prefs("settings\\feature").getBoolean("show_carrier_config", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowCarrierConfigVersion"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_carrier_update", false)) {
+            if (prefs("settings\\feature").getBoolean("show_carrier_update", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowCarrierSystemUpdate"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_custom_details", false)) {
+            if (prefs("settings\\feature").getBoolean("show_custom_details", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowCustomDetails"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_data_usage", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_data_usage", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowDataUsageInfoInvisible"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_diagnostic", false)) {
+            if (prefs("settings\\feature").getBoolean("show_diagnostic", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowDiagnostic"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_os_firstname", false)) {
+            if (prefs("settings\\feature").getBoolean("show_os_firstname", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowFirstNameOfOsVersion"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_hw_version", false)) {
+            if (prefs("settings\\feature").getBoolean("show_hw_version", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowHardWareVersionInAboutDevice"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_ims_status", false)) {
+            if (prefs("settings\\feature").getBoolean("show_ims_status", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowImsRegistrationStatus"
                     returnType = BooleanType
@@ -1812,35 +1812,35 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("show_kernel_time", false)) {
+            if (prefs("settings\\feature").getBoolean("show_kernel_time", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowKernelVersionTime"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_net_unlock", false)) {
+            if (prefs("settings\\feature").getBoolean("show_net_unlock", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowNetworkUnlock"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_never_timeout", false)) {
+            if (prefs("settings\\feature").getBoolean("show_never_timeout", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowNeverTimeout"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_npu_detail", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_npu_detail", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowNpuDetailDisable"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_processor", false)) {
+            if (prefs("settings\\feature").getBoolean("show_processor", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
                     method { name = "isShowProcessorDetails" }.hook {
                         before {
@@ -1851,42 +1851,42 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("show_processor_gen2", false)) {
+            if (prefs("settings\\feature").getBoolean("show_processor_gen2", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowProcessorDetailsGen2"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("screen_size_cm", false)) {
+            if (prefs("settings\\feature").getBoolean("screen_size_cm", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowScreenPhysicsSizeUnitCM"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_sw_version", false)) {
+            if (prefs("settings\\feature").getBoolean("show_sw_version", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowSoftWareVersionInAboutDevice"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("sw_instead_build", false)) {
+            if (prefs("settings\\feature").getBoolean("sw_instead_build", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowSwVersionInsteadOfBuildNumber"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("show_uicc_unlock", false)) {
+            if (prefs("settings\\feature").getBoolean("show_uicc_unlock", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isShowUICCUnlock"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_sim_lock", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_sim_lock", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
                     method { name = "isSimLockStateSupport" }.hook {
                         before {
@@ -1898,14 +1898,14 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("hide_sim_toolkit", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_sim_toolkit", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSimToolkitInvisible"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("force_software_conf", false)) {
+            if (prefs("settings\\feature").getBoolean("force_software_conf", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
                     method {
                         name = "isSoftwareConfidention"
@@ -1914,14 +1914,14 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("special_side_finger", false)) {
+            if (prefs("settings\\feature").getBoolean("special_side_finger", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSpecialSideFinger"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_circle_search", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_circle_search", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportCircleToSearch"
                     emptyParam()
@@ -1932,14 +1932,14 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("show_custom_ver", false)) {
+            if (prefs("settings\\feature").getBoolean("show_custom_ver", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportCustomVersion"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_electronic_label", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_electronic_label", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
                     method { name = "isSupportElectronicLabel" }.hook {
                         before {
@@ -1951,7 +1951,7 @@ class feature: YukiBaseHooker() {
                         .hook { before { result = "IN_SYSTEM_REGION_ID" } }
                 }
             }
-            if (prefs("settings").getBoolean("fullscreen_apps", false)) {
+            if (prefs("settings\\feature").getBoolean("fullscreen_apps", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportFullScreenDisplay"
                     returnType = BooleanType
@@ -1962,7 +1962,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("smart_gesture", false)) {
+            if (prefs("settings\\feature").getBoolean("smart_gesture", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportGestureIntelligentPerception"
                     emptyParam()
@@ -1970,7 +1970,7 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = true } }
             }
             arrayOf("show_imsi", "show_meid").forEach { key ->
-                if (prefs("settings").getBoolean(key, false)) {
+                if (prefs("settings\\feature").getBoolean(key, false)) {
                     "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                         name = when(key) {
                             "show_imsi" -> "isSupportImsi"
@@ -1981,28 +1981,28 @@ class feature: YukiBaseHooker() {
                     }.hook { before { result = true } }
                 }
             }
-            if (prefs("settings").getBoolean("member_rcc_show", false)) {
+            if (prefs("settings\\feature").getBoolean("member_rcc_show", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportMemberRccShow"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("mini_capsule", false)) {
+            if (prefs("settings\\feature").getBoolean("mini_capsule", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportMiniCapsule"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("number_recognition", false)) {
+            if (prefs("settings\\feature").getBoolean("number_recognition", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportNumberRecognition"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("enable_oguard", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_oguard", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportOGuardInfo"
                     emptyParam()
@@ -2022,21 +2022,21 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("oh_india_version", false)) {
+            if (prefs("settings\\feature").getBoolean("oh_india_version", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportOHIndiaVersion"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("usb_tether_boot", false)) {
+            if (prefs("settings\\feature").getBoolean("usb_tether_boot", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportOpenUsbTetheringBoot"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("quick_app_support", false)) {
+            if (prefs("settings\\feature").getBoolean("quick_app_support", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
                     method { name = "isSupportQuickApp" }.hook {
                         before {
@@ -2045,7 +2045,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("region_picker", false)) {
+            if (prefs("settings\\feature").getBoolean("region_picker", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportRegion"
                     emptyParam()
@@ -2056,7 +2056,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("enable_roulette", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_roulette", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
                     method { name = "isSupportRouletteSupport" }.hook {
                         before {
@@ -2066,7 +2066,7 @@ class feature: YukiBaseHooker() {
                 }
             }
 
-            if (prefs("settings").getBoolean("show_wfc_dialog", false)) {
+            if (prefs("settings\\feature").getBoolean("show_wfc_dialog", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportShowWfcTipDialog"
                     returnType = BooleanType
@@ -2074,7 +2074,7 @@ class feature: YukiBaseHooker() {
             }
 
             arrayOf("smart_touch", "smart_touch_v2").forEach { key ->
-                if (prefs("settings").getBoolean(key, false)) {
+                if (prefs("settings\\feature").getBoolean(key, false)) {
                     "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                         name = when(key) {
                             "smart_touch" -> "isSupportSmartTouch"
@@ -2086,7 +2086,7 @@ class feature: YukiBaseHooker() {
                 }
             }
 
-            if (prefs("settings").getBoolean("show_sms_number", false)) {
+            if (prefs("settings\\feature").getBoolean("show_sms_number", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSupportSmsNumber"
                     emptyParam()
@@ -2094,7 +2094,7 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = true } }
             }
 
-            if (prefs("settings").getBoolean("ai_eye_protect", false)) {
+            if (prefs("settings\\feature").getBoolean("ai_eye_protect", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSuppprtAiIntelligentEyeProtect"
                     emptyParam()
@@ -2102,21 +2102,21 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = true } }
             }
 
-            if (prefs("settings").getBoolean("disable_edge_panel", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_edge_panel", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSystemEdgePanel"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_stable_plan", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_stable_plan", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isSystemStablePlanDisable"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_time_change", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_time_change", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isTimeChangeDisabled"
                     emptyParam()
@@ -2124,7 +2124,7 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = true } }
             }
 
-            if (prefs("settings").getBoolean("disable_gaze_ringtone", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_gaze_ringtone", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isUnSupportGazeFadeRingtone"
                     emptyParam()
@@ -2132,7 +2132,7 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = true } }
             }
 
-            if (prefs("settings").getBoolean("disable_user_exp", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_user_exp", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isUserExperienceDisabled"
                     emptyParam()
@@ -2140,7 +2140,7 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = true } }
             }
 
-            if (prefs("settings").getBoolean("disable_verify_dialog", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_verify_dialog", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isVerificationDialogDisabled"
                     emptyParam()
@@ -2148,14 +2148,14 @@ class feature: YukiBaseHooker() {
                 }.hook { before { result = true } }
             }
 
-            if (prefs("settings").getBoolean("virtual_comm_device", false)) {
+            if (prefs("settings\\feature").getBoolean("virtual_comm_device", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().apply {
                     method { name = "initVirtualComm" }.hook { before { } } // 跳过初始化
                     method { name = "isVirtualCommConsumerDevice" }.hook { before { result = true } }
                 }
             }
 
-            if (prefs("settings").getBoolean("virtual_comm_service", false)) {
+            if (prefs("settings\\feature").getBoolean("virtual_comm_service", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isVirtualCommInService"
                     returnType = BooleanType
@@ -2167,35 +2167,35 @@ class feature: YukiBaseHooker() {
                 }
             }
 
-            if (prefs("settings").getBoolean("disable_vowifi_setting", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_vowifi_setting", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isVoWifiSettingUnavailable"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_volte_setting", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_volte_setting", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isVolteSettingUnavailable"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("volte_icon_off", false)) {
+            if (prefs("settings\\feature").getBoolean("volte_icon_off", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isVolteStatusIconDefaultOff"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("disable_wifi_setting", false)) {
+            if (prefs("settings\\feature").getBoolean("disable_wifi_setting", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "isWifiSettingsUnavailable"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("hide_install_sources", false)) {
+            if (prefs("settings\\feature").getBoolean("hide_install_sources", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "needHideInstallationSources"
                     emptyParam()
@@ -2207,21 +2207,21 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("biometric_privacy", false)) {
+            if (prefs("settings\\feature").getBoolean("biometric_privacy", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "needPrivacyStatementWithBiometricUnlock"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("upload_error_log", false)) {
+            if (prefs("settings\\feature").getBoolean("upload_error_log", false)) {
                 "com.oplus.settings.utils.CustomizeFeatureUtils".toClass().method {
                     name = "supportUploadErrorLog"
                     emptyParam()
                     returnType = BooleanType
                 }.hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("dirac_sound", false)) {
+            if (prefs("settings\\feature").getBoolean("dirac_sound", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().method {
                     name = "isDiracSupported"
                     emptyParam()
@@ -2232,7 +2232,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("fluid_cloud", false)) {
+            if (prefs("settings\\feature").getBoolean("fluid_cloud", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().method {
                     name = "isSupportFluidCloud"
                     emptyParam()
@@ -2243,7 +2243,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("hyper_mode", false)) {
+            if (prefs("settings\\feature").getBoolean("hyper_mode", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().method {
                     name = "isSupportHyperMode"
                     emptyParam()
@@ -2255,7 +2255,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("edge_panel", false)) {
+            if (prefs("settings\\feature").getBoolean("edge_panel", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method { name = "isSystemEdgePanel" }.hook { before { result = true } }
                     method { name = "getEdgePanelLayout" }.hook {
@@ -2266,7 +2266,7 @@ class feature: YukiBaseHooker() {
                 }
             }
             arrayOf("linear_vibration", "op7_vibration").forEach { key ->
-                if (prefs("settings").getBoolean(key, false)) {
+                if (prefs("settings\\feature").getBoolean(key, false)) {
                     "com.oplus.settings.utils.SysFeatureUtils".toClass().method {
                         name = when(key) {
                             "linear_vibration" -> "isSupportLinearVibration"
@@ -2281,7 +2281,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("stealth_security", false)) {
+            if (prefs("settings\\feature").getBoolean("stealth_security", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass().apply {
                     method { name = "isStealthSecurityModeSupport" }.hook { before { result = true } }
                     method { name = "isAlertSliderWithStealthSecurityModeSupport" }.hook { before { result = true } }
@@ -2290,7 +2290,7 @@ class feature: YukiBaseHooker() {
                     .method { name = "showStealthSecurityView" }
                     .hook { before { result = true } }
             }
-            if (prefs("settings").getBoolean("anti_voyeur", false)) {
+            if (prefs("settings\\feature").getBoolean("anti_voyeur", false)) {
                 "com.oplus.settings.utils.SysFeatureUtils".toClass()
                     .method { name = "isSmartAntiVoyeurEnabled" }
                     .hook { before { result = true } }
@@ -2305,7 +2305,7 @@ class feature: YukiBaseHooker() {
                         }
                     }
             }
-            if (prefs("settings").getBoolean("enable_redpacket_helper", false)) {
+            if (prefs("settings\\feature").getBoolean("enable_redpacket_helper", false)) {
                 "com.oplus.settings.feature.convenient.controller.RedEnvelopeController".toClass().apply {
                     method {
                         name = "isSupportEnvelope"
@@ -2318,7 +2318,7 @@ class feature: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("settings").getBoolean("palm_unlock", false)) {
+            if (prefs("settings\\feature").getBoolean("palm_unlock", false)) {
                 "com.oplus.settings.feature.palm.PalmUtils".toClass().apply {
                     method {
                         name = "supportPalm"
