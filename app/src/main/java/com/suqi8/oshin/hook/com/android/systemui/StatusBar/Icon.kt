@@ -1,4 +1,4 @@
-package com.suqi8.oshin.hook.systemui.StatusBar
+package com.suqi8.oshin.hook.com.android.systemui.StatusBar
 
 import android.view.View
 import androidx.core.view.isVisible
@@ -6,7 +6,7 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.field
 import com.highcapable.yukihookapi.hook.factory.method
 
-class StatusBarIcon: YukiBaseHooker() {
+class Icon: YukiBaseHooker() {
     override fun onHook() {
         if (prefs("systemui\\statusbar_icon").getBoolean("statusbar_icon", false)) {
             loadApp(name = "com.android.systemui") {

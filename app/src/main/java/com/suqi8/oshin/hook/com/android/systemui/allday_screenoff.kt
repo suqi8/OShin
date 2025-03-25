@@ -1,4 +1,4 @@
-package com.suqi8.oshin.hook.systemui.aod
+package com.suqi8.oshin.hook.com.android.systemui
 
 import android.provider.Settings
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker

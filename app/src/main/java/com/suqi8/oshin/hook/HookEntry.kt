@@ -16,7 +16,14 @@ import com.suqi8.oshin.hook.com.android.launcher.launcher
 import com.suqi8.oshin.hook.com.android.launcher.recent_task
 import com.suqi8.oshin.hook.com.android.mms.mms
 import com.suqi8.oshin.hook.com.android.settings.settings
-import com.suqi8.oshin.hook.com.android.systemui.StatusBarhardware_indicator
+import com.suqi8.oshin.hook.com.android.systemui.StatusBar.BatteryBar
+import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Clock
+import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Fragment
+import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Hardware_indicator
+import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Icon
+import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Notification
+import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Wifi
+import com.suqi8.oshin.hook.com.android.systemui.allday_screenoff
 import com.suqi8.oshin.hook.com.coloros.ocrscanner.ocrscanner
 import com.suqi8.oshin.hook.com.coloros.phonemanager.phonemanager
 import com.suqi8.oshin.hook.com.coloros.securepay.securepay
@@ -27,11 +34,6 @@ import com.suqi8.oshin.hook.com.oplus.appdetail.appdetail
 import com.suqi8.oshin.hook.com.oplus.battery.battery
 import com.suqi8.oshin.hook.com.oplus.games.games
 import com.suqi8.oshin.hook.com.oplus.phonemanager.oplusphonemanager
-import com.suqi8.oshin.hook.systemui.StatusBar.StatusBar
-import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarClock
-import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarIcon
-import com.suqi8.oshin.hook.systemui.StatusBar.notification
-import com.suqi8.oshin.hook.systemui.aod.allday_screenoff
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
@@ -49,12 +51,12 @@ class HookEntry : IYukiHookXposedInit {
     @SuppressLint("RestrictedApi")
     override fun onHook() = encase {
         loadApp(hooker = OplusRootCheck())
-        loadApp(hooker = StatusBarClock())
-        loadApp(hooker = StatusBarhardware_indicator())
+        loadApp(hooker = Clock())
+        loadApp(hooker = Hardware_indicator())
         loadApp(hooker = LauncherIcon())
-        loadApp(hooker = StatusBarIcon())
+        loadApp(hooker = Icon())
         loadApp(hooker = recent_task())
-        loadApp(hooker = notification())
+        loadApp(hooker = Notification())
         loadApp(hooker = battery())
         loadApp(name = "com.android.systemui") {
             /*"com.android.systemui.statusbar.phone.StatusBarIconController".toClass().apply {
@@ -71,7 +73,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = speechassist())
         loadApp(hooker = games())
         loadApp(hooker = ocrscanner())
-        loadApp(hooker = StatusBar())
+        loadApp(hooker = Fragment())
         loadApp(hooker = allday_screenoff())
         loadApp(hooker = split_screen_multi_window())
         loadApp(hooker = settings())
@@ -83,6 +85,8 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = securepay())
         loadApp(hooker = health())
         loadApp(hooker = appdetail())
+        loadApp(hooker = BatteryBar())
+        loadApp(hooker = Wifi())
     }
 
     override fun onXposedEvent() {
