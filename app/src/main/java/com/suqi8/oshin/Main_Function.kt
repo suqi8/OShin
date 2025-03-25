@@ -613,7 +613,9 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.disable_root_dialog),
         category = "health"),
     item(title = context.getString(R.string.remove_recommendations),
-        category = "appdetail")
+        category = "appdetail"),
+    item(title = context.getString(R.string.network_speed_indicator),
+        category = "systemui\\status_bar_wifi")
 )
 
 @Composable

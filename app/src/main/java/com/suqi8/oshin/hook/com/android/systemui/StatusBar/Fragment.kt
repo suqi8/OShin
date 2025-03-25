@@ -1,4 +1,4 @@
-package com.suqi8.oshin.hook.systemui.StatusBar
+package com.suqi8.oshin.hook.com.android.systemui.StatusBar
 
 import android.view.View
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
@@ -6,7 +6,7 @@ import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.android.BundleClass
 import com.highcapable.yukihookapi.hook.type.android.ViewClass
 
-class StatusBar: YukiBaseHooker() {
+class Fragment: YukiBaseHooker() {
     override fun onHook() {
         if (prefs("systemui").getBoolean("hide_status_bar", false)) {
             loadApp(name = "com.android.systemui") {

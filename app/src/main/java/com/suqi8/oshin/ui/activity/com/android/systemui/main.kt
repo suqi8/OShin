@@ -42,6 +42,11 @@ fun systemui(navController: NavController) {
                     navController.navigate("systemui\\status_bar_clock")
                 })
             addline()
+            SuperArrow(title = stringResource(id = R.string.network_speed_indicator),
+                onClick = {
+                    navController.navigate("systemui\\status_bar_wifi")
+                })
+            addline()
             SuperArrow(title = stringResource(id = R.string.hardware_indicator),
                 onClick = {
                     navController.navigate("systemui\\hardware_indicator")

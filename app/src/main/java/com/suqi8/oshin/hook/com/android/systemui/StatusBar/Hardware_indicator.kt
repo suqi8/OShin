@@ -1,4 +1,4 @@
-package com.suqi8.oshin.hook.com.android.systemui
+package com.suqi8.oshin.hook.com.android.systemui.StatusBar
 
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
@@ -24,7 +24,7 @@ import java.io.FileInputStream
 import java.util.Properties
 import kotlin.math.abs
 
-class StatusBarhardware_indicator: YukiBaseHooker() {
+class Hardware_indicator: YukiBaseHooker() {
     @SuppressLint("SetTextI18n")
     override fun onHook() {
         loadApp("com.android.systemui"){
