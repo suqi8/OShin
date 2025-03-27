@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.net.TrafficStats
 import android.os.SystemClock
 import android.util.TypedValue
-import android.view.View
 import android.widget.FrameLayout
 import android.widget.GridLayout.LayoutParams
 import android.widget.TextView
@@ -56,10 +55,12 @@ class Wifi: YukiBaseHooker() {
                                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, if (prefs("systemui\\status_bar_wifi").getInt("upload_font_size",-1) != -1) prefs("systemui\\status_bar_wifi").getInt("upload_font_size",-1).toFloat() else 8F)
                                 //layoutParams.height = LayoutParams.WRAP_CONTENT
                                 layoutParams.width = LayoutParams.WRAP_CONTENT
-                                if (hide_on_slow && !hide_when_both_slow) visibility = if (TotalByte.second / 1024 <= slow_speed_threshold) View.INVISIBLE else View.VISIBLE
-                                if (hide_when_both_slow) visibility = if ((TotalByte.second / 1024 <= slow_speed_threshold) && (TotalByte.first / 1024 <= slow_speed_threshold)) View.INVISIBLE else View.VISIBLE
                                 var uptext = formatBytes(TotalByte.second)
                                 uptext = uptext + txArrow(icon_indicator, TotalByte.second/1024, slow_speed_threshold)
+                                if (hide_when_both_slow) {
+                                    if ((TotalByte.second / 1024 <= slow_speed_threshold) && (TotalByte.first / 1024 <= slow_speed_threshold)) uptext = ""
+                                }
+                                if (hide_on_slow && !hide_when_both_slow) if (TotalByte.first / 1024 <= slow_speed_threshold) uptext = ""
                                 text = uptext
                             }
                             val mSpeedUnit = field {
@@ -68,12 +69,14 @@ class Wifi: YukiBaseHooker() {
                             }.get(instance).cast<TextView>()
                             mSpeedUnit!!.apply {
                                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, if (prefs("systemui\\status_bar_wifi").getInt("download_font_size",-1) != -1) prefs("systemui\\status_bar_wifi").getInt("download_font_size",-1).toFloat() else 8F)
-                                if (hide_on_slow && !hide_when_both_slow) visibility = if (TotalByte.first / 1024 <= slow_speed_threshold) View.INVISIBLE else View.VISIBLE
-                                if (hide_when_both_slow) visibility = if ((TotalByte.second / 1024 <= slow_speed_threshold) && (TotalByte.first / 1024 <= slow_speed_threshold)) View.INVISIBLE else View.VISIBLE
                                 //layoutParams.height = LayoutParams.WRAP_CONTENT
                                 layoutParams.width = LayoutParams.WRAP_CONTENT
                                 var uptext = formatBytes(TotalByte.first)
                                 uptext = uptext + rxArrow(icon_indicator, TotalByte.first/1024, slow_speed_threshold)
+                                if (hide_when_both_slow) {
+                                    if ((TotalByte.second / 1024 <= slow_speed_threshold) && (TotalByte.first / 1024 <= slow_speed_threshold)) uptext = ""
+                                }
+                                if (hide_on_slow && !hide_when_both_slow) if (TotalByte.second / 1024 <= slow_speed_threshold) uptext = ""
                                 text = uptext
                             }
                         }
