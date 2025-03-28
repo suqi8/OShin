@@ -561,4 +561,8 @@
     <string name="hide_when_both_slow">上下行均慢速时隐藏</string>
     <string name="icon_indicator">图标指示器</string>
     <string name="no_icon">无图标</string>
+    <string name="hide_bs">隐藏b/s</string>
+    <string name="hide_space">隐藏空格</string>
+    <string name="swap_upload_download">交换上下行位置</string>
+    <string name="position_speed_indicator_front">网速指示器前置</string>
 </resources>

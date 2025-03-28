@@ -176,11 +176,37 @@ fun status_bar_wifi(navController: NavController) {
                         }
                         AnimatedVisibility(selected.value == 1) {
                             Column {
+                                val icon_indicator = remember { mutableStateOf(context.prefs("systemui\\status_bar_wifi").getInt("icon_indicator", 0)) }
                                 FunDropdown(
                                     title = stringResource(R.string.icon_indicator),
                                     category = "systemui\\status_bar_wifi",
                                     key = "icon_indicator",
-                                    selectedList = listOf(stringResource(R.string.no_icon),"△▽▲▼","▵▿▴▾","☖⛉☗⛊","↑↓","⇧⇩")
+                                    selectedList = listOf(stringResource(R.string.no_icon),"△▽▲▼","▵▿▴▾","☖⛉☗⛊","↑↓","⇧⇩"),
+                                    onCheckedChange = {
+                                        icon_indicator.value = it
+                                    }
+                                )
+                                AnimatedVisibility(icon_indicator.value != 0) {
+                                    FunSwich(
+                                        title = stringResource(R.string.position_speed_indicator_front),
+                                        category = "systemui\\status_bar_wifi",
+                                        key = "position_speed_indicator_front"
+                                    )
+                                }
+                                FunSwich(
+                                    title = stringResource(R.string.hide_space),
+                                    category = "systemui\\status_bar_wifi",
+                                    key = "hide_space"
+                                )
+                                FunSwich(
+                                    title = stringResource(R.string.hide_bs),
+                                    category = "systemui\\status_bar_wifi",
+                                    key = "hide_bs"
+                                )
+                                FunSwich(
+                                    title = stringResource(R.string.swap_upload_download),
+                                    category = "systemui\\status_bar_wifi",
+                                    key = "swap_upload_download"
                                 )
                             }
                         }
