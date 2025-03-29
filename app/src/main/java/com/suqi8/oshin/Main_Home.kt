@@ -66,6 +66,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.ui.activity.funlistui.addline
+import com.suqi8.oshin.utils.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -358,6 +359,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
 
                     // 初始化只执行一次的操作
                     LaunchedEffect(Unit) {
+                        toast(context,"您的设备可能已Root，不建议在风险环境下运行本应用")
                         withContext(Dispatchers.IO) {
                             nvid = getSystemProperty("ro.build.oplus_nv_id")
                             health = executeCommand("cat /sys/class/power_supply/battery/health").trim()
