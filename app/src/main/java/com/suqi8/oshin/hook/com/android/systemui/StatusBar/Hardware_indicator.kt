@@ -136,6 +136,7 @@ class Hardware_indicator: YukiBaseHooker() {
                 else -> "$batteryVoltage$voltageUnit"
             }
             indicator.setPadding(0, 0, 4.dpToPx(clockTextView.context), 0)
+            if (clockTextView.visibility == 8) indicator.visibility = View.GONE else indicator.visibility = View.VISIBLE
             indicator.text = if (isDualRow) "$line1\n$line2" else line1
 
             updateTime
@@ -182,6 +183,7 @@ class Hardware_indicator: YukiBaseHooker() {
             val line1 = if (show1 == 0) "$batteryTemp$batteryUnit" else "$cpuTemp$cpuUnit"
             val line2 = if (show2 == 0) "$batteryTemp$batteryUnit" else "$cpuTemp$cpuUnit"
             indicator.setPadding(0, 0, 4.dpToPx(clockTextView.context), 0)
+            if (clockTextView.visibility == 8) indicator.visibility = View.GONE else indicator.visibility = View.VISIBLE
             indicator.text = if (isDualRow) "$line1\n$line2" else line1
 
             updateTime
