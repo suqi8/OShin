@@ -135,6 +135,7 @@ class Hardware_indicator: YukiBaseHooker() {
                 1 -> "$batteryCurrentMa$currentUnit"
                 else -> "$batteryVoltage$voltageUnit"
             }
+            indicator.setPadding(0, 0, 4.dpToPx(clockTextView.context), 0)
             indicator.text = if (isDualRow) "$line1\n$line2" else line1
 
             updateTime
@@ -180,6 +181,7 @@ class Hardware_indicator: YukiBaseHooker() {
             val cpuUnit = if (hideCpuUnit) "" else "°C"
             val line1 = if (show1 == 0) "$batteryTemp$batteryUnit" else "$cpuTemp$cpuUnit"
             val line2 = if (show2 == 0) "$batteryTemp$batteryUnit" else "$cpuTemp$cpuUnit"
+            indicator.setPadding(0, 0, 4.dpToPx(clockTextView.context), 0)
             indicator.text = if (isDualRow) "$line1\n$line2" else line1
 
             updateTime
@@ -217,5 +219,9 @@ class Hardware_indicator: YukiBaseHooker() {
         context.registerReceiver(object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) = callback()
         }, IntentFilter(Intent.ACTION_CONFIGURATION_CHANGED))
+    }
+
+    fun Int.dpToPx(context: Context): Int {
+        return (this * context.resources.displayMetrics.density).toInt()
     }
 }
