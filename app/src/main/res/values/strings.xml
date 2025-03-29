@@ -565,4 +565,8 @@
     <string name="hide_space">隐藏空格</string>
     <string name="swap_upload_download">交换上下行位置</string>
     <string name="position_speed_indicator_front">图标指示器前置</string>
+    <string name="frequency_activation_hint">启用时应用选定频率阈值，关闭后释放配置。频率参数须满足Max > Min约束条件，等值情况将保持当前设定。</string>
+    <string name="cpu_freq_main">CPU动态调频配置</string>
+    <string name="cpu_group_min_freq">CPU %1$d组最小频率阈值</string>
+    <string name="cpu_group_max_freq">CPU %1$d组最大频率阈值</string>
 </resources>

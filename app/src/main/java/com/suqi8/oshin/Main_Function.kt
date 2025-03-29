@@ -73,6 +73,7 @@ import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.Search
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -814,6 +815,19 @@ fun Main_Function(
                             FunctionApp("com.heytap.health", "health", navController)
                             addline()
                             FunctionApp("com.oplus.appdetail", "appdetail", navController)
+                        }
+                    }
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp, top = 6.dp)
+                    ) {
+                        Column {
+                            SuperArrow(title = stringResource(id = R.string.cpu_freq_main),
+                                onClick = {
+                                    navController.navigate("testfunc\\cpu_freq")
+                                })
                         }
                     }
                     Spacer(modifier = Modifier.padding(bottom = padding.calculateBottomPadding()))

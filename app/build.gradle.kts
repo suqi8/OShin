@@ -152,6 +152,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.toolbar.compose)
     implementation(libs.xxpermissions)
     implementation(libs.common)
     implementation(libs.umsdk.asms)
