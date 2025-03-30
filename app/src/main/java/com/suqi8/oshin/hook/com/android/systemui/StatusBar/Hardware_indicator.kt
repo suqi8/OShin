@@ -85,6 +85,7 @@ class Hardware_indicator: YukiBaseHooker() {
         Properties().apply { FileInputStream("/sys/class/power_supply/battery/uevent").use { load(it) } }
 
     // 创建电量消耗指标，返回创建的 indicator
+    @SuppressLint("DefaultLocale")
     private fun createConsumptionIndicator(clockTextView: TextView, parent: ViewGroup): TextView {
         val localPrefs = prefs("systemui\\hardware_indicator")
         if (!localPrefs.getBoolean("power_consumption_indicator", false))
@@ -113,6 +114,11 @@ class Hardware_indicator: YukiBaseHooker() {
             val props = readBatteryProperties()
             var batteryCurrentMa = props.getProperty("POWER_SUPPLY_CURRENT_NOW").toFloat() * -1
             var batteryCurrent = String.format("%.2f", batteryCurrentMa / 1000f).toFloat()
+            val currentDisplay: String = if (abs(batteryCurrentMa) >= 800) {
+                String.format("%.2f", batteryCurrentMa / 1000f) + "A"
+            } else {
+                String.format("%.0f", batteryCurrentMa) + "mA"
+            }
             if (absolute) {
                 batteryCurrentMa = abs(batteryCurrentMa)
                 batteryCurrent = abs(batteryCurrent)
@@ -123,16 +129,15 @@ class Hardware_indicator: YukiBaseHooker() {
             else
                 String.format("%.2f", batteryCurrent * batteryVoltage)
             val powerUnit = if (hidePowerUnit) "" else "W"
-            val currentUnit = if (hideCurrentUnit) "" else "mA"
             val voltageUnit = if (hideVoltageUnit) "" else "V"
             val line1 = when (show1) {
                 0 -> "$batteryWatt$powerUnit"
-                1 -> "$batteryCurrentMa$currentUnit"
+                1 -> currentDisplay
                 else -> "$batteryVoltage$voltageUnit"
             }
             val line2 = when (show2) {
                 0 -> "$batteryWatt$powerUnit"
-                1 -> "$batteryCurrentMa$currentUnit"
+                1 -> currentDisplay
                 else -> "$batteryVoltage$voltageUnit"
             }
             indicator.setPadding(0, 0, 4.dpToPx(clockTextView.context), 0)
