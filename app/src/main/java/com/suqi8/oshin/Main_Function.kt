@@ -63,6 +63,7 @@ import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.ui.activity.funlistui.SearchList
 import com.suqi8.oshin.ui.activity.funlistui.addline
+import com.suqi8.oshin.utils.GetFuncRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -761,9 +762,15 @@ fun Main_Function(
 
                     filteredFeatures.forEachIndexed { index, feature ->
                         item {
+                            val route = rememberSaveable { mutableStateOf("") }
+                            if (route.value == "") {
+                                LaunchedEffect(Unit) {
+                                    route.value = GetFuncRoute(feature.category,context)
+                                }
+                            }
                             SearchList(
                                 title = highlightMatches(feature.title, miuixSearchValue),
-                                summary = feature.summary?.let { highlightMatches(it, miuixSearchValue) },
+                                summary = highlightMatches(if (feature.summary != null) feature.summary + "\n" + route.value else route.value, miuixSearchValue),
                                 modifier = Modifier.fillMaxWidth(),
                                 onClick = {
                                     //miuixSearchValue = feature.title
