@@ -13,8 +13,6 @@ import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Refresh
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -43,7 +41,8 @@ import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.icons.ArrowBack
+import top.yukonga.miuix.kmp.icon.icons.useful.Back
+import top.yukonga.miuix.kmp.icon.icons.useful.Refresh
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @OptIn(ExperimentalHazeApi::class)
@@ -90,7 +89,7 @@ fun FunPage(title: String, appList: List<String>? = listOf(), navController: Nav
                     modifier = Modifier.padding(start = 18.dp)
                 ) {
                     Icon(
-                        imageVector = MiuixIcons.ArrowBack,
+                        imageVector = MiuixIcons.Useful.Back,
                         contentDescription = null,
                         tint = MiuixTheme.colorScheme.onBackground
                     )
@@ -105,7 +104,7 @@ fun FunPage(title: String, appList: List<String>? = listOf(), navController: Nav
                         modifier = Modifier.padding(end = 18.dp)
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.Refresh,
+                            imageVector = MiuixIcons.Useful.Refresh,
                             contentDescription = null,
                             tint = MiuixTheme.colorScheme.onBackground
                         )

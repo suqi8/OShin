@@ -5,7 +5,6 @@ import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.os.Environment
 import android.os.StatFs
 import android.os.storage.StorageManager
@@ -69,7 +68,7 @@ import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import java.lang.reflect.Method
 import java.time.Instant
 import java.time.ZoneId
@@ -316,7 +315,13 @@ fun Main_About(
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp)
                 ) {
-                    SuperArrow(title = stringResource(R.string.donors_list))
+                    item(
+                        name = "酸奶",
+                        coolapk = "Stracha酸奶菌",
+                        coolapkid = 15225420,
+                        github = "suqi8",
+                        qq = 3383787570
+                    )
                     addline()
                     SuperArrow(title = stringResource(R.string.contributors), onClick = {
                         navController.navigate("about_contributors")
@@ -418,7 +423,7 @@ fun Main_About(
                 }
                 Text(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
-                    text = "Powered By SYC Team",
+                    text = "Powered By SYCTeam & 酸奶",
                     fontSize = MiuixTheme.textStyles.subtitle.fontSize,
                     fontWeight = FontWeight.Medium,
                     color = MiuixTheme.colorScheme.onBackgroundVariant,
@@ -473,20 +478,12 @@ fun formatSize(size: Long): String {
 
 fun getTotalStorage(): Long {
     val stat = StatFs(Environment.getDataDirectory().path)
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-        stat.totalBytes
-    } else {
-        stat.blockCountLong * stat.blockSizeLong
-    }
+    return stat.totalBytes
 }
 
 fun getAvailableStorage(): Long {
     val stat = StatFs(Environment.getDataDirectory().path)
-    return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2) {
-        stat.availableBytes
-    } else {
-        stat.availableBlocksLong * stat.blockSizeLong
-    }
+    return stat.availableBytes
 }
 
 fun getUsedStorage(): Long {

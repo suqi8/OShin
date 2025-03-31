@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -53,6 +52,7 @@ import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -70,12 +70,11 @@ import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
-import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.icon.MiuixIcons
-import top.yukonga.miuix.kmp.icon.icons.Search
+import top.yukonga.miuix.kmp.icon.icons.useful.Search
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.BackHandler
 import top.yukonga.miuix.kmp.utils.SmoothRoundedCornerShape
@@ -651,6 +650,7 @@ fun features(context: Context) = listOf(
         category = "systemui\\status_bar_wifi")
 )
 
+@SuppressLint("UnrememberedMutableState")
 @Composable
 fun Main_Function(
     topAppBarScrollBehavior: ScrollBehavior,
@@ -707,7 +707,7 @@ fun Main_Function(
                     leadingIcon = {
                         Image(
                             modifier = Modifier.padding(horizontal = 12.dp),
-                            imageVector = MiuixIcons.Search,
+                            imageVector = MiuixIcons.Useful.Search,
                             colorFilter = BlendModeColorFilter(
                                 MiuixTheme.colorScheme.onSurfaceContainer,
                                 BlendMode.SrcIn
@@ -779,6 +779,7 @@ fun Main_Function(
             LazyColumn(Modifier.fillMaxSize(), topAppBarScrollBehavior = topAppBarScrollBehavior) {
                 item {
                     Spacer(modifier = Modifier.size(68.dp+padding.calculateTopPadding()))
+                    var notInstallList = mutableStateOf(listOf(""))
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -883,7 +884,7 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
             if (dominantColor.value == defaultColor) {
                 LaunchedEffect(icon) {
                     val newColor = withContext(Dispatchers.Default) {
-                        getautocolor(icon) ?: defaultColor
+                        getautocolor(icon)
                     }
                     dominantColor.value = newColor
                 }
@@ -908,14 +909,7 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (isLoading.value) {
-                    // 显示加载占位符
-                    CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-                    Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(start = 16.dp)) {
-                        Text(text = appName)
-                        SmallTitle(text = packageName, insideMargin = PaddingValues(0.dp, 0.dp))
-                    }
-                } else {
+                if (!isLoading.value) {
                     Card(
                         color = if (YukiHookAPI.Status.isModuleActive) dominantColor.value else MaterialTheme.colorScheme.errorContainer,
                         modifier = Modifier
@@ -934,7 +928,12 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
                     }
                     Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(start = 16.dp)) {
                         Text(text = appName)
-                        SmallTitle(text = packageName, insideMargin = PaddingValues(0.dp, 0.dp))
+                        Text(
+                            text = packageName,
+                            fontSize = MiuixTheme.textStyles.subtitle.fontSize,
+                            fontWeight = FontWeight.Medium,
+                            color = MiuixTheme.colorScheme.onBackgroundVariant
+                        )
                     }
                 }
             }
