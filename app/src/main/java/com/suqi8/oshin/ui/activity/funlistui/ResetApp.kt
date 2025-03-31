@@ -4,14 +4,12 @@ import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,16 +18,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.highcapable.yukihookapi.YukiHookAPI
-import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.GetAppIconAndName
 import com.suqi8.oshin.R
+import com.suqi8.oshin.colorCache
 import com.suqi8.oshin.drawColoredShadow
-import com.suqi8.oshin.getautocolor
+import com.suqi8.oshin.getAutoColor
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -37,7 +34,6 @@ import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
-import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperDialog
@@ -151,19 +147,22 @@ class resetApp {
     fun ResetAppList(packageName: String) {
         GetAppIconAndName(packageName = packageName) { appName, icon ->
             if (appName != "noapp") {
-                val context = LocalContext.current
-                val auto_color = context.prefs("settings").getBoolean("auto_color", true)
                 val defaultColor = MiuixTheme.colorScheme.primary
-                val dominantColor: MutableState<Color> = remember { mutableStateOf(defaultColor) }
-                val isLoading = remember { mutableStateOf(true) }
 
-                LaunchedEffect(icon) {
+                // 使用 remember 缓存 dominantColor 的状态
+                val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
+                val isLoading = remember { mutableStateOf(dominantColor.value == defaultColor) }
 
-                    withContext(Dispatchers.IO) {
-                        if (auto_color) dominantColor.value = getautocolor(icon)
+                // 使用 LaunchedEffect 在 icon 或 dominantColor 变化时启动协程
+                LaunchedEffect(icon, dominantColor.value) {
+                    if (isLoading.value) {
+                        val newColor = withContext(Dispatchers.Default) {
+                            if (!YukiHookAPI.Status.isModuleActive) defaultColor else getAutoColor(icon)
+                        }
+                        dominantColor.value = newColor
+                        colorCache[packageName] = newColor
                         isLoading.value = false
                     }
-
                 }
 
                 Row(
@@ -171,13 +170,7 @@ class resetApp {
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    if (isLoading.value) {
-                        CircularProgressIndicator(modifier = Modifier.padding(16.dp))
-                        Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(start = 16.dp)) {
-                            Text(text = appName)
-                            SmallTitle(text = packageName, insideMargin = PaddingValues(0.dp, 0.dp))
-                        }
-                    } else {
+                    if (!isLoading.value) {
                         Card(
                             color = if (YukiHookAPI.Status.isModuleActive) dominantColor.value else MaterialTheme.colorScheme.errorContainer,
                             modifier = Modifier
@@ -194,9 +187,14 @@ class resetApp {
                         ) {
                             Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(45.dp))
                         }
-                        Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(start = 16.dp)) {
+                        Column(modifier = Modifier.padding(start = 16.dp)) {
                             Text(text = appName)
-                            SmallTitle(text = packageName, insideMargin = PaddingValues(0.dp, 0.dp))
+                            Text(
+                                text = packageName,
+                                fontSize = MiuixTheme.textStyles.subtitle.fontSize,
+                                fontWeight = FontWeight.Medium,
+                                color = MiuixTheme.colorScheme.onBackgroundVariant
+                            )
                         }
                     }
                 }

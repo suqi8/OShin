@@ -100,6 +100,7 @@ import com.suqi8.oshin.ui.activity.com.oplus.appdetail.appdetail
 import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
 import com.suqi8.oshin.ui.activity.com.oplus.games.games
 import com.suqi8.oshin.ui.activity.com.oplus.phonemanager.oplusphonemanager
+import com.suqi8.oshin.ui.activity.hide_apps_notice
 import com.suqi8.oshin.ui.activity.recent_update
 import com.suqi8.oshin.ui.activity.testfunc.cpu_freq
 import com.suqi8.oshin.ui.theme.AppTheme
@@ -700,6 +701,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("health") { health(navController) }
             composable("appdetail") { appdetail(navController) }
             composable("testfunc\\cpu_freq") { cpu_freq(navController) }
+            composable("hide_apps_notice") { hide_apps_notice(navController) }
         }
     }
 }

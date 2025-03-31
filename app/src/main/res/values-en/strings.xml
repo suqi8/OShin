@@ -548,4 +548,5 @@ All data will be encrypted and processed anonymously, never associated with pers
     <string name="enable_redpacket_helper">Enable Red Packet Assistant</string>
     <string name="disable_root_dialog">Remove Root Detection Popup</string>
     <string name="remove_recommendations">Remove \"You May Also Like\"</string>
+    <string name="help">Help</string>
 </resources>

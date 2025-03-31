@@ -9,7 +9,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -67,6 +66,7 @@ import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -80,8 +80,6 @@ import top.yukonga.miuix.kmp.utils.BackHandler
 import top.yukonga.miuix.kmp.utils.SmoothRoundedCornerShape
 import java.text.Collator
 import java.util.Locale
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 fun features(context: Context) = listOf(
     item(title = context.getString(R.string.downgr),
@@ -650,6 +648,8 @@ fun features(context: Context) = listOf(
         category = "systemui\\status_bar_wifi")
 )
 
+var notInstallList = mutableStateOf(emptyList<String>())
+
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun Main_Function(
@@ -693,7 +693,8 @@ fun Main_Function(
             .fillMaxSize()
     ) {
         SearchBar(
-            modifier = Modifier.padding(horizontal = 12.dp, vertical = 12.dp)
+            modifier = Modifier
+                .padding(horizontal = 12.dp, vertical = 12.dp)
                 .background(Color.Transparent)
                 .padding(top = padding.calculateTopPadding()),
             inputField = {
@@ -735,7 +736,10 @@ fun Main_Function(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(top = 6.dp, bottom = if (isKeyboardVisible) 0.dp else padding.calculateBottomPadding())
+                    .padding(
+                        top = 6.dp,
+                        bottom = if (isKeyboardVisible) 0.dp else padding.calculateBottomPadding()
+                    )
             ) {
                 LazyColumn(topAppBarScrollBehavior = topAppBarScrollBehavior) {
                     if (filteredFeatures.isEmpty()) {
@@ -779,7 +783,23 @@ fun Main_Function(
             LazyColumn(Modifier.fillMaxSize(), topAppBarScrollBehavior = topAppBarScrollBehavior) {
                 item {
                     Spacer(modifier = Modifier.size(68.dp+padding.calculateTopPadding()))
-                    var notInstallList = mutableStateOf(listOf(""))
+                    val appList = listOf(
+                        AppInfo("android", "android"),
+                        AppInfo("com.android.systemui", "systemui"),
+                        AppInfo("com.android.settings", "settings"),
+                        AppInfo("com.android.launcher", "launcher"),
+                        AppInfo("com.oplus.battery", "battery"),
+                        AppInfo("com.heytap.speechassist", "speechassist"),
+                        AppInfo("com.coloros.ocrscanner", "ocrscanner"),
+                        AppInfo("com.oplus.games", "games"),
+                        AppInfo("com.finshell.wallet", "wallet"),
+                        AppInfo("com.coloros.phonemanager", "phonemanager"),
+                        AppInfo("com.oplus.phonemanager", "oplusphonemanager"),
+                        AppInfo("com.android.mms", "mms"),
+                        AppInfo("com.coloros.securepay", "securepay"),
+                        AppInfo("com.heytap.health", "health"),
+                        AppInfo("com.oplus.appdetail", "appdetail")
+                    )
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -787,36 +807,37 @@ fun Main_Function(
                             .padding(bottom = 6.dp)
                     ) {
                         Column {
-                            FunctionApp("android", "android", navController)
-                            addline()
-                            FunctionApp("com.android.systemui", "systemui", navController)
-                            addline()
-                            FunctionApp("com.android.settings", "settings", navController)
-                            addline()
-                            FunctionApp("com.android.launcher", "launcher", navController)
-                            addline()
-                            FunctionApp("com.oplus.battery", "battery", navController)
-                            addline()
-                            FunctionApp("com.heytap.speechassist", "speechassist", navController)
-                            addline()
-                            FunctionApp("com.coloros.ocrscanner", "ocrscanner", navController)
-                            addline()
-                            FunctionApp("com.oplus.games", "games", navController)
-                            addline()
-                            FunctionApp("com.finshell.wallet", "wallet", navController)
-                            addline()
-                            FunctionApp("com.coloros.phonemanager", "phonemanager", navController)
-                            addline()
-                            FunctionApp("com.oplus.phonemanager", "oplusphonemanager", navController)
-                            addline()
-                            FunctionApp("com.android.mms", "mms", navController)
-                            addline()
-                            FunctionApp("com.coloros.securepay", "securepay", navController)
-                            addline()
-                            FunctionApp("com.heytap.health", "health", navController)
-                            addline()
-                            FunctionApp("com.oplus.appdetail", "appdetail", navController)
+                            appList.forEachIndexed { index, appInfo ->
+                                val notInstall = rememberSaveable { mutableStateOf(false) }
+                                FunctionApp(
+                                    packageName = appInfo.packageName,
+                                    activityName = appInfo.activityName,
+                                    navController = navController
+                                ) {
+                                    if (it == "noapp") {
+                                        if (!notInstallList.value.contains(appInfo.packageName)) notInstallList.value += appInfo.packageName
+                                        notInstall.value = true
+                                    }
+                                }
+                                if (index < appList.size - 1 && !notInstall.value) {
+                                    addline()
+                                }
+                            }
                         }
+                    }
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp, top = 6.dp)
+                    ) {
+                        SuperArrow(
+                            title = stringResource(R.string.app_not_found_in_list),
+                            titleColor = BasicComponentDefaults.titleColor(color = MiuixTheme.colorScheme.primaryVariant),
+                            onClick = {
+                                navController.navigate("hide_apps_notice")
+                            }
+                        )
                     }
                     Card(
                         modifier = Modifier
@@ -837,6 +858,8 @@ fun Main_Function(
         }
     }
 }
+
+data class AppInfo(val packageName: String, val activityName: String)
 
 // 高亮匹配内容的函数
 fun highlightMatches(text: String, query: String): AnnotatedString {
@@ -863,49 +886,30 @@ fun highlightMatches(text: String, query: String): AnnotatedString {
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun FunctionApp(packageName: String, activityName: String, navController: NavController) {
+fun FunctionApp(packageName: String, activityName: String, navController: NavController, onResult: (String) -> Unit) {
     GetAppIconAndName(packageName = packageName) { appName, icon ->
         if (appName != "noapp") {
-            //val context = LocalContext.current
-            //val auto_color = context.prefs("settings").getBoolean("auto_color", true)
             val defaultColor = MiuixTheme.colorScheme.primary
 
-            // 通过 remember 保持单次运行中的状态
-            val dominantColor = remember(packageName) {
-                mutableStateOf(colorCache[packageName] ?: defaultColor)
-            }
+            // 使用 remember 缓存 dominantColor 的状态
+            val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
+            val isLoading = remember { mutableStateOf(dominantColor.value == defaultColor) }
 
-            // 自动更新缓存
-            LaunchedEffect(dominantColor.value) {
-                colorCache[packageName] = dominantColor.value
-            }
-
-            // 异步计算颜色
-            if (dominantColor.value == defaultColor) {
-                LaunchedEffect(icon) {
+            // 使用 LaunchedEffect 在 icon 或 dominantColor 变化时启动协程
+            LaunchedEffect(icon, dominantColor.value) {
+                if (isLoading.value) {
                     val newColor = withContext(Dispatchers.Default) {
-                        getautocolor(icon)
+                        if (!YukiHookAPI.Status.isModuleActive) defaultColor else getAutoColor(icon)
                     }
                     dominantColor.value = newColor
-                }
-            }
-            //val dominantColor: MutableState<Color> = rememberSaveable(stateSaver = colorSaver) { mutableStateOf(defaultColor) }
-            val isLoading = rememberSaveable { mutableStateOf(true) }
-
-            LaunchedEffect(icon) {
-                if (isLoading.value) {
-                    dominantColor.value = withContext(Dispatchers.Default) {
-                        getautocolor(icon)
-                    }
+                    colorCache[packageName] = newColor
                     isLoading.value = false
                 }
             }
 
             Row(
                 modifier = Modifier
-                    .clickable {
-                        navController.navigate(activityName)
-                    }
+                    .clickable { navController.navigate(activityName) }
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -926,7 +930,7 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
                     ) {
                         Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(45.dp))
                     }
-                    Column(verticalArrangement = Arrangement.Center, modifier = Modifier.padding(start = 16.dp)) {
+                    Column(modifier = Modifier.padding(start = 16.dp)) {
                         Text(text = appName)
                         Text(
                             text = packageName,
@@ -938,30 +942,19 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
                 }
             }
         } else {
-            Text(text = "$packageName 没有安装", modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 4.dp))
+            onResult("noapp")
         }
     }
 }
 
-private val colorCache = mutableMapOf<String, Color>()
+// 全局颜色缓存
+internal val colorCache = mutableMapOf<String, Color>()
 
-suspend fun getautocolor(icon: ImageBitmap): Color {
+// 获取主色调的函数
+suspend fun getAutoColor(icon: ImageBitmap): Color {
     return withContext(Dispatchers.IO) {
         val bitmap = icon.asAndroidBitmap()
-
-        // 使用 suspendCoroutine 将回调转换为协程
-        suspendCoroutine { continuation ->
-            Palette.from(bitmap).generate { palette ->
-                val colorSwatch = palette?.dominantSwatch
-                if (colorSwatch != null) {
-                    // 返回获取到的颜色
-                    continuation.resume(Color(colorSwatch.rgb))
-                } else {
-                    // 如果获取不到颜色，返回默认颜色
-                    continuation.resume(Color.White)
-                }
-            }
-        }
+        Palette.from(bitmap).generate().dominantSwatch?.rgb?.let { Color(it) } ?: Color.White
     }
 }
 
@@ -1031,8 +1024,12 @@ fun InputField(
 
     val paddingModifier = remember(insideMargin, leadingIcon, trailingIcon) {
         if (leadingIcon == null && trailingIcon == null) Modifier.padding(horizontal = insideMargin.width, vertical = insideMargin.height)
-        else if (leadingIcon == null) Modifier.padding(start = insideMargin.width).padding(vertical = insideMargin.height)
-        else if (trailingIcon == null) Modifier.padding(end = insideMargin.width).padding(vertical = insideMargin.height)
+        else if (leadingIcon == null) Modifier
+            .padding(start = insideMargin.width)
+            .padding(vertical = insideMargin.height)
+        else if (trailingIcon == null) Modifier
+            .padding(end = insideMargin.width)
+            .padding(vertical = insideMargin.height)
         else Modifier.padding(vertical = insideMargin.height)
     }
 
