@@ -7,5 +7,6 @@ class android : YukiBaseHooker() {
         loadApp(hooker = OplusRootCheck())
         loadApp(hooker = split_screen_multi_window())
         loadApp(hooker = DisablePinVerifyPer72h())
+        loadApp(hooker = AllowUntrustedTouch())
     }
 }

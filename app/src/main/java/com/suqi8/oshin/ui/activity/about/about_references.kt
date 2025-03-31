@@ -132,6 +132,11 @@ fun about_references(navController: NavController) {
                 name = "QAuxiliary",
                 username = "cinit",
                 url = "https://github.com/cinit/QAuxiliary")
+            addline()
+            about_references_item(
+                name = "HyperCeiler",
+                username = "Re.chronoRain & Sevtinge",
+                url = "https://github.com/ReChronoRain/HyperCeiler")
         }
         SmallTitle(text = stringResource(R.string.closed_source_project))
         Card(
