@@ -10,6 +10,7 @@ import androidx.navigation.NavController
 import com.suqi8.oshin.GetAppName
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
+import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.extra.SuperArrow
@@ -45,6 +46,17 @@ fun android(navController: NavController) {
                 onClick = {
                     navController.navigate("android\\split_screen_multi_window")
                 })
+        }
+        Card(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 6.dp,top = 6.dp)
+        ) {
+            FunSwich(
+                title = stringResource(R.string.disable_72h_verify),
+                category = "android",
+                key = "DisablePinVerifyPer72h"
+            )
         }
     }
 }

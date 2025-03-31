@@ -645,7 +645,9 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.hide_bs),
         category = "systemui\\status_bar_wifi"),
     item(title = context.getString(R.string.swap_upload_download),
-        category = "systemui\\status_bar_wifi")
+        category = "systemui\\status_bar_wifi"),
+    item(title = context.getString(R.string.disable_72h_verify),
+        category = "android")
 )
 
 var notInstallList = mutableStateOf(emptyList<String>())

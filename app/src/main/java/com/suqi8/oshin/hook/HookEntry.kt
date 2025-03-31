@@ -8,22 +8,14 @@ import com.highcapable.yukihookapi.hook.factory.configs
 import com.highcapable.yukihookapi.hook.factory.encase
 import com.highcapable.yukihookapi.hook.xposed.bridge.event.YukiXposedEvent
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
-import com.suqi8.oshin.hook.android.OplusRootCheck
+import com.suqi8.oshin.hook.android.android
 import com.suqi8.oshin.hook.android.corepatch.CorePatchForV
-import com.suqi8.oshin.hook.android.split_screen_multi_window
 import com.suqi8.oshin.hook.com.android.launcher.LauncherIcon
 import com.suqi8.oshin.hook.com.android.launcher.launcher
 import com.suqi8.oshin.hook.com.android.launcher.recent_task
 import com.suqi8.oshin.hook.com.android.mms.mms
 import com.suqi8.oshin.hook.com.android.settings.settings
-import com.suqi8.oshin.hook.com.android.systemui.StatusBar.BatteryBar
-import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Clock
-import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Fragment
-import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Hardware_indicator
-import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Icon
-import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Notification
-import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Wifi
-import com.suqi8.oshin.hook.com.android.systemui.allday_screenoff
+import com.suqi8.oshin.hook.com.android.systemui.systemui
 import com.suqi8.oshin.hook.com.coloros.ocrscanner.ocrscanner
 import com.suqi8.oshin.hook.com.coloros.phonemanager.phonemanager
 import com.suqi8.oshin.hook.com.coloros.securepay.securepay
@@ -50,32 +42,14 @@ class HookEntry : IYukiHookXposedInit {
 
     @SuppressLint("RestrictedApi")
     override fun onHook() = encase {
-        loadApp(hooker = OplusRootCheck())
-        loadApp(hooker = Clock())
-        loadApp(hooker = Hardware_indicator())
+        loadApp(hooker = android())
+        loadApp(hooker = systemui())
         loadApp(hooker = LauncherIcon())
-        loadApp(hooker = Icon())
         loadApp(hooker = recent_task())
-        loadApp(hooker = Notification())
         loadApp(hooker = battery())
-        loadApp(name = "com.android.systemui") {
-            /*"com.android.systemui.statusbar.phone.StatusBarIconController".toClass().apply {
-                method {
-                    name = "setIconVisibility"
-                    param(StringClass, BooleanClass)
-                }.hook {
-                    before {
-                        args[1] = true
-                    }
-                }
-            }*/
-        }
         loadApp(hooker = speechassist())
         loadApp(hooker = games())
         loadApp(hooker = ocrscanner())
-        loadApp(hooker = Fragment())
-        loadApp(hooker = allday_screenoff())
-        loadApp(hooker = split_screen_multi_window())
         loadApp(hooker = settings())
         loadApp(hooker = wallet())
         loadApp(hooker = launcher())
@@ -85,8 +59,6 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = securepay())
         loadApp(hooker = health())
         loadApp(hooker = appdetail())
-        loadApp(hooker = BatteryBar())
-        loadApp(hooker = Wifi())
     }
 
     override fun onXposedEvent() {
