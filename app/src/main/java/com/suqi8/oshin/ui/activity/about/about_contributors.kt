@@ -84,9 +84,8 @@ fun about_contributors(navController: NavController) {
             )
             addline()
             item(
-                name = "凌逸",
-                coolapk = "网恋秀牛被骗",
-                coolapkid = 34081897
+                name = "psychosispy",
+                github = "psychosispy"
             )
         }
     }

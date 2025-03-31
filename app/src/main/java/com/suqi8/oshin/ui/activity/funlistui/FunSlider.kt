@@ -1,5 +1,7 @@
 package com.suqi8.oshin.ui.activity.funlistui
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +10,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -44,6 +47,10 @@ fun FunSlider(title: String, summary: String? = null, category: String, key: Str
     }.toString()) }
     val cachevalue = remember { mutableStateOf(value.value) }
     val Dialog = remember { mutableStateOf(false) }
+    val animatedSliderPosition by animateFloatAsState(
+        targetValue = if (cachevalue.value.isNotEmpty()) cachevalue.value.toFloat() else 0f,
+        animationSpec = tween(durationMillis = 200)
+    )
     SuperArrow(
         title = title,
         summary = summary,
@@ -62,7 +69,7 @@ fun FunSlider(title: String, summary: String? = null, category: String, key: Str
         }
     ) {
         Slider(
-            progress = if (cachevalue.value.isNotEmpty()) cachevalue.value.toFloat() else 0f,
+            progress = animatedSliderPosition,
             onProgressChange = {
                 cachevalue.value = if (type == Int::class) it.toInt().toString() else String.format("%.${decimalPlaces}f", it)
             },
