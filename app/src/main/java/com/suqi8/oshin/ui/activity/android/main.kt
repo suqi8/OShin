@@ -57,6 +57,12 @@ fun android(navController: NavController) {
                 category = "android",
                 key = "DisablePinVerifyPer72h"
             )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.allow_untrusted_touch),
+                category = "android",
+                key = "AllowUntrustedTouch"
+            )
         }
     }
 }

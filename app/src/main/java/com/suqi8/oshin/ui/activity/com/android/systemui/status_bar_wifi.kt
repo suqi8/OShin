@@ -23,6 +23,7 @@ import com.suqi8.oshin.ui.activity.funlistui.FunNoEnable
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSlider
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
 
 @SuppressLint("RtlHardcoded")
@@ -93,6 +94,7 @@ fun status_bar_wifi(navController: NavController) {
                         )
                         AnimatedVisibility(selected.value == 0) {
                             Column {
+                                addline()
                                 FunSlider(
                                     title = stringResource(R.string.speed_font_size),
                                     summary = stringResource(R.string.default_value_hint_negative_one),
@@ -104,6 +106,7 @@ fun status_bar_wifi(navController: NavController) {
                                     min = -1f,
                                     decimalPlaces = 0
                                 )
+                                addline()
                                 FunSlider(
                                     title = stringResource(R.string.unit_font_size),
                                     summary = stringResource(R.string.default_value_hint_negative_one),
@@ -119,6 +122,7 @@ fun status_bar_wifi(navController: NavController) {
                         }
                         AnimatedVisibility(selected.value == 1) {
                             Column {
+                                addline()
                                 FunSlider(
                                     title = stringResource(R.string.upload_font_size),
                                     summary = stringResource(R.string.default_value_hint_negative_one),
@@ -130,6 +134,7 @@ fun status_bar_wifi(navController: NavController) {
                                     min = -1f,
                                     decimalPlaces = 0
                                 )
+                                addline()
                                 FunSlider(
                                     title = stringResource(R.string.download_font_size),
                                     summary = stringResource(R.string.default_value_hint_negative_one),
@@ -143,6 +148,7 @@ fun status_bar_wifi(navController: NavController) {
                                 )
                             }
                         }
+                        addline()
                         FunSlider(
                             title = stringResource(R.string.slow_speed_threshold),
                             category = "systemui\\status_bar_wifi",
@@ -159,6 +165,7 @@ fun status_bar_wifi(navController: NavController) {
                                     .getBoolean("hide_on_slow", false)
                             )
                         }
+                        addline()
                         FunSwich(
                             title = stringResource(R.string.hide_on_slow),
                             category = "systemui\\status_bar_wifi",
@@ -168,6 +175,7 @@ fun status_bar_wifi(navController: NavController) {
                             }
                         )
                         AnimatedVisibility(hide_on_slow.value && selected.value == 1) {
+                            addline()
                             FunSwich(
                                 title = stringResource(R.string.hide_when_both_slow),
                                 category = "systemui\\status_bar_wifi",
@@ -177,6 +185,7 @@ fun status_bar_wifi(navController: NavController) {
                         AnimatedVisibility(selected.value == 1) {
                             Column {
                                 val icon_indicator = remember { mutableStateOf(context.prefs("systemui\\status_bar_wifi").getInt("icon_indicator", 0)) }
+                                addline()
                                 FunDropdown(
                                     title = stringResource(R.string.icon_indicator),
                                     category = "systemui\\status_bar_wifi",
@@ -187,22 +196,26 @@ fun status_bar_wifi(navController: NavController) {
                                     }
                                 )
                                 AnimatedVisibility(icon_indicator.value != 0) {
+                                    addline()
                                     FunSwich(
                                         title = stringResource(R.string.position_speed_indicator_front),
                                         category = "systemui\\status_bar_wifi",
                                         key = "position_speed_indicator_front"
                                     )
                                 }
+                                addline()
                                 FunSwich(
                                     title = stringResource(R.string.hide_space),
                                     category = "systemui\\status_bar_wifi",
                                     key = "hide_space"
                                 )
+                                addline()
                                 FunSwich(
                                     title = stringResource(R.string.hide_bs),
                                     category = "systemui\\status_bar_wifi",
                                     key = "hide_bs"
                                 )
+                                addline()
                                 FunSwich(
                                     title = stringResource(R.string.swap_upload_download),
                                     category = "systemui\\status_bar_wifi",

@@ -24,6 +24,7 @@ import com.suqi8.oshin.executeCommand
 import com.suqi8.oshin.ui.activity.funlistui.FunNoEnable
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -90,6 +91,7 @@ fun cpu_freq(navController: NavController) {
                                 }
                             }
                         )
+                        addline()
                         SuperDropdown(
                             title = stringResource(R.string.cpu_group_min_freq, core),
                             items = freqs,

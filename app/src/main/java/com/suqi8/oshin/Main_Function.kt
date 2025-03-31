@@ -647,6 +647,8 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.swap_upload_download),
         category = "systemui\\status_bar_wifi"),
     item(title = context.getString(R.string.disable_72h_verify),
+        category = "android"),
+    item(title = context.getString(R.string.allow_untrusted_touch),
         category = "android")
 )
 
