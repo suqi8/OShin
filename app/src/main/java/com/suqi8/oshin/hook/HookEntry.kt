@@ -21,6 +21,7 @@ import com.suqi8.oshin.hook.com.coloros.phonemanager.phonemanager
 import com.suqi8.oshin.hook.com.coloros.securepay.securepay
 import com.suqi8.oshin.hook.com.finshell.wallet.wallet
 import com.suqi8.oshin.hook.com.heytap.health.health
+import com.suqi8.oshin.hook.com.heytap.quicksearchbox.quicksearchbox
 import com.suqi8.oshin.hook.com.heytap.speechassist.speechassist
 import com.suqi8.oshin.hook.com.oplus.appdetail.appdetail
 import com.suqi8.oshin.hook.com.oplus.battery.battery
@@ -59,6 +60,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = securepay())
         loadApp(hooker = health())
         loadApp(hooker = appdetail())
+        loadApp(hooker = quicksearchbox())
     }
 
     override fun onXposedEvent() {
