@@ -650,7 +650,9 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.disable_72h_verify),
         category = "android"),
     item(title = context.getString(R.string.allow_untrusted_touch),
-        category = "android")
+        category = "android"),
+    item(title = context.getString(R.string.remove_app_recommendation_ads),
+        category = "quicksearchbox")
 )
 
 var notInstallList = mutableStateOf(emptyList<String>())
@@ -809,8 +811,9 @@ fun Main_Function(
                         AppInfo("com.android.mms", "mms"),
                         AppInfo("com.coloros.securepay", "securepay"),
                         AppInfo("com.heytap.health", "health"),
-                        AppInfo("com.oplus.appdetail", "appdetail")
-                    )
+                        AppInfo("com.oplus.appdetail", "appdetail"),
+                        AppInfo("com.heytap.quicksearchbox", "quicksearchbox")
+                        )
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()

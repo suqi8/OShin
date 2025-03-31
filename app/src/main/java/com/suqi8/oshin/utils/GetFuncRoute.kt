@@ -31,6 +31,7 @@ fun GetFuncRoute(route: String, context: Context): String {
     FuncRoute = FuncRoute.replace("securepay", GetAppName1("com.coloros.securepay",context))
     FuncRoute = FuncRoute.replace("health", GetAppName1("com.heytap.health",context))
     FuncRoute = FuncRoute.replace("appdetail", GetAppName1("com.oplus.appdetail",context))
+    FuncRoute = FuncRoute.replace("quicksearchbox", GetAppName1("com.heytap.quicksearchbox",context))
 
     return FuncRoute
 }
