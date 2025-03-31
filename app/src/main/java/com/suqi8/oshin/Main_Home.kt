@@ -1,6 +1,8 @@
 package com.suqi8.oshin
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
@@ -67,6 +69,7 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.ui.activity.funlistui.addline
+import com.suqi8.oshin.utils.GetFuncRoute
 import com.suqi8.oshin.utils.toast
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -92,6 +95,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
             Text(text = "Loading...", modifier = Modifier.align(Alignment.Center))
         }
     }*/
+    val context = LocalContext.current
     val cardVisible = rememberSaveable { mutableStateOf(false) }
     val cardVisible1 = rememberSaveable { mutableStateOf(false) }
     LazyColumn(
@@ -249,17 +253,24 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
             ) {
                 LazyRow(modifier = Modifier.fillMaxWidth()) {
                     item {
-                        Card(modifier = Modifier.width(230.dp).height(165.dp).padding(start = 20.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
+                        Card(modifier = Modifier
+                            .width(230.dp)
+                            .height(165.dp)
+                            .padding(start = 20.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
                             val randomFeature = features(LocalContext.current)
                                 .takeIf { it.isNotEmpty() }
                                 ?.random()
-                            Column(modifier = Modifier.clickable {
-                                navController.navigate(randomFeature!!.category)
-                            }.fillMaxSize()) {
+                            Column(modifier = Modifier
+                                .clickable {
+                                    navController.navigate(randomFeature!!.category)
+                                }
+                                .fillMaxSize()) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Image(painter = painterResource(id = R.drawable.recommend),
                                         contentDescription = null,
-                                        modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 5.dp).size(30.dp),
+                                        modifier = Modifier
+                                            .padding(top = 10.dp, start = 10.dp, bottom = 5.dp)
+                                            .size(30.dp),
                                         colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface))
                                     Text(text = stringResource(R.string.recommended_features), modifier = Modifier.padding(top = 10.dp, end = 10.dp), fontSize = 15.sp)
                                 }
@@ -269,7 +280,13 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis)
                                 //Spacer(modifier = Modifier.weight(1f))
-                                Text(randomFeature.summary ?: stringResource(R.string.no_introduction),
+                                val route = rememberSaveable { mutableStateOf("") }
+                                if (route.value == "") {
+                                    LaunchedEffect(Unit) {
+                                        route.value = "\n" + GetFuncRoute(randomFeature.category,context)
+                                    }
+                                }
+                                Text((randomFeature.summary ?: stringResource(R.string.no_introduction))+route.value,
                                     modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp),
                                     fontSize = 14.sp,
                                     color = MiuixTheme.colorScheme.onSurfaceContainerHigh,
@@ -279,17 +296,25 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                         }
                     }
                     item {
-                        Card(modifier = Modifier.width(230.dp).height(165.dp).padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
+                        Card(modifier = Modifier
+                            .width(230.dp)
+                            .height(165.dp)
+                            .padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
                             val recent_Feature = features(LocalContext.current)
                                 .takeIf { it.isNotEmpty() }
                                 ?.last()
-                            Column(modifier = Modifier.clickable {
-                                navController.navigate("recent_update")
-                            }.fillMaxSize()) {
+                            Column(modifier = Modifier
+                                .clickable {
+                                    navController.navigate("recent_update")
+                                }
+                                .fillMaxSize()) {
                                 Row(verticalAlignment = Alignment.CenterVertically) {
                                     Image(painter = painterResource(id = R.drawable.recent_update),
                                         contentDescription = null,
-                                        modifier = Modifier.padding(top = 10.dp, start = 10.dp, bottom = 5.dp).size(30.dp).padding(5.dp),
+                                        modifier = Modifier
+                                            .padding(top = 10.dp, start = 10.dp, bottom = 5.dp)
+                                            .size(30.dp)
+                                            .padding(5.dp),
                                         colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface))
                                     Text(text = stringResource(R.string.recent_update), modifier = Modifier.padding(top = 10.dp, end = 10.dp), fontSize = 15.sp)
                                 }
@@ -299,8 +324,14 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis)
                                 //Spacer(modifier = Modifier.weight(1f))
+                                val route = rememberSaveable { mutableStateOf("") }
+                                if (route.value == "") {
+                                    LaunchedEffect(Unit) {
+                                        route.value = "\n"+ GetFuncRoute(recent_Feature.category,context)
+                                    }
+                                }
                                 Text(
-                                    recent_Feature.summary ?: stringResource(R.string.no_introduction),
+                                    (recent_Feature.summary ?: stringResource(R.string.no_introduction)) + route.value,
                                     modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp),
                                     fontSize = 14.sp,
                                     color = MiuixTheme.colorScheme.onSurfaceContainerHigh,
@@ -743,6 +774,24 @@ fun GetAppName(
         val info = applicationInfo.value!!
         val appName = packageManager.getApplicationLabel(info).toString()
 
+        return appName
+    } else {
+        return "noapp"
+    }
+}
+
+fun GetAppName1(
+    packageName: String,
+    context: Context
+): String {
+    val packageManager = context.packageManager
+    var applicationInfo: ApplicationInfo? = null
+    try {
+        applicationInfo = packageManager.getApplicationInfo(packageName, 0)
+    } catch (_: PackageManager.NameNotFoundException) { }
+    if (applicationInfo != null) {
+        val info = applicationInfo
+        val appName = packageManager.getApplicationLabel(info).toString()
         return appName
     } else {
         return "noapp"
