@@ -569,4 +569,7 @@
     <string name="cpu_freq_main">CPU动态调频配置</string>
     <string name="cpu_group_min_freq">CPU %1$d组最小频率阈值</string>
     <string name="cpu_group_max_freq">CPU %1$d组最大频率阈值</string>
+    <string name="app_not_found_in_list">列表中找不到您想要的应用？</string>
+    <string name="hide_apps_notice">为了保持首页的美观，%1$d个未安装应用已被隐藏。\n\n当前隐藏的应用入口：\n</string>
+    <string name="help">帮助</string>
 </resources>
