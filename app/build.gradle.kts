@@ -152,6 +152,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
     implementation(libs.toolbar.compose)
     implementation(libs.xxpermissions)
     implementation(libs.common)

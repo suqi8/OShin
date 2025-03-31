@@ -13,7 +13,6 @@
 /.kotlin
 /captures
 /app/release
-crowdin.yml
 .externalNativeBuild
 .cxx
 local.properties

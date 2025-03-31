@@ -2,16 +2,22 @@ package com.suqi8.oshin.ui.activity.about
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -19,6 +25,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.addline
@@ -55,13 +62,6 @@ fun about_contributors(navController: NavController) {
                 .padding(bottom = 6.dp)
         ) {
             item(
-                name = "酸奶",
-                coolapk = "Stracha酸奶菌",
-                coolapkid = 15225420,
-                github = "suqi8"
-            )
-            addline()
-            item(
                 name = "YuKong_A",
                 github = "YuKongA"
             )
@@ -87,103 +87,132 @@ fun about_contributors(navController: NavController) {
 }
 
 @Composable
-private fun item(
+internal fun item(
     name: String,
     coolapk: String? = null,
     coolapkid: Int? = null,
-    github: String? = null
+    github: String? = null,
+    qq: Long? = null
 ) {
     val context = LocalContext.current
-    val showtwo = remember { mutableStateOf(false) }
+    var showExtra by remember { mutableStateOf(false) }
     val toastMessage = stringResource(R.string.please_install_cool_apk)
-    SuperArrow(title = name,
-        summary = buildString {
-            coolapk?.let {
-                append("${stringResource(R.string.coolapk)}@$it")
-            }
-            if (coolapk != null && github != null) {
-                append(" | ")
-            }
-            github?.let {
-                append("Github@$it")
+
+    // 公共启动函数
+    fun launchUri(uri: Uri) {
+        try {
+            context.startActivity(Intent(Intent.ACTION_VIEW, uri))
+        } catch (e: ActivityNotFoundException) {
+            Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // 拼接summary字符串
+    val summaryText = buildString {
+        coolapk?.let { append("${stringResource(R.string.coolapk)}@$it ") }
+        github?.let { append("Github@$it ") }
+        qq?.let { append("QQ@$it ") }
+    }
+
+    SuperArrow(
+        title = name,
+        leftAction = {
+            qq?.let {
+                Column(modifier = Modifier
+                    .padding(end = 10.dp)) {
+                    AsyncImage(
+                        model = "https://q.qlogo.cn/headimg_dl?dst_uin=$it&spec=640&img_type=jpg",
+                        contentDescription = null,
+                        modifier = Modifier
+                            .size(50.dp)
+                            .clip(RoundedCornerShape(15.dp))
+                    )
+                }
             }
         },
+        summary = summaryText,
         onClick = {
-            if (coolapk != null && github != null) {
-                showtwo.value = !showtwo.value
-            } else if (coolapk != null) {
-                val coolApkUri = "coolmarket://u/${coolapkid}".toUri()
-                val intent = Intent(Intent.ACTION_VIEW, coolApkUri)
-
-                try {
-                    // 尝试启动酷安应用
-                    context.startActivity(intent)
-                } catch (e: ActivityNotFoundException) {
-                    // 如果酷安未安装，则提示用户
-                    Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+            // 如果两个及以上信息存在，则弹出卡片，否则直接跳转
+            val infoCount = listOfNotNull(coolapk, github, qq).size
+            if (infoCount >= 2) {
+                showExtra = !showExtra
+            } else {
+                when {
+                    coolapk != null -> coolapkid?.let { launchUri("coolmarket://u/$it".toUri()) }
+                    github != null -> launchUri("https://github.com/$github".toUri())
+                    qq != null -> launchUri("mqqapi://card/show_pslcard?src_type=internal&version=1&uin=$qq".toUri())
                 }
-            } else if (github != null) {
-                val intent = Intent(
-                    Intent.ACTION_VIEW,
-                    "https://github.com/${github}".toUri()
-                )
-                context.startActivity(intent)
             }
         }
     )
-    AnimatedVisibility(showtwo.value) {
+
+    AnimatedVisibility(visible = showExtra) {
         Card(
             color = MiuixTheme.colorScheme.secondaryContainer,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 12.dp),
+                .padding(horizontal = 12.dp, vertical = 12.dp)
         ) {
-            SuperArrow(title = stringResource(R.string.coolapk), leftAction = {
-                Image(
-                    painter = painterResource(R.drawable.coolapk),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(end = 8.dp),
-                    colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
-                )
-            },
-                onClick = {
-                    coolapkid?.let {
-                        val coolApkUri = "coolmarket://u/${it}".toUri()
-                        val intent = Intent(Intent.ACTION_VIEW, coolApkUri)
-
-                        try {
-                            // 尝试启动酷安应用
-                            context.startActivity(intent)
-                        } catch (e: ActivityNotFoundException) {
-                            // 如果酷安未安装，则提示用户
-                            Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+            Column {
+                coolapk?.let {
+                    SuperArrow(
+                        title = stringResource(R.string.coolapk),
+                        leftAction = {
+                            Image(
+                                painter = painterResource(R.drawable.coolapk),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .padding(end = 8.dp),
+                                colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
+                            )
+                        },
+                        onClick = {
+                            coolapkid?.let { id ->
+                                launchUri("coolmarket://u/$id".toUri())
+                            }
                         }
-                    }
+                    )
+                    addline()
                 }
-            )
-            addline()
-            SuperArrow(title = "Github", leftAction = {
-                Image(
-                    painter = painterResource(R.drawable.github),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(32.dp)
-                        .padding(end = 8.dp),
-                    colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
-                )
-            },
-                onClick = {
-                    github?.let {
-                        val intent = Intent(
-                            Intent.ACTION_VIEW,
-                            "https://github.com/${it}".toUri()
-                        )
-                        context.startActivity(intent)
-                    }
+                github?.let {
+                    SuperArrow(
+                        title = "Github",
+                        leftAction = {
+                            Image(
+                                painter = painterResource(R.drawable.github),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .padding(end = 8.dp),
+                                colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
+                            )
+                        },
+                        onClick = {
+                            launchUri("https://github.com/$it".toUri())
+                        }
+                    )
+                    addline()
                 }
-            )
+                qq?.let {
+                    SuperArrow(
+                        title = "QQ",
+                        leftAction = {
+                            Image(
+                                painter = painterResource(R.drawable.qq),
+                                contentDescription = null,
+                                modifier = Modifier
+                                    .size(32.dp)
+                                    .padding(end = 8.dp),
+                                colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
+                            )
+                        },
+                        onClick = {
+                            launchUri("mqqapi://card/show_pslcard?src_type=internal&version=1&uin=$it".toUri())
+                        }
+                    )
+                }
+            }
         }
     }
 }

@@ -25,7 +25,7 @@ import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperDialogDefaults
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtil.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 
 @Composable
 fun FunSlider(title: String, summary: String? = null, category: String, key: String, defValue: Any = 0, endtype: String? = "", max: Float = 1f, min: Float = 0f,decimalPlaces: Int = 2, titlecolor: Color = SuperDialogDefaults.titleColor()) {
