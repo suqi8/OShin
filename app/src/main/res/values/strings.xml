@@ -201,6 +201,7 @@
     <string name="thank">感谢</string>
     <string name="contributors">贡献人员</string>
     <string name="donors_list">捐赠列表</string>
+    <string name="donors">捐赠</string>
     <string name="references">引用内容</string>
     <string name="discussion_group">讨论群组</string>
     <string name="auto_build_release">自动构建发布</string>

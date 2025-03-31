@@ -327,6 +327,10 @@ fun Main_About(
                         navController.navigate("about_contributors")
                     })
                     addline()
+                    SuperArrow(title = stringResource(R.string.donors_list), onClick = {
+                        navController.navigate("about_donors")
+                    })
+                    addline()
                     SuperArrow(title = stringResource(R.string.references), onClick = {
                         navController.navigate("about_references")
                     })
@@ -349,6 +353,23 @@ fun Main_About(
                         )
                     }, onClick = {
                         navController.navigate("about_setting")
+                    })
+                    addline()
+                    SuperArrow(title = stringResource(R.string.donors), leftAction = {
+                        Image(
+                            painter = painterResource(R.drawable.donors),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .size(32.dp)
+                                .padding(end = 8.dp),
+                            colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
+                        )
+                    }, onClick = {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://oshin.mikusignal.top/docs/donate.html")
+                        )
+                        context.startActivity(intent)
                     })
                     addline()
                     SuperArrow(title = stringResource(R.string.official_channel), leftAction = {
