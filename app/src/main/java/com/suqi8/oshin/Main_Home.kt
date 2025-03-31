@@ -16,6 +16,7 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -165,43 +166,53 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                         ),
                     color = if (YukiHookAPI.Status.isModuleActive) startColor else MaterialTheme.colorScheme.errorContainer,
                 ) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.padding(
-                            start = 30.dp,
-                            end = 30.dp,
-                            top = 30.dp,
-                            bottom = 30.dp
-                        )
-                    ) {
-                        val compositionResult =
-                            rememberLottieComposition(LottieCompositionSpec.RawRes(if (YukiHookAPI.Status.isModuleActive) R.raw.accept else R.raw.error))
-                        val progress = animateLottieCompositionAsState(
-                            composition = compositionResult.value
-                        )
-                        LottieAnimation(
-                            composition = compositionResult.value,
-                            progress = progress.value,
+                    Box(modifier = Modifier
+                        .fillMaxWidth()) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(
+                                start = 30.dp,
+                                end = 30.dp,
+                                top = 30.dp,
+                                bottom = 30.dp
+                            )
+                        ) {
+                            val compositionResult =
+                                rememberLottieComposition(LottieCompositionSpec.RawRes(if (YukiHookAPI.Status.isModuleActive) R.raw.accept else R.raw.error))
+                            val progress = animateLottieCompositionAsState(
+                                composition = compositionResult.value
+                            )
+                            LottieAnimation(
+                                composition = compositionResult.value,
+                                progress = progress.value,
+                                modifier = Modifier
+                                    .size(50.dp)
+                            )
+                            Column(
+                                verticalArrangement = Arrangement.Center,
+                                modifier = Modifier.padding(start = 15.dp)
+                            ) {
+                                Text(
+                                    text = if (YukiHookAPI.Status.isModuleActive)
+                                        stringResource(R.string.module_is_activated)
+                                    else stringResource(R.string.module_not_activated),
+                                    color = Color.Black
+                                )
+                                Text(
+                                    text = if (YukiHookAPI.Status.isModuleActive)
+                                        "${YukiHookAPI.Status.Executor.name}-v${YukiHookAPI.Status.Executor.apiLevel}"
+                                    else stringResource(R.string.please_activate),
+                                    color = Color.Black
+                                )
+                            }
+                        }
+                        Image(
+                            painter = painterResource(id = R.drawable.pic20250331_192109),
+                            contentDescription = null,
                             modifier = Modifier
                                 .size(50.dp)
+                                .align(Alignment.BottomEnd)
                         )
-                        Column(
-                            verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.padding(start = 15.dp)
-                        ) {
-                            Text(
-                                text = if (YukiHookAPI.Status.isModuleActive)
-                                    stringResource(R.string.module_is_activated)
-                                else stringResource(R.string.module_not_activated),
-                                color = Color.Black
-                            )
-                            Text(
-                                text = if (YukiHookAPI.Status.isModuleActive)
-                                    "${YukiHookAPI.Status.Executor.name}-v${YukiHookAPI.Status.Executor.apiLevel}"
-                                else stringResource(R.string.please_activate),
-                                color = Color.Black
-                            )
-                        }
                     }
                 }
             }

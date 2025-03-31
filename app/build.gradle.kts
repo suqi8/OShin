@@ -144,7 +144,7 @@ android {
     }
     androidResources {
         ignoreAssetsPattern = "!*.ttf:!*.json:!*.bin"
-        noCompress += listOf("zip", "txt", "raw")
+        noCompress += listOf("zip", "txt", "raw", "png")
     }
     // TODO Please visit https://highcapable.github.io/YukiHookAPI/en/api/special-features/host-inject
     // TODO 请参考 https://highcapable.github.io/YukiHookAPI/zh-cn/api/special-features/host-inject
