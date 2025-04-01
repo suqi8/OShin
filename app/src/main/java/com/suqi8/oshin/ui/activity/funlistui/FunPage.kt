@@ -47,7 +47,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @OptIn(ExperimentalHazeApi::class)
 @Composable
-fun FunPage(title: String, appList: List<String>? = listOf(), navController: NavController, isItem: Boolean = false, content: @Composable () -> Unit) {
+fun FunPage(title: String, appList: List<String>? = listOf(), navController: NavController, content: @Composable () -> Unit) {
     val context = LocalContext.current
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
     val restartAPP = remember { mutableStateOf(false) }
