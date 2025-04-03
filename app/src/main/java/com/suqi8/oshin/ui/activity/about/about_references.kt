@@ -136,7 +136,8 @@ fun about_references(navController: NavController) {
             about_references_item(
                 name = "HyperCeiler",
                 username = "Re.chronoRain & Sevtinge",
-                url = "https://github.com/ReChronoRain/HyperCeiler")
+                url = "https://github.com/ReChronoRain/HyperCeiler",
+                license = "AGPL-3.0")
         }
         SmallTitle(text = stringResource(R.string.closed_source_project))
         Card(
