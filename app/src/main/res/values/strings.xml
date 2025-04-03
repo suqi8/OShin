@@ -578,4 +578,8 @@
     <string name="remove_app_recommendation_ads">移除应用建议附加广告</string>
     <string name="accessibility_service_direct">无障碍服务直达</string>
     <string name="accessibility_service_authorize">直接授权无障碍服务</string>
+    <string name="selected_app">已选择应用：</string>
+    <string name="smart_accessibility_service">智能授权无障碍服务</string>
+    <string name="whitelist_app_auto_authorization">开启后在白名单应用列表选中的应用程序将会自动授权，未选中的应用程序将会直接跳转至应用无障碍开关页面。</string>
+    <string name="accessibility_whitelist">无障碍服务白名单</string>
 </resources>

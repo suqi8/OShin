@@ -11,7 +11,6 @@ import android.provider.Settings
 import android.view.accessibility.AccessibilityManager
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.android.BundleClass
 
 class Accessibility : YukiBaseHooker() {
@@ -20,7 +19,9 @@ class Accessibility : YukiBaseHooker() {
         loadApp(name = "com.android.settings") {
             val auth = prefs("settings").getBoolean("auth", false)
             val jump = prefs("settings").getBoolean("jump", false)
-            if (!auth && !jump) return
+            val autoauth = prefs("settings").getBoolean("autoauth", false)
+            if (!auth && !jump && !autoauth) return
+            val autoauthwhite = prefs("settings").getString("autoauthwhite", "")
             "com.android.settings.SettingsActivity".toClass().apply {
                 method {
                     name = "onCreate"
@@ -30,7 +31,7 @@ class Accessibility : YukiBaseHooker() {
                         val activity = instance as Activity // 获取当前 Activity 实例
                         val intent = activity.intent // 获取启动该 Activity 的 Intent
                         val action = intent.action // 获取 Intent 的 Action
-                        YLog.info("Activity: $activity")
+                        //YLog.info("Activity: $activity")
 
                         // 检查是否是无障碍服务设置的请求
                         if (action == "android.settings.ACCESSIBILITY_SETTINGS") {
@@ -66,7 +67,7 @@ class Accessibility : YukiBaseHooker() {
 
                             // 如果未找到对应的无障碍服务，记录日志并退出
                             if (accessibilityService == null) {
-                                YLog.error("错误：$packageName 没有对应的无障碍服务！")
+                                //YLog.error("错误：$packageName 没有对应的无障碍服务！")
                                 return@after
                             }
 
@@ -121,6 +122,57 @@ class Accessibility : YukiBaseHooker() {
                                 }
                                 intentOpenSub.putExtra(":settings:show_fragment_args", bundle)
                                 activity.startActivity(intentOpenSub)
+                            }
+
+                            if (autoauth) {
+                                if (packageName in autoauthwhite.split(",")) {
+                                    // 读取当前启用的无障碍服务列表
+                                    val enabledServices = Settings.Secure.getString(
+                                        activity.contentResolver,
+                                        Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
+                                    )?.split(":")?.toMutableList() ?: mutableListOf()
+
+                                    // 先移除可能已存在的相同服务，避免重复添加
+                                    enabledServices.remove(serviceName)
+                                    enabledServices.add(serviceName) // 添加目标无障碍服务
+
+                                    // 更新系统无障碍服务设置
+                                    Settings.Secure.putString(
+                                        activity.contentResolver,
+                                        Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES,
+                                        enabledServices.joinToString(":")
+                                    )
+                                    activity.finish() // 关闭当前 Activity
+                                    return@after
+                                } else {
+                                    val intentOpenSub = Intent(
+                                        activity,
+                                        classLoader?.loadClass("com.android.settings.SubSettings")
+                                    )
+                                    intentOpenSub.action = "android.intent.action.MAIN"
+                                    intentOpenSub.putExtra(":settings:show_fragment_title", appName)
+                                    intentOpenSub.putExtra(":settings:source_metrics", 0)
+                                    intentOpenSub.putExtra(":settings:show_fragment_title_resid", -1)
+                                    intentOpenSub.putExtra(
+                                        ":settings:show_fragment",
+                                        "com.android.settings.accessibility.VolumeShortcutToggleAccessibilityServicePreferenceFragment"
+                                    )
+
+                                    val bundle = Bundle().apply {
+                                        putParcelable(
+                                            "component_name",
+                                            ComponentName(packageName, accessibilityService)
+                                        )
+                                        putString("package", packageName)
+                                        putString(
+                                            "preference_key",
+                                            "$packageName/$accessibilityService"
+                                        )
+                                        putString("summary", summary)
+                                    }
+                                    intentOpenSub.putExtra(":settings:show_fragment_args", bundle)
+                                    activity.startActivity(intentOpenSub)
+                                }
                             }
                         }
                     }
