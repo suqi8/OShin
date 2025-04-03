@@ -2,6 +2,7 @@ package com.suqi8.oshin.ui.activity.com.android.settings
 
 import android.annotation.SuppressLint
 import android.os.Environment
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,6 +18,7 @@ import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.GetAppName
 import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.activity.funlistui.FunAppSele
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunPicSele
 import com.suqi8.oshin.ui.activity.funlistui.FunSlider
@@ -109,7 +111,9 @@ fun settings(navController: NavController) {
             ) {
                 val auth = remember { mutableStateOf(context.prefs("settings").getBoolean("auth", false)) }
                 val jump = remember { mutableStateOf(context.prefs("settings").getBoolean("jump", false)) }
-                AnimatedVisibility(!jump.value) {
+                val autoauth = remember { mutableStateOf(context.prefs("settings").getBoolean("autoauth", false)) }
+                Log.d("auth",auth.value.toString() + jump.value + autoauth.value)
+                AnimatedVisibility(!jump.value && !autoauth.value) {
                     FunSwich(
                         title = stringResource(R.string.accessibility_service_authorize),
                         category = "settings",
@@ -119,10 +123,10 @@ fun settings(navController: NavController) {
                         }
                     )
                 }
-                AnimatedVisibility(!auth.value && !jump.value) {
+                AnimatedVisibility(!auth.value && !jump.value && !autoauth.value) {
                     addline()
                 }
-                AnimatedVisibility(!auth.value) {
+                AnimatedVisibility(!auth.value && !autoauth.value) {
                     FunSwich(
                         title = stringResource(R.string.accessibility_service_direct),
                         category = "settings",
@@ -131,6 +135,30 @@ fun settings(navController: NavController) {
                             jump.value = it
                         }
                     )
+                }
+                AnimatedVisibility(!auth.value && !jump.value && !autoauth.value) {
+                    addline()
+                }
+                AnimatedVisibility(!auth.value && !jump.value) {
+                    Column {
+                        FunSwich(
+                            title = stringResource(R.string.smart_accessibility_service),
+                            summary = stringResource(R.string.whitelist_app_auto_authorization),
+                            category = "settings",
+                            key = "autoauth",
+                            onCheckedChange = {
+                                autoauth.value = it
+                            }
+                        )
+                        AnimatedVisibility(autoauth.value) {
+                            addline()
+                            FunAppSele(
+                                title = stringResource(R.string.accessibility_whitelist),
+                                category = "settings",
+                                key = "autoauthwhite"
+                            )
+                        }
+                    }
                 }
             }
             WantFind(
