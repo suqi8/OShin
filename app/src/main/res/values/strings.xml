@@ -576,4 +576,6 @@
     <string name="disable_72h_verify">禁用每 72 小时验证锁屏密码</string>
     <string name="allow_untrusted_touch">允许不受信任的触摸操作</string>
     <string name="remove_app_recommendation_ads">移除应用建议附加广告</string>
+    <string name="accessibility_service_direct">无障碍服务直达</string>
+    <string name="accessibility_service_authorize">直接授权无障碍服务</string>
 </resources>
