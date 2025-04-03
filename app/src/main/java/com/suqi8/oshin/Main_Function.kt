@@ -652,7 +652,16 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.allow_untrusted_touch),
         category = "android"),
     item(title = context.getString(R.string.remove_app_recommendation_ads),
-        category = "quicksearchbox")
+        category = "quicksearchbox"),
+    item(title = context.getString(R.string.accessibility_service_authorize),
+        category = "settings"),
+    item(title = context.getString(R.string.accessibility_service_direct),
+        category = "settings"),
+    item(title = context.getString(R.string.smart_accessibility_service),
+        summary = context.getString(R.string.whitelist_app_auto_authorization),
+        category = "settings"),
+    item(title = context.getString(R.string.accessibility_whitelist),
+        category = "settings")
 )
 
 var notInstallList = mutableStateOf(emptyList<String>())
