@@ -36,6 +36,7 @@ fun settings(navController: NavController) {
         navController = navController
     ) {
         Column {
+            val context = LocalContext.current
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -53,7 +54,6 @@ fun settings(navController: NavController) {
                     .padding(horizontal = 12.dp)
                     .padding(bottom = 6.dp, top = 6.dp)
             ) {
-                val context = LocalContext.current
                 FunString(
                     title = stringResource(R.string.custom_display_model),
                     summary = stringResource(R.string.hint_empty_content_default),
@@ -100,6 +100,35 @@ fun settings(navController: NavController) {
                     category = "settings",
                     key = "force_show_nfc_security_chip"
                 )
+            }
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp)
+                    .padding(bottom = 6.dp, top = 6.dp)
+            ) {
+                val auth = remember { mutableStateOf(context.prefs("settings").getBoolean("auth", false)) }
+                val jump = remember { mutableStateOf(context.prefs("settings").getBoolean("jump", false)) }
+                AnimatedVisibility(!jump.value) {
+                    FunSwich(
+                        title = stringResource(R.string.accessibility_service_authorize),
+                        category = "settings",
+                        key = "auth",
+                        onCheckedChange = {
+                            auth.value = it
+                        }
+                    )
+                }
+                AnimatedVisibility(!auth.value) {
+                    FunSwich(
+                        title = stringResource(R.string.accessibility_service_direct),
+                        category = "settings",
+                        key = "jump",
+                        onCheckedChange = {
+                            jump.value = it
+                        }
+                    )
+                }
             }
             WantFind(
                 listOf(
