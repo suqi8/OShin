@@ -3,7 +3,10 @@ package com.suqi8.oshin.ui.activity.funlistui
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -37,6 +40,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
+import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.CheckboxLocation
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperCheckbox
@@ -46,51 +50,88 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 @Composable
 fun FunAppSele(title: String, summary: String? = null, category: String, key: String, onCheckedChange: ((Int) -> Unit)? = null) {
     val context = LocalContext.current
-    val seleappList = remember { mutableStateOf(context.prefs(category).getString(key, "")) }
     val showAppListSele = remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
+    val searchText = remember { mutableStateOf("") }
+
+    // 读取已选应用列表，转换为 Set 存储，防止重复
+    val seleappList = remember {
+        mutableStateOf(
+            context.prefs(category)
+                .getString(key, "")
+                .split(",")
+                .filter { it.isNotEmpty() }
+                .toSet()
+        )
+    }
+
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
             requestPermissions(context, arrayOf(Permission.GET_INSTALLED_APPS)) {}
         }
     }
+
     SuperArrow(
         title = title,
-        summary = if (summary == null) stringResource(R.string.selected_app) + seleappList.value else summary + "\n" + stringResource(R.string.selected_app) + seleappList.value,
-        onClick = {
-            showAppListSele.value = true
-        }
+        summary = if (summary == null) stringResource(R.string.selected_app) + seleappList.value.joinToString(",") else summary + "\n" + stringResource(R.string.selected_app) + seleappList.value.joinToString(","),
+        onClick = { showAppListSele.value = true }
     )
+
     if (showAppListSele.value) {
         val appList = remember { mutableStateOf(listOf<Pair<String, String>>()) }
-        getApps(context, isSystemApp = false) { appInfo ->
-            appList.value += appInfo
+
+        // 获取所有应用信息
+        if (appList.value.isEmpty()) {
+            getApps(context, isSystemApp = false) { appInfo ->
+                appList.value += appInfo
+            }
         }
+
         ModalBottomSheet(
             onDismissRequest = { showAppListSele.value = false },
             sheetState = sheetState,
             containerColor = MiuixTheme.colorScheme.surface,
         ) {
-            LazyColumn {
-                items(appList.value) { app ->
-                    ResetAppList(app.second, isChecked = seleappList.value.contains(app.second)) { isChecked ->
-                        seleappList.value = if (isChecked) {
-                            (seleappList.value
-                                .split(",") // 先转换为 List
-                                .filter { it.isNotEmpty() } // 过滤掉空值
-                                .toMutableList()
-                                .apply { add(app.second) } // 添加新的 packageName
-                                    ).joinToString(",") // 重新转换为 String
-                        } else {
-                            (seleappList.value
-                                .split(",") // 转换为 List
-                                .filter { it.isNotEmpty() } // 过滤掉空值
-                                .toMutableList()
-                                .apply { remove(app.second) } // 移除目标 packageName
-                                    ).joinToString(",") // 重新转换为 String
-                        }
-                        context.prefs(category).edit {
-                            putString(key, seleappList.value)
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .animateContentSize() // 自动调整高度，并带有动画
+            ) {
+                Column {
+                    // 搜索框
+                    TextField(
+                        value = searchText.value,
+                        onValueChange = { searchText.value = it },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                    )
+
+                    LazyColumn(
+                        modifier = Modifier.animateContentSize() // 列表高度变化时，带动画
+                    ) {
+                        // 过滤并排序应用列表
+                        val filteredList = appList.value
+                            .filter {
+                                it.first.contains(searchText.value, ignoreCase = true) ||
+                                        it.second.contains(searchText.value, ignoreCase = true)
+                            }
+                            .sortedByDescending { seleappList.value.contains(it.second) } // 选中的置顶
+
+                        items(filteredList) { app ->
+                            val isChecked = seleappList.value.contains(app.second)
+                            ResetAppList(app.second, isChecked) { isSelected ->
+                                seleappList.value = if (isSelected) {
+                                    seleappList.value + app.second  // 使用 Set 追加数据
+                                } else {
+                                    seleappList.value - app.second  // 从 Set 移除数据
+                                }
+
+                                // 更新 `SharedPreferences`
+                                context.prefs(category).edit {
+                                    putString(key, seleappList.value.joinToString(","))
+                                }
+                            }
                         }
                     }
                 }
@@ -147,7 +188,7 @@ fun ResetAppList(packageName: String, isChecked: Boolean, onCheckedChange: (Bool
                     title = appName,
                     checked = isChecked,
                     onCheckedChange = {
-                        onCheckedChange(it)
+                        onCheckedChange(it) // 更新选中状态
                     },
                     summary = packageName,
                     checkboxLocation = CheckboxLocation.Right
