@@ -245,7 +245,7 @@ class Clock: YukiBaseHooker() {
         var timeFormat = ""
         timeFormat += if (is24(context)) "HH:mm" else "hh:mm"
         if (ShowSeconds) timeFormat += ":ss"
-        if (ShowMillisecond) timeFormat += ":SSS"
+        if (ShowMillisecond) timeFormat += ".SSS"
         timeFormat = SimpleDateFormat(timeFormat).format(nowTime!!)
         if (isZh(context)) timeFormat =
             getPeriod(context) + timeFormat else timeFormat += getPeriod(context)

@@ -2,7 +2,6 @@ package com.suqi8.oshin.ui.activity.com.android.settings
 
 import android.annotation.SuppressLint
 import android.os.Environment
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -112,7 +111,6 @@ fun settings(navController: NavController) {
                 val auth = remember { mutableStateOf(context.prefs("settings").getBoolean("auth", false)) }
                 val jump = remember { mutableStateOf(context.prefs("settings").getBoolean("jump", false)) }
                 val autoauth = remember { mutableStateOf(context.prefs("settings").getBoolean("autoauth", false)) }
-                Log.d("auth",auth.value.toString() + jump.value + autoauth.value)
                 AnimatedVisibility(!jump.value && !autoauth.value) {
                     FunSwich(
                         title = stringResource(R.string.accessibility_service_authorize),
