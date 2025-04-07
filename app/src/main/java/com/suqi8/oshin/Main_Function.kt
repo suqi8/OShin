@@ -44,6 +44,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -757,7 +758,7 @@ fun Main_Function(
                         bottom = if (isKeyboardVisible) 0.dp else padding.calculateBottomPadding()
                     )
             ) {
-                LazyColumn(topAppBarScrollBehavior = topAppBarScrollBehavior) {
+                LazyColumn(modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)) {
                     if (filteredFeatures.isEmpty()) {
                         item {
                             Box(
@@ -802,7 +803,7 @@ fun Main_Function(
             // 如果 expanded 为 true，则显示搜索结果
         } else {
             // 如果 expanded 为 false，则显示 Card
-            LazyColumn(Modifier.fillMaxSize(), topAppBarScrollBehavior = topAppBarScrollBehavior) {
+            LazyColumn(Modifier.fillMaxSize().nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)) {
                 item {
                     Spacer(modifier = Modifier.size(68.dp+padding.calculateTopPadding()))
                     val appList = listOf(

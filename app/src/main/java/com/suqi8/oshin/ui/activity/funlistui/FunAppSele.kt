@@ -90,7 +90,7 @@ fun FunAppSele(title: String, summary: String? = null, category: String, key: St
         ModalBottomSheet(
             onDismissRequest = { showAppListSele.value = false },
             sheetState = sheetState,
-            containerColor = MiuixTheme.colorScheme.surface,
+            containerColor = MiuixTheme.colorScheme.surface
         ) {
             Box(
                 modifier = Modifier
