@@ -28,5 +28,29 @@ class appdetail: YukiBaseHooker() {
                 }
             }
         }
+        /*"com.oplus.appdetail.model.entrance.ChannelBarrageActivity".toClass().apply {
+            method {
+                name = "x0"
+                emptyParam()
+                returnType = UnitType
+            }.hook {
+                replaceUnit {  }
+            }
+        }*/
+        /*"com.oplus.appdetail.model.entrance.ChannelBarrageActivity".toClass().apply {
+            method {
+                name = "onCreate"
+                param("android.os.Bundle")
+                returnType = UnitType
+            }.hook {
+                replaceUnit {
+                    method {
+                        name = "A0"
+                        emptyParam()
+                        returnType = UnitType
+                    }.get(instance).call()
+                }
+            }
+        }*/
     }
 }

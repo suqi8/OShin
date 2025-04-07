@@ -55,7 +55,7 @@ public class CorePatchForR extends XposedHelper implements IXposedHookLoadPackag
         }
     }
 
-    final XSharedPreferences prefs = new XSharedPreferences(BuildConfig.APPLICATION_ID, "android\\\\package_manager_services");
+    final XSharedPreferences prefs = new XSharedPreferences(BuildConfig.APPLICATION_ID, "android\\package_manager_services");
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws IllegalAccessException, InvocationTargetException, InstantiationException {

@@ -62,6 +62,19 @@ class settings: YukiBaseHooker() {
                     }
                 }
             }
+            /*"com.android.settings.applications.appinfo.AppInfoDashboardFragment".toClass().apply {
+                method {
+                    name = "onCreateOptionsMenu"
+                    param("android.view.Menu", "android.view.MenuInflater")
+                    returnType = UnitType
+                }.hook {
+                    after {
+                        val menu = args[0] as Menu
+                        menu.add(0, 3, 0, "aaa").setShowAsAction(0)
+                        args[0] = menu
+                    }
+                }
+            }*/
         }
     }
 }

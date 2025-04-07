@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -43,7 +44,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -79,12 +79,8 @@ import java.time.format.DateTimeFormatter
 fun Main_About(
     topAppBarScrollBehavior: ScrollBehavior,
     padding: PaddingValues,
-    colorMode: MutableState<Int>,
     context: Context,
-    navController: NavController,
-    alpha: MutableState<Float>,
-    blur: MutableState<Dp>,
-    noise: MutableState<Float>
+    navController: NavController
 ) {
     val showDeviceNameDialog = remember { mutableStateOf(false) }
     val deviceName: MutableState<String> = remember {
@@ -103,7 +99,7 @@ fun Main_About(
     Scaffold() {
         LazyColumn(
             contentPadding = padding,
-            topAppBarScrollBehavior = topAppBarScrollBehavior, modifier = Modifier.fillMaxSize()
+            modifier = Modifier.fillMaxSize().nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
         ) {
             item {
                 Spacer(modifier = Modifier.height(16.dp))

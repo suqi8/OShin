@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
@@ -128,7 +129,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
-import top.yukonga.miuix.kmp.basic.HorizontalPager
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationItem
@@ -671,7 +671,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
                     SizeTransform(clip = true)  // 允许页面在过渡时进行缩放，但不裁剪内容
                 }
         ) {
-            composable("Main") { Main1(modifier = modifier, context = context,navController,colorMode,alpha, blurRadius, noiseFactor, hazeState, hazeStyle) }
+            composable("Main") { Main1(modifier = modifier, context = context,navController, hazeState, hazeStyle) }
             composable("recent_update") { recent_update(navController) }
             composable("android") { android(navController) }
             composable("android\\package_manager_services") { package_manager_services(navController = navController) }
@@ -715,8 +715,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
 )
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "InflateParams", "ResourceType")
 @Composable
-fun Main1(modifier: Modifier,context: Context,navController: NavController,colorMode: MutableState<Int>,
-          alpha: MutableFloatState, blurRadius: MutableState<Dp>, noiseFactor: MutableFloatState,
+fun Main1(modifier: Modifier,context: Context,navController: NavController,
           hazeState: HazeState, hazeStyle: HazeStyle) {
     val topAppBarScrollBehavior0 = MiuixScrollBehavior(rememberTopAppBarState())
     val topAppBarScrollBehavior1 = MiuixScrollBehavior(rememberTopAppBarState())
@@ -819,11 +818,7 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,color
                 topAppBarScrollBehaviorList = topAppBarScrollBehaviorList,
                 padding = padding,
                 navController = navController,
-                colorMode = colorMode,
-                context = context,
-                alpha = alpha,
-                blurRadius = blurRadius,
-                noiseFactor = noiseFactor
+                context = context
             )
         }
         /*Column(modifier = Modifier.padding(Padding)) {
@@ -843,15 +838,11 @@ fun AppHorizontalPager(
     topAppBarScrollBehaviorList: List<ScrollBehavior>,
     padding: PaddingValues,
     navController: NavController,
-    colorMode: MutableState<Int>,
-    context: Context,
-    alpha: MutableFloatState,
-    blurRadius: MutableState<Dp>,
-    noiseFactor: MutableFloatState
+    context: Context
 ) {
     HorizontalPager(
         modifier = modifier,
-        pagerState = pagerState,
+        state = pagerState,
         userScrollEnabled = true,
         pageContent = { page ->
             when (page) {
@@ -870,12 +861,8 @@ fun AppHorizontalPager(
                 else -> Main_About(
                     topAppBarScrollBehavior = topAppBarScrollBehaviorList[2],
                     padding = padding,
-                    colorMode = colorMode,
                     context = context,
-                    navController = navController,
-                    alpha = alpha,
-                    blur = blurRadius,
-                    noise = noiseFactor
+                    navController = navController
                 )
             }
         }

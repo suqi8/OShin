@@ -51,6 +51,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -99,7 +100,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
     val cardVisible1 = rememberSaveable { mutableStateOf(false) }
     LazyColumn(
         contentPadding = padding,
-        topAppBarScrollBehavior = topAppBarScrollBehavior
+        modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
     ) {
         item {
             LaunchedEffect(Unit) {

@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -119,9 +120,9 @@ fun FunPage(title: String, appList: List<String>? = listOf(), navController: Nav
                 .hazeSource(state = hazeState)
                 .background(MiuixTheme.colorScheme.background)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal)),
+                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal))
+                .nestedScroll(topAppBarState.nestedScrollConnection),
             contentPadding = padding,
-            topAppBarScrollBehavior = topAppBarState,
             state = lazyListState
         ) {
             item {

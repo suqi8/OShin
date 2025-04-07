@@ -35,6 +35,11 @@ fun about_donors(navController: NavController) {
                 name = "*超",
                 donors = 5f
             )
+            addline()
+            DonorsItem(
+                name = "**富",
+                donors = 1f
+            )
         }
     }
 }
