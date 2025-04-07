@@ -33,6 +33,16 @@ fun appdetail(navController: NavController) {
                 category = "appdetail",
                 key = "remove_recommendations"
             )
+            FunSwich(
+                title = stringResource(R.string.remove_installation_frequency_popup),
+                category = "appdetail",
+                key = "remove_installation_frequency_popup"
+            )
+            FunSwich(
+                title = stringResource(R.string.remove_attempt_installation_popup),
+                category = "appdetail",
+                key = "remove_attempt_installation_popup"
+            )
         }
     }
 }

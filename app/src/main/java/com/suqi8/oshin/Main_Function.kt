@@ -662,7 +662,11 @@ fun features(context: Context) = listOf(
         summary = context.getString(R.string.whitelist_app_auto_authorization),
         category = "settings"),
     item(title = context.getString(R.string.accessibility_whitelist),
-        category = "settings")
+        category = "settings"),
+    item(title = context.getString(R.string.remove_installation_frequency_popup),
+        category = "appdetail"),
+    item(title = context.getString(R.string.remove_attempt_installation_popup),
+        category = "appdetail")
 )
 
 var notInstallList = mutableStateOf(emptyList<String>())

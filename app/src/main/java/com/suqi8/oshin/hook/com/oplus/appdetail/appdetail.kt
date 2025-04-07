@@ -1,10 +1,12 @@
 package com.suqi8.oshin.hook.com.oplus.appdetail
 
+import android.annotation.SuppressLint
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.UnitType
 
 class appdetail: YukiBaseHooker() {
+    @SuppressLint("RestrictedApi")
     override fun onHook() {
         loadApp(name = "com.oplus.appdetail") {
             if (prefs("appdetail").getBoolean("remove_recommendations", false)) {
@@ -28,29 +30,41 @@ class appdetail: YukiBaseHooker() {
                 }
             }
         }
-        /*"com.oplus.appdetail.model.entrance.ChannelBarrageActivity".toClass().apply {
-            method {
-                name = "x0"
-                emptyParam()
-                returnType = UnitType
-            }.hook {
-                replaceUnit {  }
-            }
-        }*/
-        /*"com.oplus.appdetail.model.entrance.ChannelBarrageActivity".toClass().apply {
-            method {
-                name = "onCreate"
-                param("android.os.Bundle")
-                returnType = UnitType
-            }.hook {
-                replaceUnit {
-                    method {
-                        name = "A0"
-                        emptyParam()
-                        returnType = UnitType
-                    }.get(instance).call()
+        //安装频繁
+        if (prefs("appdetail").getBoolean("remove_installation_frequency_popup", false)) {
+            "com.oplus.appdetail.model.entrance.ChannelBarrageActivity".toClass().apply {
+                method {
+                    name = "x0"
+                    emptyParam()
+                    returnType = UnitType
+                }.hook {
+                    replaceUnit {
+                        method {
+                            name = "A0"
+                            emptyParam()
+                            returnType = UnitType
+                        }.get(instance).call()
+                    }
                 }
             }
-        }*/
+        }
+        //尝试安装应用
+        if (prefs("appdetail").getBoolean("remove_attempt_installation_popup", false)) {
+            "com.oplus.appdetail.model.entrance.ChannelBarrageActivity".toClass().apply {
+                method {
+                    name = "A0"
+                    emptyParam()
+                    returnType = UnitType
+                }.hook {
+                    replaceUnit {
+                        method {
+                            name = "w0"
+                            emptyParam()
+                            returnType = UnitType
+                        }.get(instance).call()
+                    }
+                }
+            }
+        }
     }
 }

@@ -582,4 +582,6 @@
     <string name="smart_accessibility_service">智能授权无障碍服务</string>
     <string name="whitelist_app_auto_authorization">开启后在白名单应用列表选中的应用程序将会自动授权，未选中的应用程序将会直接跳转至应用无障碍开关页面。</string>
     <string name="accessibility_whitelist">无障碍服务白名单</string>
+    <string name="remove_installation_frequency_popup">移除安装频繁弹窗</string>
+    <string name="remove_attempt_installation_popup">移除尝试安装弹窗</string>
 </resources>
