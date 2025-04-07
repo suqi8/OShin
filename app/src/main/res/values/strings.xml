@@ -584,4 +584,5 @@
     <string name="accessibility_whitelist">无障碍服务白名单</string>
     <string name="remove_installation_frequency_popup">移除安装频繁弹窗</string>
     <string name="remove_attempt_installation_popup">移除尝试安装弹窗</string>
+    <string name="remove_version_check">移除版本号检测</string>
 </resources>

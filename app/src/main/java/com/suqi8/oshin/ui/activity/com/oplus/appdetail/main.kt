@@ -12,6 +12,7 @@ import com.suqi8.oshin.GetAppName
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
 
 @SuppressLint("SuspiciousIndentation")
@@ -33,15 +34,23 @@ fun appdetail(navController: NavController) {
                 category = "appdetail",
                 key = "remove_recommendations"
             )
+            addline()
             FunSwich(
                 title = stringResource(R.string.remove_installation_frequency_popup),
                 category = "appdetail",
                 key = "remove_installation_frequency_popup"
             )
+            addline()
             FunSwich(
                 title = stringResource(R.string.remove_attempt_installation_popup),
                 category = "appdetail",
                 key = "remove_attempt_installation_popup"
+            )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.remove_version_check),
+                category = "appdetail",
+                key = "remove_version_check"
             )
         }
     }

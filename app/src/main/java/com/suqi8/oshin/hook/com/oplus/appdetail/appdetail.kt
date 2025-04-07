@@ -1,12 +1,11 @@
 package com.suqi8.oshin.hook.com.oplus.appdetail
 
-import android.annotation.SuppressLint
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
+import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.UnitType
 
 class appdetail: YukiBaseHooker() {
-    @SuppressLint("RestrictedApi")
     override fun onHook() {
         loadApp(name = "com.oplus.appdetail") {
             if (prefs("appdetail").getBoolean("remove_recommendations", false)) {
@@ -62,6 +61,20 @@ class appdetail: YukiBaseHooker() {
                             emptyParam()
                             returnType = UnitType
                         }.get(instance).call()
+                    }
+                }
+            }
+        }
+        //移除版本号检测
+        if (prefs("appdetail").getBoolean("remove_attempt_installation_popup", false)) {
+            "com.nearme.common.util.AppUtil".toClass().apply {
+                method {
+                    name = "getAppVersionCode"
+                    param("android.content.Context", "java.lang.String")
+                    returnType = IntType
+                }.hook {
+                    before {
+                        result = -1
                     }
                 }
             }
