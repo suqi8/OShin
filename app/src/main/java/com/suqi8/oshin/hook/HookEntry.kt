@@ -1,6 +1,5 @@
 package com.suqi8.oshin.hook
 
-import android.annotation.SuppressLint
 import android.os.Build
 import android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM
 import com.highcapable.yukihookapi.annotation.xposed.InjectYukiHookWithXposed
@@ -41,7 +40,6 @@ class HookEntry : IYukiHookXposedInit {
         isDebug = false
     }
 
-    @SuppressLint("RestrictedApi")
     override fun onHook() = encase {
         loadApp(hooker = android())
         loadApp(hooker = systemui())
