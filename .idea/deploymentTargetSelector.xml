@@ -13,7 +13,7 @@
         </DropdownSelection>
         <DialogSelection />
       </SelectionState>
-      <SelectionState runConfigName="OPatch">
+      <SelectionState runConfigName="OShin">
         <option name="selectionMode" value="DROPDOWN" />
       </SelectionState>
     </selectionStates>

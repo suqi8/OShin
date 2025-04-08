@@ -3,33 +3,48 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:networkSecurityConfig="@xml/network_security_config">
     <!-- 引用网络权限 -->
-    <uses-permission android:name="android.permission.INTERNET" /> <!-- 访问网络状态权限 -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 访问Wi-Fi状态权限 -->
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 读取电话状态权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 访问网络状态权限 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 访问 Wi-Fi 状态权限 -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 杀后台进程权限 -->
     <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 请求安装包权限 -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"
+    <!-- 读取电话状态权限 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE"
             tools:ignore="SelectedPhotoAccess" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"
-            tools:ignore="SelectedPhotoAccess" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 声明需要使用的权限，QueryAllPackagesPermission权限是用于查询所有应用程序包名的权限 -->
+    <!-- 读取媒体图片权限 -->
     <uses-permission
-            android:name="android.permission.QUERY_ALL_PACKAGES"
-            tools:ignore="QueryAllPackagesPermission" />
+            android:name="android.permission.READ_MEDIA_IMAGES"
+            tools:ignore="SelectedPhotoAccess" />
+    <!-- 读取媒体视频权限 -->
+    <uses-permission
+            android:name="android.permission.READ_MEDIA_VIDEO"
+            tools:ignore="SelectedPhotoAccess" />
+    <!-- 读取媒体音频权限 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+    <!-- 请求安装包权限 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- 检测截屏权限（部分系统支持） -->
     <uses-permission android:name="android.permission.DETECT_SCREEN_CAPTURE" />
+    <!-- 修改系统设置权限 -->
     <uses-permission
             android:name="android.permission.WRITE_SETTINGS"
             tools:ignore="ProtectedPermissions" />
+    <!-- 修改系统安全设置权限 -->
     <uses-permission
             android:name="android.permission.WRITE_SECURE_SETTINGS"
             tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+    <!-- 管理外部存储权限（需声明分区存储豁免） -->
+    <uses-permission
+            android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
             tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+    <!-- 查询所有已安装包名权限 -->
+    <uses-permission
+            android:name="android.permission.QUERY_ALL_PACKAGES"
             tools:ignore="QueryAllPackagesPermission" />
+    <!-- 获取已安装应用权限（自定义权限） -->
     <uses-permission android:name="com.android.permission.GET_INSTALLED_APPS" />
-
 
     <application
             android:usesCleartextTraffic="true"
