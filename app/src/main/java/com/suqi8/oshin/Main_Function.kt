@@ -668,6 +668,8 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.remove_attempt_installation_popup),
         category = "appdetail"),
     item(title = context.getString(R.string.remove_version_check),
+        category = "appdetail"),
+    item(title = context.getString(R.string.remove_security_check),
         category = "appdetail")
 )
 

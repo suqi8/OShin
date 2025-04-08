@@ -52,6 +52,12 @@ fun appdetail(navController: NavController) {
                 category = "appdetail",
                 key = "remove_version_check"
             )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.remove_security_check),
+                category = "appdetail",
+                key = "remove_security_check"
+            )
         }
     }
 }

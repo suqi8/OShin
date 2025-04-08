@@ -2,6 +2,7 @@ package com.suqi8.oshin.hook.com.oplus.appdetail
 
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
+import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.UnitType
 
@@ -79,17 +80,19 @@ class appdetail: YukiBaseHooker() {
                 }
             }
         }
-        /*"com.oplus.appdetail.model.guide.viewModel.RiskViewModel\$b".toClass().apply {
-            method {
-                name = "emit"
-                param("java.lang.Object", "kotlin.coroutines.c")
-                returnType = "java.lang.Object"
-            }.hook {
-                before {
-                    result = null
-                    resultNull()
+        //移除安装前安全检测
+        if (prefs("appdetail").getBoolean("remove_attempt_installation_popup", false)) {
+            "com.oplus.appdetail.model.guide.viewModel.GuideShareViewModel".toClass().apply {
+                method {
+                    name = "i"
+                    emptyParam()
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        result = true
+                    }
                 }
             }
-        }*/
+        }
     }
 }
