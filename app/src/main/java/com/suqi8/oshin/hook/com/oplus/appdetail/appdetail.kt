@@ -79,5 +79,17 @@ class appdetail: YukiBaseHooker() {
                 }
             }
         }
+        /*"com.oplus.appdetail.model.guide.viewModel.RiskViewModel\$b".toClass().apply {
+            method {
+                name = "emit"
+                param("java.lang.Object", "kotlin.coroutines.c")
+                returnType = "java.lang.Object"
+            }.hook {
+                before {
+                    result = null
+                    resultNull()
+                }
+            }
+        }*/
     }
 }

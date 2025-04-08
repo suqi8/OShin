@@ -1,19 +1,14 @@
-@file:Suppress("DSL_SCOPE_VIOLATION")
+
 import com.android.build.gradle.internal.dsl.SigningConfig
 import java.io.ByteArrayOutputStream
 
 plugins {
-    alias(libs.plugins.android.application) apply true
-    alias(libs.plugins.kotlin.android) apply true
-    alias(libs.plugins.kotlin.ksp) apply true
-    id("com.github.ben-manes.versions") version "0.51.0"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.1.10"
+    id("com.android.application") version "8.9.1"
+    id("org.jetbrains.kotlin.android") version "2.1.20"
+    id("com.google.devtools.ksp") version "2.1.20-1.0.32"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.1.20"
     id("com.autonomousapps.dependency-analysis") version "2.1.4"
 }
-
-apply(plugin = libs.plugins.android.application.get().pluginId)
-apply(plugin = libs.plugins.kotlin.android.get().pluginId)
-apply(plugin = libs.plugins.kotlin.ksp.get().pluginId)
 
 abstract class GitHashService @Inject constructor(private val execOps: ExecOperations) {
     fun getCommitHash(): String {
@@ -35,8 +30,8 @@ abstract class GitHashService @Inject constructor(private val execOps: ExecOpera
 }
 
 android {
-    namespace = property.project.app.packageName
-    compileSdk = 35
+    namespace = "com.suqi8.oshin"
+    compileSdk = 36
 
     lint {
         baseline = file("lint-baseline.xml")
@@ -68,10 +63,10 @@ android {
     val gitHashService = project.objects.newInstance(GitHashService::class.java)
     val number = gitHashService.commitCount().toInt()
     defaultConfig {
-        applicationId = property.project.app.packageName
-        minSdk = property.project.android.minSdk
-        targetSdk = property.project.android.targetSdk
-        versionName = property.project.app.versionName+"."+number+"."+gitHashService.getCommitHash()
+        applicationId = "com.suqi8.oshin"
+        minSdk = 35
+        targetSdk = 36
+        versionName = "15.4"+"."+number+"."+gitHashService.getCommitHash()
         versionCode = number
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -113,7 +108,6 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_21
         targetCompatibility = JavaVersion.VERSION_21
-        isCoreLibraryDesugaringEnabled = true
     }
     kotlinOptions {
         jvmTarget = "21"
@@ -159,7 +153,6 @@ dependencies {
     implementation(libs.common)
     implementation(libs.umsdk.asms)
     implementation(libs.umsdk.uyumao)
-    coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.okhttp)
     implementation(libs.lottie.compose)
     implementation(libs.ezxhelper)
@@ -187,15 +180,15 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
-    compileOnly(de.robv.android.xposed.api)
-    implementation(com.highcapable.yukihookapi.api)
-    ksp(com.highcapable.yukihookapi.ksp.xposed)
-    implementation(com.github.duanhong169.drawabletoolbox)
-    implementation(androidx.core.core.ktx)
-    implementation(androidx.appcompat.appcompat)
-    implementation(com.google.android.material.material)
-    implementation(androidx.constraintlayout.constraintlayout)
-    testImplementation(junit.junit)
-    androidTestImplementation(androidx.test.ext.junit)
-    androidTestImplementation(androidx.test.espresso.espresso.core)
+    compileOnly("de.robv.android.xposed:api:82")
+    implementation("com.highcapable.yukihookapi:api:1.2.1")
+    ksp("com.highcapable.yukihookapi:ksp-xposed:1.2.1")
+    implementation("com.github.duanhong169:drawabletoolbox:1.0.7")
+    implementation("androidx.core:core-ktx:1.15.0")
+    implementation("androidx.appcompat:appcompat:1.7.0")
+    implementation("com.google.android.material:material:1.12.0")
+    implementation("androidx.constraintlayout:constraintlayout:2.2.1")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    testImplementation("junit:junit:4.13.2")
 }
