@@ -2,24 +2,31 @@ package com.suqi8.oshin
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Vibrator
 import android.view.ViewTreeObserver
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -38,13 +45,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.BlendModeColorFilter
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -54,8 +64,11 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -82,6 +95,8 @@ import top.yukonga.miuix.kmp.utils.BackHandler
 import top.yukonga.miuix.kmp.utils.SmoothRoundedCornerShape
 import java.text.Collator
 import java.util.Locale
+import kotlin.math.abs
+import kotlin.math.roundToInt
 
 fun features(context: Context) = listOf(
     item(title = context.getString(R.string.downgr),
@@ -808,7 +823,6 @@ fun Main_Function(
         }
 
         if (!expanded) {
-            val notInstallList = remember { mutableStateOf(mutableListOf<String>()) }
             val appList = listOf(
                 AppInfo("android", "android"),
                 AppInfo("com.android.systemui", "systemui"),
@@ -836,7 +850,7 @@ fun Main_Function(
                 item {
                     Spacer(modifier = Modifier.size(68.dp + padding.calculateTopPadding()))
                 }
-                item {
+                /*item {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -860,6 +874,112 @@ fun Main_Function(
                                 }
                                 if (index < appList.size - 1 && !notInstall.value) {
                                     addline()
+                                }
+                            }
+                        }
+                    }
+                }*/
+                item {
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp)
+                    ) {
+                        // 首先，创建一个可记住的可变状态来保存排序后的列表
+                        var reorderedList by remember { mutableStateOf(appList) }
+// 跟踪当前被拖动的项索引
+                        var draggedItemIndex by remember { mutableStateOf(-1) }
+// 跟踪当前拖动的偏移量（用于视觉反馈）
+                        var dragOffset by remember { mutableStateOf(Offset.Zero) }
+
+                        FlowRow(
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxSize()
+                        ) {
+                            reorderedList.forEachIndexed { index, appInfo ->
+                                val notInstall = rememberSaveable { mutableStateOf(false) }
+                                val vibrator = LocalContext.current.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+
+
+                                // 为每个项添加拖动手势
+                                Box(
+                                    modifier = Modifier
+                                        .offset { // 应用拖动偏移量
+                                            if (index == draggedItemIndex) {
+                                                IntOffset(dragOffset.x.roundToInt(), dragOffset.y.roundToInt())
+                                            } else {
+                                                IntOffset.Zero
+                                            }
+                                        }
+                                        .animateContentSize()
+                                        .graphicsLayer {
+                                            alpha = if (index == draggedItemIndex) 0.8f else 1f
+                                            shadowElevation = if (index == draggedItemIndex) 8.dp.toPx() else 0f
+                                        }
+                                        .pointerInput(index) {
+                                            detectDragGestures(
+                                                onDragStart = {
+                                                    // 拖动开始：记录当前拖动的项索引
+                                                    draggedItemIndex = index
+                                                    dragOffset = Offset.Zero
+                                                },
+                                                onDragEnd = {
+                                                    // 拖动结束：重置状态
+                                                    draggedItemIndex = -1
+                                                    dragOffset = Offset.Zero
+                                                },
+                                                onDrag = { change, dragAmount ->
+                                                    change.consume()
+                                                    // 更新拖动偏移量
+                                                    dragOffset += dragAmount
+
+                                                    // 计算是否需要交换位置
+                                                    if (draggedItemIndex != -1) {
+                                                        // 计算拖动方向
+                                                        val isDraggingRight = dragAmount.x > 0
+                                                        val isDraggingLeft = dragAmount.x < 0
+
+                                                        // 获取相邻项的边界
+                                                        val itemWidth = size.width
+                                                        val dragThreshold = itemWidth * 0.4f // 拖动超过40%宽度时交换
+
+                                                        // 检查是否达到交换阈值
+                                                        if (abs(dragOffset.x) > dragThreshold) {
+                                                            val newIndex = if (isDraggingRight) {
+                                                                minOf(draggedItemIndex + 1, reorderedList.lastIndex)
+                                                            } else {
+                                                                maxOf(draggedItemIndex - 1, 0)
+                                                            }
+
+                                                            // 如果位置有变化，则交换项
+                                                            if (newIndex != draggedItemIndex) {
+                                                                reorderedList = reorderedList.toMutableList().apply {
+                                                                    val draggedItem = removeAt(draggedItemIndex)
+                                                                    add(newIndex, draggedItem)
+                                                                }
+                                                                draggedItemIndex = newIndex
+                                                                dragOffset = Offset.Zero // 重置偏移量
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            )
+                                        }
+                                        .zIndex(if (index == draggedItemIndex) 1f else 0f) // 被拖动的项显示在最上层
+                                ) {
+                                    FunctionAppFlow(
+                                        packageName = appInfo.packageName,
+                                        activityName = appInfo.activityName,
+                                        navController = navController
+                                    ) { result ->
+                                        if (result == "noapp") {
+                                            if (!notInstallList.value.contains(appInfo.packageName)) {
+                                                notInstallList.value += appInfo.packageName
+                                            }
+                                            notInstall.value = true
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -986,6 +1106,68 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
                         color = MiuixTheme.colorScheme.onBackgroundVariant
                     )
                 }
+            }
+        } else {
+            onResult("noapp")
+        }
+    }
+}
+
+@SuppressLint("CoroutineCreationDuringComposition")
+@Composable
+fun FunctionAppFlow(packageName: String, activityName: String, navController: NavController, onResult: (String) -> Unit) {
+    GetAppIconAndName(packageName = packageName) { appName, icon ->
+        if (appName != "noapp") {
+            val defaultColor = MiuixTheme.colorScheme.surface
+            val noModuleActive = MaterialTheme.colorScheme.errorContainer
+
+            // 使用 remember 缓存 dominantColor 的状态
+            val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
+            val isLoading = remember { mutableStateOf(dominantColor.value == defaultColor) }
+
+            // 使用 LaunchedEffect 在 icon 或 dominantColor 变化时启动协程
+            LaunchedEffect(icon, dominantColor.value) {
+                if (isLoading.value) {
+                    val newColor = withContext(Dispatchers.IO) {
+                        if (YukiHookAPI.Status.isModuleActive) getAutoColor(icon) else noModuleActive
+                    }
+                    dominantColor.value = newColor
+                    colorCache[packageName] = newColor
+                    isLoading.value = false
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .clickable { navController.navigate(activityName) }
+                    .width(80.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Card(
+                    color = dominantColor.value,
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .drawColoredShadow(
+                            dominantColor.value,
+                            1f,
+                            borderRadius = 13.dp,
+                            shadowRadius = 7.dp,
+                            offsetX = 0.dp,
+                            offsetY = 0.dp,
+                            roundedRect = false
+                        )
+                ) {
+                    Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(50.dp))
+                }
+                Text(
+                    text = appName,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1, // 限制为单行
+                    overflow = TextOverflow.Ellipsis, // 超出部分显示省略号
+                    softWrap = false, // 禁止自动换行
+                    modifier = Modifier.padding(top = 10.dp, bottom = 6.dp)
+                )
             }
         } else {
             onResult("noapp")

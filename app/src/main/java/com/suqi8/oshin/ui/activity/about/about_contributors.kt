@@ -26,6 +26,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.addline
@@ -118,7 +120,6 @@ internal fun item(
         github?.let { append("Github@$it ") }
         qq?.let { append("QQ@$it ") }
     }
-
     SuperArrow(
         title = name,
         leftAction = {
@@ -126,7 +127,10 @@ internal fun item(
                 Column(modifier = Modifier
                     .padding(end = 10.dp)) {
                     AsyncImage(
-                        model = "https://q.qlogo.cn/headimg_dl?dst_uin=$it&spec=640&img_type=jpg",
+                        model = ImageRequest.Builder(context)
+                            .data("https://q.qlogo.cn/headimg_dl?dst_uin=$it&spec=640&img_type=jpg")
+                            .diskCachePolicy(CachePolicy.DISABLED) // 禁用磁盘缓存
+                            .build(),
                         contentDescription = null,
                         modifier = Modifier
                             .size(50.dp)
