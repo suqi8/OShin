@@ -807,31 +807,36 @@ fun Main_Function(
             }
         }
 
-        if (expanded) {
-            // 如果 expanded 为 true，则显示搜索结果
-        } else {
-            // 如果 expanded 为 false，则显示 Card
-            LazyColumn(Modifier.fillMaxSize().nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)) {
+        if (!expanded) {
+            val notInstallList = remember { mutableStateOf(mutableListOf<String>()) }
+            val appList = listOf(
+                AppInfo("android", "android"),
+                AppInfo("com.android.systemui", "systemui"),
+                AppInfo("com.android.settings", "settings"),
+                AppInfo("com.android.launcher", "launcher"),
+                AppInfo("com.oplus.battery", "battery"),
+                AppInfo("com.heytap.speechassist", "speechassist"),
+                AppInfo("com.coloros.ocrscanner", "ocrscanner"),
+                AppInfo("com.oplus.games", "games"),
+                AppInfo("com.finshell.wallet", "wallet"),
+                AppInfo("com.coloros.phonemanager", "phonemanager"),
+                AppInfo("com.oplus.phonemanager", "oplusphonemanager"),
+                AppInfo("com.android.mms", "mms"),
+                AppInfo("com.coloros.securepay", "securepay"),
+                AppInfo("com.heytap.health", "health"),
+                AppInfo("com.oplus.appdetail", "appdetail"),
+                AppInfo("com.heytap.quicksearchbox", "quicksearchbox")
+            )
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+            ) {
                 item {
-                    Spacer(modifier = Modifier.size(68.dp+padding.calculateTopPadding()))
-                    val appList = listOf(
-                        AppInfo("android", "android"),
-                        AppInfo("com.android.systemui", "systemui"),
-                        AppInfo("com.android.settings", "settings"),
-                        AppInfo("com.android.launcher", "launcher"),
-                        AppInfo("com.oplus.battery", "battery"),
-                        AppInfo("com.heytap.speechassist", "speechassist"),
-                        AppInfo("com.coloros.ocrscanner", "ocrscanner"),
-                        AppInfo("com.oplus.games", "games"),
-                        AppInfo("com.finshell.wallet", "wallet"),
-                        AppInfo("com.coloros.phonemanager", "phonemanager"),
-                        AppInfo("com.oplus.phonemanager", "oplusphonemanager"),
-                        AppInfo("com.android.mms", "mms"),
-                        AppInfo("com.coloros.securepay", "securepay"),
-                        AppInfo("com.heytap.health", "health"),
-                        AppInfo("com.oplus.appdetail", "appdetail"),
-                        AppInfo("com.heytap.quicksearchbox", "quicksearchbox")
-                        )
+                    Spacer(modifier = Modifier.size(68.dp + padding.calculateTopPadding()))
+                }
+                item {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -845,9 +850,11 @@ fun Main_Function(
                                     packageName = appInfo.packageName,
                                     activityName = appInfo.activityName,
                                     navController = navController
-                                ) {
-                                    if (it == "noapp") {
-                                        if (!notInstallList.value.contains(appInfo.packageName)) notInstallList.value += appInfo.packageName
+                                ) { result ->
+                                    if (result == "noapp") {
+                                        if (!notInstallList.value.contains(appInfo.packageName)) {
+                                            notInstallList.value.add(appInfo.packageName)
+                                        }
                                         notInstall.value = true
                                     }
                                 }
@@ -857,11 +864,13 @@ fun Main_Function(
                             }
                         }
                     }
+                }
+                item {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp)
-                            .padding(bottom = 6.dp, top = 6.dp)
+                            .padding(vertical = 6.dp)
                     ) {
                         SuperArrow(
                             title = stringResource(R.string.app_not_found_in_list),
@@ -871,19 +880,25 @@ fun Main_Function(
                             }
                         )
                     }
+                }
+                item {
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp)
-                            .padding(bottom = 6.dp, top = 6.dp)
+                            .padding(vertical = 6.dp)
                     ) {
                         Column {
-                            SuperArrow(title = stringResource(id = R.string.cpu_freq_main),
+                            SuperArrow(
+                                title = stringResource(id = R.string.cpu_freq_main),
                                 onClick = {
                                     navController.navigate("testfunc\\cpu_freq")
-                                })
+                                }
+                            )
                         }
                     }
+                }
+                item {
                     Spacer(modifier = Modifier.padding(bottom = padding.calculateBottomPadding()))
                 }
             }
@@ -921,7 +936,8 @@ fun highlightMatches(text: String, query: String): AnnotatedString {
 fun FunctionApp(packageName: String, activityName: String, navController: NavController, onResult: (String) -> Unit) {
     GetAppIconAndName(packageName = packageName) { appName, icon ->
         if (appName != "noapp") {
-            val defaultColor = MiuixTheme.colorScheme.primary
+            val defaultColor = MiuixTheme.colorScheme.surface
+            val noModuleActive = MaterialTheme.colorScheme.errorContainer
 
             // 使用 remember 缓存 dominantColor 的状态
             val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
@@ -930,8 +946,8 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
             // 使用 LaunchedEffect 在 icon 或 dominantColor 变化时启动协程
             LaunchedEffect(icon, dominantColor.value) {
                 if (isLoading.value) {
-                    val newColor = withContext(Dispatchers.Default) {
-                        if (!YukiHookAPI.Status.isModuleActive) defaultColor else getAutoColor(icon)
+                    val newColor = withContext(Dispatchers.IO) {
+                        if (YukiHookAPI.Status.isModuleActive) getAutoColor(icon) else noModuleActive
                     }
                     dominantColor.value = newColor
                     colorCache[packageName] = newColor
@@ -945,32 +961,30 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
                     .fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (!isLoading.value) {
-                    Card(
-                        color = if (YukiHookAPI.Status.isModuleActive) dominantColor.value else MaterialTheme.colorScheme.errorContainer,
-                        modifier = Modifier
-                            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                            .drawColoredShadow(
-                                if (YukiHookAPI.Status.isModuleActive) dominantColor.value else MaterialTheme.colorScheme.errorContainer,
-                                1f,
-                                borderRadius = 13.dp,
-                                shadowRadius = 7.dp,
-                                offsetX = 0.dp,
-                                offsetY = 0.dp,
-                                roundedRect = false
-                            )
-                    ) {
-                        Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(45.dp))
-                    }
-                    Column(modifier = Modifier.padding(start = 16.dp)) {
-                        Text(text = appName)
-                        Text(
-                            text = packageName,
-                            fontSize = MiuixTheme.textStyles.subtitle.fontSize,
-                            fontWeight = FontWeight.Medium,
-                            color = MiuixTheme.colorScheme.onBackgroundVariant
+                Card(
+                    color = dominantColor.value,
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                        .drawColoredShadow(
+                            dominantColor.value,
+                            1f,
+                            borderRadius = 13.dp,
+                            shadowRadius = 7.dp,
+                            offsetX = 0.dp,
+                            offsetY = 0.dp,
+                            roundedRect = false
                         )
-                    }
+                ) {
+                    Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(45.dp))
+                }
+                Column(modifier = Modifier.padding(start = 16.dp)) {
+                    Text(text = appName)
+                    Text(
+                        text = packageName,
+                        fontSize = MiuixTheme.textStyles.subtitle.fontSize,
+                        fontWeight = FontWeight.Medium,
+                        color = MiuixTheme.colorScheme.onBackgroundVariant
+                    )
                 }
             }
         } else {

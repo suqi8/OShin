@@ -29,7 +29,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -38,8 +37,8 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -73,7 +72,6 @@ import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetFuncRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Card
@@ -701,57 +699,29 @@ fun GetAppIconAndName(
     onAppInfoLoaded: @Composable (String, ImageBitmap) -> Unit
 ) {
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
 
-    // 当前加载状态（非缓存状态）
-    val loadingState = remember(packageName) {
-        mutableStateOf<Pair<String, ImageBitmap>?>(AppInfoCache.getCached(packageName))
-    }
-
-    DisposableEffect(packageName) {
-        if (loadingState.value == null) {
-            val job = coroutineScope.launch {
-                try {
-                    // 真实加载逻辑
-                    val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
-                    val icon = appInfo.loadIcon(context.packageManager)
-                    val appName = context.packageManager.getApplicationLabel(appInfo).toString()
-                    val bitmap = icon.toBitmap().asImageBitmap()
-
-                    // 更新缓存和状态
-                    AppInfoCache.updateCache(packageName, appName to bitmap)
-                    loadingState.value = appName to bitmap
-                } catch (e: PackageManager.NameNotFoundException) {
-                    // 应用未安装的特殊处理
-                    loadingState.value = "noapp" to ImageBitmap(1, 1)
-                } catch (e: Exception) {
-                    // 其他错误保持加载状态
+    // 使用 produceState 在 IO 线程加载数据并缓存
+    val result by produceState<Pair<String, ImageBitmap>?>(initialValue = null, key1 = packageName) {
+        withContext(Dispatchers.IO) {
+            try {
+                AppInfoCache.getCached(packageName)?.let {
+                    value = it
+                    return@withContext
                 }
-            }
-
-            onDispose {
-                job.cancel()
-            }
-        }
-
-        onDispose {}
-    }
-
-    when (val result = loadingState.value) {
-        null -> {
-            // 加载中状态
-            CircularProgressIndicator(modifier = Modifier.size(24.dp))
-        }
-        else -> {
-            if (result.first == "noapp") {
-                // 触发未安装UI
-                onAppInfoLoaded("noapp", result.second)
-            } else {
-                // 正常显示应用信息
-                onAppInfoLoaded(result.first, result.second)
-            }
+                val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
+                val icon = appInfo.loadIcon(context.packageManager)
+                val appName = context.packageManager.getApplicationLabel(appInfo).toString()
+                val bitmap = icon.toBitmap().asImageBitmap()
+                // 更新缓存
+                AppInfoCache.updateCache(packageName, appName to bitmap)
+                value = appName to bitmap
+            } catch (e: PackageManager.NameNotFoundException) {
+                value = "noapp" to ImageBitmap(1, 1)
+            } catch (e: Exception) { }
         }
     }
+
+    result?.let { onAppInfoLoaded(it.first, it.second) }
 }
 
 @Composable
