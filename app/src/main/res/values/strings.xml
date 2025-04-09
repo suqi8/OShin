@@ -586,4 +586,5 @@
     <string name="remove_attempt_installation_popup">移除尝试安装弹窗</string>
     <string name="remove_version_check">移除版本号检测</string>
     <string name="remove_security_check">移除安装前安全检测</string>
+    <string name="switch_style">切换样式</string>
 </resources>

@@ -2,7 +2,6 @@ package com.suqi8.oshin
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.os.Vibrator
 import android.view.ViewTreeObserver
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
@@ -75,6 +74,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
+import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.ui.activity.funlistui.SearchList
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetFuncRoute
@@ -850,125 +850,124 @@ fun Main_Function(
                 item {
                     Spacer(modifier = Modifier.size(68.dp + padding.calculateTopPadding()))
                 }
-                /*item {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp)
-                            .padding(bottom = 6.dp)
-                    ) {
-                        Column {
-                            appList.forEachIndexed { index, appInfo ->
-                                val notInstall = rememberSaveable { mutableStateOf(false) }
-                                FunctionApp(
-                                    packageName = appInfo.packageName,
-                                    activityName = appInfo.activityName,
-                                    navController = navController
-                                ) { result ->
-                                    if (result == "noapp") {
-                                        if (!notInstallList.value.contains(appInfo.packageName)) {
-                                            notInstallList.value.add(appInfo.packageName)
-                                        }
-                                        notInstall.value = true
-                                    }
-                                }
-                                if (index < appList.size - 1 && !notInstall.value) {
-                                    addline()
-                                }
-                            }
-                        }
-                    }
-                }*/
                 item {
+                    val appstyle = rememberSaveable { mutableStateOf(context.prefs("settings").getInt("appstyle", 0)) }
+                    Column(
+                        modifier = Modifier.fillMaxWidth()
+                            .padding(horizontal = 12.dp)
+                            .padding(bottom = 6.dp)
+                            .clickable {
+                                appstyle.value = if (appstyle.value == 0) 1 else 0
+                                context.prefs("settings").edit { putInt("appstyle", appstyle.value) }
+                            },
+                        horizontalAlignment = Alignment.End
+                    ) {
+                        Text(text = stringResource(R.string.switch_style), color = MiuixTheme.colorScheme.primary)
+                    }
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp)
                             .padding(bottom = 6.dp)
                     ) {
-                        // 首先，创建一个可记住的可变状态来保存排序后的列表
-                        var reorderedList by remember { mutableStateOf(appList) }
-// 跟踪当前被拖动的项索引
-                        var draggedItemIndex by remember { mutableStateOf(-1) }
-// 跟踪当前拖动的偏移量（用于视觉反馈）
-                        var dragOffset by remember { mutableStateOf(Offset.Zero) }
+                        AnimatedVisibility(appstyle.value == 0) {
+                            var reorderedList by remember { mutableStateOf(appList) }
+                            // 跟踪当前被拖动的项索引
+                            var draggedItemIndex by remember { mutableStateOf(-1) }
+                            var dragOffset by remember { mutableStateOf(Offset.Zero) }
 
-                        FlowRow(
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier.fillMaxSize()
-                        ) {
-                            reorderedList.forEachIndexed { index, appInfo ->
-                                val notInstall = rememberSaveable { mutableStateOf(false) }
-                                val vibrator = LocalContext.current.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-
-
-                                // 为每个项添加拖动手势
-                                Box(
-                                    modifier = Modifier
-                                        .offset { // 应用拖动偏移量
-                                            if (index == draggedItemIndex) {
-                                                IntOffset(dragOffset.x.roundToInt(), dragOffset.y.roundToInt())
-                                            } else {
-                                                IntOffset.Zero
+                            FlowRow(
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
+                                reorderedList.forEachIndexed { index, appInfo ->
+                                    val notInstall = rememberSaveable { mutableStateOf(false) }
+                                    Box(
+                                        modifier = Modifier
+                                            .offset { // 应用拖动偏移量
+                                                if (index == draggedItemIndex) {
+                                                    IntOffset(dragOffset.x.roundToInt(), dragOffset.y.roundToInt())
+                                                } else {
+                                                    IntOffset.Zero
+                                                }
                                             }
-                                        }
-                                        .animateContentSize()
-                                        .graphicsLayer {
-                                            alpha = if (index == draggedItemIndex) 0.8f else 1f
-                                            shadowElevation = if (index == draggedItemIndex) 8.dp.toPx() else 0f
-                                        }
-                                        .pointerInput(index) {
-                                            detectDragGestures(
-                                                onDragStart = {
-                                                    // 拖动开始：记录当前拖动的项索引
-                                                    draggedItemIndex = index
-                                                    dragOffset = Offset.Zero
-                                                },
-                                                onDragEnd = {
-                                                    // 拖动结束：重置状态
-                                                    draggedItemIndex = -1
-                                                    dragOffset = Offset.Zero
-                                                },
-                                                onDrag = { change, dragAmount ->
-                                                    change.consume()
-                                                    // 更新拖动偏移量
-                                                    dragOffset += dragAmount
+                                            .animateContentSize()
+                                            .graphicsLayer {
+                                                alpha = if (index == draggedItemIndex) 0.8f else 1f
+                                                shadowElevation = if (index == draggedItemIndex) 8.dp.toPx() else 0f
+                                            }
+                                            .pointerInput(index) {
+                                                detectDragGestures(
+                                                    onDragStart = {
+                                                        // 拖动开始：记录当前拖动的项索引
+                                                        draggedItemIndex = index
+                                                        dragOffset = Offset.Zero
+                                                    },
+                                                    onDragEnd = {
+                                                        // 拖动结束：重置状态
+                                                        draggedItemIndex = -1
+                                                        dragOffset = Offset.Zero
+                                                    },
+                                                    onDrag = { change, dragAmount ->
+                                                        change.consume()
+                                                        // 更新拖动偏移量
+                                                        dragOffset += dragAmount
 
-                                                    // 计算是否需要交换位置
-                                                    if (draggedItemIndex != -1) {
-                                                        // 计算拖动方向
-                                                        val isDraggingRight = dragAmount.x > 0
-                                                        val isDraggingLeft = dragAmount.x < 0
+                                                        // 计算是否需要交换位置
+                                                        if (draggedItemIndex != -1) {
+                                                            // 计算拖动方向
+                                                            val isDraggingRight = dragAmount.x > 0
+                                                            val isDraggingLeft = dragAmount.x < 0
 
-                                                        // 获取相邻项的边界
-                                                        val itemWidth = size.width
-                                                        val dragThreshold = itemWidth * 0.4f // 拖动超过40%宽度时交换
+                                                            // 获取相邻项的边界
+                                                            val itemWidth = size.width
+                                                            val dragThreshold = itemWidth * 0.4f // 拖动超过40%宽度时交换
 
-                                                        // 检查是否达到交换阈值
-                                                        if (abs(dragOffset.x) > dragThreshold) {
-                                                            val newIndex = if (isDraggingRight) {
-                                                                minOf(draggedItemIndex + 1, reorderedList.lastIndex)
-                                                            } else {
-                                                                maxOf(draggedItemIndex - 1, 0)
-                                                            }
-
-                                                            // 如果位置有变化，则交换项
-                                                            if (newIndex != draggedItemIndex) {
-                                                                reorderedList = reorderedList.toMutableList().apply {
-                                                                    val draggedItem = removeAt(draggedItemIndex)
-                                                                    add(newIndex, draggedItem)
+                                                            // 检查是否达到交换阈值
+                                                            if (abs(dragOffset.x) > dragThreshold) {
+                                                                val newIndex = if (isDraggingRight) {
+                                                                    minOf(draggedItemIndex + 1, reorderedList.lastIndex)
+                                                                } else {
+                                                                    maxOf(draggedItemIndex - 1, 0)
                                                                 }
-                                                                draggedItemIndex = newIndex
-                                                                dragOffset = Offset.Zero // 重置偏移量
+
+                                                                // 如果位置有变化，则交换项
+                                                                if (newIndex != draggedItemIndex) {
+                                                                    reorderedList = reorderedList.toMutableList().apply {
+                                                                        val draggedItem = removeAt(draggedItemIndex)
+                                                                        add(newIndex, draggedItem)
+                                                                    }
+                                                                    draggedItemIndex = newIndex
+                                                                    dragOffset = Offset.Zero // 重置偏移量
+                                                                }
                                                             }
                                                         }
                                                     }
+                                                )
+                                            }
+                                            .zIndex(if (index == draggedItemIndex) 1f else 0f) // 被拖动的项显示在最上层
+                                    ) {
+                                        FunctionAppFlow(
+                                            packageName = appInfo.packageName,
+                                            activityName = appInfo.activityName,
+                                            navController = navController
+                                        ) { result ->
+                                            if (result == "noapp") {
+                                                if (!notInstallList.value.contains(appInfo.packageName)) {
+                                                    notInstallList.value += appInfo.packageName
                                                 }
-                                            )
+                                                notInstall.value = true
+                                            }
                                         }
-                                        .zIndex(if (index == draggedItemIndex) 1f else 0f) // 被拖动的项显示在最上层
-                                ) {
-                                    FunctionAppFlow(
+                                    }
+                                }
+                            }
+                        }
+                        AnimatedVisibility(appstyle.value == 1) {
+                            Column {
+                                appList.forEachIndexed { index, appInfo ->
+                                    val notInstall = rememberSaveable { mutableStateOf(false) }
+                                    FunctionApp(
                                         packageName = appInfo.packageName,
                                         activityName = appInfo.activityName,
                                         navController = navController
@@ -979,6 +978,9 @@ fun Main_Function(
                                             }
                                             notInstall.value = true
                                         }
+                                    }
+                                    if (index < appList.size - 1 && !notInstall.value) {
+                                        addline()
                                     }
                                 }
                             }
