@@ -44,7 +44,7 @@ fun FunNoEnable() {
         Row(verticalAlignment = Alignment.CenterVertically) {
             LottieAnimation(
                 composition = compositionResult.value,
-                progress = progress.value,
+                progress = { progress.value },
                 modifier = Modifier
                     .size(50.dp)
             )
