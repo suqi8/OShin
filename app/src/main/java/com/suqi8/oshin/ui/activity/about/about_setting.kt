@@ -66,7 +66,7 @@ fun about_setting(
                 )
             LottieAnimation(
                 composition = compositionResult.value,
-                progress = progress.progress,
+                progress = { progress.progress },
                 modifier = Modifier.padding(1.dp)
             )
         }

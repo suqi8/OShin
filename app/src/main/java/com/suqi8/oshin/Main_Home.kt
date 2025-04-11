@@ -186,7 +186,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                             )
                             LottieAnimation(
                                 composition = compositionResult.value,
-                                progress = progress.value,
+                                progress = { progress.value },
                                 modifier = Modifier
                                     .size(50.dp)
                             )

@@ -7,7 +7,6 @@ plugins {
     id("org.jetbrains.kotlin.android") version "2.1.20"
     id("com.google.devtools.ksp") version "2.1.20-1.0.32"
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.20"
-    id("com.autonomousapps.dependency-analysis") version "2.1.4"
 }
 
 abstract class GitHashService @Inject constructor(private val execOps: ExecOperations) {
