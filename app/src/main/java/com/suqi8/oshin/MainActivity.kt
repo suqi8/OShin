@@ -99,6 +99,7 @@ import com.suqi8.oshin.ui.activity.com.finshell.wallet.wallet
 import com.suqi8.oshin.ui.activity.com.heytap.health.health
 import com.suqi8.oshin.ui.activity.com.heytap.quicksearchbox.quicksearchbox
 import com.suqi8.oshin.ui.activity.com.heytap.speechassist.speechassist
+import com.suqi8.oshin.ui.activity.com.mi.health.mihealth
 import com.suqi8.oshin.ui.activity.com.oplus.appdetail.appdetail
 import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
 import com.suqi8.oshin.ui.activity.com.oplus.games.games
@@ -706,6 +707,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("testfunc\\cpu_freq") { cpu_freq(navController) }
             composable("hide_apps_notice") { hide_apps_notice(navController) }
             composable("quicksearchbox") { quicksearchbox(navController) }
+            composable("mihealth") { mihealth(navController) }
         }
     }
 }

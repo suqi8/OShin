@@ -29,6 +29,7 @@ fun GetFuncRoute(route: String, context: Context): String {
     FuncRoute = FuncRoute.replace("oplusphonemanager", GetAppName1("com.oplus.phonemanager",context))
     FuncRoute = FuncRoute.replace("mms", GetAppName1("com.android.mms",context))
     FuncRoute = FuncRoute.replace("securepay", GetAppName1("com.coloros.securepay",context))
+    FuncRoute = FuncRoute.replace("mihealth", GetAppName1("com.mi.health",context))
     FuncRoute = FuncRoute.replace("health", GetAppName1("com.heytap.health",context))
     FuncRoute = FuncRoute.replace("appdetail", GetAppName1("com.oplus.appdetail",context))
     FuncRoute = FuncRoute.replace("quicksearchbox", GetAppName1("com.heytap.quicksearchbox",context))
