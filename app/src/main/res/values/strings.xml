@@ -587,4 +587,6 @@
     <string name="remove_version_check">移除版本号检测</string>
     <string name="remove_security_check">移除安装前安全检测</string>
     <string name="switch_style">切换样式</string>
+    <string name="enable_alarm_reminder">使开启手机闹钟提醒可用</string>
+    <string name="alarm_reminder_description">开启后需要安装小米时钟并设置闹钟，且将小米运动健康固化为系统应用</string>
 </resources>

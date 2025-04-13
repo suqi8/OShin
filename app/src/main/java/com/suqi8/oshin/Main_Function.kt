@@ -685,7 +685,10 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.remove_version_check),
         category = "appdetail"),
     item(title = context.getString(R.string.remove_security_check),
-        category = "appdetail")
+        category = "appdetail"),
+    item(title = context.getString(R.string.enable_alarm_reminder),
+        summary = context.getString(R.string.alarm_reminder_description),
+        category = "mihealth")
 )
 
 var notInstallList = mutableStateOf(emptyList<String>())
@@ -839,7 +842,8 @@ fun Main_Function(
                 AppInfo("com.coloros.securepay", "securepay"),
                 AppInfo("com.heytap.health", "health"),
                 AppInfo("com.oplus.appdetail", "appdetail"),
-                AppInfo("com.heytap.quicksearchbox", "quicksearchbox")
+                AppInfo("com.heytap.quicksearchbox", "quicksearchbox"),
+                AppInfo("com.mi.health", "mihealth")
             )
 
             LazyColumn(

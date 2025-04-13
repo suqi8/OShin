@@ -450,10 +450,10 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                                         .associate { it.split("=").let { parts -> parts[0] to parts[1] } }
                                     val charge_fulldata0 = try {
                                         (data["charge_full"]?.toIntOrNull() ?: 0) / 1000
-                                    } catch (e: Exception) { 0 }
+                                    } catch (_: Exception) { 0 }
                                     val charge_fulldata1 = try {
                                         (data["charge_full1"]?.toIntOrNull() ?: 0) / 1000
-                                    } catch (e: Exception) { 0 }
+                                    } catch (_: Exception) { 0 }
                                     val charge_fulldata = if (charge_fulldata0 != 0) {
                                         charge_fulldata0
                                     } else {
@@ -467,12 +467,11 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                                             val design = data["design"]?.toFloatOrNull() ?: 1f
                                             val soh = (data["fcc"]?.toFloatOrNull() ?: 0f) / (design / 100000)
                                             "${getSOH()}% / ${soh}%"
-                                        } catch (e: Exception) { "ERROR" }
+                                        } catch (_: Exception) { "ERROR" }
                                     )
 
                                     // 单次状态更新
                                     batteryStatus.value = newStatus
-                                    println(batteryStatus.value.toString() + "111" + newStatus.toString())
                                 }
                                 delay(10000L)
                             }

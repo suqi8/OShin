@@ -22,6 +22,7 @@ import com.suqi8.oshin.hook.com.finshell.wallet.wallet
 import com.suqi8.oshin.hook.com.heytap.health.health
 import com.suqi8.oshin.hook.com.heytap.quicksearchbox.quicksearchbox
 import com.suqi8.oshin.hook.com.heytap.speechassist.speechassist
+import com.suqi8.oshin.hook.com.mi.health.mihealth
 import com.suqi8.oshin.hook.com.oplus.appdetail.appdetail
 import com.suqi8.oshin.hook.com.oplus.battery.battery
 import com.suqi8.oshin.hook.com.oplus.games.games
@@ -59,6 +60,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = health())
         loadApp(hooker = appdetail())
         loadApp(hooker = quicksearchbox())
+        loadApp(hooker = mihealth())
     }
 
     override fun onXposedEvent() {
