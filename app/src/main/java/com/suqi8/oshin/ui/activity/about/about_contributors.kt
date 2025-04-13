@@ -89,6 +89,12 @@ fun about_contributors(navController: NavController) {
                 name = "psychosispy",
                 github = "psychosispy"
             )
+            addline()
+            item(
+                name = "咚踏取",
+                coolapk = "咚踏取",
+                coolapkid = 2035174
+            )
         }
     }
 }
