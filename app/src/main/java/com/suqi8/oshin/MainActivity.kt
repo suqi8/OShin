@@ -61,11 +61,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -122,10 +117,8 @@ import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -160,15 +153,9 @@ class MainActivity : ComponentActivity() {
         UMConfigure.preInit(this,"67c7dea68f232a05f127781e","android")
         UMConfigure.setProcessEvent(true)
         setContent {
-            val colorMode = remember { mutableIntStateOf(0) }
-            val darkMode = colorMode.intValue == 2 || (isSystemInDarkTheme() && colorMode.intValue == 0)
             val context = LocalContext.current
-            // 读取存储的 colorMode
-            LaunchedEffect(Unit) {
-                getColorMode(context).collect { savedIndex ->
-                    colorMode.intValue = savedIndex
-                }
-            }
+            val colorMode = remember { mutableIntStateOf(context.prefs("settings").getInt("color_mode", 0)) }
+            val darkMode = colorMode.intValue == 2 || (isSystemInDarkTheme() && colorMode.intValue == 0)
             DisposableEffect(darkMode) {
                 enableEdgeToEdge(
                     statusBarStyle = SystemBarStyle.auto(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT) { darkMode },
@@ -870,19 +857,3 @@ fun AppHorizontalPager(
         }
     )
 }
-
-suspend fun saveColorMode(context: Context, selectedIndex: Int) {
-    val colorModeKey = intPreferencesKey("color_mode")
-    context.dataStore.edit { preferences ->
-        preferences[colorModeKey] = selectedIndex
-    }
-}
-
-fun getColorMode(context: Context): Flow<Int> {
-    val colorModeKey = intPreferencesKey("color_mode")
-    return context.dataStore.data.map { preferences ->
-        preferences[colorModeKey] ?: 0 // 默认值为 0（Auto_Mode）
-    }
-}
-
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")

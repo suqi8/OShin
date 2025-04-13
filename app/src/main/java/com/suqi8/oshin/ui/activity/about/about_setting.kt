@@ -23,13 +23,9 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
-import com.suqi8.oshin.saveColorMode
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.extra.SuperArrow
@@ -88,9 +84,7 @@ fun about_setting(
                 selectedIndex = colorMode.value,
                 onSelectedIndexChange = {
                     colorMode.value = it
-                    CoroutineScope(Dispatchers.IO).launch {
-                        saveColorMode(context, it)
-                    }
+                    context.prefs("settings").edit { putInt("color_mode", it) }
                 }
             )
             addline()
