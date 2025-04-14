@@ -6,6 +6,7 @@ import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.LinearEasing
@@ -14,10 +15,13 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -63,10 +67,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetFuncRoute
@@ -170,14 +170,18 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                 ) {
                     Box(modifier = Modifier
                         .fillMaxWidth()) {
-                        Row(
+                        Image(
+                            painter = painterResource(R.drawable.homebackground),
+                            contentDescription = null
+                        )
+                        /*Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(
+                            modifier = Modifier.fillMaxSize().padding(
                                 start = 30.dp,
                                 end = 30.dp,
                                 top = 30.dp,
                                 bottom = 30.dp
-                            )
+                            ).align(Alignment.Center)
                         ) {
                             val compositionResult =
                                 rememberLottieComposition(LottieCompositionSpec.RawRes(if (YukiHookAPI.Status.isModuleActive) R.raw.accept else R.raw.error))
@@ -214,7 +218,44 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                             modifier = Modifier
                                 .size(50.dp)
                                 .align(Alignment.BottomEnd)
-                        )
+                        )*/
+                        val texts = listOf("做自己想做的事", "做自己喜欢的事", "做自己热爱的事")
+                        var currentIndex by remember { mutableStateOf(0) }
+
+                        // 每 3 秒切换一次文本
+                        LaunchedEffect(Unit) {
+                            while (true) {
+                                delay(3000) // 3 秒延迟
+                                currentIndex = (currentIndex + 1) % texts.size
+                            }
+                        }
+                        Column {
+                            AnimatedContent(
+                                targetState = currentIndex,
+                                transitionSpec = {
+                                    if (targetState > initialState) {
+                                        (slideInHorizontally { width -> width } + fadeIn()) togetherWith
+                                                (slideOutHorizontally { width -> -width } + fadeOut())
+                                    } else {
+                                        (slideInHorizontally { width -> -width } + fadeIn()) togetherWith
+                                                (slideOutHorizontally { width -> width } + fadeOut())
+                                    }
+                                }
+                            ) { index ->
+                                Text(
+                                    text = texts[index],
+                                    modifier = Modifier.padding(start = 20.dp, top = 20.dp),
+                                    fontSize = 20.sp,
+                                    color = Color.Black
+                                )
+                            }
+                            Text(
+                                text = "探索更多有趣功能",
+                                modifier = Modifier.padding(start = 20.dp, top = 5.dp),
+                                fontSize = 13.sp,
+                                color = Color.Gray
+                            )
+                        }
                     }
                 }
             }
