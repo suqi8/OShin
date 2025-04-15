@@ -63,6 +63,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.toColorInt
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -834,6 +835,7 @@ open class ShadowElevation(
  * @param offsetY 偏移Y轴
  * @param roundedRect 是否绘制圆角就行
  */
+@SuppressLint("UseKtx")
 fun Modifier.drawColoredShadow(
     color: Color,
     alpha: Float = 0.2f,
@@ -844,8 +846,8 @@ fun Modifier.drawColoredShadow(
     roundedRect: Boolean = true
 ) = this.drawBehind {
     /**将颜色转换为Argb的Int类型*/
-    val transparentColor = android.graphics.Color.toArgb(color.copy(alpha = .0f).value.toLong())
-    val shadowColor = android.graphics.Color.toArgb(color.copy(alpha = alpha).value.toLong())
+    val transparentColor = color.copy(alpha = .0f).value.toLong().toColorInt()
+    val shadowColor = color.copy(alpha = alpha).value.toLong().toColorInt()
     /**调用Canvas绘制*/
     this.drawIntoCanvas {
         val paint = Paint()
