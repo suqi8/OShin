@@ -826,14 +826,15 @@ open class ShadowElevation(
 }
 
 /**
- * 绘制基础阴影
- * @param color 颜色
- * @param alpha 颜色透明度
- * @param borderRadius 阴影便捷圆角
- * @param shadowRadius 阴影圆角
- * @param offsetX 偏移X轴
- * @param offsetY 偏移Y轴
- * @param roundedRect 是否绘制圆角就行
+ * 自定义彩色阴影绘制修饰符
+ *
+ * @param color 阴影颜色
+ * @param alpha 阴影透明度（0f~1f）
+ * @param borderRadius 组件圆角半径（仅在非圆形绘制时生效）
+ * @param shadowRadius 阴影模糊半径（控制阴影扩散范围）
+ * @param offsetX 阴影水平方向偏移量
+ * @param offsetY 阴影垂直方向偏移量
+ * @param roundedRect 是否自动使用圆形绘制（true 则自动使用高度的一半作为圆角）
  */
 @SuppressLint("UseKtx")
 fun Modifier.drawColoredShadow(

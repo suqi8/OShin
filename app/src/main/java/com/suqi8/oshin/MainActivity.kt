@@ -131,6 +131,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.CardDefaults
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.NavigationItem
 import top.yukonga.miuix.kmp.basic.Scaffold
@@ -742,13 +743,17 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,
             targetPage = pagerState.currentPage
         }
     }
-    Scaffold(modifier = Modifier.fillMaxSize(),/*enableBottomBarBlur = true,
-        enableTopBarBlur = true, alpha = 0.2f, */bottomBar = {
-        /*Box(modifier = Modifier.hazeChild(state = hazeState)) {
-
-        }*/
+    Scaffold(modifier = Modifier.fillMaxSize(),bottomBar = {
         Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Card(modifier = Modifier.padding(20.dp)) {
+            Card(modifier = Modifier.padding(20.dp).drawColoredShadow(
+                MiuixTheme.colorScheme.onSurface,
+                0.1f,
+                borderRadius = CardDefaults.CornerRadius,
+                shadowRadius = 10.dp,
+                offsetX = 0.dp,
+                offsetY = 0.dp,
+                roundedRect = false
+            )) {
                 NavigationBar(
                     items = items,
                     color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.surfaceContainer,
@@ -810,8 +815,7 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,
                         }
                     }
                 })
-            Image(painter = painterResource(R.drawable.osu),contentDescription = null)
-
+            Image(painter = painterResource(R.drawable.osu),contentDescription = null, modifier = Modifier.fillMaxWidth())
         }
     }) { padding ->
         Box(modifier = Modifier.hazeSource(
