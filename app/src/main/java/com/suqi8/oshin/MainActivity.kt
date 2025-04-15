@@ -9,12 +9,15 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Easing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -52,15 +55,20 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -124,11 +132,11 @@ import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.basic.NavigationBar
 import top.yukonga.miuix.kmp.basic.NavigationItem
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
@@ -739,25 +747,29 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,
         /*Box(modifier = Modifier.hazeChild(state = hazeState)) {
 
         }*/
-        NavigationBar(
-            items = items,
-            color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.surfaceContainer,
-            modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
-                Modifier.hazeEffect(
-                    state = hazeState,
-                    style = hazeStyle, block = fun HazeEffectScope.() {
-                        inputScale = HazeInputScale.Auto
+        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            Card(modifier = Modifier.padding(20.dp)) {
+                NavigationBar(
+                    items = items,
+                    color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.surfaceContainer,
+                    modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
+                        Modifier.hazeEffect(
+                            state = hazeState,
+                            style = hazeStyle, block = fun HazeEffectScope.() {
+                                inputScale = HazeInputScale.Auto
+                            }
+                        )
+                    } else Modifier,
+                    selected = targetPage,
+                    onClick = { index ->
+                        targetPage = index
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                        }
                     }
                 )
-            } else Modifier,
-            selected = targetPage,
-            onClick = { index ->
-                targetPage = index
-                coroutineScope.launch {
-                    pagerState.animateScrollToPage(index)
-                }
             }
-        )
+        }
     }, topBar = {
         TopAppBar(scrollBehavior = currentScrollBehavior,color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.background,
             title = when (pagerState.currentPage) {
@@ -798,8 +810,7 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,
         })
     }) { padding ->
         Box(modifier = Modifier.hazeSource(
-            state = hazeState
-        )
+            state = hazeState)
         ) {
             AppHorizontalPager(
                 modifier = Modifier.imePadding(),
@@ -819,6 +830,92 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,
         }*/
     }
 }
+
+@Composable
+fun NavigationBar(
+    items: List<NavigationItem>,
+    selected: Int,
+    onClick: (Int) -> Unit,
+    modifier: Modifier = Modifier,
+    color: Color = MiuixTheme.colorScheme.surfaceContainer
+) {
+    require(items.size in 2..5) { "BottomBar must have between 2 and 5 items" }
+    Surface(
+        color = color
+    ) {
+        Column(
+            modifier = modifier
+                .background(Color.Transparent),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Row(
+                modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                items.forEachIndexed { index, item ->
+                    val isSelected = selected == index
+                    var isPressed by remember { mutableStateOf(false) }
+                    val tint by animateColorAsState(
+                        targetValue = when {
+                            isPressed -> if (isSelected) {
+                                MiuixTheme.colorScheme.onSurfaceContainer.copy(alpha = 0.6f)
+                            } else {
+                                MiuixTheme.colorScheme.onSurfaceContainerVariant.copy(alpha = 0.6f)
+                            }
+
+                            isSelected -> MiuixTheme.colorScheme.onSurfaceContainer
+                            else -> MiuixTheme.colorScheme.onSurfaceContainerVariant
+                        }
+                    )
+                    val fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
+                    Column(
+                        modifier = Modifier
+                            .padding(vertical = 8.dp, horizontal = 20.dp)
+                            .pointerInput(Unit) {
+                                detectTapGestures(
+                                    onPress = {
+                                        isPressed = true
+                                        tryAwaitRelease()
+                                        isPressed = false
+                                    },
+                                    onTap = { onClick(index) }
+                                )
+                            },
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Image(
+                            modifier = Modifier.size(26.dp),
+                            imageVector = item.icon,
+                            contentDescription = item.label,
+                            colorFilter = ColorFilter.tint(tint)
+                        )
+                        Text(
+                            modifier = Modifier,
+                            text = item.label,
+                            color = tint,
+                            textAlign = TextAlign.Center,
+                            fontSize = 12.sp,
+                            fontWeight = fontWeight
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+/**
+ * The data class for [NavigationBar].
+ *
+ * @param label The label of the item.
+ * @param icon The icon of the item.
+ */
+data class NavigationItem(
+    val label: String,
+    val icon: ImageVector
+)
+
 
 @Composable
 fun AppHorizontalPager(
