@@ -771,43 +771,48 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,
             }
         }
     }, topBar = {
-        TopAppBar(scrollBehavior = currentScrollBehavior,color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.background,
-            title = when (pagerState.currentPage) {
-            0 -> stringResource(R.string.func)
-            1 -> stringResource(R.string.app_name)
-            else -> stringResource(R.string.about)
-        }, modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
-            Modifier.hazeEffect(
-                state = hazeState,
-                style = hazeStyle, block = fun HazeEffectScope.() {
-                    inputScale = HazeInputScale.Auto
-                    if (context.prefs("settings").getBoolean("enable_gradient_blur", true)) progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
-                })
-        } else Modifier, navigationIcon = {
-            /*Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null,
-                modifier = Modifier.size(50.dp))*/
-            Card(modifier = Modifier
-                .size(55.dp).padding(10.dp)) {
-                Box(modifier = Modifier.fillMaxSize()) {
-                    /*Image(
-                        painter = painterResource(id = R.drawable.icon_background_newyear),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
-                        *//*.offset(y = (-20).dp)*//*,
+        Box {
+            TopAppBar(scrollBehavior = currentScrollBehavior,color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.background,
+                title = when (pagerState.currentPage) {
+                    0 -> stringResource(R.string.func)
+                    1 -> stringResource(R.string.app_name)
+                    else -> stringResource(R.string.about)
+                }, modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
+                    Modifier.hazeEffect(
+                        state = hazeState,
+                        style = hazeStyle, block = fun HazeEffectScope.() {
+                            inputScale = HazeInputScale.Auto
+                            if (context.prefs("settings").getBoolean("enable_gradient_blur", true)) progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
+                        })
+                } else Modifier, navigationIcon = {
+                    /*Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null,
+                        modifier = Modifier.size(50.dp))*/
+
+                    Card(modifier = Modifier
+                        .size(55.dp).padding(10.dp)) {
+                        Box(modifier = Modifier.fillMaxSize()) {
+                            /*Image(
+                                painter = painterResource(id = R.drawable.icon_background_newyear),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
+                                *//*.offset(y = (-20).dp)*//*,
                         contentScale = ContentScale.Crop
                     )*/
-                    Image(
-                        painter = painterResource(id = R.drawable.icon),
-                        contentDescription = null,
-                        modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f).clickable {
-                            //context.prefs("settings").edit { putBoolean("privacy",true) }
+                            Image(
+                                painter = painterResource(id = R.drawable.icon),
+                                contentDescription = null,
+                                modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f).clickable {
+                                    //context.prefs("settings").edit { putBoolean("privacy",true) }
+                                }
+                                /*.offset(y = (-20).dp)*/,
+                                contentScale = ContentScale.Crop
+                            )
                         }
-                        /*.offset(y = (-20).dp)*/,
-                        contentScale = ContentScale.Crop
-                    )
-                }
-            }
-        })
+                    }
+                })
+            Image(painter = painterResource(R.drawable.osu),contentDescription = null)
+
+        }
     }) { padding ->
         Box(modifier = Modifier.hazeSource(
             state = hazeState)
@@ -885,7 +890,7 @@ fun NavigationBar(
                         verticalArrangement = Arrangement.Center
                     ) {
                         Image(
-                            modifier = Modifier.size(26.dp),
+                            modifier = Modifier.size(28.dp),
                             imageVector = item.icon,
                             contentDescription = item.label,
                             colorFilter = ColorFilter.tint(tint)
@@ -895,7 +900,7 @@ fun NavigationBar(
                             text = item.label,
                             color = tint,
                             textAlign = TextAlign.Center,
-                            fontSize = 12.sp,
+                            fontSize = 13.sp,
                             fontWeight = fontWeight
                         )
                     }
