@@ -26,16 +26,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -48,7 +43,6 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
@@ -64,7 +58,6 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -80,12 +73,12 @@ import com.suqi8.oshin.utils.GetFuncRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import top.yukonga.miuix.kmp.basic.BasicComponentColors
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import java.io.BufferedReader
 import java.io.InputStreamReader
@@ -102,7 +95,6 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
     }*/
     val context = LocalContext.current
     val cardVisible = rememberSaveable { mutableStateOf(false) }
-    val cardVisible1 = rememberSaveable { mutableStateOf(false) }
     LazyColumn(
         contentPadding = padding,
         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
@@ -111,13 +103,6 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
             LaunchedEffect(Unit) {
                 cardVisible.value = true
                 //loading.value = false
-            }
-            LaunchedEffect(cardVisible1.value) {
-                if (!cardVisible.value) {
-                    cardVisible1.value = true
-                    delay(6000)
-                    cardVisible1.value = false
-                }
             }
 
             // 卡片1动画
@@ -266,28 +251,6 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                     }
                 }
             }
-            AnimatedVisibility(
-                visible = cardVisible1.value,
-                enter = slideInVertically(
-                    initialOffsetY = { -it },
-                    animationSpec = tween(durationMillis = 500)
-                ) + fadeIn(animationSpec = tween(durationMillis = 500))
-            ) {
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp, vertical = 6.dp),
-                    color = MiuixTheme.colorScheme.primaryVariant.copy(alpha = 0.1f)
-                ) {
-                    top.yukonga.miuix.kmp.basic.BasicComponent(
-                        summary = stringResource(R.string.module_notice),
-                        summaryColor = BasicComponentColors(
-                            color = MiuixTheme.colorScheme.primaryVariant,
-                            disabledColor = MiuixTheme.colorScheme.primaryVariant
-                        )
-                    )
-                }
-            }
         }
         item {
             AnimatedVisibility(
@@ -297,94 +260,25 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                     animationSpec = tween(durationMillis = 500)
                 ) + fadeIn(animationSpec = tween(durationMillis = 500))
             ) {
-                LazyRow(modifier = Modifier.fillMaxWidth()) {
-                    item {
-                        Card(modifier = Modifier
-                            .width(230.dp)
-                            .height(165.dp)
-                            .padding(start = 20.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
-                            val randomFeature = features(LocalContext.current)
-                                .takeIf { it.isNotEmpty() }
-                                ?.random()
-                            Column(modifier = Modifier
-                                .clickable {
-                                    navController.navigate(randomFeature!!.category)
-                                }
-                                .fillMaxSize()) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Image(painter = painterResource(id = R.drawable.recommend),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .padding(top = 10.dp, start = 10.dp, bottom = 5.dp)
-                                            .size(30.dp),
-                                        colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface))
-                                    Text(text = stringResource(R.string.recommended_features), modifier = Modifier.padding(top = 10.dp, end = 10.dp), fontSize = 15.sp)
-                                }
-                                Text(randomFeature!!.title+"",
-                                    modifier = Modifier.padding(start = 15.dp, end = 10.dp),
-                                    fontSize = 17.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis)
-                                //Spacer(modifier = Modifier.weight(1f))
-                                val route = rememberSaveable { mutableStateOf("") }
-                                if (route.value == "") {
-                                    LaunchedEffect(Unit) {
-                                        route.value = "\n" + GetFuncRoute(randomFeature.category,context)
-                                    }
-                                }
-                                Text((randomFeature.summary ?: stringResource(R.string.no_introduction))+route.value,
-                                    modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp),
-                                    fontSize = 14.sp,
-                                    color = MiuixTheme.colorScheme.onSurfaceContainerHigh,
-                                    maxLines = 3,
-                                    overflow = TextOverflow.Ellipsis)
+                Card(
+                    modifier = Modifier
+                        .padding(start = 20.dp, top = 10.dp, end = 20.dp)
+                        .fillMaxWidth()
+                ) {
+                    Column {
+                        SuperArrow(
+                            title = stringResource(R.string.recent_update),
+                            leftAction = {
+                                Image(painter = painterResource(id = R.drawable.recent_update),
+                                    contentDescription = null,
+                                    modifier = Modifier
+                                        .size(20.dp),
+                                    colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface))
+                            },
+                            onClick = {
+                                navController.navigate("recent_update")
                             }
-                        }
-                    }
-                    item {
-                        Card(modifier = Modifier
-                            .width(230.dp)
-                            .height(165.dp)
-                            .padding(start = 10.dp, top = 10.dp, end = 10.dp, bottom = 10.dp)) {
-                            val recent_Feature = features(LocalContext.current)
-                                .takeIf { it.isNotEmpty() }
-                                ?.last()
-                            Column(modifier = Modifier
-                                .clickable {
-                                    navController.navigate("recent_update")
-                                }
-                                .fillMaxSize()) {
-                                Row(verticalAlignment = Alignment.CenterVertically) {
-                                    Image(painter = painterResource(id = R.drawable.recent_update),
-                                        contentDescription = null,
-                                        modifier = Modifier
-                                            .padding(top = 10.dp, start = 10.dp, bottom = 5.dp)
-                                            .size(30.dp)
-                                            .padding(5.dp),
-                                        colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface))
-                                    Text(text = stringResource(R.string.recent_update), modifier = Modifier.padding(top = 10.dp, end = 10.dp), fontSize = 15.sp)
-                                }
-                                Text(recent_Feature!!.title+"",
-                                    modifier = Modifier.padding(start = 15.dp, end = 10.dp),
-                                    fontSize = 17.sp,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis)
-                                //Spacer(modifier = Modifier.weight(1f))
-                                val route = rememberSaveable { mutableStateOf("") }
-                                if (route.value == "") {
-                                    LaunchedEffect(Unit) {
-                                        route.value = "\n"+ GetFuncRoute(recent_Feature.category,context)
-                                    }
-                                }
-                                Text(
-                                    (recent_Feature.summary ?: stringResource(R.string.no_introduction)) + route.value,
-                                    modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp),
-                                    fontSize = 14.sp,
-                                    color = MiuixTheme.colorScheme.onSurfaceContainerHigh,
-                                    maxLines = 3,
-                                    overflow = TextOverflow.Ellipsis)
-                            }
-                        }
+                        )
                     }
                 }
             }
@@ -668,61 +562,63 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
             }
         }
         item {
-            val allFeatures = remember { features(context).shuffled() }
-            var shownCount by remember { mutableStateOf(10) }  // 控制每次显示多少项
-            val visibleFeatures = allFeatures.take(shownCount)
-            var isFlowVisible by remember { mutableStateOf(false) } // 是否显示 FlowRow
-            var isBottomReached by remember { mutableStateOf(false) } // 是否到达底部
+            if(cardVisible.value) {
+                val allFeatures = remember { features(context).shuffled() }
+                var shownCount by remember { mutableStateOf(10) }  // 控制每次显示多少项
+                val visibleFeatures = allFeatures.take(shownCount)
+                var isFlowVisible by remember { mutableStateOf(false) } // 是否显示 FlowRow
+                var isBottomReached by remember { mutableStateOf(false) } // 是否到达底部
 
 // 控制显示更多的逻辑
-            if (isFlowVisible && shownCount < allFeatures.size && isBottomReached) {
-                shownCount += 10
-                isBottomReached = false // 重置底部标记
-            }
+                if (isFlowVisible && shownCount < allFeatures.size && isBottomReached) {
+                    shownCount += 10
+                    isBottomReached = false // 重置底部标记
+                }
 
-            FlowRow(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .offset(y = (-8).dp)
-                    .onGloballyPositioned { coordinates ->
-                        val height = coordinates.size.height
-                        val position = coordinates.positionInParent().y
-                        // 判断是否滑动到底部
-                        isBottomReached =
-                            position + height >= (coordinates.parentCoordinates?.size?.height ?: 0)
-                        isFlowVisible = true // 一旦可见，就设置为 true
-                    },
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                visibleFeatures.forEach { recent_Feature ->
-                    Card(
-                        modifier = Modifier
-                            .widthIn(0.dp, LocalConfiguration.current.screenWidthDp.dp / 2 - 20.dp)
-                    ) {
-                        Column(modifier = Modifier.clickable {
-                            navController.navigate(recent_Feature.category)
-                        }) {
-                            Text(
-                                recent_Feature.title,
-                                modifier = Modifier.padding(start = 15.dp, end = 10.dp, top = 10.dp),
-                                fontSize = 17.sp
-                            )
+                FlowRow(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .offset(y = (-8).dp)
+                        .onGloballyPositioned { coordinates ->
+                            val height = coordinates.size.height
+                            val position = coordinates.positionInParent().y
+                            // 判断是否滑动到底部
+                            isBottomReached =
+                                position + height >= (coordinates.parentCoordinates?.size?.height ?: 0)
+                            isFlowVisible = true // 一旦可见，就设置为 true
+                        },
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    visibleFeatures.forEach { recent_Feature ->
+                        Card(
+                            modifier = Modifier
+                                .widthIn(0.dp, LocalConfiguration.current.screenWidthDp.dp / 2 - 20.dp)
+                        ) {
+                            Column(modifier = Modifier.clickable {
+                                navController.navigate(recent_Feature.category)
+                            }) {
+                                Text(
+                                    recent_Feature.title,
+                                    modifier = Modifier.padding(start = 15.dp, end = 10.dp, top = 10.dp),
+                                    fontSize = 17.sp
+                                )
 
-                            // 提前准备 route 字段，避免每次都重新计算
-                            val route = rememberSaveable { mutableStateOf("") }
-                            if (route.value.isEmpty()) {
-                                LaunchedEffect(Unit) {
-                                    route.value = (if (recent_Feature.summary != null) "\n" else "") + GetFuncRoute(recent_Feature.category, context)
+                                // 提前准备 route 字段，避免每次都重新计算
+                                val route = rememberSaveable { mutableStateOf("") }
+                                if (route.value.isEmpty()) {
+                                    LaunchedEffect(Unit) {
+                                        route.value = (if (recent_Feature.summary != null) "\n" else "") + GetFuncRoute(recent_Feature.category, context)
+                                    }
                                 }
-                            }
 
-                            Text(
-                                if (recent_Feature.summary != null) recent_Feature.summary + route.value else route.value,
-                                modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp),
-                                fontSize = 14.sp,
-                                color = MiuixTheme.colorScheme.onSurfaceContainerHigh
-                            )
+                                Text(
+                                    if (recent_Feature.summary != null) recent_Feature.summary + route.value else route.value,
+                                    modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp),
+                                    fontSize = 14.sp,
+                                    color = MiuixTheme.colorScheme.onSurfaceContainerHigh
+                                )
+                            }
                         }
                     }
                 }

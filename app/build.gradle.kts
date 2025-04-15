@@ -91,7 +91,7 @@ android {
     buildTypes {
         release {
             signingConfig = signingConfigs.getByName(if (keystoreFile != null) "ci" else "release")
-            buildConfigField("String", "BUILD_TYPE_TAG", "\"${(signingConfig as SigningConfig).name}\"")
+            buildConfigField("String", "BUILD_TYPE_TAG", "\"${if ((signingConfig as SigningConfig).name == "ci") "CI Build" else "Release"}\"")
             isMinifyEnabled = true
             isShrinkResources = true
             isDebuggable = false
@@ -101,7 +101,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
-            buildConfigField("String", "BUILD_TYPE_TAG", "\"debug\"")
+            buildConfigField("String", "BUILD_TYPE_TAG", "\"Debug\"")
         }
     }
     compileOptions {

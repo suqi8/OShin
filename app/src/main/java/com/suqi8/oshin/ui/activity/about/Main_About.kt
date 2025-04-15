@@ -34,16 +34,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -107,55 +108,68 @@ fun Main_About(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp)
-                        .padding(bottom = 6.dp)
+                        .padding(bottom = 6.dp),
+                    color = Color.Transparent
                 ) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
                         // 背景图片
-                        Image(
+                        /*Image(
                             painter = painterResource(id = R.drawable.aboutbackground),
                             contentDescription = null,
                             contentScale = ContentScale.Crop, // 图片裁剪以适应容器
                             modifier = Modifier.matchParentSize() // 使图片充满整个 Box
-                        )
+                        )*/
                         Column(modifier = Modifier.padding(bottom = 16.dp)) {
                             Box(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .height(200.dp) // 设定 Box 的高度
                             ) {
-                                Card(modifier = Modifier
+                                /*Card(modifier = Modifier
                                         .size(130.dp)
                                         .align(Alignment.Center)) {
                                     Box(modifier = Modifier.fillMaxSize()) {
-                                        /*Image(
+                                        *//*Image(
                                             painter = painterResource(id = R.drawable.icon_background_newyear),
                                             contentDescription = null,
                                             modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
-                                            *//*.offset(y = (-20).dp)*//*,
+                                            *//**//*.offset(y = (-20).dp)*//**//*,
                                             contentScale = ContentScale.Crop
-                                        )*/
+                                        )*//*
                                         Image(
                                             painter = painterResource(id = R.drawable.icon),
                                             contentDescription = null,
                                             modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
-                                            /*.offset(y = (-20).dp)*/,
+                                            *//*.offset(y = (-20).dp)*//*,
                                             contentScale = ContentScale.Crop
                                         )
                                     }
-                                }
+                                }*/
+                                Text(
+                                    text = buildAnnotatedString {
+                                        append("O")
+                                        withStyle(style = SpanStyle(color = MiuixTheme.colorScheme.primaryVariant)) {
+                                            append("Shin ")
+                                        }
+                                        append(BuildConfig.BUILD_TYPE_TAG)
+                                    },
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 32.sp,
+                                    modifier = Modifier.align(Alignment.Center)
+                                )
                                 Text(
                                     text = context.packageManager.getPackageInfo(
                                         context.packageName,
                                         0
-                                    ).versionName.toString() + " | " + BuildConfig.BUILD_TYPE_TAG,
+                                    ).versionName.toString(),
                                     fontSize = 14.sp,
                                     color = Color.Gray,
                                     modifier = Modifier
-                                        .align(Alignment.BottomCenter)
-                                        .padding(bottom = 8.dp)
+                                        .align(Alignment.Center)
+                                        .padding(top = 46.dp)
                                     /*.offset(y = (-20).dp)*/
                                 )
                             }
