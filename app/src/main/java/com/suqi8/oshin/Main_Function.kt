@@ -688,7 +688,11 @@ fun features(context: Context) = listOf(
         category = "appdetail"),
     item(title = context.getString(R.string.enable_alarm_reminder),
         summary = context.getString(R.string.alarm_reminder_description),
-        category = "mihealth")
+        category = "mihealth"),
+    item(title = context.getString(R.string.remove_system_update_dialog),
+        category = "ota"),
+    item(title = context.getString(R.string.remove_system_update_notification),
+        category = "ota")
 )
 
 var notInstallList = mutableStateOf(emptyList<String>())
@@ -843,7 +847,8 @@ fun Main_Function(
                 AppInfo("com.heytap.health", "health"),
                 AppInfo("com.oplus.appdetail", "appdetail"),
                 AppInfo("com.heytap.quicksearchbox", "quicksearchbox"),
-                AppInfo("com.mi.health", "mihealth")
+                AppInfo("com.mi.health", "mihealth"),
+                AppInfo("com.oplus.ota", "ota")
             )
 
             LazyColumn(

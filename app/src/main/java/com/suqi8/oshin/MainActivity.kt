@@ -106,6 +106,7 @@ import com.suqi8.oshin.ui.activity.com.mi.health.mihealth
 import com.suqi8.oshin.ui.activity.com.oplus.appdetail.appdetail
 import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
 import com.suqi8.oshin.ui.activity.com.oplus.games.games
+import com.suqi8.oshin.ui.activity.com.oplus.ota.ota
 import com.suqi8.oshin.ui.activity.com.oplus.phonemanager.oplusphonemanager
 import com.suqi8.oshin.ui.activity.hide_apps_notice
 import com.suqi8.oshin.ui.activity.recent_update
@@ -704,6 +705,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("hide_apps_notice") { hide_apps_notice(navController) }
             composable("quicksearchbox") { quicksearchbox(navController) }
             composable("mihealth") { mihealth(navController) }
+            composable("ota") { ota(navController) }
         }
     }
 }

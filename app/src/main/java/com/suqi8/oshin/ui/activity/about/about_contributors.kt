@@ -95,6 +95,13 @@ fun about_contributors(navController: NavController) {
                 coolapk = "咚踏取",
                 coolapkid = 2035174
             )
+            addline()
+            item(
+                name = "Mikusignal",
+                coolapk = "Mikusignal",
+                coolapkid = 12130388,
+                qq = 1809784522
+            )
         }
     }
 }

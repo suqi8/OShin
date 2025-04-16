@@ -34,7 +34,8 @@ fun GetFuncRoute(route: String, context: Context): String {
         "mihealth" to appNameCache.getAppName("com.mi.health"),
         "health" to appNameCache.getAppName("com.heytap.health"),
         "appdetail" to appNameCache.getAppName("com.oplus.appdetail"),
-        "quicksearchbox" to appNameCache.getAppName("com.heytap.quicksearchbox")
+        "quicksearchbox" to appNameCache.getAppName("com.heytap.quicksearchbox"),
+        "ota" to appNameCache.getAppName("com.oplus.ota")
     )
 
     // 使用正则表达式和替换映射表进行替换

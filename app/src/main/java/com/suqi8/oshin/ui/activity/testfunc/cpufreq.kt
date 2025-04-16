@@ -21,9 +21,7 @@ import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.executeCommand
-import com.suqi8.oshin.ui.activity.funlistui.FunNoEnable
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
-import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.Card
@@ -44,24 +42,7 @@ fun cpu_freq(navController: NavController) {
         LaunchedEffect(Unit) {
             cpuFrequencies.value = getAllCoresFrequencies()
         }
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp, top = 6.dp)
-        ) {
-            FunSwich(
-                title = stringResource(R.string.cpu_freq_main),
-                summary = stringResource(R.string.frequency_activation_hint),
-                category = "cpu_freq",
-                key = "cpu_freq_main",
-                onCheckedChange = {
-                    cpu_freq_main.value = it
-                }
-            )
-        }
-        AnimatedVisibility(visible = !cpu_freq_main.value) { FunNoEnable() }
-        AnimatedVisibility(visible = cpu_freq_main.value && !cpuFrequencies.value.isEmpty()) {
+        AnimatedVisibility(!cpuFrequencies.value.isEmpty()) {
             Column {
                 fun updateCpuFrequencies(core: Int, maxIndex: Int, minIndex: Int) {
                     cpuFrequencies.value = cpuFrequencies.value.toMutableMap().apply {

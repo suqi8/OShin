@@ -36,7 +36,6 @@ class Package_Installer : YukiBaseHooker() {
                 before {
                     // 获取 com.android.server.wm.ActivityStarter\$Request 类的 Class 对象
                     val requestClass = "com.android.server.wm.ActivityStarter\$Request".toClass()
-
                     // 确保 requestClass 不为 null
                     requestClass.let { clazz ->
                         // 获取当前实例的 mRequest 字段值
