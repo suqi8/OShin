@@ -17,5 +17,6 @@
         <item>com.oplus.appdetail</item>
         <item>com.heytap.quicksearchbox</item>
         <item>com.mi.health</item>
+        <item>com.oplus.ota</item>
     </string-array>
 </resources>
