@@ -14,7 +14,7 @@ class Package_Installer : YukiBaseHooker() {
             }
             loadSystem {
                 // Hook系统级Activity启动服务
-                hookSystemServices()
+                //hookSystemServices()
             }
             loadApp("com.android.packageinstaller") {
                 //hookInstallerActivities()  // Hook安装器Activity
