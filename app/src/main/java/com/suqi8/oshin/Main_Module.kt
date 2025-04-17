@@ -1013,23 +1013,6 @@ fun Main_Module(
                     }
                 }
                 item {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp)
-                            .padding(vertical = 6.dp)
-                    ) {
-                        Column {
-                            SuperArrow(
-                                title = stringResource(id = R.string.cpu_freq_main),
-                                onClick = {
-                                    navController.navigate("testfunc\\cpu_freq")
-                                }
-                            )
-                        }
-                    }
-                }
-                item {
                     Spacer(modifier = Modifier.padding(bottom = padding.calculateBottomPadding()))
                 }
             }
