@@ -591,4 +591,5 @@
     <string name="alarm_reminder_description">开启后需要安装小米时钟并设置闹钟，且将小米运动健康固化为系统应用</string>
     <string name="remove_system_update_dialog">移除系统更新弹窗</string>
     <string name="remove_system_update_notification">移除系统更新通知</string>
+    <string name="module">模块</string>
 </resources>
