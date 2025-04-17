@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorThemeBackground">#FFFFFFFF</color>
-    <color name="colorTextDark">#FF777777</color>
-    <color name="colorTextGray">#FF323B42</color>
-    <color name="public_color_D3DBF9">#D3DBF9</color>
+    <color name="colorPrimaryAccent">#FF656565</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
 </resources>
