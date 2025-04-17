@@ -11,6 +11,7 @@ composeneumorphism = "1.0.0-alpha02"
 composeShimmer = "1.3.1"
 constraintlayoutVersion = "2.2.1"
 coreKtxVersion = "1.16.0"
+dexkitVersion = "2.0.3"
 drawabletoolboxVersion = "1.0.7"
 espressoCoreVersion = "3.6.1"
 expandablebottombar = "1.5.4"
@@ -53,6 +54,7 @@ coil-network-okhttp = { module = "io.coil-kt.coil3:coil-network-okhttp", version
 common = { module = "com.umeng.umsdk:common", version.ref = "commonVersion" }
 compose-shimmer = { module = "com.valentinilk.shimmer:compose-shimmer", version.ref = "composeShimmer" }
 composeneumorphism = { module = "me.nikhilchaudhari:composeNeumorphism", version.ref = "composeneumorphism" }
+dexkit = { module = "org.luckypray:dexkit", version.ref = "dexkitVersion" }
 drawabletoolbox = { module = "com.github.duanhong169:drawabletoolbox", version.ref = "drawabletoolboxVersion" }
 expandablebottombar = { module = "com.github.st235:expandablebottombar", version.ref = "expandablebottombar" }
 ezxhelper = { module = "com.github.kyuubiran:EzXHelper", version.ref = "ezxhelper" }

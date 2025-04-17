@@ -720,23 +720,26 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,
     val topAppBarScrollBehavior0 = MiuixScrollBehavior(rememberTopAppBarState())
     val topAppBarScrollBehavior1 = MiuixScrollBehavior(rememberTopAppBarState())
     val topAppBarScrollBehavior2 = MiuixScrollBehavior(rememberTopAppBarState())
+    val topAppBarScrollBehavior3 = MiuixScrollBehavior(rememberTopAppBarState())
 
     val topAppBarScrollBehaviorList = listOf(
-        topAppBarScrollBehavior0, topAppBarScrollBehavior1, topAppBarScrollBehavior2
+        topAppBarScrollBehavior0, topAppBarScrollBehavior1, topAppBarScrollBehavior2, topAppBarScrollBehavior3
     )
 
-    val pagerState = rememberPagerState(pageCount = { 3 },initialPage = 1)
+    val pagerState = rememberPagerState(pageCount = { 4 },initialPage = 0)
     var targetPage by remember { mutableIntStateOf(pagerState.currentPage) }
     val coroutineScope = rememberCoroutineScope()
     val currentScrollBehavior = when (pagerState.currentPage) {
         0 -> topAppBarScrollBehaviorList[0]
         1 -> topAppBarScrollBehaviorList[1]
-        else -> topAppBarScrollBehaviorList[2]
+        2 -> topAppBarScrollBehaviorList[2]
+        else -> topAppBarScrollBehaviorList[3]
     }
 
     val items = listOf(
-        NavigationItem(stringResource(R.string.func), ImageVector.vectorResource(id = R.drawable.func)),
         NavigationItem(stringResource(R.string.home), ImageVector.vectorResource(id = R.drawable.home)),
+        NavigationItem(stringResource(R.string.module), ImageVector.vectorResource(id = R.drawable.module)),
+        NavigationItem(stringResource(R.string.func), ImageVector.vectorResource(id = R.drawable.func)),
         NavigationItem(stringResource(R.string.about), ImageVector.vectorResource(id = R.drawable.about))
     )
 
@@ -781,8 +784,9 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,
         Box {
             TopAppBar(scrollBehavior = currentScrollBehavior,color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.background,
                 title = when (pagerState.currentPage) {
-                    0 -> stringResource(R.string.func)
-                    1 -> stringResource(R.string.app_name)
+                    0 -> stringResource(R.string.app_name)
+                    1 -> stringResource(R.string.module)
+                    2 -> stringResource(R.string.func)
                     else -> stringResource(R.string.about)
                 }, modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
                     Modifier.hazeEffect(
@@ -916,18 +920,6 @@ fun NavigationBar(
     }
 }
 
-/**
- * The data class for [NavigationBar].
- *
- * @param label The label of the item.
- * @param icon The icon of the item.
- */
-data class NavigationItem(
-    val label: String,
-    val icon: ImageVector
-)
-
-
 @Composable
 fun AppHorizontalPager(
     modifier: Modifier = Modifier,
@@ -943,20 +935,26 @@ fun AppHorizontalPager(
         userScrollEnabled = true,
         pageContent = { page ->
             when (page) {
-                0 -> Main_Function(
+                0 -> Main_Home(
                     topAppBarScrollBehavior = topAppBarScrollBehaviorList[0],
                     padding = padding,
                     navController = navController
                 )
 
-                1 -> Main_Home(
+                1 -> Main_Module(
                     topAppBarScrollBehavior = topAppBarScrollBehaviorList[1],
                     padding = padding,
                     navController = navController
                 )
 
-                else -> Main_About(
+                2 -> Main_Function(
                     topAppBarScrollBehavior = topAppBarScrollBehaviorList[2],
+                    padding = padding,
+                    navController = navController
+                )
+
+                else -> Main_About(
+                    topAppBarScrollBehavior = topAppBarScrollBehaviorList[3],
                     padding = padding,
                     context = context,
                     navController = navController
