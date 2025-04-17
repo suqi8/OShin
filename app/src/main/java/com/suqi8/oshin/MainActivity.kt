@@ -25,10 +25,13 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -749,8 +752,8 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,
         }
     }
     Scaffold(modifier = Modifier.fillMaxSize(),bottomBar = {
-        Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-            Card(modifier = Modifier.padding(20.dp).drawColoredShadow(
+        Column(modifier = Modifier.fillMaxWidth().padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()), horizontalAlignment = Alignment.CenterHorizontally) {
+            Card(modifier = Modifier.padding(bottom = 10.dp).drawColoredShadow(
                 MiuixTheme.colorScheme.onSurface,
                 0.1f,
                 borderRadius = CardDefaults.CornerRadius,
