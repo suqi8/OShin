@@ -692,6 +692,8 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.remove_system_update_dialog),
         category = "ota"),
     item(title = context.getString(R.string.remove_system_update_notification),
+        category = "ota"),
+    item(title = context.getString(R.string.remove_wlan_auto_download_dialog),
         category = "ota")
 )
 

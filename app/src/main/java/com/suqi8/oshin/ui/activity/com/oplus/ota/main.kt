@@ -40,6 +40,12 @@ fun ota(navController: NavController) {
                 category = "ota",
                 key = "remove_system_update_notification"
             )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.remove_wlan_auto_download_dialog),
+                category = "ota",
+                key = "remove_wlan_auto_download_dialog"
+            )
         }
     }
 }
