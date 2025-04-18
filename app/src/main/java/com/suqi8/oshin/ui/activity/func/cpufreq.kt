@@ -57,7 +57,7 @@ fun cpu_freq(navController: NavController) {
                             .padding(bottom = 6.dp)
                     ) {
                         SuperDropdown(
-                            title = stringResource(R.string.cpu_group_max_freq, core),
+                            title = stringResource(R.string.cpu_group_max_freq),
                             items = freqs,
                             selectedIndex = selectedMaxIndex,
                             onSelectedIndexChange = {
@@ -70,7 +70,7 @@ fun cpu_freq(navController: NavController) {
                         )
                         addline()
                         SuperDropdown(
-                            title = stringResource(R.string.cpu_group_min_freq, core),
+                            title = stringResource(R.string.cpu_group_min_freq),
                             items = freqs,
                             selectedIndex = selectedMinIndex,
                             onSelectedIndexChange = {
