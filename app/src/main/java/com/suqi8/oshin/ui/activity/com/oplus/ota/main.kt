@@ -46,6 +46,12 @@ fun ota(navController: NavController) {
                 category = "ota",
                 key = "remove_wlan_auto_download_dialog"
             )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.remove_unlock_and_dmverity_check),
+                category = "ota",
+                key = "remove_unlock_and_dmverity_check"
+            )
         }
     }
 }
