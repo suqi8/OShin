@@ -15,6 +15,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.LazyColumn
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -47,7 +48,14 @@ fun Main_Function(
                     SuperArrow(
                         title = stringResource(id = R.string.cpu_freq_main),
                         onClick = {
-                            navController.navigate("testfunc\\cpu_freq")
+                            navController.navigate("func\\cpu_freq")
+                        }
+                    )
+                    addline()
+                    SuperArrow(
+                        title = stringResource(id = R.string.rom_workshop),
+                        onClick = {
+                            navController.navigate("func\\romworkshop")
                         }
                     )
                 }

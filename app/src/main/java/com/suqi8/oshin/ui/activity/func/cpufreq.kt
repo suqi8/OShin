@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.activity.testfunc
+package com.suqi8.oshin.ui.activity.func
 
 import android.annotation.SuppressLint
 import android.util.Log
@@ -14,11 +14,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.executeCommand
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
@@ -31,8 +29,6 @@ import top.yukonga.miuix.kmp.extra.SuperDropdown
 @SuppressLint("SuspiciousIndentation")
 @Composable
 fun cpu_freq(navController: NavController) {
-    val context = LocalContext.current
-    val cpu_freq_main = remember { mutableStateOf(context.prefs("cpu_freq").getBoolean("cpu_freq_main", false)) }
     FunPage(
         title = stringResource(R.string.cpu_freq_main),
         navController = navController
