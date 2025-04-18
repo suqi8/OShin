@@ -111,9 +111,10 @@ import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
 import com.suqi8.oshin.ui.activity.com.oplus.games.games
 import com.suqi8.oshin.ui.activity.com.oplus.ota.ota
 import com.suqi8.oshin.ui.activity.com.oplus.phonemanager.oplusphonemanager
+import com.suqi8.oshin.ui.activity.func.cpu_freq
+import com.suqi8.oshin.ui.activity.func.romworkshop.Rom_workshop
 import com.suqi8.oshin.ui.activity.hide_apps_notice
 import com.suqi8.oshin.ui.activity.recent_update
-import com.suqi8.oshin.ui.activity.testfunc.cpu_freq
 import com.suqi8.oshin.ui.theme.AppTheme
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
@@ -704,11 +705,12 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("securepay") { securepay(navController) }
             composable("health") { health(navController) }
             composable("appdetail") { appdetail(navController) }
-            composable("testfunc\\cpu_freq") { cpu_freq(navController) }
+            composable("func\\cpu_freq") { cpu_freq(navController) }
             composable("hide_apps_notice") { hide_apps_notice(navController) }
             composable("quicksearchbox") { quicksearchbox(navController) }
             composable("mihealth") { mihealth(navController) }
             composable("ota") { ota(navController) }
+            composable("func\\romworkshop") { Rom_workshop(navController) }
         }
     }
 }

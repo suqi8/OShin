@@ -594,4 +594,6 @@
     <string name="module">模块</string>
     <string name="remove_wlan_auto_download_dialog">移除推荐开启 WLAN 自动下载弹窗</string>
     <string name="remove_unlock_and_dmverity_check">移除检测解锁状态与dm校验</string>
+    <string name="coming_soon">尽情期待</string>
+    <string name="rom_workshop">ROM工坊</string>
 </resources>
