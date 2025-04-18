@@ -593,4 +593,5 @@
     <string name="remove_system_update_notification">移除系统更新通知</string>
     <string name="module">模块</string>
     <string name="remove_wlan_auto_download_dialog">移除推荐开启 WLAN 自动下载弹窗</string>
+    <string name="remove_unlock_and_dmverity_check">移除检测解锁状态与dm校验</string>
 </resources>
