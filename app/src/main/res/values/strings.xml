@@ -596,4 +596,5 @@
     <string name="remove_unlock_and_dmverity_check">移除检测解锁状态与dm校验</string>
     <string name="coming_soon">尽情期待</string>
     <string name="rom_workshop">ROM工坊</string>
+    <string name="enable_mlbb_ai_god_assist">开启决胜巅峰AI大神辅助</string>
 </resources>

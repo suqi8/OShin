@@ -66,6 +66,16 @@ class games: YukiBaseHooker() {
                                 returnType = BooleanType
                             }.hook { before { result = true } }
                         }
+                        if (prefs("games").getBoolean("enable_mlbb_ai_god_assist", false) && it.className in "mlbb") {
+                            method {
+                                name = it.methodName
+                                returnType = BooleanType
+                            }.hook { before { result = true } }
+                            method {
+                                name = it.methodName
+                                returnType = BooleanType
+                            }.hook { before { result = true } }
+                        }
                     }
                 }
             }
