@@ -42,6 +42,7 @@ class HookEntry : IYukiHookXposedInit {
     }
 
     override fun onHook() = encase {
+        System.loadLibrary("dexkit")
         loadApp(hooker = android())
         loadApp(hooker = systemui())
         loadApp(hooker = LauncherIcon())

@@ -4,6 +4,8 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
+import org.luckypray.dexkit.DexKitBridge
+import java.lang.reflect.Modifier
 
 class games: YukiBaseHooker() {
     override fun onHook() {
@@ -34,15 +36,35 @@ class games: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("games").getBoolean("hok_ai_v1", false)) {
-                "business.module.aiplay.sgame.AIPlayFeature".toClass().apply {
-                    method {
-                        name = "f0"
-                        emptyParam()
-                        returnType = BooleanType
-                    }.hook {
-                        before {
-                            result = true
+            DexKitBridge.create(this.appInfo.sourceDir).use {
+                it.findMethod {
+                    matcher {
+                        modifiers = Modifier.PRIVATE
+                        returnType = "boolean"
+                        usingStrings("feature.support.game.AI_PLAY")
+                    }
+                }.forEach {
+                    YLog.info(it.name + it.className)
+                    it.className.toClass().apply {
+                        if (prefs("games").getBoolean("hok_ai_v1", false) && it.className in "sgame") {
+                            method {
+                                name = it.methodName
+                                returnType = BooleanType
+                            }.hook { before { result = true } }
+                            method {
+                                name = it.methodName
+                                returnType = BooleanType
+                            }.hook { before { result = true } }
+                        }
+                        if (prefs("games").getBoolean("pubg_ai", false) && it.className in "pubg") {
+                            method {
+                                name = it.methodName
+                                returnType = BooleanType
+                            }.hook { before { result = true } }
+                            method {
+                                name = it.methodName
+                                returnType = BooleanType
+                            }.hook { before { result = true } }
                         }
                     }
                 }
@@ -112,30 +134,6 @@ class games: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("games").getBoolean("pubg_ai", false)) {
-                "business.module.aiplay.pubg.AIPlayPubgFeature".toClass().apply {
-                    method {
-                        name = "Z"
-                        emptyParam()
-                        returnType = BooleanType
-                    }.hook {
-                        before {
-                            result = true
-                        }
-                    }
-                }
-                "business.module.aiplay.pubg.AIPlayPubgFeature".toClass().apply {
-                    method {
-                        name = "isFeatureEnabled"
-                        param("java.lang.String")
-                        returnType = BooleanType
-                    }.hook {
-                        before {
-                            result = true
-                        }
-                    }
-                }
-            }
             if (prefs("games").getBoolean("remove_game_filter_root_detection", false)) {
                 "business.module.gamefilter.GameFilterFeature".toClass().apply {
                     method {
@@ -145,7 +143,7 @@ class games: YukiBaseHooker() {
                     }.hook {
                         after {
                             val Rresult = result
-                            YLog.info("Root返回模式：$Rresult")
+                            //YLog.info("Root返回模式：$Rresult")
                             if (Rresult == 1) result = 0
                         }
                     }
