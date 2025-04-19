@@ -60,6 +60,12 @@ fun games(navController: NavController) {
                 category = "games",
                 key = "remove_game_filter_root_detection"
             )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.enable_mlbb_ai_god_assist),
+                category = "games",
+                key = "enable_mlbb_ai_god_assist"
+            )
         }
         SmallTitle(stringResource(R.string.hok))
         Card(

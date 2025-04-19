@@ -696,7 +696,9 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.remove_wlan_auto_download_dialog),
         category = "ota"),
     item(title = context.getString(R.string.remove_unlock_and_dmverity_check),
-        category = "ota")
+        category = "ota"),
+    item(title = context.getString(R.string.enable_mlbb_ai_god_assist),
+        category = "games")
 )
 
 var notInstallList = mutableStateOf(emptyList<String>())
