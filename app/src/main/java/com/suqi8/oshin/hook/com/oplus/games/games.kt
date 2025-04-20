@@ -66,6 +66,20 @@ class games: YukiBaseHooker() {
                         it.className.toClass().method { name = it.methodName }.hook { before { result = true } }
                     }
                 }
+                //云控
+                if (prefs("games").getBoolean("feature_disable_cloud_control", false)) {
+                    it.findMethod {
+                        searchPackages("com.coloros.gamespaceui.config.cloud")
+                        matcher {
+                            modifiers = Modifier.PUBLIC
+                            returnType = "boolean"
+                            usingStrings("cloudKey")
+                            paramTypes("java.lang.String", "java.util.Map")
+                        }
+                    }.singleOrNull()?.also {
+                        it.className.toClass().method { name = it.methodName }.hook { before { result = true } }
+                    }
+                }
             }
             if (prefs("games").getBoolean("hok_ai_v2", false)) {
                 "business.module.aiplay.sgame.AIPlayFeature".toClass().apply {
@@ -85,19 +99,6 @@ class games: YukiBaseHooker() {
                     method {
                         name = "g0"
                         emptyParam()
-                        returnType = BooleanType
-                    }.hook {
-                        before {
-                            result = true
-                        }
-                    }
-                }
-            }
-            if (prefs("games").getBoolean("feature_disable_cloud_control", false)) {
-                "com.coloros.gamespaceui.config.cloud.CloudConditionUtil".toClass().apply {
-                    method {
-                        name = "j"
-                        param("java.lang.String", "java.util.Map")
                         returnType = BooleanType
                     }.hook {
                         before {
