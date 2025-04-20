@@ -92,13 +92,6 @@ fun games(navController: NavController) {
                 category = "games",
                 key = "hok_ai_v3"
             )
-            addline()
-            FunSwich(
-                title = stringResource(R.string.hok_ai_assistant_remove_pkg_restriction),
-                summary = stringResource(R.string.ai_assistant_global_display),
-                category = "games",
-                key = "hok_ai_remove_pkg_restriction"
-            )
         }
         SmallTitle(stringResource(R.string.pubg))
         Card(

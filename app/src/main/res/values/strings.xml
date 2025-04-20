@@ -236,9 +236,7 @@
     <string name="enable_hok_ai_v1">开启AI大神辅助V1</string>
     <string name="enable_hok_ai_v2">开启AI大神辅助V2</string>
     <string name="enable_hok_ai_v3">开启AI大神辅助V3</string>
-    <string name="hok_ai_assistant_remove_pkg_restriction">移除AI大神辅助包名限制</string>
     <string name="realme_gt7pro_feature_unlock_device_restriction">真我 GT7 Pro专属功能，开启此功能将移除机型限制</string>
-    <string name="ai_assistant_global_display">开启此功能将会在所有游戏显示“AI大神辅助”</string>
     <string name="hok">王者荣耀</string>
     <string name="feature_disable_cloud_control">移除功能云控</string>
     <string name="remove_package_restriction">移除包名限制</string>
