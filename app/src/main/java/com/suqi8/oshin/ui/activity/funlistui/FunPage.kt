@@ -49,6 +49,7 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.icon.icons.useful.Refresh
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 @OptIn(ExperimentalHazeApi::class)
 @Composable
@@ -122,6 +123,7 @@ fun FunPage(title: String, appList: List<String>? = listOf(), navController: Nav
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .overScrollVertical()
                 .hazeSource(state = hazeState)
                 .background(MiuixTheme.colorScheme.background)
                 .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))

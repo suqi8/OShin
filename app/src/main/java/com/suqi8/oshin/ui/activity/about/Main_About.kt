@@ -70,6 +70,7 @@ import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 import java.lang.reflect.Method
 import java.time.Instant
 import java.time.ZoneId
@@ -101,6 +102,7 @@ fun Main_About(
         LazyColumn(
             contentPadding = padding,
             modifier = Modifier.fillMaxSize().nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+                .overScrollVertical()
         ) {
             item {
                 Spacer(modifier = Modifier.height(16.dp))

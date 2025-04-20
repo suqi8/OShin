@@ -45,6 +45,7 @@ import top.yukonga.miuix.kmp.extra.CheckboxLocation
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperCheckbox
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -109,6 +110,7 @@ fun FunAppSele(title: String, summary: String? = null, category: String, key: St
 
                     LazyColumn(
                         modifier = Modifier.animateContentSize() // 列表高度变化时，带动画
+                            .overScrollVertical()
                     ) {
                         // 过滤并排序应用列表
                         val filteredList = appList.value

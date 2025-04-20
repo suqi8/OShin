@@ -80,6 +80,7 @@ import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import kotlin.random.Random
@@ -98,6 +99,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
     LazyColumn(
         contentPadding = padding,
         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+            .overScrollVertical()
     ) {
         item {
             LaunchedEffect(Unit) {
