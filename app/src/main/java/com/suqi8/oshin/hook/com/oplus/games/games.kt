@@ -38,28 +38,16 @@ class games: YukiBaseHooker() {
                                 name = it.methodName
                                 returnType = BooleanType
                             }.hook { before { result = true } }
-                            method {
-                                name = "isFeatureEnabled"
-                                returnType = BooleanType
-                            }.hook { before { result = true } }
                         }
                         if (prefs("games").getBoolean("pubg_ai", false) && it.className in "pubg") {
                             method {
                                 name = it.methodName
                                 returnType = BooleanType
                             }.hook { before { result = true } }
-                            method {
-                                name = "isFeatureEnabled"
-                                returnType = BooleanType
-                            }.hook { before { result = true } }
                         }
                         if (prefs("games").getBoolean("enable_mlbb_ai_god_assist", false) && it.className in "mlbb") {
                             method {
                                 name = it.methodName
-                                returnType = BooleanType
-                            }.hook { before { result = true } }
-                            method {
-                                name = "isFeatureEnabled"
                                 returnType = BooleanType
                             }.hook { before { result = true } }
                         }
