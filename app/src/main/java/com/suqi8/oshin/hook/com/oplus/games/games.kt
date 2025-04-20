@@ -9,19 +9,6 @@ import java.lang.reflect.Modifier
 class games: YukiBaseHooker() {
     override fun onHook() {
         loadApp(name = "com.oplus.games") {
-            if (prefs("games").getBoolean("ultra_combo", false)) {
-                "business.module.assistkey.GameAssistKeyFeature".toClass().apply {
-                    method {
-                        name = "L"
-                        emptyParam()
-                        returnType = BooleanType
-                    }.hook {
-                        before {
-                            result = true
-                        }
-                    }
-                }
-            }
             DexKitBridge.create(this.appInfo.sourceDir).use {
                 //游戏AI
                 it.findMethod {
@@ -66,6 +53,19 @@ class games: YukiBaseHooker() {
                         it.className.toClass().method { name = it.methodName }.hook { before { result = true } }
                     }
                 }
+                //超神连招
+                if (prefs("games").getBoolean("ultra_combo", false)) {
+                    it.findMethod {
+                        searchPackages("business.module.assistkey")
+                        matcher {
+                            modifiers = Modifier.PRIVATE
+                            returnType = "boolean"
+                            usingStrings("feature.support.game.ASSIST_KEY")
+                        }
+                    }.singleOrNull()?.also {
+                        it.className.toClass().method { name = it.methodName }.hook { before { result = true } }
+                    }
+                }
             }
             if (prefs("games").getBoolean("hok_ai_v2", false)) {
                 "business.module.aiplay.sgame.AIPlayFeature".toClass().apply {
@@ -85,19 +85,6 @@ class games: YukiBaseHooker() {
                     method {
                         name = "g0"
                         emptyParam()
-                        returnType = BooleanType
-                    }.hook {
-                        before {
-                            result = true
-                        }
-                    }
-                }
-            }
-            if (prefs("games").getBoolean("hok_ai_remove_pkg_restriction", false)) {
-                "business.module.aiplay.sgame.AIPlayFeature".toClass().apply {
-                    method {
-                        name = "isFeatureEnabled"
-                        param("java.lang.String")
                         returnType = BooleanType
                     }.hook {
                         before {
