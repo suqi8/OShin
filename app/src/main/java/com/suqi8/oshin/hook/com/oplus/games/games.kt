@@ -80,6 +80,19 @@ class games: YukiBaseHooker() {
                         it.className.toClass().method { name = it.methodName }.hook { before { result = true } }
                     }
                 }
+                //去除报名限制
+                if (prefs("games").getBoolean("remove_package_restriction", false)) {
+                    it.findMethod {
+                        searchPackages("com.coloros.gamespaceui.config.cloud")
+                        matcher {
+                            modifiers = Modifier.PRIVATE
+                            returnType = "boolean"
+                            paramTypes("java.util.Set", "java.util.Map")
+                        }
+                    }.singleOrNull()?.also {
+                        it.className.toClass().method { name = it.methodName }.hook { before { result = true } }
+                    }
+                }
             }
             if (prefs("games").getBoolean("hok_ai_v2", false)) {
                 "business.module.aiplay.sgame.AIPlayFeature".toClass().apply {
@@ -99,19 +112,6 @@ class games: YukiBaseHooker() {
                     method {
                         name = "g0"
                         emptyParam()
-                        returnType = BooleanType
-                    }.hook {
-                        before {
-                            result = true
-                        }
-                    }
-                }
-            }
-            if (prefs("games").getBoolean("remove_package_restriction", false)) {
-                "com.coloros.gamespaceui.config.cloud.CloudConditionUtil".toClass().apply {
-                    method {
-                        name = "a"
-                        param("java.util.Set", "java.util.Map")
                         returnType = BooleanType
                     }.hook {
                         before {
