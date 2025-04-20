@@ -2,7 +2,6 @@ package com.suqi8.oshin.hook.com.oplus.games
 
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import org.luckypray.dexkit.DexKitBridge
 import java.lang.reflect.Modifier
@@ -23,28 +22,16 @@ class games: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("games").getBoolean("enable_all_features", false)) {
-                "v20.b".toClass().apply {
-                    method {
-                        name = "b"
-                        param("android.content.ContentResolver", "java.lang.String")
-                        returnType = BooleanType
-                    }.hook {
-                        before {
-                            result = true
-                        }
-                    }
-                }
-            }
             DexKitBridge.create(this.appInfo.sourceDir).use {
+                //游戏AI
                 it.findMethod {
+                    searchPackages("business.module.aiplay")
                     matcher {
                         modifiers = Modifier.PRIVATE
                         returnType = "boolean"
                         usingStrings("feature.support.game.AI_PLAY")
                     }
                 }.forEach {
-                    YLog.info(it.name + it.className)
                     it.className.toClass().apply {
                         if (prefs("games").getBoolean("hok_ai_v1", false) && it.className in "sgame") {
                             method {
@@ -52,7 +39,7 @@ class games: YukiBaseHooker() {
                                 returnType = BooleanType
                             }.hook { before { result = true } }
                             method {
-                                name = it.methodName
+                                name = "isFeatureEnabled"
                                 returnType = BooleanType
                             }.hook { before { result = true } }
                         }
@@ -62,7 +49,7 @@ class games: YukiBaseHooker() {
                                 returnType = BooleanType
                             }.hook { before { result = true } }
                             method {
-                                name = it.methodName
+                                name = "isFeatureEnabled"
                                 returnType = BooleanType
                             }.hook { before { result = true } }
                         }
@@ -72,10 +59,23 @@ class games: YukiBaseHooker() {
                                 returnType = BooleanType
                             }.hook { before { result = true } }
                             method {
-                                name = it.methodName
+                                name = "isFeatureEnabled"
                                 returnType = BooleanType
                             }.hook { before { result = true } }
                         }
+                    }
+                }
+                //全部功能
+                if (prefs("games").getBoolean("enable_all_features", false)) {
+                    it.findMethod {
+                        matcher {
+                            modifiers = Modifier.PUBLIC
+                            returnType = "boolean"
+                            paramTypes("android.content.ContentResolver", "java.lang.String")
+                        }
+                    }.singleOrNull()?.also {
+                        //YLog.info("methodName:"+it.methodName + " className:" + it.className)
+                        it.className.toClass().method { name = it.methodName }.hook { before { result = true } }
                     }
                 }
             }
