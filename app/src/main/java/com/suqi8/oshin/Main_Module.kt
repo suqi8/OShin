@@ -93,6 +93,7 @@ import top.yukonga.miuix.kmp.icon.icons.useful.Search
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.BackHandler
 import top.yukonga.miuix.kmp.utils.SmoothRoundedCornerShape
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 import java.text.Collator
 import java.util.Locale
 import kotlin.math.abs
@@ -794,7 +795,8 @@ fun Main_Module(
                         bottom = if (isKeyboardVisible) 0.dp else padding.calculateBottomPadding()
                     )
             ) {
-                LazyColumn(modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)) {
+                LazyColumn(modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+                    .overScrollVertical()) {
                     if (filteredFeatures.isEmpty()) {
                         item {
                             Box(
@@ -860,6 +862,7 @@ fun Main_Module(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
+                    .overScrollVertical()
                     .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
             ) {
                 item {

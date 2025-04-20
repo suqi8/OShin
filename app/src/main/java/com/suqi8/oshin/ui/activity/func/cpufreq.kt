@@ -8,16 +8,12 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.material3.Icon
@@ -65,6 +61,7 @@ import top.yukonga.miuix.kmp.extra.SuperDropdown
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 @OptIn(ExperimentalHazeApi::class)
 @SuppressLint("SuspiciousIndentation")
@@ -142,17 +139,16 @@ fun cpu_freq(navController: NavController) {
         }
         PullToRefresh(
             modifier = Modifier.padding(
-                top = padding.calculateTopPadding()
+                padding
             ),
             pullToRefreshState = pullToRefreshState
         ) {
             LazyColumn(
                 modifier = Modifier
+                    .overScrollVertical()
                     .fillMaxSize()
                     .hazeSource(state = hazeState)
                     .background(MiuixTheme.colorScheme.background)
-                    .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                    .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal))
                     .nestedScroll(topAppBarState.nestedScrollConnection),
                 state = lazyListState
             ) {

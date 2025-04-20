@@ -38,6 +38,7 @@ import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperDropdown
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 import java.io.File
 import java.io.IOException
 
@@ -432,6 +433,7 @@ fun cpu_temp_data(show: MutableState<Boolean>) {
             modifier = Modifier
                 .fillMaxWidth()
                 .heightIn(max = 300.dp)
+                .overScrollVertical()
         ) {
             items(temperatures) { temperatureInfo ->
                 BasicComponent(

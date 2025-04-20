@@ -20,6 +20,7 @@ import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.extra.SuperArrow
+import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
@@ -32,6 +33,7 @@ fun Main_Function(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
+            .overScrollVertical()
             .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
     ) {
         item {
