@@ -93,6 +93,22 @@ class games: YukiBaseHooker() {
                         it.className.toClass().method { name = it.methodName }.hook { before { result = true } }
                     }
                 }
+                //root检测
+                if (prefs("games").getBoolean("remove_game_filter_root_detection", false)) {
+                    it.findMethod {
+                        searchPackages("business.module.gamefilter")
+                        matcher {
+                            modifiers = Modifier.PUBLIC
+                            returnType = "java.lang.Integer"
+                        }
+                    }.forEach {
+                        it.className.toClass().method { name = it.methodName }.hook { after {
+                            val Rresult = result
+                            //YLog.info(it.methodName+"Root返回模式：$Rresult")
+                            if (Rresult == 1) result = 0
+                        } }
+                    }
+                }
             }
             if (prefs("games").getBoolean("hok_ai_v2", false)) {
                 "business.module.aiplay.sgame.AIPlayFeature".toClass().apply {
@@ -116,21 +132,6 @@ class games: YukiBaseHooker() {
                     }.hook {
                         before {
                             result = true
-                        }
-                    }
-                }
-            }
-            if (prefs("games").getBoolean("remove_game_filter_root_detection", false)) {
-                "business.module.gamefilter.GameFilterFeature".toClass().apply {
-                    method {
-                        name = "R"
-                        emptyParam()
-                        returnType = "java.lang.Integer"
-                    }.hook {
-                        after {
-                            val Rresult = result
-                            //YLog.info("Root返回模式：$Rresult")
-                            if (Rresult == 1) result = 0
                         }
                     }
                 }
