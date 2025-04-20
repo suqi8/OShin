@@ -2,6 +2,7 @@ package com.suqi8.oshin.hook.com.oplus.games
 
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
+import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import org.luckypray.dexkit.DexKitBridge
 import java.lang.reflect.Modifier
@@ -109,30 +110,29 @@ class games: YukiBaseHooker() {
                         } }
                     }
                 }
-            }
-            if (prefs("games").getBoolean("hok_ai_v2", false)) {
-                "business.module.aiplay.sgame.AIPlayFeature".toClass().apply {
-                    method {
-                        name = "e0"
-                        emptyParam()
-                        returnType = BooleanType
-                    }.hook {
-                        before {
-                            result = true
+                if (prefs("games").getBoolean("hok_ai_v2", false)) {
+                    it.findMethod {
+                        searchPackages("business.module.aiplay.sgame")
+                        matcher {
+                            modifiers = Modifier.PUBLIC
+                            returnType = "boolean"
+                            usingStrings("feature.support.game.AI_PLAY_version2")
                         }
+                    }.singleOrNull()?.also {
+                        YLog.info("methodName:"+it.methodName + " className:" + it.className)
+                        it.className.toClass().method { name = it.methodName }.hook { before { result = true } }
                     }
                 }
-            }
-            if (prefs("games").getBoolean("hok_ai_v3", false)) {
-                "business.module.aiplay.sgame.AIPlayFeature".toClass().apply {
-                    method {
-                        name = "g0"
-                        emptyParam()
-                        returnType = BooleanType
-                    }.hook {
-                        before {
-                            result = true
+                if (prefs("games").getBoolean("hok_ai_v3", false)) {
+                    it.findMethod {
+                        searchPackages("business.module.aiplay.sgame")
+                        matcher {
+                            modifiers = Modifier.PUBLIC
+                            returnType = "boolean"
+                            usingStrings("feature.support.game.AI_PLAY_version3")
                         }
+                    }.singleOrNull()?.also {
+                        it.className.toClass().method { name = it.methodName }.hook { before { result = true } }
                     }
                 }
             }
