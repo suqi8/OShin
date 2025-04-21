@@ -121,7 +121,7 @@ fun Main_About(
     val secScale = remember { mutableFloatStateOf(1f) }
     val scroll = rememberLazyListState()
     LaunchedEffect(scroll) {
-        snapshotFlow { scroll.firstVisibleItemScrollOffset }
+        snapshotFlow { scroll.firstVisibleItemScrollOffset/1.8 }
             .onEach {
                 if (scroll.firstVisibleItemIndex > 0){
                     bgAlpha.floatValue = 0f
@@ -222,6 +222,7 @@ fun Main_About(
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp)
+                        .alpha(scroll.firstVisibleItemScrollOffset.toFloat() / 1000)
                 ) {
                     SuperArrow(title = stringResource(R.string.Device_Name), onClick = {
                         showDeviceNameDialog.value = true
@@ -254,6 +255,7 @@ fun Main_About(
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp)
+                        .alpha(scroll.firstVisibleItemScrollOffset.toFloat() / 1000)
                 ) {
 
                     Text(

@@ -19,7 +19,7 @@ class BgEffectPainter(context: Context) {
     private var uBgBound = floatArrayOf(0.0f, 0.4489f, 1.0f, 0.5511f)
     private val uTranslateY = 0.0f
     private var uPoints = floatArrayOf(0.67f, 0.42f, 1.0f, 0.69f, 0.75f, 1.0f, 0.14f, 0.71f, 0.95f, 0.14f, 0.27f, 0.8f)
-    private var uColors = floatArrayOf(0.57f, 0.76f, 0.98f, 1.0f, 0.98f, 0.85f, 0.68f, 1.0f, 0.98f, 0.75f, 0.93f, 1.0f, 0.73f, 0.7f, 0.98f, 1.0f)
+    private var uColors = generateRandomColors()
     private val uAlphaMulti = 1.0f
     private val uNoiseScale = 1.5f
     private val uPointOffset = 0.1f
@@ -31,6 +31,12 @@ class BgEffectPainter(context: Context) {
     private val uShadowColorOffset = 0.3f
     private val uShadowNoiseScale = 5.0f
     private val uShadowOffset = 0.01f
+    private var startColors: FloatArray = uColors.copyOf()
+    private var targetColors: FloatArray = uColors.copyOf()
+    private var transitionStartTime: Long = 0L
+    private var isTransitioning = false
+    private var colorChangeHandler: android.os.Handler? = null
+    private var colorRunnable: Runnable? = null
 
     init {
         val loadShader = loadShader(mResources, R.raw.bg_frag)
@@ -93,16 +99,72 @@ class BgEffectPainter(context: Context) {
         setLightOffset(0.1f)
         setSaturateOffset(0.2f)
         setPoints(floatArrayOf(0.67f,0.42f,1.0f,0.69f,0.75f,1.0f,0.14f,0.71f,0.95f,0.14f,0.27f, 0.8f))
-        setColors(floatArrayOf(0.57f,0.76f,0.98f,1.0f,0.98f,0.85f,0.68f,1.0f,0.98f,0.75f,0.93f,1.0f,0.73f,0.7f,0.98f,1.0f))
+        setColors(generateRandomColors())
         setBound(fArr)
+        startColorAnimation(false)
     }
 
     fun setPhoneDark(fArr: FloatArray) {
         setLightOffset(-0.1f)
         setSaturateOffset(0.2f)
         setPoints(floatArrayOf(0.63f, 0.5f, 0.88f, 0.69f, 0.75f, 0.8f, 0.17f, 0.66f, 0.81f, 0.14f, 0.24f, 0.72f))
-        setColors(floatArrayOf(0.0f, 0.31f, 0.58f, 1.0f, 0.53f, 0.29f, 0.15f, 1.0f, 0.46f, 0.06f, 0.27f, 1.0f, 0.16f, 0.12f, 0.45f, 1.0f))
+        setColors(generateRandomColors())
         setBound(fArr)
+        startColorAnimation(true)
+    }
+
+    fun startColorAnimation(isDarkMode: Boolean) {
+        colorChangeHandler = android.os.Handler(android.os.Looper.getMainLooper())
+        colorRunnable = object : Runnable {
+            override fun run() {
+                startColors = uColors.copyOf()
+                targetColors = generateRandomColors(isDark = isDarkMode)
+                transitionStartTime = System.currentTimeMillis()
+                isTransitioning = true
+                runTransitionFrame()
+                colorChangeHandler?.postDelayed(this, 3000)
+            }
+        }
+        colorChangeHandler?.post(colorRunnable!!)
+    }
+
+    private fun runTransitionFrame() {
+        if (!isTransitioning) return
+
+        val duration = 3000f
+        val elapsed = System.currentTimeMillis() - transitionStartTime
+        val t = (elapsed / duration).coerceIn(0f, 1f)
+
+        val interpolatedColors = FloatArray(startColors.size)
+        for (i in startColors.indices) {
+            interpolatedColors[i] = startColors[i] * (1 - t) + targetColors[i] * t
+        }
+        setColors(interpolatedColors)
+
+        if (t < 1f) {
+            // 下一帧
+            android.os.Handler(android.os.Looper.getMainLooper())
+                .postDelayed({ runTransitionFrame() }, 16L) // 约 60fps
+        } else {
+            isTransitioning = false
+        }
+    }
+
+    fun generateRandomColors(count: Int = 4, isDark: Boolean = false): FloatArray {
+        val colors = FloatArray(count * 4)
+        for (i in 0 until count) {
+            val base = if (isDark) 0.0 else 0.3
+            val range = if (isDark) 0.5 else 0.7
+            val r = (base + Math.random() * range).toFloat()
+            val g = (base + Math.random() * range).toFloat()
+            val b = (base + Math.random() * range).toFloat()
+            val a = 1.0f
+            colors[i * 4] = r
+            colors[i * 4 + 1] = g
+            colors[i * 4 + 2] = b
+            colors[i * 4 + 3] = a
+        }
+        return colors
     }
 
     fun setResolution(fArr: FloatArray) {
