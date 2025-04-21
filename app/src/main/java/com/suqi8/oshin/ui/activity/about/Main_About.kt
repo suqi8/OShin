@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -47,16 +48,15 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.fontscaling.MathUtils.lerp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI_Impl
@@ -164,17 +164,29 @@ fun Main_About(
             .height(520.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
+            val gradientColors = if (colorMode.value == 2) {
+                listOf(
+                    Color("#D0A279ED".toColorInt()),
+                    Color("#D0E3BCB1".toColorInt())
+                )
+            } else {
+                listOf(
+                    Color("#D03A18AD".toColorInt()),
+                    Color("#D0A56138".toColorInt())
+                )
+            }
             Text(
-                text = buildAnnotatedString {
+                text = /*buildAnnotatedString {
                     append("O")
                     withStyle(style = SpanStyle(color = MiuixTheme.colorScheme.primaryVariant.copy(alpha = mainAlpha.floatValue))) {
                         append("Shin ")
                     }
                     append(BuildConfig.BUILD_TYPE_TAG)
-                },
+                }*/"OShin ${BuildConfig.BUILD_TYPE_TAG}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 32.sp,
-                color = MiuixTheme.colorScheme.onBackground.copy(
+                style = TextStyle(
+                    brush = Brush.linearGradient(colors = gradientColors),
                     alpha = mainAlpha.floatValue
                 ),
                 modifier = Modifier.scale(mainScale.floatValue)
