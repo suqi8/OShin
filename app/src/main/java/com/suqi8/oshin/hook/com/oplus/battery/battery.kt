@@ -18,6 +18,18 @@ class battery: YukiBaseHooker() {
                 }
             }
             if (prefs("battery").getInt("auto_start_max_limit", 5) != 5) {
+                /*DexKitBridge.create(this.appInfo.sourceDir).use {
+                    it.findMethod {
+                        matcher {
+                            modifiers = Modifier.PUBLIC
+                            returnType = "int"
+                            paramTypes()
+                            usingNumbers(5,20)
+                        }
+                    }.forEach {
+                        it.className.toClass().method { name = it.methodName }.hook { before { replaceTo(prefs("battery").getInt("auto_start_max_limit", 5)) } }
+                    }
+                }*/
                 "qa.c".toClass().apply {
                     method {
                         name = "k"

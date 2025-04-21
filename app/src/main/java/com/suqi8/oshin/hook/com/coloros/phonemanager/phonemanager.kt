@@ -2,9 +2,12 @@ package com.suqi8.oshin.hook.com.coloros.phonemanager
 
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
+import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.UnitType
+import org.luckypray.dexkit.DexKitBridge
+import java.lang.reflect.Modifier
 
 class phonemanager: YukiBaseHooker() {
     override fun onHook() {
@@ -43,15 +46,20 @@ class phonemanager: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("phonemanager").getString("custom_prompt_content", "") != "") {
-                "com.oplus.phonemanager.newrequest.delegate.m0".toClass().apply {
-                    method {
-                        name = "a"
-                        param("java.util.List", IntType)
-                        returnType = "java.lang.String"
-                    }.hook {
-                        before {
-                            result = prefs("phonemanager").getString("custom_prompt_content", "")
+            DexKitBridge.create(this.appInfo.sourceDir).use {
+                if (prefs("phonemanager").getString("custom_prompt_content", "") != "") {
+                    it.findMethod {
+                        searchPackages("com.oplus.phonemanager.newrequest.delegate")
+                        matcher {
+                            modifiers = Modifier.PUBLIC
+                            usingStrings("updateScanResult manualOptItems: ","main_entry_summary")
+                        }
+                    }.forEach {
+                        YLog.info("methodName:"+it.methodName + " className:" + it.className)
+                        it.className.toClass().method { name = it.methodName }.hook {
+                            before {
+                                result = prefs("phonemanager").getString("custom_prompt_content", "")
+                            }
                         }
                     }
                 }
