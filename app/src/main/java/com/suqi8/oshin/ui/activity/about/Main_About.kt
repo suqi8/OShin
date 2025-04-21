@@ -61,6 +61,7 @@ import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI_Impl
+import com.suqi8.oshin.BuildConfig
 import com.suqi8.oshin.R
 import com.suqi8.oshin.executeCommand
 import com.suqi8.oshin.ui.activity.funlistui.addline
@@ -183,7 +184,7 @@ fun Main_About(
                         append("Shin ")
                     }
                     append(BuildConfig.BUILD_TYPE_TAG)
-                }*/"Col_larOS",
+                }*/"OShin ${BuildConfig.BUILD_TYPE_TAG}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 32.sp,
                 style = TextStyle(
