@@ -39,6 +39,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -57,6 +58,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
@@ -673,7 +675,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
                     SizeTransform(clip = true)  // 允许页面在过渡时进行缩放，但不裁剪内容
                 }
         ) {
-            composable("Main") { Main1(modifier = modifier, context = context,navController, hazeState, hazeStyle) }
+            composable("Main") { Main1(context = context,navController, hazeState, hazeStyle, colorMode) }
             composable("recent_update") { recent_update(navController) }
             composable("android") { android(navController) }
             composable("android\\package_manager_services") { package_manager_services(navController = navController) }
@@ -720,8 +722,9 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
 )
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "InflateParams", "ResourceType")
 @Composable
-fun Main1(modifier: Modifier,context: Context,navController: NavController,
-          hazeState: HazeState, hazeStyle: HazeStyle) {
+fun Main1(context: Context,navController: NavController,
+          hazeState: HazeState, hazeStyle: HazeStyle,
+          colorMode: MutableState<Int>) {
     val topAppBarScrollBehavior0 = MiuixScrollBehavior(rememberTopAppBarState())
     val topAppBarScrollBehavior1 = MiuixScrollBehavior(rememberTopAppBarState())
     val topAppBarScrollBehavior2 = MiuixScrollBehavior(rememberTopAppBarState())
@@ -786,47 +789,48 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,
             }
         }
     }, topBar = {
-        Box {
-            TopAppBar(scrollBehavior = currentScrollBehavior,color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.background,
-                title = when (pagerState.currentPage) {
-                    0 -> stringResource(R.string.app_name)
-                    1 -> stringResource(R.string.module)
-                    2 -> stringResource(R.string.func)
-                    else -> stringResource(R.string.about)
-                }, modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
-                    Modifier.hazeEffect(
-                        state = hazeState,
-                        style = hazeStyle, block = fun HazeEffectScope.() {
-                            inputScale = HazeInputScale.Auto
-                            if (context.prefs("settings").getBoolean("enable_gradient_blur", true)) progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
-                        })
-                } else Modifier, navigationIcon = {
-                    /*Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null,
-                        modifier = Modifier.size(50.dp))*/
-
-                    Card(modifier = Modifier
-                        .size(55.dp).padding(10.dp)) {
-                        Box(modifier = Modifier.fillMaxSize()) {
-                            /*Image(
-                                painter = painterResource(id = R.drawable.icon_background_newyear),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
-                                *//*.offset(y = (-20).dp)*//*,
+        AnimatedVisibility(pagerState.currentPage != 3) {
+            Box(modifier = Modifier.clip(RoundedCornerShape(28.dp))) {
+                TopAppBar(scrollBehavior = currentScrollBehavior,color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.background,
+                    title = when (pagerState.currentPage) {
+                        0 -> stringResource(R.string.app_name)
+                        1 -> stringResource(R.string.module)
+                        2 -> stringResource(R.string.func)
+                        else -> stringResource(R.string.about)
+                    }, modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
+                        Modifier.hazeEffect(
+                            state = hazeState,
+                            style = hazeStyle, block = fun HazeEffectScope.() {
+                                inputScale = HazeInputScale.Auto
+                                if (context.prefs("settings").getBoolean("enable_gradient_blur", true)) progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
+                            })
+                    } else Modifier, navigationIcon = {
+                        /*Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null,
+                            modifier = Modifier.size(50.dp))*/
+                        Card(modifier = Modifier
+                            .size(55.dp).padding(10.dp)) {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                /*Image(
+                                    painter = painterResource(id = R.drawable.icon_background_newyear),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
+                                    *//*.offset(y = (-20).dp)*//*,
                         contentScale = ContentScale.Crop
                     )*/
-                            Image(
-                                painter = painterResource(id = R.drawable.icon),
-                                contentDescription = null,
-                                modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f).clickable {
-                                    //context.prefs("settings").edit { putBoolean("privacy",true) }
-                                }
-                                /*.offset(y = (-20).dp)*/,
-                                contentScale = ContentScale.Crop
-                            )
+                                Image(
+                                    painter = painterResource(id = R.drawable.icon),
+                                    contentDescription = null,
+                                    modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f).clickable {
+                                        //context.prefs("settings").edit { putBoolean("privacy",true) }
+                                    }
+                                    /*.offset(y = (-20).dp)*/,
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
                         }
-                    }
-                })
-            Image(painter = painterResource(R.drawable.osu),contentDescription = null, modifier = Modifier.fillMaxWidth())
+                    })
+                Image(painter = painterResource(R.drawable.osu),contentDescription = null, modifier = Modifier.fillMaxWidth())
+            }
         }
     }) { padding ->
         Box(modifier = Modifier.hazeSource(
@@ -838,7 +842,8 @@ fun Main1(modifier: Modifier,context: Context,navController: NavController,
                 topAppBarScrollBehaviorList = topAppBarScrollBehaviorList,
                 padding = padding,
                 navController = navController,
-                context = context
+                context = context,
+                colorMode = colorMode
             )
         }
         /*Column(modifier = Modifier.padding(Padding)) {
@@ -932,7 +937,8 @@ fun AppHorizontalPager(
     topAppBarScrollBehaviorList: List<ScrollBehavior>,
     padding: PaddingValues,
     navController: NavController,
-    context: Context
+    context: Context,
+    colorMode: MutableState<Int>
 ) {
     HorizontalPager(
         modifier = modifier,
@@ -962,7 +968,8 @@ fun AppHorizontalPager(
                     topAppBarScrollBehavior = topAppBarScrollBehaviorList[3],
                     padding = padding,
                     context = context,
-                    navController = navController
+                    navController = navController,
+                    colorMode = colorMode
                 )
             }
         }
