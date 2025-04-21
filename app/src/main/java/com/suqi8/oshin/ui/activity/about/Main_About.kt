@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -60,7 +61,6 @@ import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI_Impl
-import com.suqi8.oshin.BuildConfig
 import com.suqi8.oshin.R
 import com.suqi8.oshin.executeCommand
 import com.suqi8.oshin.ui.activity.funlistui.addline
@@ -150,7 +150,8 @@ fun Main_About(
         AndroidView(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(520.dp), // Occupy the max size in the Compose UI tree
+                .height(520.dp)
+                .offset(y = 50.dp), // Occupy the max size in the Compose UI tree
             factory = { context ->
                 BgEffectView(context,colorMode.value)
             }
@@ -182,7 +183,7 @@ fun Main_About(
                         append("Shin ")
                     }
                     append(BuildConfig.BUILD_TYPE_TAG)
-                }*/"OShin ${BuildConfig.BUILD_TYPE_TAG}",
+                }*/"Col_larOS",
                 fontWeight = FontWeight.Bold,
                 fontSize = 32.sp,
                 style = TextStyle(
