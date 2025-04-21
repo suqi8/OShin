@@ -2,7 +2,6 @@ package com.suqi8.oshin.hook.com.coloros.phonemanager
 
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.UnitType
 import org.luckypray.dexkit.DexKitBridge
 import java.lang.reflect.Modifier
@@ -32,7 +31,7 @@ class phonemanager: YukiBaseHooker() {
                             usingStrings("updateScanResult manualOptItems: ","main_entry_summary")
                         }
                     }.singleOrNull()?.also {
-                        YLog.info("methodName:"+it.methodName + " className:" + it.className)
+                        //YLog.info("methodName:"+it.methodName + " className:" + it.className)
                         it.className.toClass().method { name = it.methodName }.hook {
                             before {
                                 result = prefs("phonemanager").getString("custom_prompt_content", "")

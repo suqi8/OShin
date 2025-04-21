@@ -25,18 +25,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -47,7 +54,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.fontscaling.MathUtils.lerp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI_Impl
@@ -55,12 +64,13 @@ import com.suqi8.oshin.BuildConfig
 import com.suqi8.oshin.R
 import com.suqi8.oshin.executeCommand
 import com.suqi8.oshin.ui.activity.funlistui.addline
+import com.suqi8.oshin.ui.theme.BgEffectView
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
-import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
@@ -82,7 +92,8 @@ fun Main_About(
     topAppBarScrollBehavior: ScrollBehavior,
     padding: PaddingValues,
     context: Context,
-    navController: NavController
+    navController: NavController,
+    colorMode: MutableState<Int>
 ) {
     val showDeviceNameDialog = remember { mutableStateOf(false) }
     val deviceName: MutableState<String> = remember {
@@ -97,117 +108,103 @@ fun Main_About(
     val physicalTotalStorage = formatSize(getPhysicalTotalStorage(context))
     val usedStorage = formatSize(getUsedStorage())
     val focusManager = LocalFocusManager.current
+    val density = LocalDensity.current
+    val min = with(density) { 0.dp.toPx() }
+    val sec = with(density) { 100.dp.toPx() }
+    val main = with(density) { 160.dp.toPx() }
+    val mainHeight = main-sec
+    val bgHeight = with(density) {  332.dp.toPx() }
+    val bgAlpha = remember { mutableFloatStateOf(1f) }
+    val mainAlpha = remember { mutableFloatStateOf(1f) }
+    val mainScale = remember { mutableFloatStateOf(1f) }
+    val secAlpha = remember { mutableFloatStateOf(1f) }
+    val secScale = remember { mutableFloatStateOf(1f) }
+    val scroll = rememberLazyListState()
+    LaunchedEffect(scroll) {
+        snapshotFlow { scroll.firstVisibleItemScrollOffset }
+            .onEach {
+                if (scroll.firstVisibleItemIndex > 0){
+                    bgAlpha.floatValue = 0f
+                    secAlpha.floatValue = 0f
+                    mainAlpha.floatValue = 0f
+                    //showBlurs.value = true
+                    return@onEach
+                }
+                val alpha = ((bgHeight-it.toFloat().coerceIn(min,bgHeight))/ bgHeight).coerceIn(0f, 1f)
+                bgAlpha.floatValue = alpha
+                val secValue =  ((sec-it.toFloat().coerceIn(min,sec))/ sec).coerceIn(0f, 1f)
 
-    Scaffold() {
+                secAlpha.floatValue = secValue
+                secScale.floatValue = lerp(0.9f,1f,secValue)
+
+                val mainValue =  ((main-it.toFloat().coerceIn(sec,main))/ mainHeight).coerceIn(0f, 1f)
+
+                mainAlpha.floatValue = mainValue
+                mainScale.floatValue = lerp(0.9f,1f,mainValue)
+
+            }.collect {
+
+            }
+    }
+    Box {
+        AndroidView(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(520.dp), // Occupy the max size in the Compose UI tree
+            factory = { context ->
+                BgEffectView(context,colorMode.value)
+            }
+        ) {
+            it.updateMode(colorMode.value)
+            it.alpha = bgAlpha.floatValue
+        }
+        Column(modifier = Modifier
+            .padding(top = 55.dp)
+            .fillMaxWidth()
+            .height(520.dp),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally) {
+            Text(
+                text = buildAnnotatedString {
+                    append("O")
+                    withStyle(style = SpanStyle(color = MiuixTheme.colorScheme.primaryVariant.copy(alpha = mainAlpha.floatValue))) {
+                        append("Shin ")
+                    }
+                    append(BuildConfig.BUILD_TYPE_TAG)
+                },
+                fontWeight = FontWeight.Bold,
+                fontSize = 32.sp,
+                color = MiuixTheme.colorScheme.onBackground.copy(
+                    alpha = mainAlpha.floatValue
+                ),
+                modifier = Modifier.scale(mainScale.floatValue)
+            )
+            Text(
+                text = context.packageManager.getPackageInfo(
+                    context.packageName,
+                    0
+                ).versionName.toString(),
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .scale(secScale.floatValue)
+                    .alpha(secAlpha.floatValue)
+                    .padding(top = 20.dp),
+                fontWeight = FontWeight.Medium,
+                color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                textAlign = TextAlign.Center
+            )
+        }
         LazyColumn(
-            contentPadding = padding,
-            modifier = Modifier.fillMaxSize().nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
+            modifier = Modifier
+                .fillMaxSize()
                 .overScrollVertical()
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+            state = scroll,
+            contentPadding = PaddingValues(bottom = padding.calculateBottomPadding()),
         ) {
             item {
-                Spacer(modifier = Modifier.height(16.dp))
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp)
-                        .padding(bottom = 6.dp),
-                    color = Color.Transparent
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        // 背景图片
-                        /*Image(
-                            painter = painterResource(id = R.drawable.aboutbackground),
-                            contentDescription = null,
-                            contentScale = ContentScale.Crop, // 图片裁剪以适应容器
-                            modifier = Modifier.matchParentSize() // 使图片充满整个 Box
-                        )*/
-                        Column(modifier = Modifier.padding(bottom = 16.dp)) {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(200.dp) // 设定 Box 的高度
-                            ) {
-                                /*Card(modifier = Modifier
-                                        .size(130.dp)
-                                        .align(Alignment.Center)) {
-                                    Box(modifier = Modifier.fillMaxSize()) {
-                                        *//*Image(
-                                            painter = painterResource(id = R.drawable.icon_background_newyear),
-                                            contentDescription = null,
-                                            modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
-                                            *//**//*.offset(y = (-20).dp)*//**//*,
-                                            contentScale = ContentScale.Crop
-                                        )*//*
-                                        Image(
-                                            painter = painterResource(id = R.drawable.icon),
-                                            contentDescription = null,
-                                            modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
-                                            *//*.offset(y = (-20).dp)*//*,
-                                            contentScale = ContentScale.Crop
-                                        )
-                                    }
-                                }*/
-                                Text(
-                                    text = buildAnnotatedString {
-                                        append("O")
-                                        withStyle(style = SpanStyle(color = MiuixTheme.colorScheme.primaryVariant)) {
-                                            append("Shin ")
-                                        }
-                                        append(BuildConfig.BUILD_TYPE_TAG)
-                                    },
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 32.sp,
-                                    modifier = Modifier.align(Alignment.Center)
-                                )
-                                Text(
-                                    text = context.packageManager.getPackageInfo(
-                                        context.packageName,
-                                        0
-                                    ).versionName.toString(),
-                                    fontSize = 14.sp,
-                                    color = Color.Gray,
-                                    modifier = Modifier
-                                        .align(Alignment.Center)
-                                        .padding(top = 46.dp)
-                                    /*.offset(y = (-20).dp)*/
-                                )
-                            }
-
-                            /*Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .offset(y = (-10).dp),
-                                horizontalArrangement = Arrangement.Center,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                Image(
-                                    painter = painterResource(id = R.drawable.coloros),
-                                    contentDescription = null,
-                                    modifier = Modifier.size(width = 121.875.dp, height = 25.dp)
-                                )
-                                Spacer(modifier = Modifier.size(8.dp))
-                                Image(
-                                    painter = painterResource(id = R.drawable.coloros15logo),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(40.dp)
-                                        .offset(y = (-2.5).dp)
-                                )
-                            }
-                            Button(
-                                modifier = Modifier
-                                    .padding(start = 16.dp, end = 16.dp)
-                                    .fillMaxWidth(),
-                                text = stringResource(R.string.check_update),
-                                submit = true,
-                                onClick = {})*/
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.size(12.dp))
+                Spacer(modifier = Modifier.size(520.dp))
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -455,7 +452,9 @@ fun Main_About(
                         })
                 }
                 Text(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 20.dp),
                     text = "Powered By SYCTeam & 酸奶",
                     fontSize = MiuixTheme.textStyles.subtitle.fontSize,
                     fontWeight = FontWeight.Medium,
