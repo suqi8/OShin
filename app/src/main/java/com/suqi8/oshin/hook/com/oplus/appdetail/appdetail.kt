@@ -34,6 +34,7 @@ class appdetail: YukiBaseHooker() {
             var installation_frequency_methodName = ""
             var attempt_installation_method = ""
             var attempt_installation_callMethod = ""
+            var security_check_method = ""
             DexKitBridge.create(this.appInfo.sourceDir).use {
                 installation_frequency_methodName = it.findMethod {
                     searchPackages("com.oplus.appdetail.model.entrance")
@@ -62,6 +63,26 @@ class appdetail: YukiBaseHooker() {
                         usingStrings("oplus_extra_app_op_mode")
                     }
                 }.singleOrNull()?.methodName.toString()
+                it.findClass {
+                    searchPackages("com.oplus.appdetail.model.guide.viewModel")
+                    matcher {
+                        source("GuideShareViewModel.kt")
+                    }
+                }.also {
+                    security_check_method = it.findMethod {
+                        matcher {
+                            modifiers = Modifier.PUBLIC
+                            paramTypes = listOf<String>()
+                            returnType("boolean")
+                            usingNumbers(0)
+                            invokeMethods {
+                                add {
+                                    name = "getPackageUri"
+                                }
+                            }
+                        }
+                    }.singleOrNull()?.methodName.toString()
+                }
             }
             //安装频繁
             if (prefs("appdetail").getBoolean("remove_installation_frequency_popup", false)) {
@@ -117,7 +138,7 @@ class appdetail: YukiBaseHooker() {
             if (prefs("appdetail").getBoolean("remove_security_check", false)) {
                 "com.oplus.appdetail.model.guide.viewModel.GuideShareViewModel".toClass().apply {
                     method {
-                        name = "i"
+                        name = security_check_method
                         emptyParam()
                         returnType = BooleanType
                     }.hook {
