@@ -100,7 +100,7 @@ class appdetail: YukiBaseHooker() {
                 }
             }
             //移除版本号检测
-            if (prefs("appdetail").getBoolean("remove_attempt_installation_popup", false)) {
+            if (prefs("appdetail").getBoolean("remove_version_check", false)) {
                 "com.nearme.common.util.AppUtil".toClass().apply {
                     method {
                         name = "getAppVersionCode"
@@ -114,7 +114,7 @@ class appdetail: YukiBaseHooker() {
                 }
             }
             //移除安装前安全检测
-            if (prefs("appdetail").getBoolean("remove_attempt_installation_popup", false)) {
+            if (prefs("appdetail").getBoolean("remove_security_check", false)) {
                 "com.oplus.appdetail.model.guide.viewModel.GuideShareViewModel".toClass().apply {
                     method {
                         name = "i"
