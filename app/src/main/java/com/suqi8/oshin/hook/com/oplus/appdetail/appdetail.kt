@@ -5,6 +5,8 @@ import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.UnitType
+import org.luckypray.dexkit.DexKitBridge
+import java.lang.reflect.Modifier
 
 class appdetail: YukiBaseHooker() {
     override fun onHook() {
@@ -29,17 +31,49 @@ class appdetail: YukiBaseHooker() {
                     }
                 }
             }
+            var installation_frequency_methodName = ""
+            var attempt_installation_method = ""
+            var attempt_installation_callMethod = ""
+            DexKitBridge.create(this.appInfo.sourceDir).use {
+                installation_frequency_methodName = it.findMethod {
+                    searchPackages("com.oplus.appdetail.model.entrance")
+                    matcher {
+                        modifiers = Modifier.PRIVATE
+                        paramTypes = listOf<String>()
+                        returnType("void")
+                        usingStrings("1")
+                    }
+                }.singleOrNull()?.methodName.toString()
+                attempt_installation_method = it.findMethod {
+                    searchPackages("com.oplus.appdetail.model.entrance")
+                    matcher {
+                        modifiers = Modifier.PRIVATE
+                        paramTypes = listOf<String>()
+                        returnType("void")
+                        usingStrings("channel_risk_dialog")
+                    }
+                }.singleOrNull()?.methodName.toString()
+                attempt_installation_callMethod = it.findMethod {
+                    searchPackages("com.oplus.appdetail.model.entrance")
+                    matcher {
+                        modifiers = Modifier.PRIVATE
+                        paramTypes = listOf<String>()
+                        returnType("void")
+                        usingStrings("oplus_extra_app_op_mode")
+                    }
+                }.singleOrNull()?.methodName.toString()
+            }
             //安装频繁
             if (prefs("appdetail").getBoolean("remove_installation_frequency_popup", false)) {
                 "com.oplus.appdetail.model.entrance.ChannelBarrageActivity".toClass().apply {
                     method {
-                        name = "x0"
+                        name = installation_frequency_methodName
                         emptyParam()
                         returnType = UnitType
                     }.hook {
                         replaceUnit {
                             method {
-                                name = "A0"
+                                name = attempt_installation_method
                                 emptyParam()
                                 returnType = UnitType
                             }.get(instance).call()
@@ -51,13 +85,13 @@ class appdetail: YukiBaseHooker() {
             if (prefs("appdetail").getBoolean("remove_attempt_installation_popup", false)) {
                 "com.oplus.appdetail.model.entrance.ChannelBarrageActivity".toClass().apply {
                     method {
-                        name = "A0"
+                        name = attempt_installation_method
                         emptyParam()
                         returnType = UnitType
                     }.hook {
                         replaceUnit {
                             method {
-                                name = "w0"
+                                name = attempt_installation_callMethod
                                 emptyParam()
                                 returnType = UnitType
                             }.get(instance).call()
