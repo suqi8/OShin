@@ -44,7 +44,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
@@ -152,7 +151,7 @@ fun Main_About(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(520.dp)
-                .offset(y = 50.dp), // Occupy the max size in the Compose UI tree
+                .offset(y = 50.dp),
             factory = { context ->
                 BgEffectView(context,colorMode.value)
             }
@@ -547,7 +546,6 @@ fun DeviceNameDialog(
     deviceName: MutableState<String>,
     focusManager: androidx.compose.ui.focus.FocusManager
 ) {
-    val context = LocalContext.current
     if (!showDeviceNameDialog.value) return
     SuperDialog(title = stringResource(R.string.Device_Name),
         show = showDeviceNameDialog,
