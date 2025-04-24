@@ -146,14 +146,14 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                         }
                     }
                     val isGiveRoot = rememberSaveable { mutableStateOf(5) }
-                    var versionMessage by rememberSaveable { mutableStateOf("0") }
+                    var versionMessage by rememberSaveable { mutableStateOf("Loading...") }
                     LaunchedEffect(Unit) {
                         if (isGiveRoot.value == 5) {
                             withContext(Dispatchers.IO) {
                                 try {
                                     val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
                                     isGiveRoot.value = process.waitFor()
-                                    if (versionMessage == "0") {
+                                    if (versionMessage == "Loading...") {
                                         versionMessage = executeCommand("/data/adb/ksud -V").let {
                                             if (it.isEmpty()) {
                                                 val magiskVersion = executeCommand("magisk -v")
