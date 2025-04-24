@@ -182,7 +182,6 @@ class MainActivity : ComponentActivity() {
             AppTheme(colorMode = colorMode.intValue) {
                 Main0(colorMode = colorMode, context = context, modifier = Modifier)
             }
-
         }
     }
 }
@@ -429,7 +428,7 @@ class SpringEasing @JvmOverloads constructor(
         }
     }
 }
-
+val lspVersion = mutableStateOf("")
 @Composable
 fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = remember { mutableIntStateOf(0) }) {
     val navController = rememberNavController()
@@ -463,6 +462,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             UMConfigure.init(context, "67c7dea68f232a05f127781e", "android", UMConfigure.DEVICE_TYPE_PHONE, "");
             withContext(Dispatchers.IO) {
                 val lsposed_versionname = executeCommand("awk -F= '/version=/ {print \$2}' /data/adb/modules/zygisk_lsposed/module.prop")
+                lspVersion.value = lsposed_versionname
                 if (lsposed_versionname != "" && context.prefs("settings").getString("privacy_lspvername","") != lsposed_versionname) {
                     MobclickAgent.onEvent(context,"lsposed_usage", mapOf("version_name" to lsposed_versionname))
                     context.prefs("settings").edit { putString("privacy_lspvername",lsposed_versionname) }

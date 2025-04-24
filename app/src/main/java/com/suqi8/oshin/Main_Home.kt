@@ -12,10 +12,16 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -32,6 +38,7 @@ import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
@@ -47,6 +54,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,6 +64,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
+import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetFuncRoute
 import kotlinx.coroutines.Dispatchers
@@ -101,7 +114,88 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                     animationSpec = tween(durationMillis = 500)
                 ) + fadeIn(animationSpec = tween(durationMillis = 500))
             ) {
-
+                Row(modifier = Modifier.fillMaxWidth().height(IntrinsicSize.Min).padding(start = 20.dp, top = 10.dp, end = 20.dp)) {
+                    Column(modifier = Modifier.weight(1f)) {
+                        Card(modifier = Modifier.padding(end = 5.dp), color = if (YukiHookAPI.Status.isModuleActive) Color(0xffe6fff5) else Color(0xffffd4d6)) {
+                            Box(modifier = Modifier.fillMaxSize()) {
+                                Column {
+                                    Text(text = if (YukiHookAPI.Status.isModuleActive) stringResource(R.string.module_is_activated) else stringResource(R.string.module_not_activated),
+                                        fontSize = 20.sp,
+                                        color = Color.Black,
+                                        modifier = Modifier.padding(start = 15.dp, top = 15.dp),
+                                        fontWeight = FontWeight.Bold)
+                                    Text(text = if (YukiHookAPI.Status.isModuleActive) lspVersion.value else stringResource(R.string.please_activate),
+                                        color = Color.Black.copy(alpha = 0.75f),
+                                        fontSize = 14.sp,
+                                        modifier = Modifier.padding(start = 15.dp, top = 5.dp))
+                                }
+                                val compositionResult = rememberLottieComposition(LottieCompositionSpec.RawRes(if (YukiHookAPI.Status.isModuleActive) R.raw.accept else R.raw.error))
+                                val progress = animateLottieCompositionAsState(
+                                    composition = compositionResult.value
+                                )
+                                LottieAnimation(
+                                    composition = compositionResult.value,
+                                    progress = { progress.value },
+                                    modifier = Modifier
+                                        .align(Alignment.BottomEnd)
+                                        .padding(top = 50.dp)
+                                        .size(110.dp)
+                                        .offset(x = 35.dp,y = 35.dp)
+                                )
+                            }
+                        }
+                    }
+                    val isGiveRoot = rememberSaveable { mutableStateOf(5) }
+                    var versionMessage by rememberSaveable { mutableStateOf("0") }
+                    LaunchedEffect(Unit) {
+                        if (isGiveRoot.value == 5) {
+                            withContext(Dispatchers.IO) {
+                                try {
+                                    val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
+                                    isGiveRoot.value = process.waitFor()
+                                    if (versionMessage == "0") {
+                                        versionMessage = executeCommand("/data/adb/ksud -V").let {
+                                            if (it.isEmpty()) {
+                                                val magiskVersion = executeCommand("magisk -v")
+                                                "$magiskVersion ${executeCommand("magisk -V").trim()}"
+                                            } else {
+                                                it.substringAfter("ksud ").take(4)
+                                            }
+                                        }
+                                    }
+                                } catch (e: Exception) {
+                                    isGiveRoot.value = 3
+                                    return@withContext
+                                }
+                            }
+                        }
+                    }
+                    Column(modifier = Modifier.weight(1f).padding(start = 5.dp)) {
+                        Card(modifier = Modifier.weight(1f).fillMaxSize(), color = if (isGiveRoot.value != 5 && isGiveRoot.value == 0) Color(0xffcffffb) else Color(0xffffd4d6)) {
+                            Text(text = if (isGiveRoot.value == 5) stringResource(R.string.detecting_root) else if (isGiveRoot.value == 0) stringResource(R.string.root_granted) else stringResource(R.string.root_access_denied),
+                                fontSize = 16.sp,
+                                color = Color.Black,
+                                modifier = Modifier.padding(start = 15.dp, top = 15.dp),
+                                fontWeight = FontWeight.Bold)
+                            Text(text = if (isGiveRoot.value != 5 && isGiveRoot.value == 0) versionMessage else stringResource(R.string.root_permission_error),
+                                color = Color.Black.copy(alpha = 0.75f),
+                                fontSize = 14.sp,
+                                modifier = Modifier.padding(start = 15.dp, top = 5.dp))
+                        }
+                        Spacer(modifier = Modifier.height(10.dp))
+                        Card(modifier = Modifier.weight(1f).fillMaxSize(), color = Color(0xffffdbd8)) {
+                            Text(text = "Frida Server",
+                                fontSize = 16.sp,
+                                color = Color.Black,
+                                modifier = Modifier.padding(start = 15.dp, top = 15.dp),
+                                fontWeight = FontWeight.Bold)
+                            Text(text = "Connect Error",
+                                color = Color.Black.copy(alpha = 0.75f),
+                                fontSize = 14.sp,
+                                modifier = Modifier.padding(start = 15.dp, top = 5.dp))
+                        }
+                    }
+                }
             }
         }
         item {
@@ -179,8 +273,6 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                     }
 
                     var health by rememberSaveable { mutableStateOf("0") }
-                    var versionMessage by rememberSaveable { mutableStateOf("0") }
-                    var ksuVersion by rememberSaveable { mutableStateOf("0") }
                     var battery_cc by rememberSaveable { mutableIntStateOf(0) }
                     var charge_full_design by rememberSaveable { mutableIntStateOf(0) }
 
@@ -196,23 +288,6 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                         withContext(Dispatchers.IO) {
                             nvid = getSystemProperty("ro.build.oplus_nv_id")
                             health = executeCommand("cat /sys/class/power_supply/battery/health").trim()
-
-                            // 合并版本信息获取
-                            ksuVersion = executeCommand("/data/adb/ksud -V").let {
-                                if (it.isEmpty()) {
-                                    "0"
-                                } else {
-                                    it.substringAfter("ksud ").take(4)
-                                }
-                            }
-                            versionMessage = executeCommand("/data/adb/ksud -V").let {
-                                if (it.isEmpty()) {
-                                    val magiskVersion = executeCommand("magisk -v")
-                                    "$magiskVersion ${executeCommand("magisk -V").trim()}"
-                                } else {
-                                    it.substringAfter("ksud ").take(4)
-                                }
-                            }
 
                             // 合并电池信息获取
                             battery_cc = try {
@@ -241,7 +316,11 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
 
                                     // 解析数据
                                     val data = rawData.lines()
-                                        .associate { it.split("=").let { parts -> parts[0] to parts[1] } }
+                                        .mapNotNull { line ->
+                                            val parts = line.split("=")
+                                            if (parts.size >= 2) parts[0] to parts[1] else null
+                                        }
+                                        .toMap()
                                     val charge_fulldata0 = try {
                                         (data["charge_full"]?.toIntOrNull() ?: 0) / 1000
                                     } catch (_: Exception) { 0 }
@@ -395,17 +474,6 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                         )
                         SmallTitle(
                             text = battery_cc.toString() + "次",
-                            insideMargin = PaddingValues(0.dp, 0.dp),
-                            modifier = Modifier.padding(bottom = 5.dp)
-                        )
-                        addline(false)
-                        Text(
-                            text = if (ksuVersion == "0") stringResource(id = R.string.magisk_version) else stringResource(
-                                id = R.string.ksu_version
-                            ), modifier = Modifier.padding(top = 5.dp)
-                        )
-                        SmallTitle(
-                            text = versionMessage.trim(),
                             insideMargin = PaddingValues(0.dp, 0.dp),
                             modifier = Modifier.padding(bottom = 5.dp)
                         )
