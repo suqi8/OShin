@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -172,11 +171,11 @@ class resetApp {
                 ) {
                     if (!isLoading.value) {
                         Card(
-                            color = if (YukiHookAPI.Status.isModuleActive) dominantColor.value else MaterialTheme.colorScheme.errorContainer,
+                            color = dominantColor.value,
                             modifier = Modifier
                                 .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
                                 .drawColoredShadow(
-                                    if (YukiHookAPI.Status.isModuleActive) dominantColor.value else MaterialTheme.colorScheme.errorContainer,
+                                    dominantColor.value,
                                     1f,
                                     borderRadius = 13.dp,
                                     shadowRadius = 7.dp,
