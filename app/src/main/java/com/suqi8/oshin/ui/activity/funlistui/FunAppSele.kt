@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -19,7 +20,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.highcapable.yukihookapi.YukiHookAPI
@@ -42,8 +45,10 @@ import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperCheckbox
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
+@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 fun FunAppSele(title: String, summary: String? = null, category: String, key: String, onCheckedChange: ((Int) -> Unit)? = null) {
     val context = LocalContext.current
@@ -81,14 +86,20 @@ fun FunAppSele(title: String, summary: String? = null, category: String, key: St
             appList.value += appInfo
         }
     }
+    val configuration = LocalConfiguration.current
+    val density = LocalDensity.current
+
+    val screenHeightPx = with(density) { configuration.screenHeightDp.dp.toPx() }
+    val maxHeightDp = with(density) { (screenHeightPx * 0.85f).toDp() }
 
     SuperDialog(
         show = showAppListSele,
-        onDismissRequest = { showAppListSele.value = false }
+        onDismissRequest = { dismissDialog(showAppListSele) }
     ) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
+                .heightIn(max = maxHeightDp)
                 .animateContentSize() // 自动调整高度，并带有动画
         ) {
             Column {
@@ -102,7 +113,8 @@ fun FunAppSele(title: String, summary: String? = null, category: String, key: St
                 )
 
                 LazyColumn(
-                    modifier = Modifier.animateContentSize() // 列表高度变化时，带动画
+                    modifier = Modifier
+                        .animateContentSize() // 列表高度变化时，带动画
                         .overScrollVertical()
                 ) {
                     // 过滤并排序应用列表
