@@ -35,12 +35,10 @@ import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Immutable
@@ -131,7 +129,6 @@ import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
@@ -143,7 +140,6 @@ import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.NavigationItem
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
-import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
@@ -184,145 +180,9 @@ class MainActivity : ComponentActivity() {
             }
 
             AppTheme(colorMode = colorMode.intValue) {
-                CheckRoot1(colorMode = colorMode, context = context, modifier = Modifier)
+                Main0(colorMode = colorMode, context = context, modifier = Modifier)
             }
 
-        }
-    }
-}
-
-@Composable
-fun CheckRoot1(modifier: Modifier,context: Context,colorMode: MutableState<Int> = remember { mutableIntStateOf(0) }) {
-    val showroot = remember { mutableIntStateOf(2) }
-    LaunchedEffect(Unit) {
-        withContext(Dispatchers.IO) {
-            try {
-                val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
-                showroot.intValue = process.waitFor()
-            } catch (e: Exception) {
-                showroot.intValue = 3
-            }
-        }
-    }
-    when (showroot.intValue) {
-        0 -> AnimatedVisibility(true) {
-            Main0(colorMode = colorMode, context = context, modifier = modifier)
-        }
-        2 -> AnimatedVisibility(true) {
-            Scaffold {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .wrapContentSize(Alignment.Center) // 内容居中
-                ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally // 水平居中
-                    ) {
-                        // 圆形进度条
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(50.dp), // 设置进度条的大小
-                            color = MiuixTheme.colorScheme.primary, // 进度条颜色
-                            strokeWidth = 6.dp // 进度条宽度
-                        )
-
-                        Spacer(modifier = Modifier.height(16.dp))
-
-                        Text(
-                            text = stringResource(R.string.loading),
-                        )
-                    }
-                }
-            }
-        }
-        else -> AnimatedVisibility(true) {
-            CheckRoot(colorMode = colorMode, context = context, modifier = modifier)
-        }
-    }
-}
-
-@Composable
-fun CheckRoot(modifier: Modifier,context: Context,colorMode: MutableState<Int> = remember { mutableIntStateOf(0) }) {
-
-    val showroot = remember { mutableStateOf(true) }
-
-    LaunchedEffect(Unit) {
-        try {
-            val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
-            if (process.waitFor() != 0) {
-                showroot.value = true
-            } else {
-                dismissDialog(showroot)
-            }
-        } catch (e: Exception) {
-            showroot.value = true
-        }
-    }
-    AnimatedVisibility(!showroot.value) {
-        Main0(colorMode = colorMode, context = context, modifier = modifier)
-    }
-    AnimatedVisibility(showroot.value) {
-        Scaffold {
-            SmallTitle(text = showroot.value.toString())
-        }
-        dial(showroot)
-    }
-}
-
-@SuppressLint("ComposableNaming")
-@Composable
-fun dial(showroot: MutableState<Boolean>) {
-    if (!showroot.value) return
-    val retry = remember { mutableStateOf(false) }
-    SuperDialog(
-        title = stringResource(R.string.root_access_denied),
-        summary = stringResource(R.string.opatch_root_permission_error),
-        show = showroot,
-        onDismissRequest = {
-            retry.value = true
-        },
-        summaryColor = Color.Red
-    ) {
-        Spacer(Modifier.height(12.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            TextButton(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.exit),
-                onClick = {
-                    dismissDialog(showroot)
-                    exitProcess(0)
-                }
-            )
-            Spacer(Modifier.width(12.dp))
-            TextButton(
-                modifier = Modifier.weight(1f),
-                enabled = !retry.value,
-                text = if (retry.value) stringResource(R.string.retrying) else stringResource(R.string.retry),
-                colors = ButtonDefaults.textButtonColorsPrimary(),
-                onClick = {
-                    retry.value = true
-                }
-            )
-            LaunchedEffect(retry.value) {
-                if (retry.value) {
-                    delay(500)
-                    try {
-                        val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
-                        val exitCode = process.waitFor()
-                        if (exitCode == 0) {
-                            dismissDialog(showroot)
-                        } else {
-                            retry.value = false
-                        }
-                    } catch (e: Exception) {
-                        showroot.value = true
-                        retry.value = false
-                    }
-                }
-            }
         }
     }
 }

@@ -13,10 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
@@ -44,15 +40,14 @@ import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.CheckboxLocation
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperCheckbox
+import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FunAppSele(title: String, summary: String? = null, category: String, key: String, onCheckedChange: ((Int) -> Unit)? = null) {
     val context = LocalContext.current
     val showAppListSele = remember { mutableStateOf(false) }
-    val sheetState = rememberModalBottomSheetState()
     val searchText = remember { mutableStateOf("") }
 
     // 读取已选应用列表，转换为 Set 存储，防止重复
@@ -78,61 +73,58 @@ fun FunAppSele(title: String, summary: String? = null, category: String, key: St
         onClick = { showAppListSele.value = true }
     )
 
-    if (showAppListSele.value) {
-        val appList = remember { mutableStateOf(listOf<Pair<String, String>>()) }
+    val appList = remember { mutableStateOf(listOf<Pair<String, String>>()) }
 
-        // 获取所有应用信息
-        if (appList.value.isEmpty()) {
-            getApps(context, isSystemApp = false) { appInfo ->
-                appList.value += appInfo
-            }
+    // 获取所有应用信息
+    if (appList.value.isEmpty()) {
+        getApps(context, isSystemApp = false) { appInfo ->
+            appList.value += appInfo
         }
+    }
 
-        ModalBottomSheet(
-            onDismissRequest = { showAppListSele.value = false },
-            sheetState = sheetState,
-            containerColor = MiuixTheme.colorScheme.surface
+    SuperDialog(
+        show = showAppListSele,
+        onDismissRequest = { showAppListSele.value = false }
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize() // 自动调整高度，并带有动画
         ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .animateContentSize() // 自动调整高度，并带有动画
-            ) {
-                Column {
-                    // 搜索框
-                    TextField(
-                        value = searchText.value,
-                        onValueChange = { searchText.value = it },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                    )
+            Column {
+                // 搜索框
+                TextField(
+                    value = searchText.value,
+                    onValueChange = { searchText.value = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                )
 
-                    LazyColumn(
-                        modifier = Modifier.animateContentSize() // 列表高度变化时，带动画
-                            .overScrollVertical()
-                    ) {
-                        // 过滤并排序应用列表
-                        val filteredList = appList.value
-                            .filter {
-                                it.first.contains(searchText.value, ignoreCase = true) ||
-                                        it.second.contains(searchText.value, ignoreCase = true)
+                LazyColumn(
+                    modifier = Modifier.animateContentSize() // 列表高度变化时，带动画
+                        .overScrollVertical()
+                ) {
+                    // 过滤并排序应用列表
+                    val filteredList = appList.value
+                        .filter {
+                            it.first.contains(searchText.value, ignoreCase = true) ||
+                                    it.second.contains(searchText.value, ignoreCase = true)
+                        }
+                        .sortedByDescending { seleappList.value.contains(it.second) } // 选中的置顶
+
+                    items(filteredList) { app ->
+                        val isChecked = seleappList.value.contains(app.second)
+                        ResetAppList(app.second, isChecked) { isSelected ->
+                            seleappList.value = if (isSelected) {
+                                seleappList.value + app.second  // 使用 Set 追加数据
+                            } else {
+                                seleappList.value - app.second  // 从 Set 移除数据
                             }
-                            .sortedByDescending { seleappList.value.contains(it.second) } // 选中的置顶
 
-                        items(filteredList) { app ->
-                            val isChecked = seleappList.value.contains(app.second)
-                            ResetAppList(app.second, isChecked) { isSelected ->
-                                seleappList.value = if (isSelected) {
-                                    seleappList.value + app.second  // 使用 Set 追加数据
-                                } else {
-                                    seleappList.value - app.second  // 从 Set 移除数据
-                                }
-
-                                // 更新 `SharedPreferences`
-                                context.prefs(category).edit {
-                                    putString(key, seleappList.value.joinToString(","))
-                                }
+                            // 更新 `SharedPreferences`
+                            context.prefs(category).edit {
+                                putString(key, seleappList.value.joinToString(","))
                             }
                         }
                     }
@@ -171,11 +163,11 @@ fun ResetAppList(packageName: String, isChecked: Boolean, onCheckedChange: (Bool
         ) {
             if (!isLoading.value) {
                 Card(
-                    color = if (YukiHookAPI.Status.isModuleActive) dominantColor.value else MaterialTheme.colorScheme.errorContainer,
+                    color = dominantColor.value,
                     modifier = Modifier
                         .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
                         .drawColoredShadow(
-                            if (YukiHookAPI.Status.isModuleActive) dominantColor.value else MaterialTheme.colorScheme.errorContainer,
+                            dominantColor.value,
                             1f,
                             borderRadius = 13.dp,
                             shadowRadius = 7.dp,

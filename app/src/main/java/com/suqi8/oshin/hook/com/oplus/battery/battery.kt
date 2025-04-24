@@ -8,18 +8,24 @@ import java.lang.reflect.Modifier
 class battery: YukiBaseHooker() {
     override fun onHook() {
         loadApp(name = "com.oplus.battery") {
-            if (prefs("battery").getBoolean("low_battery_fluid_cloud", false)) {
-                "com.oplus.pantanal.seedling.intent.a".toClass().apply {
-                    method {
-                        name = "sendSeedling"
-                    }.hook {
-                        before {
-                            result = 0
+            DexKitBridge.create(this.appInfo.sourceDir).use {
+                if (prefs("battery").getBoolean("low_battery_fluid_cloud", false)) {
+                    it.findClass {
+                        matcher {
+                            addMethod {
+                                usingStrings("serviceInstanceId","isSupportMultiInstance")
+                            }
+                            addMethod {
+                                usingStrings("createCallBack: resultCode = ")
+                            }
+                            addMethod {
+                                usingStrings("createCallBack,action = ")
+                            }
                         }
+                    }.singleOrNull()?.also {
+                        it.name.toClass().method { name = "sendSeedling" }.hook { before { result = 0 } }
                     }
                 }
-            }
-            DexKitBridge.create(this.appInfo.sourceDir).use {
                 if (prefs("battery").getInt("auto_start_max_limit", 5) != 5) {
                     it.findClass {
                         matcher {
