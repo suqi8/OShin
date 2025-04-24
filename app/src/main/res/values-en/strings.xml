@@ -180,7 +180,7 @@
     <string name="ksu_version">KernelSU Version</string>
     <string name="feature_auto_color_picking_enabled">Icon background automatically colored</string>
     <string name="feature_auto_color_picking_warning">When enabled, the background color of the app icon on the feature page will be automatically selected</string>
-    <string name="opatch_root_permission_error">Please grant OShin root permissions and try again!</string>
+    <string name="root_permission_error">Please grant permissions</string>
     <string name="retry">Retry</string>
     <string name="retrying">Retrying...</string>
     <string name="exit">Exit</string>
