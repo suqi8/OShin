@@ -19,8 +19,8 @@ class battery: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("battery").getInt("auto_start_max_limit", 5) != 5) {
-                DexKitBridge.create(this.appInfo.sourceDir).use {
+            DexKitBridge.create(this.appInfo.sourceDir).use {
+                if (prefs("battery").getInt("auto_start_max_limit", 5) != 5) {
                     it.findClass {
                         matcher {
                             addMethod {
@@ -41,7 +41,7 @@ class battery: YukiBaseHooker() {
                                 }
                             }
                         }
-                    }.forEach {
+                    }.singleOrNull()?.also {
                         it.className.toClass().method { name = it.methodName }.hook { replaceTo(prefs("battery").getInt("auto_start_max_limit", 5)) }
                     }
                 }
