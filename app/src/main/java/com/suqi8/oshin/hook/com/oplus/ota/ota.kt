@@ -3,20 +3,40 @@ package com.suqi8.oshin.hook.com.oplus.ota
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
-import com.highcapable.yukihookapi.hook.type.java.IntType
 import com.highcapable.yukihookapi.hook.type.java.UnitType
+import org.luckypray.dexkit.DexKitBridge
 
 class ota: YukiBaseHooker() {
     override fun onHook() {
         loadApp(name = "com.oplus.ota") {
-            if (prefs("ota").getBoolean("remove_system_update_dialog", false)) {
-                "b5.u".toClass().apply {
-                    method {
-                        name = "m"
-                        param("android.content.Context")
-                        returnType = UnitType
-                    }.hook {
-                        replaceUnit {  }
+            DexKitBridge.create(this.appInfo.sourceDir).use {
+                it.findClass {
+                    matcher {
+                        addMethod {
+                            usingStrings("upgrade_show_download_dialog_time_interval","entry ui is not exist!!")
+                        }
+                        addMethod {
+                            usingStrings("upgrade_show_install_dialog_time_interval", "global_dialog_install_delay")
+                        }
+                    }
+                }.singleOrNull()?.also {
+                    if (prefs("ota").getBoolean("remove_system_update_dialog", false)) {
+                        it.findMethod {
+                            matcher {
+                                usingStrings("There are no overlays right to showNotifyDownloadDialog, so return")
+                            }
+                        }.singleOrNull()?.also {
+                            it.className.toClass().method { name = it.methodName }.hook { replaceUnit {  } }
+                        }
+                    }
+                    if (prefs("ota").getBoolean("remove_wlan_auto_download_dialog", false)) {
+                        it.findMethod {
+                            matcher {
+                                usingStrings("upgrade_show_download_dialog_time_interval","OTA_NoticeAlertDialog")
+                            }
+                        }.singleOrNull()?.also {
+                            it.className.toClass().method { name = it.methodName }.hook { replaceUnit {  } }
+                        }
                     }
                 }
             }
@@ -25,17 +45,6 @@ class ota: YukiBaseHooker() {
                     method {
                         name = "l"
                         emptyParam()
-                        returnType = UnitType
-                    }.hook {
-                        replaceUnit {  }
-                    }
-                }
-            }
-            if (prefs("ota").getBoolean("remove_wlan_auto_download_dialog", false)) {
-                "b5.u".toClass().apply {
-                    method {
-                        name = "a"
-                        param("b5.u", "android.content.Context", "android.content.DialogInterface", IntType)
                         returnType = UnitType
                     }.hook {
                         replaceUnit {  }
