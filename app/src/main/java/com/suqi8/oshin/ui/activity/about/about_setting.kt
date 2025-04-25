@@ -1,17 +1,21 @@
 package com.suqi8.oshin.ui.activity.about
 
+import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.currentRecomposeScope
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -31,7 +35,9 @@ import top.yukonga.miuix.kmp.basic.Slider
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDropdown
 import top.yukonga.miuix.kmp.extra.SuperSwitch
+import java.util.Locale
 
+@SuppressLint("LocalContextConfigurationRead")
 @Composable
 fun about_setting(
     navController: NavController, alpha: MutableState<Float>,
@@ -85,6 +91,39 @@ fun about_setting(
                 onSelectedIndexChange = {
                     colorMode.value = it
                     context.prefs("settings").edit { putInt("color_mode", it) }
+                }
+            )
+            addline()
+            val context = LocalContext.current
+            val languageArray = stringArrayResource(id = R.array.language).toList()
+            var selectedLanguageIndex = remember { mutableStateOf(context.prefs("settings").getInt("app_language", 0)) } // 默认选中：跟随系统
+            val recompose = currentRecomposeScope
+
+            // 切换语言逻辑
+            fun changeLanguage(index: Int) {
+                val newLocale = when (index) {
+                    1 -> Locale.SIMPLIFIED_CHINESE
+                    2 -> Locale.ENGLISH
+                    3 -> Locale.JAPANESE
+                    else -> Locale.getDefault() // 跟随系统
+                }
+
+                val resources = context.resources
+                val config = Configuration(resources.configuration)
+                config.setLocale(newLocale)
+
+                resources.updateConfiguration(config, resources.displayMetrics)
+
+                recompose.invalidate()
+            }
+            SuperDropdown(
+                title = stringResource(R.string.app_language),
+                items = languageArray,
+                selectedIndex = selectedLanguageIndex.value,
+                onSelectedIndexChange = {
+                    selectedLanguageIndex.value = it
+                    context.prefs("settings").edit { putInt("app_language", it) }
+                    changeLanguage(it)
                 }
             )
             addline()
