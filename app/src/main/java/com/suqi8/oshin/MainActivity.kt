@@ -150,6 +150,7 @@ import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
+import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.cos
 import kotlin.math.exp
@@ -167,6 +168,18 @@ class MainActivity : ComponentActivity() {
         UMConfigure.setProcessEvent(true)
         setContent {
             val context = LocalContext.current
+            val language = context.prefs("settings").getInt("app_language", 0)
+            val locale = when (language) {
+                1 -> Locale.SIMPLIFIED_CHINESE
+                2 -> Locale.ENGLISH
+                3 -> Locale.JAPANESE
+                else -> Locale.getDefault()
+            }
+
+            val config = resources.configuration
+            config.setLocale(locale)
+            resources.updateConfiguration(config, resources.displayMetrics)
+
             val colorMode = remember { mutableIntStateOf(context.prefs("settings").getInt("color_mode", 0)) }
             val darkMode = colorMode.intValue == 2 || (isSystemInDarkTheme() && colorMode.intValue == 0)
             DisposableEffect(darkMode) {
