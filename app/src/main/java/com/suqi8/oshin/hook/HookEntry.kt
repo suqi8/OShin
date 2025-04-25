@@ -16,6 +16,7 @@ import com.suqi8.oshin.hook.com.android.mms.mms
 import com.suqi8.oshin.hook.com.android.settings.settings
 import com.suqi8.oshin.hook.com.android.systemui.systemui
 import com.suqi8.oshin.hook.com.coloros.ocrscanner.ocrscanner
+import com.suqi8.oshin.hook.com.coloros.oshare.oshare
 import com.suqi8.oshin.hook.com.coloros.phonemanager.phonemanager
 import com.suqi8.oshin.hook.com.coloros.securepay.securepay
 import com.suqi8.oshin.hook.com.finshell.wallet.wallet
@@ -64,6 +65,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = quicksearchbox())
         loadApp(hooker = mihealth())
         loadApp(hooker = ota())
+        loadApp(hooker = oshare())
     }
 
     override fun onXposedEvent() {
