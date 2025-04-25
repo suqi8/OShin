@@ -686,7 +686,10 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.remove_unlock_and_dmverity_check),
         category = "ota"),
     item(title = context.getString(R.string.enable_mlbb_ai_god_assist),
-        category = "games")
+        category = "games"),
+    item(title = context.getString(R.string.transfer_time_modify),
+        category = "oshare",
+        summary = context.getString(R.string.transfer_time_effect))
 )
 
 var notInstallList = mutableStateOf(emptyList<String>())
@@ -843,7 +846,8 @@ fun Main_Module(
                 AppInfo("com.oplus.appdetail", "appdetail"),
                 AppInfo("com.heytap.quicksearchbox", "quicksearchbox"),
                 AppInfo("com.mi.health", "mihealth"),
-                AppInfo("com.oplus.ota", "ota")
+                AppInfo("com.oplus.ota", "ota"),
+                AppInfo("com.coloros.oshare", "oshare")
             )
 
             LazyColumn(

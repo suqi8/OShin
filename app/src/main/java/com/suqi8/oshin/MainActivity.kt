@@ -99,6 +99,7 @@ import com.suqi8.oshin.ui.activity.com.android.systemui.status_bar_wifi
 import com.suqi8.oshin.ui.activity.com.android.systemui.statusbar_icon
 import com.suqi8.oshin.ui.activity.com.android.systemui.systemui
 import com.suqi8.oshin.ui.activity.com.coloros.ocrscanner.ocrscanner
+import com.suqi8.oshin.ui.activity.com.coloros.oshare.oshare
 import com.suqi8.oshin.ui.activity.com.coloros.phonemanager.phonemanager
 import com.suqi8.oshin.ui.activity.com.coloros.securepay.securepay
 import com.suqi8.oshin.ui.activity.com.finshell.wallet.wallet
@@ -573,6 +574,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("mihealth") { mihealth(navController) }
             composable("ota") { ota(navController) }
             composable("func\\romworkshop") { Rom_workshop(navController) }
+            composable("oshare") { oshare(navController) }
         }
     }
 }
