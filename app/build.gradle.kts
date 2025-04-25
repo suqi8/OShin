@@ -65,7 +65,7 @@ android {
         applicationId = "com.suqi8.oshin"
         minSdk = 35
         targetSdk = 36
-        versionName = "15.4"+"."+number+"."+gitHashService.getCommitHash()
+        versionName = "15.5"+"."+number+"."+gitHashService.getCommitHash()
         versionCode = number
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -173,7 +173,6 @@ dependencies {
     implementation(libs.ui)
     implementation(libs.ui.graphics)
     implementation(libs.ui.tooling.preview)
-    //implementation(libs.material3)
     implementation(libs.androidx.navigation.runtime.ktx)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.ui.test.junit4)
@@ -183,7 +182,6 @@ dependencies {
     implementation(libs.drawabletoolbox)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
-    //implementation(libs.material)
     implementation(libs.androidx.constraintlayout)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
