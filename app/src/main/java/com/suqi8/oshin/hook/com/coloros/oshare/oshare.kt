@@ -46,7 +46,7 @@ class oshare: YukiBaseHooker() {
                         }
                     }?.singleOrNull()?.also {
                         it.className.toClass().method { name = it.methodName }.hook { before {
-                            val addtime = (prefs("oshare").getInt("transfer_time_modify", 10) * 1000 * 60)
+                            val addtime = prefs("oshare").getInt("transfer_time_modify", 10)
                             result = result as Int + addtime
                         } }
                     }
