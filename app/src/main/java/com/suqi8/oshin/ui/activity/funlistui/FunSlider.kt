@@ -1,7 +1,5 @@
 package com.suqi8.oshin.ui.activity.funlistui
 
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,7 +8,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -29,93 +26,136 @@ import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperDialogDefaults
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
+import kotlin.reflect.KClass
 
 @Composable
-fun FunSlider(title: String, summary: String? = null, category: String, key: String, defValue: Any = 0, endtype: String? = "", max: Float = 1f, min: Float = 0f,decimalPlaces: Int = 2, titlecolor: Color = SuperDialogDefaults.titleColor()) {
+fun FunSlider(
+    title: String,
+    summary: String? = null,
+    category: String,
+    key: String,
+    defValue: Any = 0,
+    endtype: String? = "",
+    max: Float = 1f,
+    min: Float = 0f,
+    decimalPlaces: Int = 2,
+    titlecolor: Color = SuperDialogDefaults.titleColor()
+) {
     val context = LocalContext.current
+    val prefs = context.prefs(category)
+
     val type = when (defValue) {
         is Int -> Int::class
         is Float -> Float::class
         is Boolean -> Boolean::class
         else -> Int::class
     }
-    val value = remember { mutableStateOf(when (type) {
-        Int::class -> context.prefs(category).getInt(key, defValue as Int)
-        Float::class -> context.prefs(category).getFloat(key, defValue as Float)
-        Boolean::class -> context.prefs(category).getBoolean(key, defValue as Boolean)
-        else -> context.prefs(category).getInt(key, defValue as Int)
-    }.toString()) }
-    val cachevalue = remember { mutableStateOf(value.value) }
-    val Dialog = remember { mutableStateOf(false) }
-    val animatedSliderPosition by animateFloatAsState(
-        targetValue = if (cachevalue.value.isNotEmpty()) cachevalue.value.toFloat() else 0f,
-        animationSpec = tween(durationMillis = 200)
-    )
+
+    val defaultString = when (defValue) {
+        is Int -> prefs.getInt(key, defValue).toString()
+        is Float -> prefs.getFloat(key, defValue).toString()
+        is Boolean -> prefs.getBoolean(key, defValue).toString()
+        else -> "0"
+    }
+
+    val value = remember { mutableStateOf(defaultString) }
+    val cacheValue = remember { mutableStateOf(value.value) }
+    var showDialog = remember { mutableStateOf(false) }
+
     SuperArrow(
         title = title,
         summary = summary,
         rightText = value.value + endtype,
-        onClick = {
-            Dialog.value = true
-        }
+        onClick = { showDialog.value = true }
     )
+
     SuperDialog(
-        show = Dialog,
+        show = showDialog,
         title = stringResource(R.string.settings) + " " + title,
         titleColor = titlecolor,
         summary = summary,
-        onDismissRequest = {
-            dismissDialog(Dialog)
-        }
+        onDismissRequest = { dismissDialog(showDialog) }
     ) {
-        Slider(
-            progress = animatedSliderPosition,
-            onProgressChange = {
-                cachevalue.value = if (type == Int::class) it.toInt().toString() else String.format("%.${decimalPlaces}f", it)
-            },
-            minValue = min,
-            maxValue = max,
-            effect = true,
-            decimalPlaces = decimalPlaces
+        SliderWithInput(
+            value = cacheValue.value,
+            type = type,
+            decimalPlaces = decimalPlaces,
+            onValueChange = { cacheValue.value = it },
+            min = min,
+            max = max
         )
+
         Spacer(Modifier.height(12.dp))
-        TextField(
-            value = cachevalue.value,
-            onValueChange = { cachevalue.value = it},
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
-        )
-        Spacer(Modifier.height(12.dp))
+
         Row(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    dismissDialog(Dialog)
-                }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(12.dp))
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
-                enabled = (cachevalue.value.isNotEmpty()),
+                enabled = cacheValue.value.isNotEmpty(),
                 onClick = {
-                    dismissDialog(Dialog)
-                    value.value = cachevalue.value
-                    when (defValue) {
-                        is Int -> context.prefs(category).edit { putInt(key, cachevalue.value.toInt()) }
-                        is Float -> context.prefs(category)
-                            .edit { putFloat(key, cachevalue.value.toFloat()) }
-                        is Boolean -> context.prefs(category)
-                            .edit { putBoolean(key, cachevalue.value.toBoolean()) }
-                        else -> context.prefs(category).edit { putInt(key, cachevalue.value.toInt()) }
+                    value.value = cacheValue.value
+                    showDialog.value = false
+                    prefs.edit {
+                        when (defValue) {
+                            is Int -> putInt(key, cacheValue.value.toInt())
+                            is Float -> putFloat(key, cacheValue.value.toFloat())
+                            is Boolean -> putBoolean(key, cacheValue.value.toBoolean())
+                            else -> putInt(key, cacheValue.value.toInt())
+                        }
                     }
                 }
             )
         }
     }
+}
+
+@Composable
+fun SliderWithInput(
+    value: String,
+    type: KClass<*>,
+    decimalPlaces: Int,
+    onValueChange: (String) -> Unit,
+    min: Float,
+    max: Float
+) {
+    val sliderPosition = remember { mutableStateOf(value.toFloatOrNull() ?: 0f) }
+
+    Slider(
+        progress = sliderPosition.value,
+        onProgressChange = {
+            sliderPosition.value = it
+            onValueChange(
+                if (type == Int::class) {
+                    it.toInt().toString()
+                } else {
+                    String.format("%.${decimalPlaces}f", it)
+                }
+            )
+        },
+        minValue = min,
+        maxValue = max,
+        effect = true,
+        decimalPlaces = decimalPlaces
+    )
+
+    Spacer(Modifier.height(12.dp))
+
+    TextField(
+        value = value,
+        onValueChange = { newValue ->
+            onValueChange(newValue)
+            sliderPosition.value = newValue.toFloatOrNull() ?: 0f
+        },
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+    )
 }
