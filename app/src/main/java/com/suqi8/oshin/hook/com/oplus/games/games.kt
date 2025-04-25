@@ -2,7 +2,6 @@ package com.suqi8.oshin.hook.com.oplus.games
 
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import org.luckypray.dexkit.DexKitBridge
 import java.lang.reflect.Modifier
@@ -119,7 +118,6 @@ class games: YukiBaseHooker() {
                             usingStrings("feature.support.game.AI_PLAY_version2")
                         }
                     }.singleOrNull()?.also {
-                        YLog.info("methodName:"+it.methodName + " className:" + it.className)
                         it.className.toClass().method { name = it.methodName }.hook { before { result = true } }
                     }
                 }
