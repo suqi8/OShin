@@ -11,7 +11,7 @@ import androidx.navigation.NavController
 import com.suqi8.oshin.GetAppName
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
-import com.suqi8.oshin.ui.activity.funlistui.FunSlider
+import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import top.yukonga.miuix.kmp.basic.Card
 
 @SuppressLint("SuspiciousIndentation")
@@ -28,16 +28,10 @@ fun oshare(navController: NavController) {
                 .padding(horizontal = 12.dp)
                 .padding(bottom = 6.dp, top = 6.dp)
         ) {
-            FunSlider(
-                title = stringResource(R.string.transfer_time_modify),
+            FunSwich(
+                title = stringResource(R.string.remove_oshare_auto_off),
                 category = "oshare",
-                key = "transfer_time_modify",
-                summary = stringResource(R.string.transfer_time_effect),
-                defValue = 10,
-                endtype = "m",
-                max = 60f,
-                min = -10f,
-                decimalPlaces = 0
+                key = "remove_oshare_auto_off"
             )
         }
     }
