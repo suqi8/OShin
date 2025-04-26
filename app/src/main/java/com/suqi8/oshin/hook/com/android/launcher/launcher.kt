@@ -11,6 +11,42 @@ class launcher: YukiBaseHooker() {
     @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
     override fun onHook() {
         loadApp("com.android.launcher"){
+            /*"com.coui.appcompat.uiutil.UIUtil".toClass().apply {
+                method {
+                    name = "b"
+                    param("com.coui.appcompat.uiutil.AnimLevel")
+                    returnType = BooleanType
+                }.hook {
+                    before {
+                        result = false
+                    }
+                }
+            }*/
+            val set_anim_level = prefs("launcher").getInt("set_anim_level", 0)
+            if (set_anim_level != 0) {
+                "com.android.common.util.PlatformLevelUtils\$animationLevelOS14\$2".toClass().apply {
+                    method {
+                        name = "invoke"
+                        emptyParam()
+                        returnType = "java.lang.Integer"
+                    }.hook {
+                        before {
+                            result = set_anim_level
+                        }
+                    }
+                }
+                "com.android.common.util.PlatformLevelUtils\$animationLevelOS14\$2".toClass().apply {
+                    method {
+                        name = "invoke"
+                        emptyParam()
+                        returnType = "java.lang.Integer"
+                    }.hook {
+                        before {
+                            result = set_anim_level
+                        }
+                    }
+                }
+            }
             if (prefs("launcher").getBoolean("force_enable_fold_mode", false)) {
                 if (prefs("launcher").getInt("fold_mode",0) == 0) {
                     "com.android.common.util.ScreenUtils".toClass().apply {
