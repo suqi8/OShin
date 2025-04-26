@@ -161,7 +161,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                                                 val magiskVersion = executeCommand("magisk -v")
                                                 "$magiskVersion ${executeCommand("magisk -V").trim()}"
                                             } else {
-                                                it.substringAfter("ksud ").take(4)
+                                                it.substringAfter("ksud ").trim()
                                             }
                                         }
                                     }
