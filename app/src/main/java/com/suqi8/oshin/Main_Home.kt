@@ -14,7 +14,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -22,11 +21,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
+import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
+import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -48,8 +51,6 @@ import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -95,6 +96,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
     }*/
     val context = LocalContext.current
     val cardVisible = rememberSaveable { mutableStateOf(false) }
+
     LazyColumn(
         contentPadding = padding,
         modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
@@ -482,58 +484,42 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
             }
         }
         item {
-            if(cardVisible.value) {
-                val allFeatures = remember { features(context).shuffled() }
-                var shownCount by remember { mutableStateOf(10) }  // 控制每次显示多少项
-                val visibleFeatures = allFeatures.take(shownCount)
-                var isFlowVisible by remember { mutableStateOf(false) } // 是否显示 FlowRow
-                var isBottomReached by remember { mutableStateOf(false) } // 是否到达底部
-
-// 控制显示更多的逻辑
-                if (isFlowVisible && shownCount < allFeatures.size && isBottomReached) {
-                    shownCount += 10
-                    isBottomReached = false // 重置底部标记
+            val allFeatures = remember {
+                features(context).shuffled().map {
+                    val route = (if (it.summary != null) "\n" else "") + GetFuncRoute(it.category, context)
+                    FeatureUI(
+                        title = it.title,
+                        summary = it.summary,
+                        category = it.category,
+                        route = route
+                    )
                 }
-
-                FlowRow(
+            }
+            AnimatedVisibility(cardVisible.value) {
+                LazyVerticalStaggeredGrid(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
-                        .offset(y = (-8).dp)
-                        .onGloballyPositioned { coordinates ->
-                            val height = coordinates.size.height
-                            val position = coordinates.positionInParent().y
-                            // 判断是否滑动到底部
-                            isBottomReached =
-                                position + height >= (coordinates.parentCoordinates?.size?.height ?: 0)
-                            isFlowVisible = true // 一旦可见，就设置为 true
-                        },
+                        .heightIn(20.dp, 10000.dp),
+                    columns = StaggeredGridCells.Fixed(2),
+                    userScrollEnabled = true,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalItemSpacing = 8.dp
                 ) {
-                    visibleFeatures.forEach { recent_Feature ->
+                    items(allFeatures) { feature ->
                         Card(
                             modifier = Modifier
                                 .widthIn(0.dp, LocalConfiguration.current.screenWidthDp.dp / 2 - 20.dp)
                         ) {
                             Column(modifier = Modifier.clickable {
-                                navController.navigate(recent_Feature.category)
+                                navController.navigate(feature.category)
                             }) {
                                 Text(
-                                    recent_Feature.title,
+                                    feature.title,
                                     modifier = Modifier.padding(start = 15.dp, end = 10.dp, top = 10.dp),
                                     fontSize = 17.sp
                                 )
-
-                                // 提前准备 route 字段，避免每次都重新计算
-                                val route = rememberSaveable { mutableStateOf("") }
-                                if (route.value.isEmpty()) {
-                                    LaunchedEffect(Unit) {
-                                        route.value = (if (recent_Feature.summary != null) "\n" else "") + GetFuncRoute(recent_Feature.category, context)
-                                    }
-                                }
-
                                 Text(
-                                    if (recent_Feature.summary != null) recent_Feature.summary + route.value else route.value,
+                                    (feature.summary ?: "") + feature.route,
                                     modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp),
                                     fontSize = 14.sp,
                                     color = MiuixTheme.colorScheme.onSurfaceContainerHigh
@@ -546,6 +532,13 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
         }
     }
 }
+
+data class FeatureUI(
+    val title: String,
+    val summary: String? = null,
+    val category: String,
+    val route: String = ""
+)
 
 @SuppressLint("DefaultLocale")
 suspend fun getSOH(): String {
