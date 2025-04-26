@@ -109,7 +109,8 @@ fun launcher(navController: NavController) {
                 category = "launcher",
                 key = "set_anim_level",
                 max = 4f,
-                min = 0f,
+                min = -1f,
+                defValue = -1,
                 decimalPlaces = 0
             )
         }

@@ -22,8 +22,8 @@ class launcher: YukiBaseHooker() {
                     }
                 }
             }*/
-            val set_anim_level = prefs("launcher").getInt("set_anim_level", 0)
-            if (set_anim_level != 0) {
+            val set_anim_level = prefs("launcher").getInt("set_anim_level", -1)
+            if (set_anim_level != -1) {
                 "com.android.common.util.PlatformLevelUtils\$animationLevelOS14\$2".toClass().apply {
                     method {
                         name = "invoke"
