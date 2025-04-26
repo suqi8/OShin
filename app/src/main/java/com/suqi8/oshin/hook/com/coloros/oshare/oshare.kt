@@ -8,7 +8,7 @@ import java.lang.reflect.Modifier
 class oshare: YukiBaseHooker() {
     override fun onHook() {
         loadApp(name = "com.coloros.oshare") {
-            if (prefs("oshare").getInt("transfer_time_modify", 10) != 10) {
+            if (prefs("oshare").getBoolean("remove_oshare_auto_off", false)) {
                 DexKitBridge.create(this.appInfo.sourceDir).use {
                     it.findClass {
                         matcher {
@@ -28,8 +28,8 @@ class oshare: YukiBaseHooker() {
                         }
                     }.singleOrNull()?.also {
                         it.className.toClass().method { name = it.methodName }.hook { before {
-                            val addtime = (prefs("oshare").getInt("transfer_time_modify", 10) * 1000 * 60).toLong()
-                            args[1] = args[1] as Long + addtime
+                            //val addtime = (prefs("oshare").getInt("transfer_time_modify", 10) * 1000 * 60).toLong()
+                            args[1] = 0L//args[1] as Long + addtime
                         } }
                     }
                     it.findClass {
@@ -45,9 +45,9 @@ class oshare: YukiBaseHooker() {
                             returnType = "long"
                         }
                     }?.singleOrNull()?.also {
-                        it.className.toClass().method { name = it.methodName }.hook { before {
-                            val addtime = prefs("oshare").getInt("transfer_time_modify", 10)
-                            result = result as Int + addtime
+                        it.className.toClass().method { name = it.methodName }.hook { after {
+                            //val addtime = prefs("oshare").getInt("transfer_time_modify", 10).toLong()
+                            result = 0L//result as Long + addtime
                         } }
                     }
                 }

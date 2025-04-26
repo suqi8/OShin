@@ -596,8 +596,7 @@
     <string name="coming_soon">尽情期待</string>
     <string name="rom_workshop">ROM工坊</string>
     <string name="enable_mlbb_ai_god_assist">开启决胜巅峰AI大神辅助</string>
-    <string name="transfer_time_modify">修改互传触发增加时间</string>
-    <string name="transfer_time_effect">默认为10分钟，将会在10分钟上增加或减少</string>
+    <string name="remove_oshare_auto_off">移除互传自动关闭</string>
     <string name="follow_system">随跟系统</string>
     <string name="app_language">应用语言</string>
 </resources>
