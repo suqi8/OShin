@@ -103,6 +103,15 @@ fun launcher(navController: NavController) {
                 category = "launcher",
                 key = "force_enable_dock_blur"
             )
+            addline()
+            FunSlider(
+                title = stringResource(R.string.set_anim_level),
+                category = "launcher",
+                key = "set_anim_level",
+                max = 4f,
+                min = 0f,
+                decimalPlaces = 0
+            )
         }
     }
 }
