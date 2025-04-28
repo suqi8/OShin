@@ -12,12 +12,15 @@ import android.os.storage.StorageVolume
 import android.provider.Settings
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,6 +28,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardActions
@@ -39,19 +43,30 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.integerArrayResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.fontscaling.MathUtils.lerp
 import androidx.compose.ui.unit.sp
@@ -73,20 +88,23 @@ import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
+import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.theme.MiuixTheme.colorScheme
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
+import top.yukonga.miuix.kmp.utils.SmoothRoundedCornerShape
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import java.lang.reflect.Method
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UseKtx")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UseKtx", "RestrictedApi")
 @Composable
 fun Main_About(
     topAppBarScrollBehavior: ScrollBehavior,
@@ -121,7 +139,7 @@ fun Main_About(
     val secScale = remember { mutableFloatStateOf(1f) }
     val scroll = rememberLazyListState()
     LaunchedEffect(scroll) {
-        snapshotFlow { scroll.firstVisibleItemScrollOffset/1.8 }
+        snapshotFlow { scroll.firstVisibleItemScrollOffset }
             .onEach {
                 if (scroll.firstVisibleItemIndex > 0){
                     bgAlpha.floatValue = 0f
@@ -130,16 +148,16 @@ fun Main_About(
                     //showBlurs.value = true
                     return@onEach
                 }
-                val alpha = ((bgHeight-it.toFloat().coerceIn(min,bgHeight))/ bgHeight).coerceIn(0f, 1f)
+                val alpha = ((bgHeight-it/1.8.toFloat().coerceIn(min,bgHeight))/ bgHeight).coerceIn(0f, 1f)
                 bgAlpha.floatValue = alpha
-                val secValue =  ((sec-it.toFloat().coerceIn(min,sec))/ sec).coerceIn(0f, 1f)
+                val secValue =  ((sec-it/1.8.toFloat().coerceIn(min,sec))/ sec).coerceIn(0f, 1f)
 
                 secAlpha.floatValue = secValue
                 secScale.floatValue = lerp(0.9f,1f,secValue)
 
-                val mainValue =  ((main-it.toFloat().coerceIn(sec,main))/ mainHeight).coerceIn(0f, 1f)
+                val mainValue =  ((main-(it/1.3).toFloat().coerceIn(sec,main))/ mainHeight).coerceIn(0f, 1f)
 
-                mainAlpha.floatValue = mainValue
+                mainAlpha.floatValue = (mainValue * 1.5f).toFloat()
                 mainScale.floatValue = lerp(0.9f,1f,mainValue)
 
             }.collect {
@@ -165,7 +183,7 @@ fun Main_About(
             .height(520.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
-            val gradientColors = if (colorMode.value == 2) {
+            val gradientColors = if (colorMode.value == 2 || isSystemInDarkTheme()) {
                 listOf(
                     Color("#D0A279ED".toColorInt()),
                     Color("#D0E3BCB1".toColorInt())
@@ -204,8 +222,65 @@ fun Main_About(
                     .alpha(secAlpha.floatValue)
                     .padding(top = 20.dp),
                 fontWeight = FontWeight.Medium,
-                color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+                color = colorScheme.onSurfaceVariantSummary,
                 textAlign = TextAlign.Center
+            )
+        }
+        val (shadowColor, backgroundColor, borderColor) = if (colorMode.value == 2 || isSystemInDarkTheme()) {
+            Triple(
+                Color(0x4D000000),
+                Color(0x1FFFFFFF),
+                integerArrayResource(R.array.my_card_stroke_gradient_colors_dark)
+            )
+        } else {
+            Triple(
+                Color(0x40000000),
+                Color(0x99FFFFFF),
+                integerArrayResource(R.array.my_card_stroke_gradient_colors_light)
+            )
+        }
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .wrapContentHeight()
+                .padding(top = 180.dp)
+                .offset(y = -(scroll.firstVisibleItemScrollOffset.toFloat() / 3).dp)
+                .alpha(1f - (scroll.firstVisibleItemScrollOffset.toFloat() / 300))
+                .align(Alignment.Center)
+                .drawBehind {
+                    val strokeWidth = 1.5.dp.toPx()
+                    val inset = strokeWidth / 2
+                    drawRoundRect(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                Color(borderColor[1]),
+                                Color(borderColor[0])
+                            ),
+                            start = Offset(size.width / 2, 0f),
+                            end = Offset(size.width / 2, size.height)
+                        ),
+                        topLeft = Offset(inset, inset),
+                        size = Size(size.width - strokeWidth, size.height - strokeWidth),
+                        cornerRadius = CornerRadius(16.dp.toPx()),
+                        style = Stroke(width = strokeWidth)
+                    )
+                }
+                .shadow(
+                    elevation = 1.5.dp,
+                    shape = SmoothRoundedCornerShape(16.dp),
+                    clip = true,
+                    ambientColor = shadowColor,
+                    spotColor = shadowColor
+                ),
+            colors = backgroundColor,
+            onClick = {  }
+        ) {
+            Text(
+                text = stringResource(R.string.check_update),
+                fontSize = 17.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colorScheme.onSurface
             )
         }
         LazyColumn(
@@ -478,6 +553,39 @@ fun Main_About(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun Button(
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    enabled: Boolean = true,
+    cornerRadius: Dp = ButtonDefaults.CornerRadius,
+    minWidth: Dp = ButtonDefaults.MinWidth,
+    minHeight: Dp = ButtonDefaults.MinHeight,
+    colors: Color = colorScheme.secondaryVariant,
+    insideMargin: PaddingValues = ButtonDefaults.InsideMargin,
+    content: @Composable RowScope.() -> Unit
+) {
+
+    Surface(
+        onClick = {
+            onClick()
+        },
+        enabled = enabled,
+        modifier = modifier.semantics { role = Role.Button },
+        shape = SmoothRoundedCornerShape(cornerRadius),
+        color = colors
+    ) {
+        Row(
+            Modifier
+                .defaultMinSize(minWidth = minWidth, minHeight = minHeight)
+                .padding(insideMargin),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            content = content
+        )
     }
 }
 
