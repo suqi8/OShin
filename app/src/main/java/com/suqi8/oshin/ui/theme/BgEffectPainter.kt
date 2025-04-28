@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.res.Resources
 import android.graphics.RenderEffect
 import android.graphics.RuntimeShader
+import android.os.Handler
+import android.os.Looper
 import android.util.TypedValue
 import android.view.View
 import android.view.ViewGroup
@@ -35,7 +37,7 @@ class BgEffectPainter(context: Context) {
     private var targetColors: FloatArray = uColors.copyOf()
     private var transitionStartTime: Long = 0L
     private var isTransitioning = false
-    private var colorChangeHandler: android.os.Handler? = null
+    private var colorChangeHandler: Handler? = null
     private var colorRunnable: Runnable? = null
 
     init {
@@ -114,7 +116,7 @@ class BgEffectPainter(context: Context) {
     }
 
     fun startColorAnimation(isDarkMode: Boolean) {
-        colorChangeHandler = android.os.Handler(android.os.Looper.getMainLooper())
+        colorChangeHandler = Handler(Looper.getMainLooper())
         colorRunnable = object : Runnable {
             override fun run() {
                 startColors = uColors.copyOf()
@@ -143,7 +145,7 @@ class BgEffectPainter(context: Context) {
 
         if (t < 1f) {
             // 下一帧
-            android.os.Handler(android.os.Looper.getMainLooper())
+            Handler(Looper.getMainLooper())
                 .postDelayed({ runTransitionFrame() }, 16L) // 约 60fps
         } else {
             isTransitioning = false

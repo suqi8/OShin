@@ -26,4 +26,12 @@
         <item>English</item>
         <item>日本語</item>
     </string-array>
+    <integer-array name="my_card_stroke_gradient_colors_light">
+        <item>0x29ffffff</item>
+        <item>0xccffffff</item>
+    </integer-array>
+    <integer-array name="my_card_stroke_gradient_colors_dark">
+        <item>0x00ffffff</item>
+        <item>0x30ffffff</item>
+    </integer-array>
 </resources>
