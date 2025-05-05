@@ -16,9 +16,9 @@ class systemui: YukiBaseHooker() {
         loadApp(hooker = Icon())
         loadApp(hooker = Notification())
         loadApp(hooker = Fragment())
-        loadApp(hooker = allday_screenoff())
-        loadApp(hooker = BatteryBar())
-        loadApp(hooker = Wifi())
+//        loadApp(hooker = allday_screenoff())
+//        loadApp(hooker = BatteryBar())
+//        loadApp(hooker = Wifi())
         /*loadApp(name = "com.android.systemui") {
             "com.oplus.systemui.plugins.qs.OplusQSSpecialModeProvider".toClass().apply {
                 method {

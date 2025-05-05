@@ -87,13 +87,7 @@ import java.io.InputStreamReader
 @SuppressLint("AutoboxingStateCreation")
 @Composable
 fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, navController: NavController) {
-    /*val loading = remember { mutableStateOf(true) }
-    if (loading.value) {
-        Box(modifier = Modifier.fillMaxSize().background(Color.Transparent)) {
-            Text(text = "Loading...", modifier = Modifier.align(Alignment.Center))
-        }
-    }*/
-    val context = LocalContext.current
+
     val cardVisible = rememberSaveable { mutableStateOf(false) }
     LazyColumn(
         contentPadding = padding,
@@ -183,17 +177,6 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                                 modifier = Modifier.padding(start = 15.dp, top = 5.dp))
                         }
                         Spacer(modifier = Modifier.height(10.dp))
-                        Card(modifier = Modifier.weight(1f).fillMaxSize(), color = Color(0xffffdbd8)) {
-                            Text(text = "Frida Server",
-                                fontSize = 16.sp,
-                                color = Color.Black,
-                                modifier = Modifier.padding(start = 15.dp, top = 15.dp),
-                                fontWeight = FontWeight.Bold)
-                            Text(text = "Connect Error",
-                                color = Color.Black.copy(alpha = 0.75f),
-                                fontSize = 14.sp,
-                                modifier = Modifier.padding(start = 15.dp, top = 5.dp))
-                        }
                     }
                 }
             }
@@ -211,21 +194,21 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                         .padding(start = 20.dp, top = 10.dp, end = 20.dp)
                         .fillMaxWidth()
                 ) {
-                    Column {
-                        SuperArrow(
-                            title = stringResource(R.string.recent_update),
-                            leftAction = {
-                                Image(painter = painterResource(id = R.drawable.recent_update),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .size(20.dp),
-                                    colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface))
-                            },
-                            onClick = {
-                                navController.navigate("recent_update")
-                            }
-                        )
-                    }
+//                    Column {
+//                        SuperArrow(
+//                            title = stringResource(R.string.recent_update),
+//                            leftAction = {
+//                                Image(painter = painterResource(id = R.drawable.recent_update),
+//                                    contentDescription = null,
+//                                    modifier = Modifier
+//                                        .size(20.dp),
+//                                    colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface))
+//                            },
+//                            onClick = {
+//                                navController.navigate("recent_update")
+//                            }
+//                        )
+//                    }
                 }
             }
         }
@@ -244,137 +227,12 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                         .padding(start = 20.dp, top = 10.dp, end = 20.dp, bottom = 20.dp)
                         .fillMaxWidth()
                 ) {
-                    data class BatteryStatus(
-                        val current: String = "0 mAh",
-                        val full: String = "0 mAh",
-                        val health: String = "0%"
-                    )
                     var nvid by rememberSaveable { mutableStateOf("0") } // 使用 rememberSaveable 保持状态
                     val country by remember(nvid) { // 使用记忆函数优化计算
                         derivedStateOf {
                             when (nvid) {
                                 "10010111" -> context.getString(R.string.nvid_CN)
-                                "00011010" -> context.getString(R.string.nvid_TW)
-                                "00110111" -> context.getString(R.string.nvid_RU)
-                                "01000100" -> context.getString(R.string.nvid_GDPR_EU)
-                                "10001101" -> context.getString(R.string.nvid_GDPR_Europe)
-                                "00011011" -> context.getString(R.string.nvid_IN)
-                                "00110011" -> context.getString(R.string.nvid_ID)
-                                "00111000" -> context.getString(R.string.nvid_MY)
-                                "00111001" -> context.getString(R.string.nvid_TH)
-                                "00111110" -> context.getString(R.string.nvid_PH)
-                                "10000011" -> context.getString(R.string.nvid_SA)
-                                "10011010" -> context.getString(R.string.nvid_LATAM)
-                                "10011110" -> context.getString(R.string.nvid_BR)
-                                "10100110" -> context.getString(R.string.nvid_ME)
                                 else -> context.getString(R.string.nvid_unknown, nvid)
-                            }
-                        }
-                    }
-
-                    var health by rememberSaveable { mutableStateOf("0") }
-                    var battery_cc by rememberSaveable { mutableIntStateOf(0) }
-                    var charge_full_design by rememberSaveable { mutableIntStateOf(0) }
-
-                    // 合并电池状态更新
-                    val batteryStatus = remember { mutableStateOf(BatteryStatus()) }
-
-                    // 生命周期管理
-                    val lifecycleOwner = LocalLifecycleOwner.current
-                    var isForeground by remember { mutableStateOf(false) }
-
-                    // 初始化只执行一次的操作
-                    LaunchedEffect(Unit) {
-                        withContext(Dispatchers.IO) {
-                            nvid = getSystemProperty("ro.build.oplus_nv_id")
-                            health = executeCommand("cat /sys/class/power_supply/battery/health").trim()
-
-                            // 合并电池信息获取
-                            battery_cc = try {
-                                executeCommand("cat /sys/class/oplus_chg/battery/battery_cc").trim().toInt()
-                            } catch (e: Exception) { 0 }
-
-                            charge_full_design = try {
-                                executeCommand("cat /sys/class/power_supply/battery/charge_full_design")
-                                    .trim().toInt() / 1000
-                            } catch (e: Exception) { 0 }
-                        }
-                    }
-
-                    // 优化电池信息更新
-                    LaunchedEffect(isForeground) {
-                        if (isForeground) {
-                            while (true) {
-                                withContext(Dispatchers.IO) {
-                                    // 使用单次命令获取所有电池信息
-                                    val rawData = executeCommand("""
-                        echo "charge_full=$(cat /sys/class/oplus_chg/battery/charge_full)"
-                        echo "charge_full1=$(cat /sys/class/power_supply/battery/charge_counter)"
-                        echo "fcc=$(cat /sys/class/oplus_chg/battery/battery_fcc)"
-                        echo "design=$(cat /sys/class/power_supply/battery/charge_full_design)"
-                    """.trimIndent())
-
-                                    // 解析数据
-                                    val data = rawData.lines()
-                                        .mapNotNull { line ->
-                                            val parts = line.split("=")
-                                            if (parts.size >= 2) parts[0] to parts[1] else null
-                                        }
-                                        .toMap()
-                                    val charge_fulldata0 = try {
-                                        (data["charge_full"]?.toIntOrNull() ?: 0) / 1000
-                                    } catch (_: Exception) { 0 }
-                                    val charge_fulldata1 = try {
-                                        (data["charge_full1"]?.toIntOrNull() ?: 0) / 1000
-                                    } catch (_: Exception) { 0 }
-                                    val charge_fulldata = if (charge_fulldata0 != 0) {
-                                        charge_fulldata0
-                                    } else {
-                                        charge_fulldata1
-                                    }
-
-                                    val newStatus = BatteryStatus(
-                                        current = "$charge_fulldata mAh",
-                                        full = (data["fcc"]?.toIntOrNull() ?: 0).toString() + " mAh",
-                                        health = try {
-                                            val design = data["design"]?.toFloatOrNull() ?: 1f
-                                            val soh = (data["fcc"]?.toFloatOrNull() ?: 0f) / (design / 100000)
-                                            "${getSOH()}% / ${soh}%"
-                                        } catch (_: Exception) { "ERROR" }
-                                    )
-
-                                    // 单次状态更新
-                                    batteryStatus.value = newStatus
-                                }
-                                delay(10000L)
-                            }
-                        }
-                    }
-
-                    // 生命周期观察器
-                    DisposableEffect(lifecycleOwner) {
-                        val observer = LifecycleEventObserver { _, event ->
-                            isForeground = when (event) {
-                                Lifecycle.Event.ON_START -> true
-                                Lifecycle.Event.ON_STOP -> false
-                                else -> isForeground
-                            }
-                        }
-                        lifecycleOwner.lifecycle.addObserver(observer)
-                        onDispose {
-                            lifecycleOwner.lifecycle.removeObserver(observer)
-                        }
-                    }
-                    val batteryHealthString by remember(health) {
-                        derivedStateOf {
-                            when (health) {
-                                "Good" -> context.getString(R.string.battery_health_good)
-                                "Overheat" -> context.getString(R.string.battery_health_overheat)
-                                "Dead" -> context.getString(R.string.battery_health_dead)
-                                "Over Voltage" -> context.getString(R.string.battery_health_over_voltage)
-                                "Cold" -> context.getString(R.string.battery_health_cold)
-                                "Unknown" -> context.getString(R.string.battery_health_unknown)
-                                else -> context.getString(R.string.battery_health_not_found)
                             }
                         }
                     }
@@ -409,16 +267,6 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                         )
                         addline(false)
                         Text(
-                            text = stringResource(id = R.string.battery_status),
-                            modifier = Modifier.padding(top = 5.dp)
-                        )
-                        SmallTitle(
-                            text = "$batteryHealthString / $health",
-                            insideMargin = PaddingValues(0.dp, 0.dp),
-                            modifier = Modifier.padding(bottom = 5.dp)
-                        )
-                        addline(false)
-                        Text(
                             text = stringResource(id = R.string.system_version),
                             modifier = Modifier.padding(top = 5.dp)
                         )
@@ -427,119 +275,6 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                             insideMargin = PaddingValues(0.dp, 0.dp),
                             modifier = Modifier.padding(bottom = 5.dp)
                         )
-                        addline(false)
-                        Text(
-                            text = stringResource(id = R.string.battery_equivalent_capacity),
-                            modifier = Modifier.padding(top = 5.dp)
-                        )
-                        SmallTitle(
-                            text = charge_full_design.toString() + "mAh",
-                            insideMargin = PaddingValues(0.dp, 0.dp),
-                            modifier = Modifier.padding(bottom = 5.dp)
-                        )
-                        addline(false)
-                        Text(
-                            text = stringResource(id = R.string.battery_current_capacity),
-                            modifier = Modifier.padding(top = 5.dp)
-                        )
-                        SmallTitle(
-                            text = batteryStatus.value.current,
-                            insideMargin = PaddingValues(0.dp, 0.dp),
-                            modifier = Modifier.padding(bottom = 5.dp)
-                        )
-                        addline(false)
-                        Text(
-                            text = stringResource(id = R.string.battery_full_capacity),
-                            modifier = Modifier.padding(top = 5.dp)
-                        )
-                        SmallTitle(
-                            text = batteryStatus.value.full,
-                            insideMargin = PaddingValues(0.dp, 0.dp),
-                            modifier = Modifier.padding(bottom = 5.dp)
-                        )
-                        addline(false)
-                        Text(
-                            text = stringResource(id = R.string.battery_health),
-                            modifier = Modifier.padding(top = 5.dp)
-                        )
-                        SmallTitle(
-                            text = batteryStatus.value.health,
-                            insideMargin = PaddingValues(0.dp, 0.dp),
-                            modifier = Modifier.padding(bottom = 5.dp)
-                        )
-                        addline(false)
-                        Text(
-                            text = stringResource(id = R.string.battery_cycle_count),
-                            modifier = Modifier.padding(top = 5.dp)
-                        )
-                        SmallTitle(
-                            text = battery_cc.toString() + "次",
-                            insideMargin = PaddingValues(0.dp, 0.dp),
-                            modifier = Modifier.padding(bottom = 5.dp)
-                        )
-                    }
-                }
-            }
-        }
-        item {
-            if(cardVisible.value) {
-                val allFeatures = remember { features(context).shuffled() }
-                var shownCount by remember { mutableStateOf(10) }  // 控制每次显示多少项
-                val visibleFeatures = allFeatures.take(shownCount)
-                var isFlowVisible by remember { mutableStateOf(false) } // 是否显示 FlowRow
-                var isBottomReached by remember { mutableStateOf(false) } // 是否到达底部
-
-// 控制显示更多的逻辑
-                if (isFlowVisible && shownCount < allFeatures.size && isBottomReached) {
-                    shownCount += 10
-                    isBottomReached = false // 重置底部标记
-                }
-
-                FlowRow(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .offset(y = (-8).dp)
-                        .onGloballyPositioned { coordinates ->
-                            val height = coordinates.size.height
-                            val position = coordinates.positionInParent().y
-                            // 判断是否滑动到底部
-                            isBottomReached =
-                                position + height >= (coordinates.parentCoordinates?.size?.height ?: 0)
-                            isFlowVisible = true // 一旦可见，就设置为 true
-                        },
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    visibleFeatures.forEach { recent_Feature ->
-                        Card(
-                            modifier = Modifier
-                                .widthIn(0.dp, LocalConfiguration.current.screenWidthDp.dp / 2 - 20.dp)
-                        ) {
-                            Column(modifier = Modifier.clickable {
-                                navController.navigate(recent_Feature.category)
-                            }) {
-                                Text(
-                                    recent_Feature.title,
-                                    modifier = Modifier.padding(start = 15.dp, end = 10.dp, top = 10.dp),
-                                    fontSize = 17.sp
-                                )
-
-                                // 提前准备 route 字段，避免每次都重新计算
-                                val route = rememberSaveable { mutableStateOf("") }
-                                if (route.value.isEmpty()) {
-                                    LaunchedEffect(Unit) {
-                                        route.value = (if (recent_Feature.summary != null) "\n" else "") + GetFuncRoute(recent_Feature.category, context)
-                                    }
-                                }
-
-                                Text(
-                                    if (recent_Feature.summary != null) recent_Feature.summary + route.value else route.value,
-                                    modifier = Modifier.padding(top = 10.dp, start = 15.dp, end = 10.dp, bottom = 10.dp),
-                                    fontSize = 14.sp,
-                                    color = MiuixTheme.colorScheme.onSurfaceContainerHigh
-                                )
-                            }
-                        }
                     }
                 }
             }

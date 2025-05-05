@@ -172,7 +172,6 @@ class MainActivity : ComponentActivity() {
             val locale = when (language) {
                 1 -> Locale.SIMPLIFIED_CHINESE
                 2 -> Locale.ENGLISH
-                3 -> Locale.JAPANESE
                 else -> Locale.getDefault()
             }
 
@@ -550,7 +549,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
                 }
         ) {
             composable("Main") { Main1(context = context,navController, hazeState, hazeStyle, colorMode) }
-            composable("recent_update") { recent_update(navController) }
+//            composable("recent_update") { recent_update(navController) }
             composable("android") { android(navController) }
             composable("android\\package_manager_services") { package_manager_services(navController = navController) }
             composable("android\\oplus_system_services") { oplus_services(navController = navController) }
@@ -563,31 +562,31 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("systemui\\status_bar_wifi") { status_bar_wifi(navController = navController) }
             composable("launcher") { launcher(navController = navController) }
             composable("launcher\\recent_task") { recent_task(navController = navController) }
-            composable("about_setting") { about_setting(navController,alpha,blurRadius,noiseFactor,colorMode) }
-            composable("about_group") { about_group(navController) }
-            composable("about_references") { about_references(navController) }
-            composable("about_contributors") { about_contributors(navController) }
-            composable("about_donors") { about_donors(navController) }
-            composable("settings") { settings(navController) }
-            composable("settings\\feature") { feature(navController) }
-            composable("battery") { battery(navController) }
-            composable("speechassist") { speechassist(navController) }
-            composable("ocrscanner") { ocrscanner(navController) }
-            composable("games") { games(navController) }
-            composable("wallet") { wallet(navController) }
-            composable("phonemanager") { phonemanager(navController) }
-            composable("oplusphonemanager") { oplusphonemanager(navController) }
-            composable("mms") { mms(navController) }
-            composable("securepay") { securepay(navController) }
-            composable("health") { health(navController) }
+//            composable("about_setting") { about_setting(navController,alpha,blurRadius,noiseFactor,colorMode) }
+//            composable("about_group") { about_group(navController) }
+//            composable("about_references") { about_references(navController) }
+//            composable("about_contributors") { about_contributors(navController) }
+//            composable("about_donors") { about_donors(navController) }
+//            composable("settings") { settings(navController) }
+//            composable("settings\\feature") { feature(navController) }
+//            composable("battery") { battery(navController) }
+//            composable("speechassist") { speechassist(navController) }
+//            composable("ocrscanner") { ocrscanner(navController) }
+//            composable("games") { games(navController) }
+//            composable("wallet") { wallet(navController) }
+//            composable("phonemanager") { phonemanager(navController) }
+//            composable("oplusphonemanager") { oplusphonemanager(navController) }
+//            composable("mms") { mms(navController) }
+//            composable("securepay") { securepay(navController) }
+//            composable("health") { health(navController) }
             composable("appdetail") { appdetail(navController) }
-            composable("func\\cpu_freq") { cpu_freq(navController) }
-            composable("hide_apps_notice") { hide_apps_notice(navController) }
-            composable("quicksearchbox") { quicksearchbox(navController) }
-            composable("mihealth") { mihealth(navController) }
-            composable("ota") { ota(navController) }
-            composable("func\\romworkshop") { Rom_workshop(navController) }
-            composable("oshare") { oshare(navController) }
+//            composable("func\\cpu_freq") { cpu_freq(navController) }
+//            composable("hide_apps_notice") { hide_apps_notice(navController) }
+//            composable("quicksearchbox") { quicksearchbox(navController) }
+//            composable("mihealth") { mihealth(navController) }
+//            composable("ota") { ota(navController) }
+//            composable("func\\romworkshop") { Rom_workshop(navController) }
+//            composable("oshare") { oshare(navController) }
         }
     }
 }
@@ -602,11 +601,12 @@ fun Main1(context: Context,navController: NavController,
           colorMode: MutableState<Int>) {
     val topAppBarScrollBehavior0 = MiuixScrollBehavior(rememberTopAppBarState())
     val topAppBarScrollBehavior1 = MiuixScrollBehavior(rememberTopAppBarState())
-    val topAppBarScrollBehavior2 = MiuixScrollBehavior(rememberTopAppBarState())
-    val topAppBarScrollBehavior3 = MiuixScrollBehavior(rememberTopAppBarState())
+//    val topAppBarScrollBehavior2 = MiuixScrollBehavior(rememberTopAppBarState())
+//    val topAppBarScrollBehavior3 = MiuixScrollBehavior(rememberTopAppBarState())
 
     val topAppBarScrollBehaviorList = listOf(
-        topAppBarScrollBehavior0, topAppBarScrollBehavior1, topAppBarScrollBehavior2, topAppBarScrollBehavior3
+        topAppBarScrollBehavior0, topAppBarScrollBehavior1,
+//        topAppBarScrollBehavior2, topAppBarScrollBehavior3
     )
 
     val pagerState = rememberPagerState(pageCount = { 4 },initialPage = 0)
@@ -615,15 +615,14 @@ fun Main1(context: Context,navController: NavController,
     val currentScrollBehavior = when (pagerState.currentPage) {
         0 -> topAppBarScrollBehaviorList[0]
         1 -> topAppBarScrollBehaviorList[1]
-        2 -> topAppBarScrollBehaviorList[2]
-        else -> topAppBarScrollBehaviorList[3]
+        else -> topAppBarScrollBehaviorList[0]
     }
 
     val items = listOf(
         NavigationItem(stringResource(R.string.home), ImageVector.vectorResource(id = R.drawable.home)),
         NavigationItem(stringResource(R.string.module), ImageVector.vectorResource(id = R.drawable.module)),
-        NavigationItem(stringResource(R.string.func), ImageVector.vectorResource(id = R.drawable.func)),
-        NavigationItem(stringResource(R.string.about), ImageVector.vectorResource(id = R.drawable.about))
+//        NavigationItem(stringResource(R.string.func), ImageVector.vectorResource(id = R.drawable.func)),
+//        NavigationItem(stringResource(R.string.about), ImageVector.vectorResource(id = R.drawable.about))
     )
 
     LaunchedEffect(pagerState) {
@@ -669,9 +668,7 @@ fun Main1(context: Context,navController: NavController,
                 TopAppBar(scrollBehavior = currentScrollBehavior,color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.background,
                     title = when (pagerState.currentPage) {
                         0 -> stringResource(R.string.app_name)
-                        1 -> stringResource(R.string.module)
-                        2 -> stringResource(R.string.func)
-                        else -> stringResource(R.string.about)
+                        else -> stringResource(R.string.module)
                     }, modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
                         Modifier.hazeEffect(
                             state = hazeState,
@@ -831,20 +828,6 @@ fun AppHorizontalPager(
                     topAppBarScrollBehavior = topAppBarScrollBehaviorList[1],
                     padding = padding,
                     navController = navController
-                )
-
-                2 -> Main_Function(
-                    topAppBarScrollBehavior = topAppBarScrollBehaviorList[2],
-                    padding = padding,
-                    navController = navController
-                )
-
-                else -> Main_About(
-                    topAppBarScrollBehavior = topAppBarScrollBehaviorList[3],
-                    padding = padding,
-                    context = context,
-                    navController = navController,
-                    colorMode = colorMode
                 )
             }
         }
