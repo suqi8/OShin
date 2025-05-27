@@ -3,7 +3,7 @@ import com.android.build.gradle.internal.dsl.SigningConfig
 import java.io.ByteArrayOutputStream
 
 plugins {
-    id("com.android.application") version "8.9.2"
+    id("com.android.application") version "8.9.3"
     id("org.jetbrains.kotlin.android") version "2.1.20"
     id("com.google.devtools.ksp") version "2.1.20-1.0.32"
     id("org.jetbrains.kotlin.plugin.compose") version "2.1.20"
@@ -122,8 +122,8 @@ android {
         compose = true
     }
     lint { checkReleaseBuilds = false }
-    ndkVersion = "27.0.11718014 rc1"
-    buildToolsVersion = "35.0.0"
+    ndkVersion = "29.0.13113456 rc1"
+    buildToolsVersion = "36.0.0"
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"
     }
