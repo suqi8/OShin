@@ -45,7 +45,6 @@ import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperCheckbox
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 @SuppressLint("ConfigurationScreenWidthHeight")
@@ -94,7 +93,7 @@ fun FunAppSele(title: String, summary: String? = null, category: String, key: St
 
     SuperDialog(
         show = showAppListSele,
-        onDismissRequest = { dismissDialog(showAppListSele) }
+        onDismissRequest = { showAppListSele.value = false }
     ) {
         Box(
             modifier = Modifier

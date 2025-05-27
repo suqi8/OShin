@@ -12,6 +12,7 @@ import android.os.storage.StorageVolume
 import android.provider.Settings
 import android.widget.Toast
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -96,7 +97,6 @@ import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.theme.MiuixTheme.colorScheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.SmoothRoundedCornerShape
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import java.lang.reflect.Method
@@ -240,6 +240,7 @@ fun Main_About(
             )
         }
 
+        val interactionSource = remember { MutableInteractionSource() }
         Button(
             modifier = Modifier
                 .fillMaxWidth(0.8f)
@@ -448,7 +449,7 @@ fun Main_About(
                             modifier = Modifier
                                 .size(32.dp)
                                 .padding(end = 8.dp),
-                            colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
+                            colorFilter = ColorFilter.tint(colorScheme.onSurface)
                         )
                     }, onClick = {
                         navController.navigate("about_setting")
@@ -461,7 +462,7 @@ fun Main_About(
                             modifier = Modifier
                                 .size(32.dp)
                                 .padding(end = 8.dp),
-                            colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
+                            colorFilter = ColorFilter.tint(colorScheme.onSurface)
                         )
                     }, onClick = {
                         val intent = Intent(
@@ -478,7 +479,7 @@ fun Main_About(
                             modifier = Modifier
                                 .size(32.dp)
                                 .padding(end = 8.dp),
-                            colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
+                            colorFilter = ColorFilter.tint(colorScheme.onSurface)
                         )
                     }, onClick = {
                         navController.navigate("about_group")
@@ -491,7 +492,7 @@ fun Main_About(
                             modifier = Modifier
                                 .size(32.dp)
                                 .padding(end = 8.dp),
-                            colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
+                            colorFilter = ColorFilter.tint(colorScheme.onSurface)
                         )
                     }, onClick = {
                         val intent = Intent(
@@ -511,7 +512,7 @@ fun Main_About(
                                 modifier = Modifier
                                     .size(32.dp)
                                     .padding(end = 8.dp),
-                                colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
+                                colorFilter = ColorFilter.tint(colorScheme.onSurface)
                             )
                         }, onClick = {
                             val intent = Intent(
@@ -530,7 +531,7 @@ fun Main_About(
                                 modifier = Modifier
                                     .size(32.dp)
                                     .padding(end = 8.dp),
-                                colorFilter = ColorFilter.tint(MiuixTheme.colorScheme.onSurface)
+                                colorFilter = ColorFilter.tint(colorScheme.onSurface)
                             )
                         },
                         onClick = {
@@ -548,7 +549,7 @@ fun Main_About(
                     text = "Powered By SYCTeam & 酸奶",
                     fontSize = MiuixTheme.textStyles.subtitle.fontSize,
                     fontWeight = FontWeight.Medium,
-                    color = MiuixTheme.colorScheme.onBackgroundVariant,
+                    color = colorScheme.onBackgroundVariant,
                     textAlign = TextAlign.Center
                 )
             }
@@ -658,7 +659,7 @@ fun DeviceNameDialog(
     SuperDialog(title = stringResource(R.string.Device_Name),
         show = showDeviceNameDialog,
         onDismissRequest = {
-            dismissDialog(showDeviceNameDialog)
+            showDeviceNameDialog.value = false
         }) {
         TextField(
             value = deviceNameCache.value,
@@ -679,7 +680,7 @@ fun DeviceNameDialog(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
-                    dismissDialog(showDeviceNameDialog)
+                    showDeviceNameDialog.value = false
                 }
             )
             Spacer(Modifier.width(12.dp))
@@ -688,7 +689,7 @@ fun DeviceNameDialog(
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    dismissDialog(showDeviceNameDialog)
+                    showDeviceNameDialog.value = false
                     deviceName.value = deviceNameCache.value
                     CoroutineScope(Dispatchers.IO).launch {
                         executeCommand("settings put global revise_device_name \"${deviceName.value}\"")

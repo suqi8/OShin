@@ -24,7 +24,6 @@ import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperDialog
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 
 @Composable
 fun package_manager_services(navController: NavController) {
@@ -126,7 +125,7 @@ fun UsePreSig(showDialog: MutableState<Boolean>) {
         summary = stringResource(R.string.usepresig_warn),
         show = showDialog,
         onDismissRequest = {
-            dismissDialog(showDialog)
+            showDialog.value = false
         }) {
         Spacer(Modifier.height(12.dp))
         Row(
@@ -139,7 +138,7 @@ fun UsePreSig(showDialog: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 enabled = true,
                 onClick = {
-                    dismissDialog(showDialog)
+                    showDialog.value = false
                 }
             )
         }

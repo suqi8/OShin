@@ -22,7 +22,6 @@ import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 
 @Composable
 fun FunString(title: String, summary: String? = null, category: String, key: String, defValue: String = "", nullable: Boolean = false) {
@@ -44,7 +43,7 @@ fun FunString(title: String, summary: String? = null, category: String, key: Str
         title = stringResource(R.string.settings) + " " + title,
         summary = summary,
         onDismissRequest = {
-            dismissDialog(Dialog)
+            Dialog.value = false
         }
     ) {
         TextField(
@@ -62,7 +61,7 @@ fun FunString(title: String, summary: String? = null, category: String, key: Str
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
                 onClick = {
-                    dismissDialog(Dialog)
+                    Dialog.value = false
                 }
             )
             Spacer(Modifier.width(12.dp))
@@ -72,7 +71,7 @@ fun FunString(title: String, summary: String? = null, category: String, key: Str
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 enabled = (if (nullable) true else cachevalue.value.isNotEmpty()),
                 onClick = {
-                    dismissDialog(Dialog)
+                    Dialog.value = false
                     value.value = cachevalue.value
                     context.prefs(category).edit { putString(key, cachevalue.value) }
                 }

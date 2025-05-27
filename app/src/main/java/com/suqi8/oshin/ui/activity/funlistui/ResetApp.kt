@@ -37,7 +37,6 @@ import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 
 class resetApp {
     @Composable
@@ -49,11 +48,11 @@ class resetApp {
                     appList.forEach {
                         restartApp(it)
                     }
-                    dismissDialog(showresetAppDialog)
+                    showresetAppDialog.value = false
                 },
                 show = showresetAppDialog,
                 onDismiss = {
-                    dismissDialog(showresetAppDialog)
+                    showresetAppDialog.value = false
                 }
             )
         }
