@@ -11,8 +11,13 @@ import android.os.storage.StorageManager
 import android.os.storage.StorageVolume
 import android.provider.Settings
 import android.widget.Toast
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -37,6 +42,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -240,50 +246,6 @@ fun Main_About(
             )
         }
 
-        val interactionSource = remember { MutableInteractionSource() }
-        Button(
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .wrapContentHeight()
-                .padding(top = 180.dp)
-                .offset(y = -(scroll.firstVisibleItemScrollOffset.toFloat() / 3).dp)
-                .alpha(1f - (scroll.firstVisibleItemScrollOffset.toFloat() / 300))
-                .align(Alignment.Center)
-                .drawBehind {
-                    val strokeWidth = 1.5.dp.toPx()
-                    val inset = strokeWidth / 2
-                    drawRoundRect(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                Color(borderColor[1]),
-                                Color(borderColor[0])
-                            ),
-                            start = Offset(size.width / 2, 0f),
-                            end = Offset(size.width / 2, size.height)
-                        ),
-                        topLeft = Offset(inset, inset),
-                        size = Size(size.width - strokeWidth, size.height - strokeWidth),
-                        cornerRadius = CornerRadius(16.dp.toPx()),
-                        style = Stroke(width = strokeWidth)
-                    )
-                }
-                .shadow(
-                    elevation = 1.5.dp,
-                    shape = SmoothRoundedCornerShape(16.dp),
-                    clip = true,
-                    ambientColor = shadowColor,
-                    spotColor = shadowColor
-                ),
-            colors = backgroundColor,
-            onClick = {  }
-        ) {
-            Text(
-                text = stringResource(R.string.check_update),
-                fontSize = 17.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = colorScheme.onSurface
-            )
-        }
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -554,6 +516,58 @@ fun Main_About(
                 )
             }
         }
+        val interactionSource = remember { MutableInteractionSource() }
+        val isPressed by interactionSource.collectIsPressedAsState()
+        val scale by animateFloatAsState(
+            targetValue = if (isPressed) 0.95f else 1f,
+            animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)
+        )
+
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .wrapContentHeight()
+                .padding(top = 180.dp)
+                .offset(y = -(scroll.firstVisibleItemScrollOffset.toFloat() / 3).dp)
+                .alpha(1f - (scroll.firstVisibleItemScrollOffset.toFloat() / 300))
+                .align(Alignment.Center)
+                .scale(scale)  // 按压缩放
+                .drawBehind {
+                    val strokeWidth = 1.5.dp.toPx()
+                    val inset = strokeWidth / 2
+                    drawRoundRect(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                Color(borderColor[1]),
+                                Color(borderColor[0])
+                            ),
+                            start = Offset(size.width / 2, 0f),
+                            end = Offset(size.width / 2, size.height)
+                        ),
+                        topLeft = Offset(inset, inset),
+                        size = Size(size.width - strokeWidth, size.height - strokeWidth),
+                        cornerRadius = CornerRadius(16.dp.toPx()),
+                        style = Stroke(width = strokeWidth)
+                    )
+                }
+                .shadow(
+                    elevation = 1.5.dp,
+                    shape = SmoothRoundedCornerShape(16.dp),
+                    clip = true,
+                    ambientColor = shadowColor,
+                    spotColor = shadowColor
+                ),
+            onClick = {  },
+            interactionSource = interactionSource, // 传入interactionSource
+            colors = backgroundColor
+        ) {
+            Text(
+                text = stringResource(R.string.check_update),
+                fontSize = 17.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colorScheme.onSurface
+            )
+        }
     }
 }
 
@@ -567,15 +581,18 @@ fun Button(
     minHeight: Dp = ButtonDefaults.MinHeight,
     colors: Color = colorScheme.secondaryVariant,
     insideMargin: PaddingValues = ButtonDefaults.InsideMargin,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }, // 新增参数
     content: @Composable RowScope.() -> Unit
 ) {
-
     Surface(
-        onClick = {
-            onClick()
-        },
-        enabled = enabled,
-        modifier = modifier.semantics { role = Role.Button },
+        modifier = modifier
+            .semantics { role = Role.Button }
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                enabled = enabled,
+                onClick = onClick
+            ),
         shape = SmoothRoundedCornerShape(cornerRadius),
         color = colors
     ) {
