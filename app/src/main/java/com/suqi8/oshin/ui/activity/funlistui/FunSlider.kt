@@ -25,7 +25,6 @@ import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperDialogDefaults
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import kotlin.reflect.KClass
 
 @Composable
@@ -74,7 +73,7 @@ fun FunSlider(
         title = stringResource(R.string.settings) + " " + title,
         titleColor = titlecolor,
         summary = summary,
-        onDismissRequest = { dismissDialog(showDialog) }
+        onDismissRequest = { showDialog.value = false }
     ) {
         SliderWithInput(
             value = cacheValue.value,

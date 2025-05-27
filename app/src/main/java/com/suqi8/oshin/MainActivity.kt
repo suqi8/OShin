@@ -148,7 +148,6 @@ import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
 import java.util.Locale
 import kotlin.math.abs
@@ -513,7 +512,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    dismissDialog(privacy)
+                    privacy.value = false
                     context.prefs("settings").edit { putBoolean("privacy",false) }
                 }
             )

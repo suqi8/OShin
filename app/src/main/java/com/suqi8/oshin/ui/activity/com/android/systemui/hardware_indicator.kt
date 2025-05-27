@@ -37,7 +37,6 @@ import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.extra.SuperDropdown
-import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.dismissDialog
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import java.io.File
 import java.io.IOException
@@ -427,7 +426,7 @@ fun cpu_temp_data(show: MutableState<Boolean>) {
     SuperDialog(title = stringResource(R.string.show_cpu_temp_data),
         show = show,
         onDismissRequest = {
-            dismissDialog(show)
+            show.value = false
         }) {
         LazyColumn(
             modifier = Modifier
@@ -455,7 +454,7 @@ fun cpu_temp_data(show: MutableState<Boolean>) {
                 text = stringResource(R.string.ok),
                 enabled = true,
                 onClick = {
-                    dismissDialog(show)
+                    show.value = false
                 }
             )
         }
