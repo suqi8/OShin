@@ -600,4 +600,5 @@
     <string name="follow_system">随跟系统</string>
     <string name="app_language">应用语言</string>
     <string name="set_anim_level">设置动画等级</string>
+    <string name="confirm_privacy_password_is_not_set">开启前请确认没有设置隐私密码</string>
 </resources>

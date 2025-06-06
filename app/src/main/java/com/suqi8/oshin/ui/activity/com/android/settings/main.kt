@@ -98,6 +98,7 @@ fun settings(navController: NavController) {
                 addline()
                 FunSwich(
                     title = stringResource(R.string.force_show_nfc_security_chip),
+                    summary = stringResource(R.string.confirm_privacy_password_is_not_set),
                     category = "settings",
                     key = "force_show_nfc_security_chip"
                 )
