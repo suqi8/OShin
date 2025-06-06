@@ -501,7 +501,7 @@ fun Main_Home(padding: PaddingValues, topAppBarScrollBehavior: ScrollBehavior, n
                         .padding(horizontal = 16.dp)
                         .heightIn(20.dp, 10000.dp),
                     columns = StaggeredGridCells.Fixed(2),
-                    userScrollEnabled = true,
+                    userScrollEnabled = false,
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
                     verticalItemSpacing = 8.dp
                 ) {
