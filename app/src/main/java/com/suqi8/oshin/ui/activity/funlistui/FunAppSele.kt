@@ -20,17 +20,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.hjq.permissions.Permission
 import com.suqi8.oshin.R
-import com.suqi8.oshin.colorCache
-import com.suqi8.oshin.getAutoColor
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.drawColoredShadow
 import com.suqi8.oshin.utils.requestPermissions
@@ -145,6 +147,15 @@ fun FunAppSele(title: String, summary: String? = null, category: String, key: St
     }
 }
 
+// 全局颜色缓存
+internal val colorCache = mutableMapOf<String, Color>()
+// 获取主色调的函数
+suspend fun getAutoColor(icon: ImageBitmap): Color {
+    return withContext(Dispatchers.IO) {
+        val bitmap = icon.asAndroidBitmap()
+        Palette.from(bitmap).generate().dominantSwatch?.rgb?.let { Color(it) } ?: Color.White
+    }
+}
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun ResetAppList(packageName: String, isChecked: Boolean, onCheckedChange: (Boolean) -> Unit) {

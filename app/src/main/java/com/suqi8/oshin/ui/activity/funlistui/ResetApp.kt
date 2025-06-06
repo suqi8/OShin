@@ -23,8 +23,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.R
-import com.suqi8.oshin.colorCache
-import com.suqi8.oshin.getAutoColor
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.drawColoredShadow
 import kotlinx.coroutines.CoroutineScope
