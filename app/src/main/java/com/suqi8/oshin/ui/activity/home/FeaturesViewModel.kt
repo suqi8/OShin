@@ -9,8 +9,9 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.R
-import com.suqi8.oshin.features
+import com.suqi8.oshin.utils.FeatureRepository
 import com.suqi8.oshin.utils.GetFuncRoute
+import com.suqi8.oshin.utils.item
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -93,7 +94,9 @@ class FeaturesViewModel(private val application: Application) : AndroidViewModel
 
     private suspend fun loadAllFeatures() {
         val context = application.applicationContext
-        val featuresData = features(context)
+        val featuresFromRepo: List<item> = FeatureRepository.getFeatures(context)
+
+        val featuresData = featuresFromRepo
             .shuffled()
             .map {
                 val route = (if (it.summary != null) "\n" else "") + GetFuncRoute(it.category, context)

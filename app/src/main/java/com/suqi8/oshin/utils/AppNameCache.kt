@@ -39,6 +39,66 @@ class AppNameCache(private val context: Context) {
     }
 }
 
+/**
+ * 专门负责提供应用信息的类
+ * - 内部处理缓存，避免重复IO查询
+ * - 提供一个清晰的接口来获取应用信息
+ *
+ * @param context 安卓上下文，用于访问PackageManager
+ */
+class AppInfoProvider(private val context: Context) {
+
+    // 使用一个Map作为内存缓存
+    private val cache = mutableMapOf<String, AppInfo?>()
+
+    /**
+     * 高效获取应用信息的挂起函数 (Suspend Function)
+     * - 首先检查缓存
+     * - 如果缓存未命中，则从系统加载，并存入缓存
+     *
+     * @param packageName 需要查询的应用包名
+     * @return 返回包含名称和图标的 AppInfo 对象，如果找不到则返回 null
+     */
+    suspend fun getInfo(packageName: String): AppInfo? {
+        // 1. 检查缓存
+        if (cache.containsKey(packageName)) {
+            return cache[packageName]
+        }
+
+        // 2. 如果缓存没有，则在IO线程中从系统加载
+        return withContext(Dispatchers.IO) {
+            try {
+                val pm = context.packageManager
+                val appInfo = pm.getApplicationInfo(packageName, 0)
+
+                val name = pm.getApplicationLabel(appInfo).toString()
+                val icon = appInfo.loadIcon(pm).toBitmap().asImageBitmap()
+
+                val result = AppInfo(name = name, icon = icon)
+
+                // 3. 将结果存入缓存
+                cache[packageName] = result
+
+                result
+            } catch (e: PackageManager.NameNotFoundException) {
+                // 如果应用未找到，也缓存一个null结果，避免重复查询不存在的应用
+                cache[packageName] = null
+                null
+            }
+        }
+    }
+}
+
+/**
+ * 一个简单的数据类，用于封装应用信息
+ * @param name 应用名称
+ * @param icon 应用图标
+ */
+data class AppInfo(
+    val name: String,
+    val icon: ImageBitmap
+)
+
 // =================================================================================
 // 使用 AppNameCache 的 Composable 函数
 // =================================================================================

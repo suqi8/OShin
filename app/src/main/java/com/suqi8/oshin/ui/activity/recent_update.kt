@@ -34,10 +34,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
-import com.suqi8.oshin.features
-import com.suqi8.oshin.item
 import com.suqi8.oshin.ui.activity.funlistui.addline
+import com.suqi8.oshin.utils.FeatureRepository
 import com.suqi8.oshin.utils.GetFuncRoute
+import com.suqi8.oshin.utils.item
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeEffectScope
 import dev.chrisbanes.haze.HazeInputScale
@@ -116,9 +116,8 @@ fun recent_update(navController: NavController) {
         val context = LocalContext.current
         LaunchedEffect(Unit) {
             recentFeatureState.value = withContext(Dispatchers.IO) {
-                features(context)
+                FeatureRepository.getFeatures(context)
                     .takeIf { it.isNotEmpty() }
-                    ?.toList()
                     ?.reversed()
             }
         }
