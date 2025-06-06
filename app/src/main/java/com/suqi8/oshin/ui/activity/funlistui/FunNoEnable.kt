@@ -16,7 +16,7 @@ import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.suqi8.oshin.R
-import com.suqi8.oshin.drawColoredShadow
+import com.suqi8.oshin.utils.drawColoredShadow
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Text
 

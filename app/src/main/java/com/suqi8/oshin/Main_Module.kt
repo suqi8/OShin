@@ -68,11 +68,11 @@ import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.ui.activity.funlistui.FunSlider
-import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.SearchList
 import com.suqi8.oshin.ui.activity.funlistui.addline
+import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.GetFuncRoute
+import com.suqi8.oshin.utils.drawColoredShadow
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext

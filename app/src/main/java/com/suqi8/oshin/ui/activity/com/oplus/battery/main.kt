@@ -8,11 +8,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.suqi8.oshin.GetAppName
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSlider
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
+import com.suqi8.oshin.utils.GetAppName
 import top.yukonga.miuix.kmp.basic.Card
 
 @SuppressLint("SuspiciousIndentation")

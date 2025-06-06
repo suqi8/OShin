@@ -1,7 +1,6 @@
 package com.suqi8.oshin.utils
 
 import android.content.Context
-import com.suqi8.oshin.AppNameCache
 import com.suqi8.oshin.R
 
 fun GetFuncRoute(route: String, context: Context): String {
