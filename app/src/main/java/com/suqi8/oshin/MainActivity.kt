@@ -77,6 +77,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.ui.activity.home.Main_Home
 import com.suqi8.oshin.ui.activity.about.Main_About
 import com.suqi8.oshin.ui.activity.about.about_contributors
 import com.suqi8.oshin.ui.activity.about.about_donors
@@ -117,6 +118,8 @@ import com.suqi8.oshin.ui.activity.func.romworkshop.Rom_workshop
 import com.suqi8.oshin.ui.activity.hide_apps_notice
 import com.suqi8.oshin.ui.activity.recent_update
 import com.suqi8.oshin.ui.theme.AppTheme
+import com.suqi8.oshin.utils.drawColoredShadow
+import com.suqi8.oshin.utils.executeCommand
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import dev.chrisbanes.haze.ExperimentalHazeApi
@@ -631,16 +634,22 @@ fun Main1(context: Context,navController: NavController,
         }
     }
     Scaffold(modifier = Modifier.fillMaxSize(),bottomBar = {
-        Column(modifier = Modifier.fillMaxWidth().padding(bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()), horizontalAlignment = Alignment.CenterHorizontally) {
-            Card(modifier = Modifier.padding(bottom = 10.dp).drawColoredShadow(
-                MiuixTheme.colorScheme.onSurface,
-                0.1f,
-                borderRadius = CardDefaults.CornerRadius,
-                shadowRadius = 10.dp,
-                offsetX = 0.dp,
-                offsetY = 0.dp,
-                roundedRect = false
-            )) {
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(
+                bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+            ), horizontalAlignment = Alignment.CenterHorizontally) {
+            Card(modifier = Modifier
+                .padding(bottom = 10.dp)
+                .drawColoredShadow(
+                    MiuixTheme.colorScheme.onSurface,
+                    0.1f,
+                    borderRadius = CardDefaults.CornerRadius,
+                    shadowRadius = 10.dp,
+                    offsetX = 0.dp,
+                    offsetY = 0.dp,
+                    roundedRect = false
+                )) {
                 NavigationBar(
                     items = items,
                     color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.surfaceContainer,
@@ -682,7 +691,8 @@ fun Main1(context: Context,navController: NavController,
                         /*Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null,
                             modifier = Modifier.size(50.dp))*/
                         Card(modifier = Modifier
-                            .size(55.dp).padding(10.dp)) {
+                            .size(55.dp)
+                            .padding(10.dp)) {
                             Box(modifier = Modifier.fillMaxSize()) {
                                 /*Image(
                                     painter = painterResource(id = R.drawable.icon_background_newyear),
@@ -694,9 +704,12 @@ fun Main1(context: Context,navController: NavController,
                                 Image(
                                     painter = painterResource(id = R.drawable.icon),
                                     contentDescription = null,
-                                    modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f).clickable {
-                                        //context.prefs("settings").edit { putBoolean("privacy",true) }
-                                    }
+                                    modifier = Modifier
+                                        .fillMaxSize()
+                                        .graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
+                                        .clickable {
+                                            //context.prefs("settings").edit { putBoolean("privacy",true) }
+                                        }
                                     /*.offset(y = (-20).dp)*/,
                                     contentScale = ContentScale.Crop
                                 )

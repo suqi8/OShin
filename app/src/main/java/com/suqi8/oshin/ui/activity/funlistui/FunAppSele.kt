@@ -28,11 +28,11 @@ import androidx.compose.ui.unit.dp
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.hjq.permissions.Permission
-import com.suqi8.oshin.GetAppIconAndName
 import com.suqi8.oshin.R
 import com.suqi8.oshin.colorCache
-import com.suqi8.oshin.drawColoredShadow
 import com.suqi8.oshin.getAutoColor
+import com.suqi8.oshin.utils.GetAppIconAndName
+import com.suqi8.oshin.utils.drawColoredShadow
 import com.suqi8.oshin.utils.requestPermissions
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

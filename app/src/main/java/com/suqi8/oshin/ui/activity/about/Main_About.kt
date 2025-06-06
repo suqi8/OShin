@@ -84,9 +84,9 @@ import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI_Impl
 import com.suqi8.oshin.BuildConfig
 import com.suqi8.oshin.R
-import com.suqi8.oshin.executeCommand
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.ui.theme.BgEffectView
+import com.suqi8.oshin.utils.executeCommand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.onEach
