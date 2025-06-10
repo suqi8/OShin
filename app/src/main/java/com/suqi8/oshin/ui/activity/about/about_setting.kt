@@ -105,6 +105,7 @@ fun about_setting(
                     1 -> Locale.SIMPLIFIED_CHINESE
                     2 -> Locale.ENGLISH
                     3 -> Locale.JAPANESE
+                    4 -> Locale.Builder().setLanguage("ru").build()
                     else -> Locale.getDefault() // 跟随系统
                 }
 
