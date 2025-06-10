@@ -77,7 +77,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.ui.activity.home.Main_Home
 import com.suqi8.oshin.ui.activity.about.Main_About
 import com.suqi8.oshin.ui.activity.about.about_contributors
 import com.suqi8.oshin.ui.activity.about.about_donors
@@ -88,6 +87,7 @@ import com.suqi8.oshin.ui.activity.android.android
 import com.suqi8.oshin.ui.activity.android.oplus_services
 import com.suqi8.oshin.ui.activity.android.package_manager_services
 import com.suqi8.oshin.ui.activity.android.split_screen_multi_window
+import com.suqi8.oshin.ui.activity.com.android.incallui.incallui
 import com.suqi8.oshin.ui.activity.com.android.launcher.launcher
 import com.suqi8.oshin.ui.activity.com.android.launcher.recent_task
 import com.suqi8.oshin.ui.activity.com.android.mms.mms
@@ -116,6 +116,7 @@ import com.suqi8.oshin.ui.activity.com.oplus.phonemanager.oplusphonemanager
 import com.suqi8.oshin.ui.activity.func.cpu_freq
 import com.suqi8.oshin.ui.activity.func.romworkshop.Rom_workshop
 import com.suqi8.oshin.ui.activity.hide_apps_notice
+import com.suqi8.oshin.ui.activity.home.Main_Home
 import com.suqi8.oshin.ui.activity.recent_update
 import com.suqi8.oshin.ui.theme.AppTheme
 import com.suqi8.oshin.utils.drawColoredShadow
@@ -590,6 +591,7 @@ fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = rem
             composable("ota") { ota(navController) }
             composable("func\\romworkshop") { Rom_workshop(navController) }
             composable("oshare") { oshare(navController) }
+            composable("incallui") { incallui(navController) }
         }
     }
 }

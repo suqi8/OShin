@@ -99,8 +99,9 @@ class ModuleViewModel(application: Application) : AndroidViewModel(application) 
             "com.heytap.quicksearchbox" to "quicksearchbox",
             "com.mi.health" to "mihealth",
             "com.oplus.ota" to "ota",
-            "com.coloros.oshare" to "oshare"
-        )
+            "com.coloros.oshare" to "oshare",
+            "com.android.incallui" to "incallui",
+            )
         viewModelScope.launch {
             val installedApps = mutableListOf<AppInfoItem>()
             val uninstalledPackageNames = mutableListOf<String>() // ⭐ 新建一个列表来收集

@@ -628,7 +628,9 @@ object FeatureRepository {
             item(title = context.getString(R.string.remove_oshare_auto_off),
                 category = "oshare"),
             item(title = context.getString(R.string.set_anim_level),
-                category = "launcher")
+                category = "launcher"),
+            item(title = context.getString(R.string.hide_call_ringtone),
+                category = "incallui")
         )
     }
 }

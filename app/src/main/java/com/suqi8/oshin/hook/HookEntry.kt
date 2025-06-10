@@ -9,6 +9,7 @@ import com.highcapable.yukihookapi.hook.xposed.bridge.event.YukiXposedEvent
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import com.suqi8.oshin.hook.android.android
 import com.suqi8.oshin.hook.android.corepatch.CorePatchForV
+import com.suqi8.oshin.hook.com.android.incallui.incallui
 import com.suqi8.oshin.hook.com.android.launcher.LauncherIcon
 import com.suqi8.oshin.hook.com.android.launcher.launcher
 import com.suqi8.oshin.hook.com.android.launcher.recent_task
@@ -66,6 +67,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = mihealth())
         loadApp(hooker = ota())
         loadApp(hooker = oshare())
+        loadApp(hooker = incallui())
     }
 
     override fun onXposedEvent() {
