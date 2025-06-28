@@ -1,4 +1,5 @@
 [versions]
+accompanistFlowlayoutVersion = "0.36.0"
 activityComposeVersion = "1.10.1"
 api = "1.2.1"
 apiVersion = "82"
@@ -24,6 +25,7 @@ junitVersion = "1.2.1"
 kspXposedVersion = "1.2.1"
 lifecycleRuntimeKtxVersion = "2.9.1"
 lottieComposeVersion = "6.6.2"
+materialIconsExtendedVersion = "1.7.8"
 materialVersion = "1.13.0-alpha14"
 miuix = "0.4.5"
 navigationCompose = "2.9.0"
@@ -34,6 +36,7 @@ toolbarComposeVersion = "2.3.5"
 uyumao = "1.1.4"
 xxpermissionsVersion = "20.0"
 [libraries]
+accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayoutVersion" }
 androidx-activity-compose-v190 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
 androidx-appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
 androidx-compose-bom-v20240600 = { module = "androidx.compose:compose-bom", version.ref = "composeBomVersion" }
@@ -43,6 +46,7 @@ androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", versi
 androidx-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
 androidx-junit = { module = "androidx.test.ext:junit", version.ref = "junitVersion" }
 androidx-lifecycle-runtime-ktx-v282 = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtxVersion" }
+androidx-material-icons-extended = { module = "androidx.compose.material:material-icons-extended", version.ref = "materialIconsExtendedVersion" }
 androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "navigationCompose" }
 androidx-navigation-runtime-ktx = { module = "androidx.navigation:navigation-runtime-ktx", version.ref = "navigationCompose" }
 androidx-palette-ktx = { module = "androidx.palette:palette-ktx", version.ref = "paletteKtx" }

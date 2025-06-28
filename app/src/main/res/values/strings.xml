@@ -602,4 +602,21 @@
     <string name="set_anim_level">设置动画等级</string>
     <string name="confirm_privacy_password_is_not_set">开启前请确认没有设置隐私密码</string>
     <string name="hide_call_ringtone">隐藏电话彩铃</string>
+    <string name="section_title_status">系统状态</string>
+    <string name="section_title_device_info">设备信息</string>
+    <string name="section_title_features">功能模块</string>
+    <string name="module_status">模块状态</string>
+    <string name="root_status">Root 状态</string>
+    <string name="frida_status">Frida 服务</string>
+    <string name="frida_not_connected">未连接</string>
+    <string name="gauge_title_health">健康度</string>
+    <string name="gauge_title_capacity">当前容量</string>
+    <string name="gauge_title_cycles">循环次数</string>
+    <string name="text_info_design_capacity">设计容量</string>
+    <string name="text_info_actual_capacity">实际容量</string>
+    <string name="text_info_calculated_health">电池健康度</string>
+    <string name="chip_label_region">区域</string>
+    <string name="chip_label_android">安卓</string>
+    <string name="chip_label_system">系统</string>
+    <string name="chip_label_status">状态</string>
 </resources>
