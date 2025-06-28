@@ -1,8 +1,6 @@
 package com.suqi8.oshin
 
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.pm.PackageManager
 import android.os.Build
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
@@ -37,30 +35,21 @@ import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.graphics.drawable.toBitmap
-import androidx.core.graphics.toColorInt
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
@@ -589,149 +578,5 @@ suspend fun executeCommand(command: String): String {
             Log.e(TAG, "executeCommand: $e")
             return@withContext "0"
         }
-    }
-}
-
-object AppInfoCache {
-    private val cache = mutableMapOf<String, Pair<String, ImageBitmap>>()
-
-    fun getCached(packageName: String): Pair<String, ImageBitmap>? {
-        return cache[packageName]
-    }
-
-    fun updateCache(packageName: String, info: Pair<String, ImageBitmap>) {
-        cache[packageName] = info
-    }
-}
-
-@Composable
-fun GetAppIconAndName(
-    packageName: String,
-    onAppInfoLoaded: @Composable (String, ImageBitmap) -> Unit
-) {
-    val context = LocalContext.current
-
-    // 使用 produceState 在 IO 线程加载数据并缓存
-    val result by produceState<Pair<String, ImageBitmap>?>(initialValue = null, key1 = packageName) {
-        withContext(Dispatchers.IO) {
-            try {
-                AppInfoCache.getCached(packageName)?.let {
-                    value = it
-                    return@withContext
-                }
-                val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
-                val icon = appInfo.loadIcon(context.packageManager)
-                val appName = context.packageManager.getApplicationLabel(appInfo).toString()
-                val bitmap = icon.toBitmap().asImageBitmap()
-                // 更新缓存
-                AppInfoCache.updateCache(packageName, appName to bitmap)
-                value = appName to bitmap
-            } catch (e: PackageManager.NameNotFoundException) {
-                value = "noapp" to ImageBitmap(1, 1)
-            } catch (e: Exception) { }
-        }
-    }
-
-    result?.let { onAppInfoLoaded(it.first, it.second) }
-}
-
-@Composable
-fun GetAppName(
-    packageName: String
-): String {
-    val context = LocalContext.current
-    val appNameCache = AppNameCache(context)
-    return appNameCache.getAppName(packageName)
-}
-
-class AppNameCache(private val context: Context) {
-    private val cache = mutableMapOf<String, String>()
-
-    fun getAppName(packageName: String): String {
-        // 如果缓存中有该应用名，直接返回
-        cache[packageName]?.let { return it }
-
-        // 否则查询应用名并缓存
-        val appName = getAppNameFromPackage(packageName)
-        cache[packageName] = appName
-        return appName
-    }
-
-    private fun getAppNameFromPackage(packageName: String): String {
-        val packageManager = context.packageManager
-        return try {
-            val applicationInfo = packageManager.getApplicationInfo(packageName, 0)
-            packageManager.getApplicationLabel(applicationInfo).toString()
-        } catch (e: PackageManager.NameNotFoundException) {
-            "noapp" // 如果没有找到该应用，则返回默认值
-        }
-    }
-}
-
-/**
- * 绘制阴影范围
- * [top] 顶部范围
- * [start] 开始范围
- * [bottom] 底部范围
- * [end] 结束范围
- * Create empty Shadow elevation
- */
-open class ShadowElevation(
-    val top: Dp = 0.dp,
-    private val start: Dp = 0.dp,
-    private val bottom: Dp = 0.dp,
-    private val end: Dp = 0.dp
-) {
-    companion object : ShadowElevation()
-}
-
-/**
- * 自定义彩色阴影绘制修饰符
- *
- * @param color 阴影颜色
- * @param alpha 阴影透明度（0f~1f）
- * @param borderRadius 组件圆角半径（仅在非圆形绘制时生效）
- * @param shadowRadius 阴影模糊半径（控制阴影扩散范围）
- * @param offsetX 阴影水平方向偏移量
- * @param offsetY 阴影垂直方向偏移量
- * @param roundedRect 是否自动使用圆形绘制（true 则自动使用高度的一半作为圆角）
- */
-@SuppressLint("UseKtx")
-fun Modifier.drawColoredShadow(
-    color: Color,
-    alpha: Float = 0.2f,
-    borderRadius: Dp = 0.dp,
-    shadowRadius: Dp = 0.dp,
-    offsetX: Dp = 0.dp,
-    offsetY: Dp = 0.dp,
-    roundedRect: Boolean = true
-) = this.drawBehind {
-    /**将颜色转换为Argb的Int类型*/
-    val transparentColor = color.copy(alpha = .0f).value.toLong().toColorInt()
-    val shadowColor = color.copy(alpha = alpha).value.toLong().toColorInt()
-    /**调用Canvas绘制*/
-    this.drawIntoCanvas {
-        val paint = Paint()
-        paint.color = Color.Transparent
-        /**调用底层fragment Paint绘制*/
-        val frameworkPaint = paint.asFrameworkPaint()
-        frameworkPaint.color = transparentColor
-        /**绘制阴影*/
-        frameworkPaint.setShadowLayer(
-            shadowRadius.toPx(),
-            offsetX.toPx(),
-            offsetY.toPx(),
-            shadowColor
-        )
-        /**形状绘制*/
-        it.drawRoundRect(
-            0f,
-            0f,
-            this.size.width,
-            this.size.height,
-            if (roundedRect) this.size.height / 2 else borderRadius.toPx(),
-            if (roundedRect) this.size.height / 2 else borderRadius.toPx(),
-            paint
-        )
     }
 }

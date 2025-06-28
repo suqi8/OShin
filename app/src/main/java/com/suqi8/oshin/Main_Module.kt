@@ -73,6 +73,7 @@ import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.GetFuncRoute
 import com.suqi8.oshin.utils.drawColoredShadow
+import com.suqi8.oshin.utils.item
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -692,7 +693,9 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.remove_oshare_auto_off),
         category = "oshare"),
     item(title = context.getString(R.string.set_anim_level),
-        category = "launcher")
+        category = "launcher"),
+    item(title = context.getString(R.string.hide_call_ringtone),
+        category = "incallui")
 )
 
 var notInstallList = mutableStateOf(emptyList<String>())
@@ -850,7 +853,8 @@ fun Main_Module(
                 AppInfo("com.heytap.quicksearchbox", "quicksearchbox"),
                 AppInfo("com.mi.health", "mihealth"),
                 AppInfo("com.oplus.ota", "ota"),
-                AppInfo("com.coloros.oshare", "oshare")
+                AppInfo("com.coloros.oshare", "oshare"),
+                AppInfo("com.android.incallui", "incallui")
             )
 
             LazyColumn(
