@@ -448,7 +448,7 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
                 }
             }
         } else {
-            onResult("noapp")
+            onResult(packageName)
         }
     }
 }
@@ -508,7 +508,7 @@ fun FunctionAppFlow(packageName: String, activityName: String, navController: Na
                 )
             }
         } else {
-            onResult("noapp")
+            onResult(packageName)
         }
     }
 }
