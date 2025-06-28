@@ -40,11 +40,13 @@ import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableFloatState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -183,6 +185,7 @@ class MainActivity : ComponentActivity() {
             config.setLocale(locale)
             resources.updateConfiguration(config, resources.displayMetrics)
 
+
             val colorMode = remember { mutableIntStateOf(context.prefs("settings").getInt("color_mode", 0)) }
             val darkMode = colorMode.intValue == 2 || (isSystemInDarkTheme() && colorMode.intValue == 0)
             DisposableEffect(darkMode) {
@@ -197,7 +200,9 @@ class MainActivity : ComponentActivity() {
             }
 
             AppTheme(colorMode = colorMode.intValue) {
-                Main0(colorMode = colorMode, context = context)
+                CompositionLocalProvider(LocalColorMode provides colorMode) {
+                    Main0(context = context)
+                }
             }
         }
     }
@@ -447,7 +452,7 @@ class SpringEasing @JvmOverloads constructor(
 }
 val lspVersion = mutableStateOf("")
 @Composable
-fun Main0(context: Context,colorMode: MutableState<Int> = remember { mutableIntStateOf(0) }) {
+fun Main0(context: Context) {
     val navController = rememberNavController()
     val windowWidth = getWindowSize().width
     val easing = SpringEasing(0.95f, 0.4f)//CubicBezierEasing(0.4f, 0.95f, 0.2f, 1f)
@@ -552,7 +557,7 @@ fun Main0(context: Context,colorMode: MutableState<Int> = remember { mutableIntS
                     SizeTransform(clip = true)  // 允许页面在过渡时进行缩放，但不裁剪内容
                 }
         ) {
-            composable("Main") { Main1(context = context,navController, hazeState, hazeStyle, colorMode) }
+            composable("Main") { Main1(context = context,navController, hazeState, hazeStyle) }
             composable("recent_update") { recent_update(navController) }
             composable("android") { android(navController) }
             composable("android\\package_manager_services") { package_manager_services(navController = navController) }
@@ -566,7 +571,7 @@ fun Main0(context: Context,colorMode: MutableState<Int> = remember { mutableIntS
             composable("systemui\\status_bar_wifi") { status_bar_wifi(navController = navController) }
             composable("launcher") { launcher(navController = navController) }
             composable("launcher\\recent_task") { recent_task(navController = navController) }
-            composable("about_setting") { about_setting(navController,alpha,blurRadius,noiseFactor,colorMode) }
+            composable("about_setting") { about_setting(navController,alpha,blurRadius,noiseFactor) }
             composable("about_group") { about_group(navController) }
             composable("about_references") { about_references(navController) }
             composable("about_contributors") { about_contributors(navController) }
@@ -602,8 +607,7 @@ fun Main0(context: Context,colorMode: MutableState<Int> = remember { mutableIntS
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "InflateParams", "ResourceType")
 @Composable
 fun Main1(context: Context,navController: NavController,
-          hazeState: HazeState, hazeStyle: HazeStyle,
-          colorMode: MutableState<Int>) {
+          hazeState: HazeState, hazeStyle: HazeStyle) {
     val topAppBarScrollBehavior0 = MiuixScrollBehavior(rememberTopAppBarState())
     val topAppBarScrollBehavior1 = MiuixScrollBehavior(rememberTopAppBarState())
     val topAppBarScrollBehavior2 = MiuixScrollBehavior(rememberTopAppBarState())
@@ -731,8 +735,7 @@ fun Main1(context: Context,navController: NavController,
                 topAppBarScrollBehaviorList = topAppBarScrollBehaviorList,
                 padding = padding,
                 navController = navController,
-                context = context,
-                colorMode = colorMode
+                context = context
             )
         }
         /*Column(modifier = Modifier.padding(Padding)) {
@@ -819,6 +822,8 @@ fun NavigationBar(
     }
 }
 
+val LocalColorMode = compositionLocalOf<MutableState<Int>> { error("No ColorMode provided") }
+
 @Composable
 fun AppHorizontalPager(
     modifier: Modifier = Modifier,
@@ -826,8 +831,7 @@ fun AppHorizontalPager(
     topAppBarScrollBehaviorList: List<ScrollBehavior>,
     padding: PaddingValues,
     navController: NavController,
-    context: Context,
-    colorMode: MutableState<Int>
+    context: Context
 ) {
     HorizontalPager(
         modifier = modifier,
@@ -857,8 +861,7 @@ fun AppHorizontalPager(
                     topAppBarScrollBehavior = topAppBarScrollBehaviorList[3],
                     padding = padding,
                     context = context,
-                    navController = navController,
-                    colorMode = colorMode
+                    navController = navController
                 )
             }
         }

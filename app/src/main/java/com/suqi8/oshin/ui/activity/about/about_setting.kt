@@ -26,6 +26,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.LocalColorMode
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
@@ -42,12 +43,14 @@ import java.util.Locale
 fun about_setting(
     navController: NavController, alpha: MutableState<Float>,
     blur: MutableState<Dp>,
-    noise: MutableState<Float>, colorMode: MutableState<Int>,
+    noise: MutableState<Float>
 ) {
     val context = LocalContext.current
     val showAlphaDialog = remember { mutableStateOf(false) }
     val showBlurDialog = remember { mutableStateOf(false) }
     val showNoiseDialog = remember { mutableStateOf(false) }
+    val colorModeState = LocalColorMode.current
+    val colorMode = colorModeState.value
     FunPage(
         title = stringResource(id = R.string.settings),
         navController = navController
@@ -87,9 +90,9 @@ fun about_setting(
                         R.string.Night_Mode
                     )
                 ),
-                selectedIndex = colorMode.value,
+                selectedIndex = colorMode,
                 onSelectedIndexChange = {
-                    colorMode.value = it
+                    colorModeState.value = it
                     context.prefs("settings").edit { putInt("color_mode", it) }
                 }
             )

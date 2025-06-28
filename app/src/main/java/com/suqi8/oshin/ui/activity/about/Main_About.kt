@@ -83,6 +83,7 @@ import androidx.navigation.NavController
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI_Impl
 import com.suqi8.oshin.BuildConfig
+import com.suqi8.oshin.LocalColorMode
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.ui.theme.BgEffectView
@@ -116,8 +117,7 @@ fun Main_About(
     topAppBarScrollBehavior: ScrollBehavior,
     padding: PaddingValues,
     context: Context,
-    navController: NavController,
-    colorMode: MutableState<Int>
+    navController: NavController
 ) {
     val showDeviceNameDialog = remember { mutableStateOf(false) }
     val deviceName: MutableState<String> = remember {
@@ -170,6 +170,9 @@ fun Main_About(
 
             }
     }
+
+    val colorModeState = LocalColorMode.current
+    val colorMode = colorModeState.value
     Box {
         AndroidView(
             modifier = Modifier
@@ -177,10 +180,10 @@ fun Main_About(
                 .height(520.dp)
                 .offset(y = 50.dp),
             factory = { context ->
-                BgEffectView(context,colorMode.value)
+                BgEffectView(context,colorMode)
             }
         ) {
-            it.updateMode(colorMode.value)
+            it.updateMode(colorMode)
             it.alpha = bgAlpha.floatValue
         }
         Column(modifier = Modifier
@@ -189,7 +192,7 @@ fun Main_About(
             .height(520.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally) {
-            val gradientColors = if (colorMode.value == 2 || isSystemInDarkTheme()) {
+            val gradientColors = if (colorMode == 2 || isSystemInDarkTheme()) {
                 listOf(
                     Color("#D0A279ED".toColorInt()),
                     Color("#D0E3BCB1".toColorInt())
@@ -232,7 +235,7 @@ fun Main_About(
                 textAlign = TextAlign.Center
             )
         }
-        val (shadowColor, backgroundColor, borderColor) = if (colorMode.value == 2 || isSystemInDarkTheme()) {
+        val (shadowColor, backgroundColor, borderColor) = if (colorMode == 2 || isSystemInDarkTheme()) {
             Triple(
                 Color(0x4D000000),
                 Color(0x1FFFFFFF),
