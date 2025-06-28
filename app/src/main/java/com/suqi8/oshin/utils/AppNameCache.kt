@@ -3,13 +3,17 @@ package com.suqi8.oshin.utils
 import android.content.Context
 import android.content.pm.PackageManager
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.produceState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.graphics.drawable.toBitmap
+import com.suqi8.oshin.utils.AppInfoCache.getCached
+import com.suqi8.oshin.utils.AppInfoCache.updateCache
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -133,26 +137,25 @@ fun GetAppIconAndName(
     onAppInfoLoaded: @Composable (String, ImageBitmap) -> Unit
 ) {
     val context = LocalContext.current
+    var result by remember(packageName) { mutableStateOf<Pair<String, ImageBitmap>?>(null) }
 
-    val result by produceState<Pair<String, ImageBitmap>?>(initialValue = null, key1 = packageName) {
-        withContext(Dispatchers.IO) {
-            try {
-                AppInfoCache.getCached(packageName)?.let {
-                    value = it
-                    return@withContext
-                }
-                val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
-                val icon = appInfo.loadIcon(context.packageManager)
-                val appName = context.packageManager.getApplicationLabel(appInfo).toString()
-                val bitmap = icon.toBitmap().asImageBitmap()
-                // 更新缓存
-                AppInfoCache.updateCache(packageName, appName to bitmap)
-                value = appName to bitmap
-            } catch (e: PackageManager.NameNotFoundException) {
-                value = "noapp" to ImageBitmap(1, 1)
-            } catch (e: Exception) {
-                // 其他异常处理
-            }
+    // 异步加载，只执行一次
+    LaunchedEffect(packageName) {
+        val cached = getCached(packageName)
+        if (cached != null) {
+            result = cached
+            return@LaunchedEffect
+        }
+
+        try {
+            val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
+            val icon = appInfo.loadIcon(context.packageManager)
+            val appName = context.packageManager.getApplicationLabel(appInfo).toString()
+            val bitmap = icon.toBitmap().asImageBitmap()
+            updateCache(packageName, appName to bitmap)
+            result = appName to bitmap
+        } catch (e: PackageManager.NameNotFoundException) {
+            result = "noapp" to ImageBitmap(1, 1)
         }
     }
 
