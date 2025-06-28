@@ -116,7 +116,6 @@ import com.suqi8.oshin.ui.activity.com.oplus.phonemanager.oplusphonemanager
 import com.suqi8.oshin.ui.activity.func.cpu_freq
 import com.suqi8.oshin.ui.activity.func.romworkshop.Rom_workshop
 import com.suqi8.oshin.ui.activity.hide_apps_notice
-import com.suqi8.oshin.ui.activity.home.Main_Home
 import com.suqi8.oshin.ui.activity.recent_update
 import com.suqi8.oshin.ui.theme.AppTheme
 import com.suqi8.oshin.utils.drawColoredShadow
@@ -198,7 +197,7 @@ class MainActivity : ComponentActivity() {
             }
 
             AppTheme(colorMode = colorMode.intValue) {
-                Main0(colorMode = colorMode, context = context, modifier = Modifier)
+                Main0(colorMode = colorMode, context = context)
             }
         }
     }
@@ -448,7 +447,7 @@ class SpringEasing @JvmOverloads constructor(
 }
 val lspVersion = mutableStateOf("")
 @Composable
-fun Main0(modifier: Modifier,context: Context,colorMode: MutableState<Int> = remember { mutableIntStateOf(0) }) {
+fun Main0(context: Context,colorMode: MutableState<Int> = remember { mutableIntStateOf(0) }) {
     val navController = rememberNavController()
     val windowWidth = getWindowSize().width
     val easing = SpringEasing(0.95f, 0.4f)//CubicBezierEasing(0.4f, 0.95f, 0.2f, 1f)
