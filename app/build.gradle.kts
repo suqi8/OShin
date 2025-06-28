@@ -145,6 +145,8 @@ android {
 }
 
 dependencies {
+    implementation(libs.accompanist.flowlayout)
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.dexkit)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
