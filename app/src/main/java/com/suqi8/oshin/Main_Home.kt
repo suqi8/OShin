@@ -256,13 +256,29 @@ fun getFeatures(context: Context): List<FeatureUI> = features(context).shuffled(
 
 fun mapNvidToCountry(context: Context, nvid: String): String = when (nvid) {
     "10010111" -> context.getString(R.string.nvid_CN)
-    // ... 其他映射
+    "00011010" -> context.getString(R.string.nvid_TW)
+    "00110111" -> context.getString(R.string.nvid_RU)
+    "01000100" -> context.getString(R.string.nvid_GDPR_EU)
+    "10001101" -> context.getString(R.string.nvid_GDPR_Europe)
+    "00011011" -> context.getString(R.string.nvid_IN)
+    "00110011" -> context.getString(R.string.nvid_ID)
+    "00111000" -> context.getString(R.string.nvid_MY)
+    "00111001" -> context.getString(R.string.nvid_TH)
+    "00111110" -> context.getString(R.string.nvid_PH)
+    "10000011" -> context.getString(R.string.nvid_SA)
+    "10011010" -> context.getString(R.string.nvid_LATAM)
+    "10011110" -> context.getString(R.string.nvid_BR)
+    "10100110" -> context.getString(R.string.nvid_ME)
     else -> context.getString(R.string.nvid_unknown, nvid)
 }
 
 fun mapHealthToString(context: Context, health: String): String = when (health) {
     "Good" -> context.getString(R.string.battery_health_good)
-    // ... 其他映射
+    "Overheat" -> context.getString(R.string.battery_health_overheat)
+    "Dead" -> context.getString(R.string.battery_health_dead)
+    "Over Voltage" -> context.getString(R.string.battery_health_over_voltage)
+    "Cold" -> context.getString(R.string.battery_health_cold)
+    "Unknown" -> context.getString(R.string.battery_health_unknown)
     else -> context.getString(R.string.battery_health_not_found)
 }
 
