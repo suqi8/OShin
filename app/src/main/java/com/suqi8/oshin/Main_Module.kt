@@ -2,18 +2,18 @@ package com.suqi8.oshin
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.view.ViewTreeObserver
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -28,68 +28,615 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.BlendMode
-import androidx.compose.ui.graphics.BlendModeColorFilter
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.onClick
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.DpSize
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.zIndex
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.ui.activity.funlistui.SearchList
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.GetFuncRoute
-import com.suqi8.oshin.utils.drawColoredShadow
+import com.suqi8.oshin.utils.item
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.BasicComponentDefaults
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
-import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Search
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.BackHandler
-import top.yukonga.miuix.kmp.utils.SmoothRoundedCornerShape
-import top.yukonga.miuix.kmp.utils.overScrollVertical
 import java.text.Collator
 import java.util.Locale
+
+// --- 数据模型 ---
+data class AppInfo(val packageName: String, val activityName: String)
+data class FeatureItem(val title: String, val summary: String? = null, val category: String)
+data class AppCacheInfo(val appName: String, val icon: ImageBitmap)
+var notInstalledApps = mutableStateOf<Set<String>>(emptySet())
+
+// --- UI 入口 (Composable) ---
+@Composable
+fun Main_Module(
+    topAppBarScrollBehavior: ScrollBehavior,
+    navController: NavController,
+    padding: PaddingValues
+) {
+    val context = LocalContext.current
+
+    // --- 状态管理 ---
+    var searchValue by remember { mutableStateOf("") }
+    var expanded by remember { mutableStateOf(false) }
+    var appStyle by remember { mutableStateOf(context.prefs("settings").getInt("appstyle", 0)) }
+    // 修复：明确泛型类型，并正确处理类型映射
+    val collator = remember { Collator.getInstance(Locale.CHINA) }
+    val filteredFeatures by remember(searchValue) {
+        derivedStateOf<List<FeatureItem>> {
+            if (searchValue.isBlank()) {
+                emptyList()
+            } else {
+                features(context)
+                    .map { originalItem: item ->
+                        FeatureItem(originalItem.title, originalItem.summary, originalItem.category)
+                    }
+                    .filter {
+                        it.title.contains(searchValue, ignoreCase = true) ||
+                                it.summary?.contains(searchValue, ignoreCase = true) ?: false
+                    }
+                    .sortedWith(compareBy(collator) { it.title })
+            }
+        }
+    }
+
+    // --- 主布局 ---
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MiuixTheme.colorScheme.background)
+    ) {
+        // 应用HUD风格的动态背景
+        HUDBackground()
+
+        // 使用LazyColumn构建主滚动列表
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+            contentPadding = padding,
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
+            // 搜索栏
+            item {
+                HUDSearchBar(
+                    query = searchValue,
+                    onQueryChange = { searchValue = it },
+                    modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
+                )
+            }
+
+            // 搜索结果或应用列表
+            item {
+                // animateContentSize 使内容切换时有平滑的动画效果
+                Column(modifier = Modifier.animateContentSize()) {
+                    // 如果有搜索词，显示搜索结果
+                    if (searchValue.isNotBlank()) {
+                        SearchContent(features = filteredFeatures, query = searchValue, navController = navController)
+                    } else {
+                        // 否则，显示应用列表
+                        AppListContent(
+                            appStyle = appStyle,
+                            onStyleChange = { appStyle = it },
+                            notInstalledApps = notInstalledApps.value,
+                            onAppNotFound = { packageName ->
+                                notInstalledApps.value = notInstalledApps.value + packageName
+                            },
+                            navController = navController
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+
+// --- UI 组件 ---
+
+/**
+ * HUD风格的搜索栏
+ */
+@Composable
+fun HUDSearchBar(
+    query: String,
+    onQueryChange: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val focusManager = LocalFocusManager.current
+
+    Box(
+        modifier = modifier
+            .clip(CutCornerShape(8.dp))
+            .background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.1f))
+            .border(1.dp, MiuixTheme.colorScheme.primary.copy(alpha = 0.3f), CutCornerShape(8.dp))
+            .padding(horizontal = 8.dp)
+    ) {
+        BasicTextField(
+            value = query,
+            onValueChange = onQueryChange,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(48.dp),
+            textStyle = MiuixTheme.textStyles.main.copy(color = MiuixTheme.colorScheme.onBackground, fontFamily = FontFamily.Monospace),
+            singleLine = true,
+            cursorBrush = SolidColor(MiuixTheme.colorScheme.primary),
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
+            decorationBox = { innerTextField ->
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        imageVector = MiuixIcons.Useful.Search,
+                        contentDescription = "Search",
+                        tint = MiuixTheme.colorScheme.primary
+                    )
+                    Spacer(Modifier.width(8.dp))
+                    Box(Modifier.weight(1f)) {
+                        if (query.isEmpty()) {
+                            Text(
+                                text = stringResource(id = R.string.Search),
+                                color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.5f),
+                                fontFamily = FontFamily.Monospace
+                            )
+                        }
+                        innerTextField()
+                    }
+                }
+            }
+        )
+    }
+}
+
+/**
+ * 搜索结果内容
+ */
+@Composable
+fun SearchContent(features: List<FeatureItem>, query: String, navController: NavController) {
+    val highlightColor = MiuixTheme.colorScheme.primary
+
+    HUDModuleContainer(modifier = Modifier.padding(horizontal = 16.dp)) {
+        if (features.isEmpty()) {
+            Box(Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
+                Text(text = "空空如也~", fontFamily = FontFamily.Monospace, color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.7f))
+            }
+        } else {
+            Column {
+                features.forEachIndexed { index, feature ->
+                    SearchListItem(
+                        feature = feature,
+                        query = query,
+                        highlightColor = highlightColor,
+                        onClick = { navController.navigate(feature.category) }
+                    )
+                    if (index < features.size - 1) {
+                        addline()
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SearchListItem(
+    feature: FeatureItem,
+    query: String,
+    highlightColor: Color,
+    onClick: () -> Unit
+) {
+    val context = LocalContext.current
+    val route = remember(feature.category) { GetFuncRoute(feature.category, context) }
+    val summary = if (feature.summary != null) "${feature.summary}\n$route" else route
+
+    val titleAnnotated = highlightMatches(feature.title, query, highlightColor)
+    val summaryAnnotated = highlightMatches(summary, query, highlightColor)
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Text(text = titleAnnotated, fontSize = 16.sp, color = MiuixTheme.colorScheme.onBackground)
+            Text(text = summaryAnnotated, fontSize = 12.sp, color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.7f))
+        }
+    }
+}
+
+
+/**
+ * 应用列表内容
+ */
+@Composable
+fun AppListContent(
+    appStyle: Int,
+    onStyleChange: (Int) -> Unit,
+    notInstalledApps: Set<String>,
+    onAppNotFound: (String) -> Unit,
+    navController: NavController
+) {
+    val context = LocalContext.current
+    val appList = remember {
+        listOf(
+            AppInfo("android", "android"),
+            AppInfo("com.android.systemui", "systemui"),
+            AppInfo("com.android.settings", "settings"),
+            AppInfo("com.android.launcher", "launcher"),
+            AppInfo("com.oplus.battery", "battery"),
+            AppInfo("com.heytap.speechassist", "speechassist"),
+            AppInfo("com.coloros.ocrscanner", "ocrscanner"),
+            AppInfo("com.oplus.games", "games"),
+            AppInfo("com.finshell.wallet", "wallet"),
+            AppInfo("com.coloros.phonemanager", "phonemanager"),
+            AppInfo("com.oplus.phonemanager", "oplusphonemanager"),
+            AppInfo("com.android.mms", "mms"),
+            AppInfo("com.coloros.securepay", "securepay"),
+            AppInfo("com.heytap.health", "health"),
+            AppInfo("com.oplus.appdetail", "appdetail"),
+            AppInfo("com.heytap.quicksearchbox", "quicksearchbox"),
+            AppInfo("com.mi.health", "mihealth"),
+            AppInfo("com.oplus.ota", "ota"),
+            AppInfo("com.coloros.oshare", "oshare"),
+            AppInfo("com.android.incallui", "incallui")
+        )
+    }
+
+    val installedApps = remember(appList, notInstalledApps) {
+        appList.filter { it.packageName !in notInstalledApps }
+    }
+
+    Column(Modifier.padding(horizontal = 16.dp)) {
+        SectionTitle(titleResId = R.string.section_title_apps)
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+            horizontalArrangement = Arrangement.End
+        ) {
+            Text(
+                text = stringResource(R.string.switch_style),
+                color = MiuixTheme.colorScheme.primary,
+                fontSize = 12.sp,
+                fontFamily = FontFamily.Monospace,
+                modifier = Modifier.clickable {
+                    val newStyle = if (appStyle == 0) 1 else 0
+                    onStyleChange(newStyle)
+                    context.prefs("settings").edit { putInt("appstyle", newStyle) }
+                }
+            )
+        }
+
+        HUDModuleContainer() {
+            if (appStyle == 0) {
+                androidx.compose.foundation.layout.FlowRow(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    installedApps.forEach { appInfo ->
+                        FunctionAppFlow(
+                            packageName = appInfo.packageName,
+                            activityName = appInfo.activityName,
+                            navController = navController,
+                            onResult = onAppNotFound
+                        )
+                    }
+                }
+            } else {
+                Column {
+                    installedApps.forEachIndexed { index, appInfo ->
+                        FunctionApp(
+                            packageName = appInfo.packageName,
+                            activityName = appInfo.activityName,
+                            navController = navController,
+                            onResult = onAppNotFound
+                        )
+                        if (index < installedApps.size - 1) {
+                            addline()
+                        }
+                    }
+                }
+            }
+        }
+
+        Spacer(Modifier.height(16.dp))
+
+        SuperArrow(
+            title = stringResource(R.string.app_not_found_in_list),
+            titleColor = BasicComponentDefaults.titleColor(color = MiuixTheme.colorScheme.primary),
+            onClick = { navController.navigate("hide_apps_notice") }
+        )
+    }
+}
+
+// --- 恢复原始的应用列表项组件 ---
+
+internal val colorCache = mutableMapOf<String, Color>()
+
+@SuppressLint("CoroutineCreationDuringComposition")
+@Composable
+fun FunctionApp(packageName: String, activityName: String, navController: NavController, onResult: (String) -> Unit) {
+    GetAppIconAndName(packageName = packageName) { appName, icon ->
+        if (appName != "noapp") {
+            val defaultColor = MiuixTheme.colorScheme.surface
+            val noModuleActive = Color.Red
+
+            val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
+            val isLoading = remember { mutableStateOf(dominantColor.value == defaultColor) }
+
+            LaunchedEffect(icon, dominantColor.value) {
+                if (isLoading.value) {
+                    val newColor = withContext(Dispatchers.IO) {
+                        if (YukiHookAPI.Status.isModuleActive) getAutoColor(icon) else noModuleActive
+                    }
+                    dominantColor.value = newColor
+                    colorCache[packageName] = newColor
+                    isLoading.value = false
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .clickable { navController.navigate(activityName) }
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Card(
+                    color = dominantColor.value,
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                        .drawColoredShadow(
+                            dominantColor.value,
+                            1f,
+                            borderRadius = 13.dp,
+                            shadowRadius = 7.dp,
+                            offsetX = 0.dp,
+                            offsetY = 0.dp,
+                            roundedRect = false
+                        )
+                ) {
+                    Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(45.dp))
+                }
+                Column(modifier = Modifier.padding(start = 16.dp)) {
+                    Text(text = appName)
+                    Text(
+                        text = packageName,
+                        fontSize = MiuixTheme.textStyles.subtitle.fontSize,
+                        fontWeight = FontWeight.Medium,
+                        color = MiuixTheme.colorScheme.onBackgroundVariant
+                    )
+                }
+            }
+        } else {
+            onResult("noapp")
+        }
+    }
+}
+
+@SuppressLint("CoroutineCreationDuringComposition")
+@Composable
+fun FunctionAppFlow(packageName: String, activityName: String, navController: NavController, onResult: (String) -> Unit) {
+    GetAppIconAndName(packageName = packageName) { appName, icon ->
+        if (appName != "noapp") {
+            val defaultColor = MiuixTheme.colorScheme.surface
+            val noModuleActive = Color.Red
+
+            val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
+            val isLoading = remember { mutableStateOf(dominantColor.value == defaultColor) }
+
+            LaunchedEffect(icon, dominantColor.value) {
+                if (isLoading.value) {
+                    val newColor = withContext(Dispatchers.IO) {
+                        if (YukiHookAPI.Status.isModuleActive) getAutoColor(icon) else noModuleActive
+                    }
+                    dominantColor.value = newColor
+                    colorCache[packageName] = newColor
+                    isLoading.value = false
+                }
+            }
+
+            Column(
+                modifier = Modifier
+                    .clickable { navController.navigate(activityName) }
+                    .width(75.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Card(
+                    color = dominantColor.value,
+                    modifier = Modifier
+                        .padding(top = 10.dp)
+                        .drawColoredShadow(
+                            dominantColor.value,
+                            1f,
+                            borderRadius = 13.dp,
+                            shadowRadius = 7.dp,
+                            offsetX = 0.dp,
+                            offsetY = 0.dp,
+                            roundedRect = false
+                        )
+                ) {
+                    Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(50.dp))
+                }
+                Text(
+                    text = appName,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    softWrap = false,
+                    modifier = Modifier.padding(top = 10.dp, bottom = 6.dp)
+                )
+            }
+        } else {
+            onResult("noapp")
+        }
+    }
+}
+
+
+// --- 辅助函数和缓存 ---
+
+@Composable
+fun highlightMatches(text: String, query: String, highlightColor: Color): AnnotatedString {
+    return buildAnnotatedString {
+        if (query.isBlank() || !text.contains(query, ignoreCase = true)) {
+            append(text)
+            return@buildAnnotatedString
+        }
+        val regex = Regex(query, RegexOption.IGNORE_CASE)
+        var lastIndex = 0
+        regex.findAll(text).forEach { matchResult ->
+            append(text.substring(lastIndex, matchResult.range.first))
+            withStyle(style = SpanStyle(color = highlightColor, fontWeight = FontWeight.Bold)) {
+                append(matchResult.value)
+            }
+            lastIndex = matchResult.range.last + 1
+        }
+        if (lastIndex < text.length) {
+            append(text.substring(lastIndex))
+        }
+    }
+}
+
+@Composable
+fun HUDModuleContainer(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
+    val shape = CutCornerShape(8.dp)
+    Column(
+        modifier = modifier.clip(shape).background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.03f))
+            .border(1.dp, MiuixTheme.colorScheme.primary.copy(alpha = 0.3f), shape).padding(8.dp)
+    ) { content() }
+}
+
+@Composable
+fun HUDBackground() {
+    val primaryColor = MiuixTheme.colorScheme.primary
+    val gridColor = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.05f)
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val gridSize = 40.dp.toPx()
+        for (i in 0 until (size.width / gridSize).toInt()) {
+            drawLine(gridColor, Offset(i * gridSize, 0f), Offset(i * gridSize, size.height), 1f)
+        }
+        for (i in 0 until (size.height / gridSize).toInt()) {
+            drawLine(gridColor, Offset(0f, i * gridSize), Offset(size.width, i * gridSize), 1f)
+        }
+    }
+}
+
+@Composable
+fun SectionTitle(titleResId: Int) {
+    val primaryColor = MiuixTheme.colorScheme.primary.copy(alpha = 0.5f)
+    val textColor = MiuixTheme.colorScheme.onBackground
+    var animated by remember { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) { animated = true }
+
+    val lineWidth by animateFloatAsState(
+        targetValue = if (animated) 1f else 0.00001f,
+        animationSpec = tween(durationMillis = 700)
+    )
+    val textAlpha by animateFloatAsState(
+        targetValue = if (animated) 1f else 0f,
+        animationSpec = tween(durationMillis = 500, delayMillis = 200)
+    )
+
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(modifier = Modifier.weight(lineWidth).height(1.dp).background(Brush.horizontalGradient(listOf(Color.Transparent, primaryColor))))
+        Text(
+            text = " ${stringResource(id = titleResId)} ",
+            fontSize = 20.sp,
+            fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Bold,
+            color = textColor.copy(alpha = textAlpha),
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
+        Box(modifier = Modifier.weight(lineWidth).height(1.dp).background(Brush.horizontalGradient(listOf(primaryColor, Color.Transparent))))
+    }
+}
+
+@SuppressLint("UseKtx")
+fun Modifier.drawColoredShadow(
+    color: Color,
+    alpha: Float = 0.2f,
+    borderRadius: Dp = 0.dp,
+    shadowRadius: Dp = 0.dp,
+    offsetX: Dp = 0.dp,
+    offsetY: Dp = 0.dp,
+    roundedRect: Boolean = true
+) = this.drawBehind {
+    val transparentColor = color.copy(alpha = .0f).value.toLong().toColorInt()
+    val shadowColor = color.copy(alpha = alpha).value.toLong().toColorInt()
+    this.drawIntoCanvas {
+        val paint = Paint()
+        paint.color = Color.Transparent
+        val frameworkPaint = paint.asFrameworkPaint()
+        frameworkPaint.color = transparentColor
+        frameworkPaint.setShadowLayer(
+            shadowRadius.toPx(),
+            offsetX.toPx(),
+            offsetY.toPx(),
+            shadowColor
+        )
+        it.drawRoundRect(
+            0f,
+            0f,
+            this.size.width,
+            this.size.height,
+            if (roundedRect) this.size.height / 2 else borderRadius.toPx(),
+            if (roundedRect) this.size.height / 2 else borderRadius.toPx(),
+            paint
+        )
+    }
+}
+
+suspend fun getAutoColor(icon: ImageBitmap): Color {
+    return withContext(Dispatchers.IO) {
+        Palette.from(icon.asAndroidBitmap()).generate().dominantSwatch?.rgb?.let { Color(it) } ?: Color.White
+    }
+}
 
 fun features(context: Context) = listOf(
     item(title = context.getString(R.string.downgr),
@@ -297,7 +844,7 @@ fun features(context: Context) = listOf(
         category = "android\\split_screen_multi_window",
     ),
     item(title = context.getString(R.string.force_multi_window_mode),
-    category = "android\\split_screen_multi_window"),
+        category = "android\\split_screen_multi_window"),
     item(title = context.getString(R.string.max_simultaneous_small_windows),
         category = "android\\split_screen_multi_window",
         summary = context.getString(R.string.default_value_hint_negative_one)),
@@ -325,9 +872,9 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.force_enable_fold_mode),
         category = "launcher"),
     item(title = context.getString(R.string.fold_mode),
-            category = "launcher"),
+        category = "launcher"),
     item(title = context.getString(R.string.force_enable_fold_dock),
-    category = "launcher"),
+        category = "launcher"),
     item(title = context.getString(R.string.adjust_dock_transparency),
         category = "launcher"),
     item(title = context.getString(R.string.force_enable_dock_blur),
@@ -351,7 +898,7 @@ fun features(context: Context) = listOf(
         summary = context.getString(R.string.default_value_hint_negative_one),
         category = "phonemanager"),
     item(title = context.getString(R.string.custom_prompt_content),
-    category = "phonemanager"),
+        category = "phonemanager"),
     item(title = context.getString(R.string.custom_animation_duration),
         summary = context.getString(R.string.default_value_hint_negative_one),
         category = "phonemanager"),
@@ -696,566 +1243,3 @@ fun features(context: Context) = listOf(
     item(title = context.getString(R.string.hide_call_ringtone),
         category = "incallui")
 )
-
-var notInstallList = mutableStateOf(emptyList<String>())
-
-@SuppressLint("UnrememberedMutableState")
-@Composable
-fun Main_Module(
-    topAppBarScrollBehavior: ScrollBehavior,
-    navController: NavController,
-    padding: PaddingValues
-) {
-    val context = LocalContext.current
-    var miuixSearchValue by remember { mutableStateOf("") }
-    var expanded by rememberSaveable { mutableStateOf(false) }
-    var isKeyboardVisible by remember { mutableStateOf(false) }
-    DisposableEffect(context) {
-        val rootView = (context as MainActivity).window.decorView
-        val listener = ViewTreeObserver.OnGlobalLayoutListener {
-            val insets = ViewCompat.getRootWindowInsets(rootView)
-            isKeyboardVisible = insets?.isVisible(WindowInsetsCompat.Type.ime()) == true
-        }
-
-        rootView.viewTreeObserver.addOnGlobalLayoutListener(listener)
-
-        onDispose {
-            rootView.viewTreeObserver.removeOnGlobalLayoutListener(listener)
-        }
-    }
-
-    // 过滤符合搜索条件的功能
-    val collator = Collator.getInstance(Locale.CHINA)
-    val filteredFeatures by remember(miuixSearchValue) {
-        derivedStateOf {
-            features(context)
-                .filter {
-                    it.title.contains(miuixSearchValue, ignoreCase = true) ||
-                            it.summary?.contains(miuixSearchValue, ignoreCase = true) ?: false
-                }
-                .sortedWith(compareBy(collator) { it.title })
-        }
-    }
-
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-    ) {
-        SearchBar(
-            modifier = Modifier
-                .padding(horizontal = 12.dp, vertical = 12.dp)
-                .background(Color.Transparent)
-                .padding(top = padding.calculateTopPadding()),
-            inputField = {
-                InputField(
-                    query = miuixSearchValue,
-                    onQueryChange = { miuixSearchValue = it },
-                    onSearch = { expanded = false },
-                    expanded = expanded,
-                    onExpandedChange = { expanded = it },
-                    label = stringResource(R.string.Search),
-                    leadingIcon = {
-                        Image(
-                            modifier = Modifier.padding(horizontal = 12.dp),
-                            imageVector = MiuixIcons.Useful.Search,
-                            colorFilter = BlendModeColorFilter(
-                                MiuixTheme.colorScheme.onSurfaceContainer,
-                                BlendMode.SrcIn
-                            ),
-                            contentDescription = stringResource(R.string.Search)
-                        )
-                    }
-                )
-            },
-            outsideRightAction = {
-                Text(
-                    modifier = Modifier
-                        .padding(start = 12.dp)
-                        .clickable {
-                            expanded = false
-                            miuixSearchValue = ""
-                        },
-                    text = stringResource(R.string.cancel),
-                    color = MiuixTheme.colorScheme.primary
-                )
-            },
-            expanded = expanded,
-            onExpandedChange = { expanded = it }
-        ) {
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(
-                        top = 6.dp,
-                        bottom = if (isKeyboardVisible) 0.dp else padding.calculateBottomPadding()
-                    )
-            ) {
-                LazyColumn(modifier = Modifier.nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
-                    .overScrollVertical()) {
-                    if (filteredFeatures.isEmpty()) {
-                        item {
-                            Box(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(200.dp),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(text = "空空如也~")
-                            }
-                        }
-                    }
-
-                    filteredFeatures.forEachIndexed { index, feature ->
-                        item {
-                            val route = rememberSaveable { mutableStateOf("") }
-                            if (route.value == "") {
-                                LaunchedEffect(Unit) {
-                                    route.value = GetFuncRoute(feature.category,context)
-                                }
-                            }
-                            SearchList(
-                                title = highlightMatches(feature.title, miuixSearchValue),
-                                summary = highlightMatches(if (feature.summary != null) feature.summary + "\n" + route.value else route.value, miuixSearchValue),
-                                modifier = Modifier.fillMaxWidth(),
-                                onClick = {
-                                    //miuixSearchValue = feature.title
-                                    expanded = false
-                                    navController.navigate(feature.category)
-                                }
-                            )
-                            if (index < filteredFeatures.size - 1) {
-                                addline()
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        if (!expanded) {
-            val appList = listOf(
-                AppInfo("android", "android"),
-                AppInfo("com.android.systemui", "systemui"),
-                AppInfo("com.android.settings", "settings"),
-                AppInfo("com.android.launcher", "launcher"),
-                AppInfo("com.oplus.battery", "battery"),
-                AppInfo("com.heytap.speechassist", "speechassist"),
-                AppInfo("com.coloros.ocrscanner", "ocrscanner"),
-                AppInfo("com.oplus.games", "games"),
-                AppInfo("com.finshell.wallet", "wallet"),
-                AppInfo("com.coloros.phonemanager", "phonemanager"),
-                AppInfo("com.oplus.phonemanager", "oplusphonemanager"),
-                AppInfo("com.android.mms", "mms"),
-                AppInfo("com.coloros.securepay", "securepay"),
-                AppInfo("com.heytap.health", "health"),
-                AppInfo("com.oplus.appdetail", "appdetail"),
-                AppInfo("com.heytap.quicksearchbox", "quicksearchbox"),
-                AppInfo("com.mi.health", "mihealth"),
-                AppInfo("com.oplus.ota", "ota"),
-                AppInfo("com.coloros.oshare", "oshare"),
-                AppInfo("com.android.incallui", "incallui")
-            )
-
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .overScrollVertical()
-                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
-            ) {
-                item {
-                    Spacer(modifier = Modifier.size(68.dp + padding.calculateTopPadding()))
-                }
-                item {
-                    val appstyle = rememberSaveable { mutableStateOf(context.prefs("settings").getInt("appstyle", 0)) }
-                    Column(
-                        modifier = Modifier.fillMaxWidth()
-                            .padding(horizontal = 12.dp)
-                            .padding(bottom = 6.dp)
-                            .clickable {
-                                appstyle.value = if (appstyle.value == 0) 1 else 0
-                                context.prefs("settings").edit { putInt("appstyle", appstyle.value) }
-                            },
-                        horizontalAlignment = Alignment.End
-                    ) {
-                        Text(text = stringResource(R.string.switch_style), color = MiuixTheme.colorScheme.primary, fontSize = 12.sp)
-                    }
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp)
-                            .padding(bottom = 6.dp)
-                    ) {
-                        AnimatedVisibility(appstyle.value == 0) {
-                            FlowRow(
-                                horizontalArrangement = Arrangement.Center,
-                                modifier = Modifier.fillMaxSize()
-                            ) {
-                                appList.forEachIndexed { index, appInfo ->
-                                    val notInstall = rememberSaveable { mutableStateOf(false) }
-                                    FunctionAppFlow(
-                                        packageName = appInfo.packageName,
-                                        activityName = appInfo.activityName,
-                                        navController = navController
-                                    ) { result ->
-                                        if (result == "noapp") {
-                                            if (!notInstallList.value.contains(appInfo.packageName)) {
-                                                notInstallList.value += appInfo.packageName
-                                            }
-                                            notInstall.value = true
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        AnimatedVisibility(appstyle.value == 1) {
-                            Column {
-                                appList.forEachIndexed { index, appInfo ->
-                                    val notInstall = rememberSaveable { mutableStateOf(false) }
-                                    FunctionApp(
-                                        packageName = appInfo.packageName,
-                                        activityName = appInfo.activityName,
-                                        navController = navController
-                                    ) { result ->
-                                        if (result == "noapp") {
-                                            if (!notInstallList.value.contains(appInfo.packageName)) {
-                                                notInstallList.value += appInfo.packageName
-                                            }
-                                            notInstall.value = true
-                                        }
-                                    }
-                                    if (index < appList.size - 1 && !notInstall.value) {
-                                        addline()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                item {
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp)
-                            .padding(vertical = 6.dp)
-                    ) {
-                        SuperArrow(
-                            title = stringResource(R.string.app_not_found_in_list),
-                            titleColor = BasicComponentDefaults.titleColor(color = MiuixTheme.colorScheme.primaryVariant),
-                            onClick = {
-                                navController.navigate("hide_apps_notice")
-                            }
-                        )
-                    }
-                }
-                item {
-                    Spacer(modifier = Modifier.padding(bottom = padding.calculateBottomPadding()))
-                }
-            }
-        }
-    }
-}
-
-data class AppInfo(val packageName: String, val activityName: String)
-
-// 高亮匹配内容的函数
-fun highlightMatches(text: String, query: String): AnnotatedString {
-    if (query.isBlank()) return AnnotatedString(text) // 如果查询为空，则返回原始文本
-
-    val regex = Regex("($query)", RegexOption.IGNORE_CASE) // 匹配查询字符串的正则表达式
-    val annotatedStringBuilder = AnnotatedString.Builder()
-
-    var lastIndex = 0
-    for (match in regex.findAll(text)) {
-        // 添加匹配前的文本
-        annotatedStringBuilder.append(text.substring(lastIndex, match.range.first))
-        // 添加高亮部分
-        annotatedStringBuilder.pushStyle(SpanStyle(color = Color.Red))
-        annotatedStringBuilder.append(match.value)
-        annotatedStringBuilder.pop()
-        lastIndex = match.range.last + 1
-    }
-    // 添加剩余的文本
-    annotatedStringBuilder.append(text.substring(lastIndex))
-
-    return annotatedStringBuilder.toAnnotatedString()
-}
-
-@SuppressLint("CoroutineCreationDuringComposition")
-@Composable
-fun FunctionApp(packageName: String, activityName: String, navController: NavController, onResult: (String) -> Unit) {
-    GetAppIconAndName(packageName = packageName) { appName, icon ->
-        if (appName != "noapp") {
-            val defaultColor = MiuixTheme.colorScheme.surface
-            val noModuleActive = Color.Red
-
-            // 使用 remember 缓存 dominantColor 的状态
-            val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
-            val isLoading = remember { mutableStateOf(dominantColor.value == defaultColor) }
-
-            // 使用 LaunchedEffect 在 icon 或 dominantColor 变化时启动协程
-            LaunchedEffect(icon, dominantColor.value) {
-                if (isLoading.value) {
-                    val newColor = withContext(Dispatchers.IO) {
-                        if (YukiHookAPI.Status.isModuleActive) getAutoColor(icon) else noModuleActive
-                    }
-                    dominantColor.value = newColor
-                    colorCache[packageName] = newColor
-                    isLoading.value = false
-                }
-            }
-
-            Row(
-                modifier = Modifier
-                    .clickable { navController.navigate(activityName) }
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Card(
-                    color = dominantColor.value,
-                    modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                        .drawColoredShadow(
-                            dominantColor.value,
-                            1f,
-                            borderRadius = 13.dp,
-                            shadowRadius = 7.dp,
-                            offsetX = 0.dp,
-                            offsetY = 0.dp,
-                            roundedRect = false
-                        )
-                ) {
-                    Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(45.dp))
-                }
-                Column(modifier = Modifier.padding(start = 16.dp)) {
-                    Text(text = appName)
-                    Text(
-                        text = packageName,
-                        fontSize = MiuixTheme.textStyles.subtitle.fontSize,
-                        fontWeight = FontWeight.Medium,
-                        color = MiuixTheme.colorScheme.onBackgroundVariant
-                    )
-                }
-            }
-        } else {
-            onResult("noapp")
-        }
-    }
-}
-
-@SuppressLint("CoroutineCreationDuringComposition")
-@Composable
-fun FunctionAppFlow(packageName: String, activityName: String, navController: NavController, onResult: (String) -> Unit) {
-    GetAppIconAndName(packageName = packageName) { appName, icon ->
-        if (appName != "noapp") {
-            val defaultColor = MiuixTheme.colorScheme.surface
-            val noModuleActive = Color.Red
-
-            // 使用 remember 缓存 dominantColor 的状态
-            val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
-            val isLoading = remember { mutableStateOf(dominantColor.value == defaultColor) }
-
-            // 使用 LaunchedEffect 在 icon 或 dominantColor 变化时启动协程
-            LaunchedEffect(icon, dominantColor.value) {
-                if (isLoading.value) {
-                    val newColor = withContext(Dispatchers.IO) {
-                        if (YukiHookAPI.Status.isModuleActive) getAutoColor(icon) else noModuleActive
-                    }
-                    dominantColor.value = newColor
-                    colorCache[packageName] = newColor
-                    isLoading.value = false
-                }
-            }
-
-            Column(
-                modifier = Modifier
-                    .clickable { navController.navigate(activityName) }
-                    .width(80.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Card(
-                    color = dominantColor.value,
-                    modifier = Modifier
-                        .padding(top = 10.dp)
-                        .drawColoredShadow(
-                            dominantColor.value,
-                            1f,
-                            borderRadius = 13.dp,
-                            shadowRadius = 7.dp,
-                            offsetX = 0.dp,
-                            offsetY = 0.dp,
-                            roundedRect = false
-                        )
-                ) {
-                    Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(50.dp))
-                }
-                Text(
-                    text = appName,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1, // 限制为单行
-                    overflow = TextOverflow.Ellipsis, // 超出部分显示省略号
-                    softWrap = false, // 禁止自动换行
-                    modifier = Modifier.padding(top = 10.dp, bottom = 6.dp)
-                )
-            }
-        } else {
-            onResult("noapp")
-        }
-    }
-}
-
-// 全局颜色缓存
-internal val colorCache = mutableMapOf<String, Color>()
-
-// 获取主色调的函数
-suspend fun getAutoColor(icon: ImageBitmap): Color {
-    return withContext(Dispatchers.IO) {
-        val bitmap = icon.asAndroidBitmap()
-        Palette.from(bitmap).generate().dominantSwatch?.rgb?.let { Color(it) } ?: Color.White
-    }
-}
-
-data class item(
-    val title: String,
-    val summary: String? = null,
-    val category: String
-)
-
-@Composable
-fun SearchBar(
-    inputField: @Composable () -> Unit,
-    onExpandedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    expanded: Boolean = false,
-    outsideRightAction: @Composable (() -> Unit)? = null,
-    content: @Composable ColumnScope.() -> Unit
-) {
-    Surface(
-        modifier = modifier.zIndex(1f),color = Color.Transparent,
-    ) {
-        Column {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Box(modifier = Modifier.weight(1f)) {
-                    inputField()
-                }
-                AnimatedVisibility(
-                    visible = expanded
-                ) {
-                    outsideRightAction?.invoke()
-                }
-            }
-
-            AnimatedVisibility(
-                visible = expanded
-            ) {
-                content()
-            }
-        }
-    }
-
-    BackHandler(enabled = expanded) {
-        onExpandedChange(false)
-    }
-}
-
-@Composable
-fun InputField(
-    query: String,
-    onQueryChange: (String) -> Unit,
-    label: String = "",
-    onSearch: (String) -> Unit,
-    expanded: Boolean,
-    onExpandedChange: (Boolean) -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    insideMargin: DpSize = DpSize(12.dp, 12.dp),
-    leadingIcon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-    interactionSource: MutableInteractionSource? = null,
-) {
-    @Suppress("NAME_SHADOWING")
-    val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
-
-    val paddingModifier = remember(insideMargin, leadingIcon, trailingIcon) {
-        if (leadingIcon == null && trailingIcon == null) Modifier.padding(horizontal = insideMargin.width, vertical = insideMargin.height)
-        else if (leadingIcon == null) Modifier
-            .padding(start = insideMargin.width)
-            .padding(vertical = insideMargin.height)
-        else if (trailingIcon == null) Modifier
-            .padding(end = insideMargin.width)
-            .padding(vertical = insideMargin.height)
-        else Modifier.padding(vertical = insideMargin.height)
-    }
-
-    val focused = interactionSource.collectIsFocusedAsState().value
-    val focusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
-
-    BasicTextField(
-        value = query,
-        onValueChange = onQueryChange,
-        modifier = modifier
-            .focusRequester(focusRequester)
-            .onFocusChanged { if (it.isFocused) onExpandedChange(true) }
-            .semantics {
-                onClick {
-                    focusRequester.requestFocus()
-                    true
-                }
-            },
-        enabled = enabled,
-        singleLine = true,
-        textStyle = MiuixTheme.textStyles.main,
-        cursorBrush = SolidColor(MiuixTheme.colorScheme.primary),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-        keyboardActions = KeyboardActions(onSearch = { onSearch(query) }),
-        interactionSource = interactionSource,
-        decorationBox =
-        @Composable { innerTextField ->
-            val shape = remember { derivedStateOf { SmoothRoundedCornerShape(50.dp) } }
-            Box(
-                modifier = Modifier
-                    .background(
-                        color = MiuixTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.75f),
-                        shape = shape.value
-                    )
-            ) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (leadingIcon != null) {
-                        leadingIcon()
-                    }
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .then(paddingModifier),
-                        contentAlignment = Alignment.CenterStart
-                    ) {
-                        Text(
-                            text = if (!(query.isNotEmpty() || expanded)) label else "",
-                            color = MiuixTheme.colorScheme.onSurfaceContainerHigh
-                        )
-
-                        innerTextField()
-                    }
-                    if (trailingIcon != null) {
-                        trailingIcon()
-                    }
-                }
-            }
-        }
-    )
-
-    val shouldClearFocus = !expanded && focused
-    LaunchedEffect(expanded) {
-        if (shouldClearFocus) {
-            delay(100)
-            focusManager.clearFocus()
-        }
-    }
-}
