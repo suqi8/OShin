@@ -9,7 +9,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.suqi8.oshin.R
-import com.suqi8.oshin.notInstallList
+import com.suqi8.oshin.notInstalledApps
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.Text
@@ -26,8 +26,8 @@ fun hide_apps_notice(navController: NavController) {
                 .padding(bottom = 6.dp,top = 15.dp)
         ) {
             Column(modifier = Modifier.padding(12.dp)) {
-                Text(stringResource(R.string.hide_apps_notice, notInstallList.value.size))
-                Text(notInstallList.value.joinToString(separator = ", "))
+                Text(stringResource(R.string.hide_apps_notice, notInstalledApps.value.size))
+                Text(notInstalledApps.value.joinToString(separator = ", "))
             }
         }
     }

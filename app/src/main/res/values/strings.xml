@@ -619,4 +619,5 @@
     <string name="chip_label_android">安卓</string>
     <string name="chip_label_system">系统</string>
     <string name="chip_label_status">状态</string>
+    <string name="section_title_apps">应用列表</string>
 </resources>
