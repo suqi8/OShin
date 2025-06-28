@@ -120,7 +120,7 @@ fun Main_Home(
     var rootStatus by remember { mutableStateOf(RootStatus(Status.LOADING)) }
     val fridaStatus by remember { mutableStateOf(FridaStatus(Status.ERROR, "未连接")) }
     var deviceInfo by remember { mutableStateOf(DeviceInfo()) }
-    var features by remember { mutableStateOf<List<FeatureUI>?>(null) } // 使用可空类型表示加载中
+    var features by remember { mutableStateOf<List<FeatureUI>?>(null) }
 
     LaunchedEffect(Unit) {
         launch {
@@ -154,7 +154,6 @@ fun Main_Home(
                     DashboardSection(moduleStatus, rootStatus, fridaStatus)
                 }
             }
-            // 新增：最近更新按钮
             item {
                 AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 100)) { -it } + fadeIn()) {
                     RecentUpdatesModule(navController)
@@ -162,7 +161,7 @@ fun Main_Home(
             }
             item {
                 AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 200)) { -it } + fadeIn()) {
-                    DeviceInfoSection(deviceInfo)
+                    DeviceInfoSection(deviceInfo, visible)
                 }
             }
             item {
@@ -467,22 +466,51 @@ fun StatusIndicatorRing(status: Status, color: Color) {
 }
 
 @Composable
-fun DeviceInfoSection(info: DeviceInfo) {
+fun DeviceInfoSection(info: DeviceInfo, isVisible: Boolean) {
     Column(modifier = Modifier.animateContentSize()) {
         SectionTitle(titleResId = R.string.section_title_device_info)
-        if (info.cycleCount == 0 && info.country == "加载中...") {
+
+        var startAnimation by remember { mutableStateOf(false) }
+
+        // 只有当整个区块可见，并且数据加载完毕后，才触发动画
+        LaunchedEffect(info.country, isVisible) {
+            if (isVisible && info.country != "加载中...") {
+                delay(300) // 给予一个短暂延迟，让入场动画结束后再播放仪表盘动画
+                startAnimation = true
+            }
+        }
+
+        if (info.country == "加载中...") {
             DeviceInfoSkeleton()
         } else {
             HUDModuleContainer {
                 Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), Arrangement.SpaceEvenly, Alignment.CenterVertically) {
-                    HUDCircularGauge(value = info.batteryHealthPercent, title = stringResource(id = R.string.gauge_title_health), color = Color(0xFF22C55E))
+                    HUDCircularGauge(
+                        value = info.batteryHealthPercent,
+                        title = stringResource(id = R.string.gauge_title_health),
+                        color = Color(0xFF22C55E),
+                        startAnimation = startAnimation
+                    )
+
                     val currentCapacityValue = if (info.designCapacity > 0) (info.currentCapacity.toFloat() / info.designCapacity.toFloat()) * 100 else 0f
                     val currentCapacityText = if (info.designCapacity > 0 && info.currentCapacity > 0) "${info.currentCapacity} mAh" else "N/A"
-                    HUDCircularGauge(value = currentCapacityValue, title = stringResource(id = R.string.gauge_title_capacity), color = MiuixTheme.colorScheme.primary, valueText = currentCapacityText)
+                    HUDCircularGauge(
+                        value = currentCapacityValue,
+                        title = stringResource(id = R.string.gauge_title_capacity),
+                        color = MiuixTheme.colorScheme.primary,
+                        valueText = currentCapacityText,
+                        startAnimation = startAnimation
+                    )
 
                     val cycleCountMax = if (info.cycleCount == 0) 100 else (ceil(info.cycleCount / 100.0).toInt() * 100)
                     val cycleProgress = if (cycleCountMax > 0) (info.cycleCount.toFloat() / cycleCountMax.toFloat()) * 100f else 0f
-                    HUDCircularGauge(value = cycleProgress, title = stringResource(id = R.string.gauge_title_cycles), color = Color(0xFFF59E0B), valueText = info.cycleCount.toString())
+                    HUDCircularGauge(
+                        value = cycleProgress,
+                        title = stringResource(id = R.string.gauge_title_cycles),
+                        color = Color(0xFFF59E0B),
+                        valueText = info.cycleCount.toString(),
+                        startAnimation = startAnimation
+                    )
                 }
                 Box(Modifier.fillMaxWidth().height(1.dp).background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f)).padding(horizontal = 16.dp))
 
@@ -564,9 +592,12 @@ fun HUDModuleContainer(content: @Composable ColumnScope.() -> Unit) {
 }
 
 @Composable
-fun HUDCircularGauge(value: Float, title: String, color: Color, strokeWidth: Dp = 6.dp, valueText: String? = null, isPercentage: Boolean = true) {
+fun HUDCircularGauge(value: Float, title: String, color: Color, strokeWidth: Dp = 6.dp, valueText: String? = null, startAnimation: Boolean = false) {
     val safeValue = if (value.isNaN() || value.isInfinite()) 0f else value
-    val animatedValue by animateFloatAsState(targetValue = safeValue, animationSpec = tween(1000))
+    val animatedValue by animateFloatAsState(
+        targetValue = if(startAnimation) safeValue else 0f,
+        animationSpec = tween(1000)
+    )
     val textColor = MiuixTheme.colorScheme.onBackground
 
     Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
