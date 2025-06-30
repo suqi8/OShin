@@ -16,7 +16,6 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -61,12 +60,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
@@ -696,17 +692,17 @@ fun Main1(context: Context,navController: NavController,
                     } else Modifier, navigationIcon = {
                         /*Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null,
                             modifier = Modifier.size(50.dp))*/
-                        Card(modifier = Modifier
+                        /*Card(modifier = Modifier
                             .size(55.dp)
                             .padding(10.dp)) {
                             Box(modifier = Modifier.fillMaxSize()) {
-                                /*Image(
+                                *//*Image(
                                     painter = painterResource(id = R.drawable.icon_background_newyear),
                                     contentDescription = null,
                                     modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
-                                    *//*.offset(y = (-20).dp)*//*,
+                                    *//**//*.offset(y = (-20).dp)*//**//*,
                         contentScale = ContentScale.Crop
-                    )*/
+                    )*//*
                                 Image(
                                     painter = painterResource(id = R.drawable.icon),
                                     contentDescription = null,
@@ -716,13 +712,13 @@ fun Main1(context: Context,navController: NavController,
                                         .clickable {
                                             //context.prefs("settings").edit { putBoolean("privacy",true) }
                                         }
-                                    /*.offset(y = (-20).dp)*/,
+                                    *//*.offset(y = (-20).dp)*//*,
                                     contentScale = ContentScale.Crop
                                 )
                             }
-                        }
+                        }*/
                     })
-                Image(painter = painterResource(R.drawable.osu),contentDescription = null, modifier = Modifier.fillMaxWidth())
+                //Image(painter = painterResource(R.drawable.osu),contentDescription = null, modifier = Modifier.fillMaxWidth())
             }
         }
     }) { padding ->
