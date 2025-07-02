@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Layers
@@ -40,6 +41,7 @@ import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Storage
 import androidx.compose.material.icons.filled.Update
 import androidx.compose.material.icons.filled.VerifiedUser
+import androidx.compose.material.icons.filled.Warning
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -80,6 +82,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.withTimeoutOrNull
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.Text
@@ -93,7 +96,7 @@ import kotlin.math.sin
 
 // --- 数据模型 ---
 data class FeatureUI(val title: String, val summary: String? = null, val category: String)
-enum class Status { LOADING, SUCCESS, ERROR }
+enum class Status { LOADING, SUCCESS, ERROR, WARNING }
 data class ModuleStatus(val status: Status, val lspVersion: String = "")
 data class RootStatus(val status: Status, val version: String = "")
 data class FridaStatus(val status: Status, val version: String = "")
@@ -101,8 +104,8 @@ data class DeviceInfo(
     val country: String = "加载中...", val androidVersion: String = Build.VERSION.RELEASE, val sdkVersion: String = Build.VERSION.SDK_INT.toString(),
     val systemVersion: String = Build.DISPLAY, val designCapacity: Int = 0, val currentCapacity: Int = 0, val fullCapacity: Int = 0,
     val batteryHealthRaw: String = "加载中...", val batteryHealthDisplay: String = "加载中...",
-    val batteryHealthPercent: Float = 0f, // From file for the gauge
-    val calculatedHealth: Float = 0f, // Calculated for the text
+    val batteryHealthPercent: Float = 0f,
+    val calculatedHealth: Float = 0f,
     val cycleCount: Int = 0
 )
 
@@ -120,7 +123,7 @@ fun Main_Home(
     var rootStatus by remember { mutableStateOf(RootStatus(Status.LOADING)) }
     val fridaStatus by remember { mutableStateOf(FridaStatus(Status.ERROR, "未连接")) }
     var deviceInfo by remember { mutableStateOf(DeviceInfo()) }
-    var features by remember { mutableStateOf<List<FeatureUI>?>(null) }
+    var features by remember { mutableStateOf<List<FeatureUI>>(emptyList()) }
 
     LaunchedEffect(Unit) {
         launch {
@@ -145,40 +148,50 @@ fun Main_Home(
         HUDBackground()
 
         LazyColumn(
-            modifier = Modifier.fillMaxSize().nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-            contentPadding = PaddingValues(top = padding.calculateTopPadding() + 16.dp, bottom = padding.calculateBottomPadding() + 16.dp, start = 16.dp, end = 16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+            contentPadding = PaddingValues(
+                top = padding.calculateTopPadding() + 16.dp,
+                bottom = padding.calculateBottomPadding()
+            ),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
+            // 仪表盘区块
             item {
                 AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800)) { -it } + fadeIn()) {
                     DashboardSection(moduleStatus, rootStatus, fridaStatus)
                 }
             }
+            // 最近更新区块
             item {
                 AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 100)) { -it } + fadeIn()) {
                     RecentUpdatesModule(navController)
                 }
             }
+            // 设备信息区块
             item {
                 AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 200)) { -it } + fadeIn()) {
                     DeviceInfoSection(deviceInfo, visible)
                 }
             }
+            // 功能列表标题
             item {
                 AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 350)) { -it } + fadeIn()) {
-                    if (features == null) {
-                        FeaturesSectionSkeleton()
-                    } else {
-                        FeaturesSection(features!!, navController)
-                    }
+                    SectionTitle(titleResId = R.string.section_title_features)
+                }
+            }
+            // 功能列表
+            items(features, key = { it.title }) { feature ->
+                AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 350)) { -it } + fadeIn()) {
+                    FeatureItem(feature = feature, navController = navController)
                 }
             }
         }
     }
 }
 
-// --- 数据获取逻辑 (直接作为挂起函数) ---
-
+// --- 数据获取逻辑 ---
 suspend fun getModuleStatus(): ModuleStatus = withContext(Dispatchers.IO) {
     if (YukiHookAPI.Status.isModuleActive) ModuleStatus(Status.SUCCESS, "LSPosed v" + YukiHookAPI.Status.Executor.apiLevel)
     else ModuleStatus(Status.ERROR, "未在LSPosed中激活")
@@ -186,18 +199,25 @@ suspend fun getModuleStatus(): ModuleStatus = withContext(Dispatchers.IO) {
 
 suspend fun getRootStatus(): RootStatus = withContext(Dispatchers.IO) {
     try {
-        val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
-        if (process.waitFor() == 0) {
-            val ksuVersion = executeCommand("/data/adb/ksud -V")
-            val version = if (ksuVersion.isNotEmpty()) {
-                "KernelSU ${ksuVersion.substringAfter("ksud ").trim()}"
+        val result = withTimeoutOrNull(2000L) {
+            val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
+            if (process.waitFor() == 0) {
+                val ksuVersion = executeCommand("/data/adb/ksud -V")
+                val version = if (ksuVersion.isNotEmpty()) {
+                    "KernelSU ${ksuVersion.substringAfter("ksud ").trim()}"
+                } else {
+                    val magiskVersion = executeCommand("magisk -V")
+                    "Magisk $magiskVersion"
+                }
+                RootStatus(Status.SUCCESS, version)
             } else {
-                val magiskVersion = executeCommand("magisk -V")
-                "Magisk $magiskVersion"
+                RootStatus(Status.ERROR, "授权失败")
             }
-            RootStatus(Status.SUCCESS, version)
-        } else RootStatus(Status.ERROR, "授权失败")
-    } catch (e: Exception) { RootStatus(Status.ERROR, "无法获取Root权限") }
+        }
+        result ?: RootStatus(Status.WARNING, "检测超时")
+    } catch (e: Exception) {
+        RootStatus(Status.ERROR, "无法获取Root权限")
+    }
 }
 
 suspend fun getDeviceInfo(context: Context): DeviceInfo = withContext(Dispatchers.IO) {
@@ -283,7 +303,7 @@ fun mapHealthToString(context: Context, health: String): String = when (health) 
 }
 
 
-// --- 大胆的视觉组件 ---
+// --- 视觉组件 ---
 
 class CutCornerShape(private val cut: Dp) : Shape {
     override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
@@ -305,7 +325,7 @@ class CutCornerShape(private val cut: Dp) : Shape {
 
 @Composable
 fun DashboardSection(moduleStatus: ModuleStatus, rootStatus: RootStatus, fridaStatus: FridaStatus) {
-    Column(modifier = Modifier.animateContentSize()) {
+    Column(modifier = Modifier.animateContentSize().padding(horizontal = 16.dp)) {
         SectionTitle(titleResId = R.string.section_title_status)
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             HUDStatusModule(Modifier.weight(1f), moduleStatus.status, Icons.Default.VerifiedUser, stringResource(id = R.string.module_status), moduleStatus.lspVersion.ifEmpty { stringResource(id = R.string.module_not_activated) })
@@ -321,6 +341,7 @@ fun HUDStatusModule(modifier: Modifier = Modifier, status: Status, icon: ImageVe
     val baseColor = when (status) {
         Status.SUCCESS -> Color(0xFF22C55E)
         Status.ERROR -> Color(0xFFEF4444)
+        Status.WARNING -> Color(0xFFF59E0B)
         Status.LOADING -> MiuixTheme.colorScheme.primary
     }
     val contentColor = MiuixTheme.colorScheme.onBackground
@@ -362,6 +383,7 @@ fun RecentUpdatesModule(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(horizontal = 16.dp)
             .clip(shape)
             .background(moduleBgColor)
             .border(1.dp, primaryColor.copy(alpha = 0.3f), shape)
@@ -405,6 +427,7 @@ fun StatusIndicatorRing(status: Status, color: Color) {
             imageVector = when(status) {
                 Status.SUCCESS -> Icons.Default.VerifiedUser
                 Status.ERROR -> Icons.Default.BugReport
+                Status.WARNING -> Icons.Default.Warning
                 Status.LOADING -> Icons.Default.Security
             },
             contentDescription = "Status",
@@ -416,20 +439,19 @@ fun StatusIndicatorRing(status: Status, color: Color) {
 
 @Composable
 fun DeviceInfoSection(info: DeviceInfo, isVisible: Boolean) {
-    Column(modifier = Modifier.animateContentSize()) {
+    Column(modifier = Modifier.animateContentSize().padding(horizontal = 16.dp)) {
         SectionTitle(titleResId = R.string.section_title_device_info)
 
         var startAnimation by remember { mutableStateOf(false) }
 
-        // 只有当整个区块可见，并且数据加载完毕后，才触发动画
         LaunchedEffect(info.country, isVisible) {
             if (isVisible && info.country != "加载中...") {
-                delay(300) // 给予一个短暂延迟，让入场动画结束后再播放仪表盘动画
+                delay(300)
                 startAnimation = true
             }
         }
 
-        if (info.country == "加载中...") {
+        if (!startAnimation) {
             DeviceInfoSkeleton()
         } else {
             HUDModuleContainer {
@@ -501,16 +523,30 @@ fun DeviceInfoSkeleton() {
             Box(Modifier.size(80.dp).clip(CutCornerShape(8.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
         }
         Box(Modifier.fillMaxWidth().height(1.dp).background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f)).padding(horizontal = 16.dp))
-        Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            Box(modifier = Modifier.fillMaxWidth().height(12.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
-            Box(modifier = Modifier.fillMaxWidth(0.7f).height(12.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+
+        Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Box(modifier = Modifier.fillMaxWidth(0.6f).height(10.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(modifier = Modifier.fillMaxWidth(0.5f).height(10.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(modifier = Modifier.fillMaxWidth(0.55f).height(10.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+        }
+
+        Box(Modifier.fillMaxWidth().height(1.dp).background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f)).padding(horizontal = 16.dp))
+
+        FlowRow(
+            modifier = Modifier.padding(12.dp),
+            mainAxisSpacing = 8.dp,
+            crossAxisSpacing = 8.dp
+        ) {
+            repeat(4) {
+                Box(modifier = Modifier.height(40.dp).width(120.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            }
         }
     }
 }
 
 @Composable
 fun FeaturesSectionSkeleton() {
-    Column {
+    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
         SectionTitle(titleResId = R.string.section_title_features)
         HUDModuleContainer {
             Column(Modifier.padding(horizontal = 8.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
@@ -545,7 +581,7 @@ fun HUDCircularGauge(value: Float, title: String, color: Color, strokeWidth: Dp 
     val safeValue = if (value.isNaN() || value.isInfinite()) 0f else value
     val animatedValue by animateFloatAsState(
         targetValue = if(startAnimation) safeValue else 0f,
-        animationSpec = tween(1000)
+        animationSpec = tween(1000, 300)
     )
     val textColor = MiuixTheme.colorScheme.onBackground
 
@@ -588,21 +624,7 @@ fun InfoChip(icon: ImageVector, label: String, value: String) {
 }
 
 @Composable
-fun FeaturesSection(features: List<FeatureUI>, navController: NavController) {
-    Column {
-        SectionTitle(titleResId = R.string.section_title_features)
-        HUDModuleContainer {
-            Column(verticalArrangement = Arrangement.spacedBy(4.dp), modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)) {
-                features.forEach { feature ->
-                    FeatureItem(feature = feature) { navController.navigate(feature.category) }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun FeatureItem(feature: FeatureUI, onClick: () -> Unit) {
+fun FeatureItem(feature: FeatureUI, navController: NavController) {
     val context = LocalContext.current
     val summaryWithRoute = remember {
         val route = GetFuncRoute(feature.category, context)
@@ -612,7 +634,7 @@ fun FeatureItem(feature: FeatureUI, onClick: () -> Unit) {
     var isHovered by rememberSaveable { mutableStateOf(false) }
 
     Row(
-        modifier = Modifier.fillMaxWidth().clip(CutCornerShape(4.dp)).clickable { onClick() }.background(if (isHovered) MiuixTheme.colorScheme.primary.copy(alpha = 0.1f) else Color.Transparent).padding(horizontal = 8.dp, vertical = 10.dp),
+        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).clip(CutCornerShape(4.dp)).clickable { navController.navigate(feature.category) }.background(if (isHovered) MiuixTheme.colorScheme.primary.copy(alpha = 0.1f) else Color.Transparent).padding(horizontal = 8.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = ">", color = MiuixTheme.colorScheme.primary, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
