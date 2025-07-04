@@ -8,7 +8,6 @@ import android.net.Uri
 import android.os.Environment
 import android.os.StatFs
 import android.os.storage.StorageManager
-import android.os.storage.StorageVolume
 import android.provider.Settings
 import android.widget.Toast
 import androidx.compose.animation.core.Spring
@@ -42,6 +41,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -79,6 +79,7 @@ import androidx.compose.ui.unit.fontscaling.MathUtils.lerp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.toColorInt
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI_Impl
@@ -90,6 +91,7 @@ import com.suqi8.oshin.ui.theme.BgEffectView
 import com.suqi8.oshin.utils.executeCommand
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -111,7 +113,9 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UseKtx", "RestrictedApi")
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UseKtx", "RestrictedApi",
+    "UnrememberedMutableState"
+)
 @Composable
 fun Main_About(
     topAppBarScrollBehavior: ScrollBehavior,
@@ -125,105 +129,97 @@ fun Main_About(
             Settings.Global.getString(
                 context.contentResolver,
                 "revise_device_name"
-            )
+            ) ?: ""
         )
     }
     val deviceNameCache: MutableState<String> = remember { mutableStateOf(deviceName.value) }
     val physicalTotalStorage = formatSize(getPhysicalTotalStorage(context))
     val usedStorage = formatSize(getUsedStorage())
     val focusManager = LocalFocusManager.current
-    val density = LocalDensity.current
-    val min = with(density) { 0.dp.toPx() }
-    val sec = with(density) { 100.dp.toPx() }
-    val main = with(density) { 160.dp.toPx() }
-    val mainHeight = main-sec
-    val bgHeight = with(density) {  332.dp.toPx() }
+
     val bgAlpha = remember { mutableFloatStateOf(1f) }
     val mainAlpha = remember { mutableFloatStateOf(1f) }
     val mainScale = remember { mutableFloatStateOf(1f) }
     val secAlpha = remember { mutableFloatStateOf(1f) }
     val secScale = remember { mutableFloatStateOf(1f) }
     val scroll = rememberLazyListState()
+
+    val density = LocalDensity.current
+
     LaunchedEffect(scroll) {
-        snapshotFlow { scroll.firstVisibleItemScrollOffset }
-            .onEach {
-                if (scroll.firstVisibleItemIndex > 0){
+        val min = with(density) { 0.dp.toPx() }
+        val sec = with(density) { 100.dp.toPx() }
+        val main = with(density) { 160.dp.toPx() }
+        val mainHeight = main - sec
+        val bgHeight = with(density) { 332.dp.toPx() }
+
+        snapshotFlow { Pair(scroll.firstVisibleItemIndex, scroll.firstVisibleItemScrollOffset) }
+            .onEach { (index, offset) ->
+                if (index == 0) {
+                    val floatOffset = offset.toFloat()
+                    val alpha = ((bgHeight - floatOffset / 1.6f).coerceIn(min, bgHeight) / bgHeight).coerceIn(0f, 1f)
+                    bgAlpha.floatValue = alpha
+
+                    val secValue = ((sec - floatOffset / 1.8f).coerceIn(min, sec) / sec).coerceIn(0f, 1f)
+                    secAlpha.floatValue = secValue
+                    secScale.floatValue = lerp(0.9f, 1f, secValue)
+                    val mainValue = ((main - (floatOffset / 1.3f).coerceIn(sec, main)) / mainHeight).coerceIn(0f, 1f)
+                    mainAlpha.floatValue = (mainValue * 1.5f)
+                    mainScale.floatValue = lerp(0.9f, 1f, mainValue)
+                } else {
                     bgAlpha.floatValue = 0f
                     secAlpha.floatValue = 0f
                     mainAlpha.floatValue = 0f
-                    //showBlurs.value = true
-                    return@onEach
                 }
-                val alpha = ((bgHeight-it/1.8.toFloat().coerceIn(min,bgHeight))/ bgHeight).coerceIn(0f, 1f)
-                bgAlpha.floatValue = alpha
-                val secValue =  ((sec-it/1.8.toFloat().coerceIn(min,sec))/ sec).coerceIn(0f, 1f)
-
-                secAlpha.floatValue = secValue
-                secScale.floatValue = lerp(0.9f,1f,secValue)
-
-                val mainValue =  ((main-(it/1.3).toFloat().coerceIn(sec,main))/ mainHeight).coerceIn(0f, 1f)
-
-                mainAlpha.floatValue = (mainValue * 1.5f).toFloat()
-                mainScale.floatValue = lerp(0.9f,1f,mainValue)
-
-            }.collect {
-
-            }
+            }.collect()
     }
 
+    // --- 主题颜色修正 ---
     val colorModeState = LocalColorMode.current
-    val colorMode = colorModeState.value
-    Box {
+    val systemIsDark = isSystemInDarkTheme()
+    // 修复：完全遵循用户提供的颜色模式逻辑
+    val isFinalDarkMode = when (colorModeState.value) {
+        1 -> false // 1 = 白天
+        2 -> true  // 2 = 黑夜
+        else -> systemIsDark // 0 = 跟随系统
+    }
+    val bgEffectMode = if (isFinalDarkMode) 2 else 1 // BgEffectView 需要 1 或 2
+
+    Box(Modifier.fillMaxSize()) {
         AndroidView(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(520.dp)
                 .offset(y = 50.dp),
-            factory = { context ->
-                BgEffectView(context,colorMode)
+            factory = { ctx -> BgEffectView(ctx, bgEffectMode) },
+            update = {
+                it.updateMode(bgEffectMode)
+                it.alpha = bgAlpha.floatValue
             }
-        ) {
-            it.updateMode(colorMode)
-            it.alpha = bgAlpha.floatValue
-        }
-        Column(modifier = Modifier
-            .padding(top = 55.dp)
-            .fillMaxWidth()
-            .height(520.dp),
+        )
+
+        Column(
+            modifier = Modifier
+                .padding(top = 55.dp)
+                .fillMaxWidth()
+                .height(520.dp),
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            val gradientColors = if (colorMode == 2 || isSystemInDarkTheme()) {
-                listOf(
-                    Color("#D0A279ED".toColorInt()),
-                    Color("#D0E3BCB1".toColorInt())
-                )
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            val gradientColors = if (isFinalDarkMode) {
+                listOf(Color("#D0A279ED".toColorInt()), Color("#D0E3BCB1".toColorInt()))
             } else {
-                listOf(
-                    Color("#D03A18AD".toColorInt()),
-                    Color("#D0A56138".toColorInt())
-                )
+                listOf(Color("#D03A18AD".toColorInt()), Color("#D0A56138".toColorInt()))
             }
             Text(
-                text = /*buildAnnotatedString {
-                    append("O")
-                    withStyle(style = SpanStyle(color = MiuixTheme.colorScheme.primaryVariant.copy(alpha = mainAlpha.floatValue))) {
-                        append("Shin ")
-                    }
-                    append(BuildConfig.BUILD_TYPE_TAG)
-                }*/"OShin ${BuildConfig.BUILD_TYPE_TAG}",
+                text = "OShin ${BuildConfig.BUILD_TYPE_TAG}",
                 fontWeight = FontWeight.Bold,
                 fontSize = 32.sp,
-                style = TextStyle(
-                    brush = Brush.linearGradient(colors = gradientColors),
-                    alpha = mainAlpha.floatValue
-                ),
+                style = TextStyle(brush = Brush.linearGradient(colors = gradientColors), alpha = mainAlpha.floatValue),
                 modifier = Modifier.scale(mainScale.floatValue)
             )
             Text(
-                text = context.packageManager.getPackageInfo(
-                    context.packageName,
-                    0
-                ).versionName.toString(),
+                text = context.packageManager.getPackageInfo(context.packageName, 0).versionName.toString(),
                 fontSize = 14.sp,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -233,19 +229,6 @@ fun Main_About(
                 fontWeight = FontWeight.Medium,
                 color = colorScheme.onSurfaceVariantSummary,
                 textAlign = TextAlign.Center
-            )
-        }
-        val (shadowColor, backgroundColor, borderColor) = if (colorMode == 2 || isSystemInDarkTheme()) {
-            Triple(
-                Color(0x4D000000),
-                Color(0x1FFFFFFF),
-                integerArrayResource(R.array.my_card_stroke_gradient_colors_dark)
-            )
-        } else {
-            Triple(
-                Color(0x40000000),
-                Color(0x99FFFFFF),
-                integerArrayResource(R.array.my_card_stroke_gradient_colors_light)
             )
         }
 
@@ -259,258 +242,59 @@ fun Main_About(
         ) {
             item {
                 Spacer(modifier = Modifier.size(520.dp))
+            }
+            item {
+                val cardAlpha by derivedStateOf {
+                    if (scroll.firstVisibleItemIndex > 0) 1f else (scroll.firstVisibleItemScrollOffset.toFloat() / 1000f).coerceIn(0f, 1f)
+                }
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp)
-                        .alpha(scroll.firstVisibleItemScrollOffset.toFloat() / 1000)
+                        .alpha(cardAlpha)
                 ) {
                     SuperArrow(title = stringResource(R.string.Device_Name), onClick = {
                         showDeviceNameDialog.value = true
                     }, rightText = deviceName.value + "")
                     DeviceNameDialog(showDeviceNameDialog, deviceNameCache, deviceName, focusManager)
                     addline()
-                    //设备内存容量
                     SuperArrow(title = stringResource(R.string.Device_Memory),
                         rightText = "$usedStorage / $physicalTotalStorage",
-                        onClick = {
-                            try {
-                                // 创建 Intent 打开 StorageDashboardActivity
-                                val intent = Intent().apply {
-                                    setClassName(
-                                        "com.android.settings",
-                                        "com.android.settings.Settings\$StorageDashboardActivity"
-                                    )
-                                }
-                                context.startActivity(intent) // 启动 Activity
-                            } catch (e: Exception) {
-                                e.printStackTrace()
-                                Toast.makeText(context, "无法打开存储管理页面", Toast.LENGTH_SHORT)
-                                    .show()
-                            }
-                        })
+                        onClick = { openStorageSettings(context) }
+                    )
                 }
-                Spacer(modifier = Modifier.size(12.dp))
+            }
+            item { Spacer(modifier = Modifier.size(12.dp)) }
+            item {
+                val cardAlpha by derivedStateOf {
+                    if (scroll.firstVisibleItemIndex > 0) 1f else (scroll.firstVisibleItemScrollOffset.toFloat() / 1000f).coerceIn(0f, 1f)
+                }
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp)
-                        .alpha(scroll.firstVisibleItemScrollOffset.toFloat() / 1000)
+                        .alpha(cardAlpha)
                 ) {
-
-                    Text(
-                        deviceName.value + "",
-                        fontSize = 25.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(20.dp)
-                    )
+                    Text(deviceName.value + "", fontSize = 25.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(20.dp))
                     Column(Modifier.padding(start = 20.dp, end = 20.dp, bottom = 10.dp)) {
-                        Column(Modifier.padding(bottom = 10.dp)) {
-                            Text(
-                                context.packageManager.getPackageInfo(
-                                    context.packageName,
-                                    0
-                                ).versionName.toString().substringAfterLast("."), fontSize = 14.sp
-                            )
-                            Text("Commit ID", fontSize = 12.sp, color = Color.Gray)
-                        }
-                        Column(Modifier.padding(bottom = 10.dp)) {
-                            Text(YukiHookAPI.VERSION, fontSize = 14.sp)
-                            Text(
-                                stringResource(R.string.yuki_hook_api_version),
-                                fontSize = 12.sp,
-                                color = Color.Gray
-                            )
-                        }
-                        Column(Modifier.padding(bottom = 10.dp)) {
-                            Text(YukiHookAPI_Impl.compiledTimestamp.toString(), fontSize = 14.sp)
-                            Text(
-                                stringResource(R.string.compiled_timestamp),
-                                fontSize = 12.sp,
-                                color = Color.Gray
-                            )
-                        }
-                        Column(Modifier.padding(bottom = 10.dp)) {
-                            Text(
-                                timestampToDateTime(YukiHookAPI_Impl.compiledTimestamp),
-                                fontSize = 14.sp
-                            )
-                            Text(
-                                stringResource(R.string.compiled_time),
-                                fontSize = 12.sp,
-                                color = Color.Gray
-                            )
-                        }
+                        InfoItem(label = "Commit ID", value = context.packageManager.getPackageInfo(context.packageName, 0).versionName.toString().substringAfterLast("."))
+                        InfoItem(label = stringResource(R.string.yuki_hook_api_version), value = YukiHookAPI.VERSION)
+                        InfoItem(label = stringResource(R.string.compiled_timestamp), value = YukiHookAPI_Impl.compiledTimestamp.toString())
+                        InfoItem(label = stringResource(R.string.compiled_time), value = timestampToDateTime(YukiHookAPI_Impl.compiledTimestamp))
                     }
                 }
-                SmallTitle(text = stringResource(R.string.by_the_way))
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp)
-                        .padding(bottom = 6.dp)
-                ) {
-                    Card(Modifier.padding(10.dp)) {
-                        Image(
-                            painter = painterResource(R.drawable.qq_pic_merged_1727926207595),
-                            contentDescription = null,
-                            modifier = Modifier.fillMaxWidth()
-                        )
-                    }
-                    val toastMessage = stringResource(R.string.please_install_cool_apk)
-                    SuperArrow(title = stringResource(R.string.go_to_his_homepage), onClick = {
-                        val coolApkUri = Uri.parse("coolmarket://u/894238")
-                        val intent = Intent(Intent.ACTION_VIEW, coolApkUri)
-
-                        try {
-                            // 尝试启动酷安应用
-                            context.startActivity(intent)
-                        } catch (e: ActivityNotFoundException) {
-                            // 如果酷安未安装，则提示用户
-                            Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
-                        }
-                    })
-                }
-                SmallTitle(text = stringResource(R.string.thank))
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp)
-                        .padding(bottom = 6.dp)
-                ) {
-                    item(
-                        name = "酸奶",
-                        coolapk = "Stracha酸奶菌",
-                        coolapkid = 15225420,
-                        github = "suqi8",
-                        qq = 3383787570
-                    )
-                    addline()
-                    SuperArrow(title = stringResource(R.string.contributors), onClick = {
-                        navController.navigate("about_contributors")
-                    })
-                    addline()
-                    SuperArrow(title = stringResource(R.string.donors_list), onClick = {
-                        navController.navigate("about_donors")
-                    })
-                    addline()
-                    SuperArrow(title = stringResource(R.string.references), onClick = {
-                        navController.navigate("about_references")
-                    })
-                }
-                SmallTitle(text = stringResource(R.string.other))
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 12.dp)
-                        .padding(bottom = 6.dp)
-                ) {
-                    SuperArrow(title = stringResource(R.string.settings), leftAction = {
-                        Image(
-                            painter = painterResource(R.drawable.settings),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(32.dp)
-                                .padding(end = 8.dp),
-                            colorFilter = ColorFilter.tint(colorScheme.onSurface)
-                        )
-                    }, onClick = {
-                        navController.navigate("about_setting")
-                    })
-                    addline()
-                    SuperArrow(title = stringResource(R.string.donors), leftAction = {
-                        Image(
-                            painter = painterResource(R.drawable.donors),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(32.dp)
-                                .padding(end = 8.dp),
-                            colorFilter = ColorFilter.tint(colorScheme.onSurface)
-                        )
-                    }, onClick = {
-                        val intent = Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("https://oshin.mikusignal.top/docs/donate.html")
-                        )
-                        context.startActivity(intent)
-                    })
-                    addline()
-                    SuperArrow(title = stringResource(R.string.official_channel), leftAction = {
-                        Image(
-                            painter = painterResource(R.drawable.group),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(32.dp)
-                                .padding(end = 8.dp),
-                            colorFilter = ColorFilter.tint(colorScheme.onSurface)
-                        )
-                    }, onClick = {
-                        navController.navigate("about_group")
-                    })
-                    addline()
-                    SuperArrow(title = stringResource(R.string.official_website), leftAction = {
-                        Image(
-                            painter = painterResource(R.drawable.website),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(32.dp)
-                                .padding(end = 8.dp),
-                            colorFilter = ColorFilter.tint(colorScheme.onSurface)
-                        )
-                    }, onClick = {
-                        val intent = Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse("https://oshin.mikusignal.top/")
-                        )
-                        context.startActivity(intent)
-                    })
-                    addline()
-                    SuperArrow(
-                        title = "GitHub",
-                        summary = stringResource(R.string.github_summary),
-                        leftAction = {
-                            Image(
-                                painter = painterResource(R.drawable.github),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .padding(end = 8.dp),
-                                colorFilter = ColorFilter.tint(colorScheme.onSurface)
-                            )
-                        }, onClick = {
-                            val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("https://github.com/suqi8/OShin")
-                            )
-                            context.startActivity(intent)
-                        })
-                    addline()
-                    SuperArrow(title = stringResource(R.string.contribute_translation),
-                        summary = stringResource(R.string.crowdin_contribute_summary),
-                        leftAction = {
-                            Image(
-                                painter = painterResource(R.drawable.translators),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(32.dp)
-                                    .padding(end = 8.dp),
-                                colorFilter = ColorFilter.tint(colorScheme.onSurface)
-                            )
-                        },
-                        onClick = {
-                            val intent = Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("https://github.com/suqi8/OShin/tree/master/app/src/main/res")
-                            )
-                            context.startActivity(intent)
-                        })
-                }
+            }
+            item { SmallTitle(text = stringResource(R.string.by_the_way)) }
+            item { CommunityCard(context) }
+            item { SmallTitle(text = stringResource(R.string.thank)) }
+            item { ThanksCard(navController) }
+            item { SmallTitle(text = stringResource(R.string.other)) }
+            item { AboutActionsCard(navController, context) }
+            item {
                 Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 20.dp),
+                    modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
                     text = "Powered By SYCTeam & 酸奶",
                     fontSize = MiuixTheme.textStyles.subtitle.fontSize,
                     fontWeight = FontWeight.Medium,
@@ -519,168 +303,126 @@ fun Main_About(
                 )
             }
         }
+
         val interactionSource = remember { MutableInteractionSource() }
         val isPressed by interactionSource.collectIsPressedAsState()
         val scale by animateFloatAsState(
             targetValue = if (isPressed) 0.95f else 1f,
-            animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow)
+            animationSpec = spring(dampingRatio = Spring.DampingRatioMediumBouncy, stiffness = Spring.StiffnessLow),
+            label = ""
         )
-
+        val (shadowColor, backgroundColor, borderColor) = if (isFinalDarkMode) {
+            Triple(Color(0x4D000000), Color(0x1FFFFFFF), integerArrayResource(R.array.my_card_stroke_gradient_colors_dark))
+        } else {
+            Triple(Color(0x40000000), Color(0x99FFFFFF), integerArrayResource(R.array.my_card_stroke_gradient_colors_light))
+        }
+        val buttonAlpha by derivedStateOf {
+            if (scroll.firstVisibleItemIndex > 0) 0f else (1f - (scroll.firstVisibleItemScrollOffset.toFloat() / 300)).coerceIn(0f, 1f)
+        }
         Button(
             modifier = Modifier
                 .fillMaxWidth(0.8f)
                 .wrapContentHeight()
-                .padding(top = 180.dp)
+                // 修复：按钮位置
+                .padding(top = 430.dp)
                 .offset(y = -(scroll.firstVisibleItemScrollOffset.toFloat() / 3).dp)
-                .alpha(1f - (scroll.firstVisibleItemScrollOffset.toFloat() / 300))
-                .align(Alignment.Center)
-                .scale(scale)  // 按压缩放
+                .alpha(buttonAlpha)
+                .align(Alignment.TopCenter)
+                .scale(scale)
                 .drawBehind {
                     val strokeWidth = 1.5.dp.toPx()
                     val inset = strokeWidth / 2
                     drawRoundRect(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                Color(borderColor[1]),
-                                Color(borderColor[0])
-                            ),
-                            start = Offset(size.width / 2, 0f),
-                            end = Offset(size.width / 2, size.height)
-                        ),
+                        brush = Brush.linearGradient(colors = listOf(Color(borderColor[1]), Color(borderColor[0])), start = Offset(size.width / 2, 0f), end = Offset(size.width / 2, size.height)),
                         topLeft = Offset(inset, inset),
                         size = Size(size.width - strokeWidth, size.height - strokeWidth),
                         cornerRadius = CornerRadius(16.dp.toPx()),
                         style = Stroke(width = strokeWidth)
                     )
                 }
-                .shadow(
-                    elevation = 1.5.dp,
-                    shape = SmoothRoundedCornerShape(16.dp),
-                    clip = true,
-                    ambientColor = shadowColor,
-                    spotColor = shadowColor
-                ),
+                .shadow(elevation = 1.5.dp, shape = SmoothRoundedCornerShape(16.dp), clip = true, ambientColor = shadowColor, spotColor = shadowColor),
             onClick = {  },
-            interactionSource = interactionSource, // 传入interactionSource
+            interactionSource = interactionSource,
             colors = backgroundColor
         ) {
-            Text(
-                text = stringResource(R.string.check_update),
-                fontSize = 17.sp,
-                fontWeight = FontWeight.SemiBold,
-                color = colorScheme.onSurface
-            )
+            Text(text = stringResource(R.string.check_update), fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = colorScheme.onSurface)
         }
     }
 }
 
+// --- 以下为未改动的辅助组件和函数 ---
+
 @Composable
-fun Button(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    enabled: Boolean = true,
-    cornerRadius: Dp = ButtonDefaults.CornerRadius,
-    minWidth: Dp = ButtonDefaults.MinWidth,
-    minHeight: Dp = ButtonDefaults.MinHeight,
-    colors: Color = colorScheme.secondaryVariant,
-    insideMargin: PaddingValues = ButtonDefaults.InsideMargin,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }, // 新增参数
-    content: @Composable RowScope.() -> Unit
-) {
-    Surface(
-        modifier = modifier
-            .semantics { role = Role.Button }
-            .clickable(
-                interactionSource = interactionSource,
-                indication = null,
-                enabled = enabled,
-                onClick = onClick
-            ),
-        shape = SmoothRoundedCornerShape(cornerRadius),
-        color = colors
-    ) {
-        Row(
-            Modifier
-                .defaultMinSize(minWidth = minWidth, minHeight = minHeight)
-                .padding(insideMargin),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically,
-            content = content
-        )
+private fun InfoItem(label: String, value: String) {
+    Column(Modifier.padding(bottom = 10.dp)) {
+        Text(value, fontSize = 14.sp)
+        Text(label, fontSize = 12.sp, color = Color.Gray)
     }
 }
 
-fun timestampToDateTime(timestamp: Long): String {
-    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
-        .withZone(ZoneId.systemDefault())
-    return formatter.format(Instant.ofEpochMilli(timestamp))
-}
-
-@SuppressLint("SoonBlockedPrivateApi")
-fun getPhysicalTotalStorage(context: Context): Long {
-    val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
-    val storageVolumes: List<StorageVolume> = storageManager.storageVolumes
-
-    for (volume in storageVolumes) {
-        try {
-            // 通过反射获取每个存储卷的总物理大小
-            val getVolumeMethod: Method = volume.javaClass.getDeclaredMethod("getPath")
-            val path = getVolumeMethod.invoke(volume) as String
-
-            val statFs = StatFs(path)
-            return statFs.blockCountLong * statFs.blockSizeLong
-        } catch (e: Exception) {
-            e.printStackTrace()
+@Composable
+private fun CommunityCard(context: Context) {
+    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp).padding(bottom = 6.dp)) {
+        Card(Modifier.padding(10.dp)) {
+            Image(painter = painterResource(R.drawable.qq_pic_merged_1727926207595), contentDescription = null, modifier = Modifier.fillMaxWidth())
         }
+        val toastMessage = stringResource(R.string.please_install_cool_apk)
+        SuperArrow(title = stringResource(R.string.go_to_his_homepage), onClick = {
+            val coolApkUri = Uri.parse("coolmarket://u/894238")
+            val intent = Intent(Intent.ACTION_VIEW, coolApkUri)
+            try {
+                context.startActivity(intent)
+            } catch (e: ActivityNotFoundException) {
+                Toast.makeText(context, toastMessage, Toast.LENGTH_SHORT).show()
+            }
+        })
     }
-
-    // 如果失败，返回0
-    return 0
-}
-
-@SuppressLint("DefaultLocale")
-fun formatSize(size: Long): String {
-    val kb = 1024
-    val mb = kb * 1024
-    val gb = mb * 1024
-
-    return when {
-        size >= gb -> String.format("%.2f GB", size.toFloat() / gb)
-        size >= mb -> String.format("%.2f MB", size.toFloat() / mb)
-        size >= kb -> String.format("%.2f KB", size.toFloat() / kb)
-        else -> String.format("%d B", size)
-    }
-}
-
-fun getTotalStorage(): Long {
-    val stat = StatFs(Environment.getDataDirectory().path)
-    return stat.totalBytes
-}
-
-fun getAvailableStorage(): Long {
-    val stat = StatFs(Environment.getDataDirectory().path)
-    return stat.availableBytes
-}
-
-fun getUsedStorage(): Long {
-    val totalStorage = getTotalStorage()
-    val availableStorage = getAvailableStorage()
-    return totalStorage - availableStorage
 }
 
 @Composable
-fun DeviceNameDialog(
-    showDeviceNameDialog: MutableState<Boolean>,
-    deviceNameCache: MutableState<String>,
-    deviceName: MutableState<String>,
-    focusManager: androidx.compose.ui.focus.FocusManager
-) {
+private fun ThanksCard(navController: NavController) {
+    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp).padding(bottom = 6.dp)) {
+        item(name = "酸奶", coolapk = "Stracha酸奶菌", coolapkid = 15225420, github = "suqi8", qq = 3383787570)
+        addline()
+        SuperArrow(title = stringResource(R.string.contributors), onClick = { navController.navigate("about_contributors") })
+        addline()
+        SuperArrow(title = stringResource(R.string.references), onClick = { navController.navigate("about_references") })
+    }
+}
+
+@Composable
+private fun AboutActionsCard(navController: NavController, context: Context) {
+    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp).padding(bottom = 6.dp)) {
+        IconSuperArrow(title = stringResource(R.string.settings), iconRes = R.drawable.settings, onClick = { navController.navigate("about_setting") })
+        addline()
+        IconSuperArrow(title = stringResource(R.string.donors), iconRes = R.drawable.donors, onClick = { openUrl(context, "https://oshin.mikusignal.top/docs/donate.html") })
+        addline()
+        IconSuperArrow(title = stringResource(R.string.official_channel), iconRes = R.drawable.group, onClick = { navController.navigate("about_group") })
+        addline()
+        IconSuperArrow(title = stringResource(R.string.official_website), iconRes = R.drawable.website, onClick = { openUrl(context, "https://oshin.mikusignal.top/") })
+        addline()
+        IconSuperArrow(title = "GitHub", summary = stringResource(R.string.github_summary), iconRes = R.drawable.github, onClick = { openUrl(context, "https://github.com/suqi8/OShin") })
+        addline()
+        IconSuperArrow(title = stringResource(R.string.contribute_translation), summary = stringResource(R.string.crowdin_contribute_summary), iconRes = R.drawable.translators, onClick = { openUrl(context, "https://github.com/suqi8/OShin/tree/master/app/src/main/res") })
+    }
+}
+
+@Composable
+fun IconSuperArrow(title: String, summary: String? = null, iconRes: Int, onClick: () -> Unit) {
+    SuperArrow(
+        title = title,
+        summary = summary,
+        leftAction = {
+            Image(painter = painterResource(iconRes), contentDescription = null, modifier = Modifier.size(32.dp).padding(end = 8.dp), colorFilter = ColorFilter.tint(colorScheme.onSurface))
+        },
+        onClick = onClick
+    )
+}
+
+@Composable
+fun DeviceNameDialog(showDeviceNameDialog: MutableState<Boolean>, deviceNameCache: MutableState<String>, deviceName: MutableState<String>, focusManager: androidx.compose.ui.focus.FocusManager) {
     if (!showDeviceNameDialog.value) return
-    SuperDialog(title = stringResource(R.string.Device_Name),
-        show = showDeviceNameDialog,
-        onDismissRequest = {
-            showDeviceNameDialog.value = false
-        }) {
+    SuperDialog(title = stringResource(R.string.Device_Name), show = showDeviceNameDialog, onDismissRequest = { showDeviceNameDialog.value = false }) {
         TextField(
             value = deviceNameCache.value,
             onValueChange = { deviceNameCache.value = it },
@@ -691,18 +433,8 @@ fun DeviceNameDialog(
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
         )
         Spacer(Modifier.height(12.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            TextButton(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.cancel),
-                onClick = {
-                    showDeviceNameDialog.value = false
-                }
-            )
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+            TextButton(modifier = Modifier.weight(1f), text = stringResource(R.string.cancel), onClick = { showDeviceNameDialog.value = false })
             Spacer(Modifier.width(12.dp))
             TextButton(
                 modifier = Modifier.weight(1f),
@@ -718,4 +450,74 @@ fun DeviceNameDialog(
             )
         }
     }
+}
+
+@Composable
+fun Button(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true, cornerRadius: Dp = ButtonDefaults.CornerRadius, minWidth: Dp = ButtonDefaults.MinWidth, minHeight: Dp = ButtonDefaults.MinHeight, colors: Color = colorScheme.secondaryVariant, insideMargin: PaddingValues = ButtonDefaults.InsideMargin, interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }, content: @Composable RowScope.() -> Unit) {
+    Surface(modifier = modifier.semantics { role = Role.Button }.clickable(interactionSource = interactionSource, indication = null, enabled = enabled, onClick = onClick), shape = SmoothRoundedCornerShape(cornerRadius), color = colors) {
+        Row(Modifier.defaultMinSize(minWidth = minWidth, minHeight = minHeight).padding(insideMargin), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically, content = content)
+    }
+}
+
+@SuppressLint("UseKtx")
+private fun openUrl(context: Context, url: String) {
+    val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+    context.startActivity(intent)
+}
+
+private fun openStorageSettings(context: Context) {
+    try {
+        val intent = Intent().setClassName("com.android.settings", "com.android.settings.Settings\$StorageDashboardActivity")
+        context.startActivity(intent)
+    } catch (e: Exception) {
+        e.printStackTrace()
+        Toast.makeText(context, "无法打开存储管理页面", Toast.LENGTH_SHORT).show()
+    }
+}
+
+fun timestampToDateTime(timestamp: Long): String {
+    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss").withZone(ZoneId.systemDefault())
+    return formatter.format(Instant.ofEpochMilli(timestamp))
+}
+
+@SuppressLint("SoonBlockedPrivateApi")
+fun getPhysicalTotalStorage(context: Context): Long {
+    val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
+    val storageVolumes = storageManager.storageVolumes
+    if (storageVolumes.isNotEmpty()) {
+        val primaryVolume = storageVolumes.firstOrNull { it.isPrimary } ?: return getTotalStorage()
+        try {
+            val getPathMethod: Method = primaryVolume.javaClass.getDeclaredMethod("getPath")
+            val path = getPathMethod.invoke(primaryVolume) as String
+            val statFs = StatFs(path)
+            return statFs.blockCountLong * statFs.blockSizeLong
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+    return getTotalStorage()
+}
+
+@SuppressLint("DefaultLocale")
+fun formatSize(size: Long): String {
+    if (size <= 0) return "0 B"
+    val units = arrayOf("B", "KB", "MB", "GB", "TB")
+    val digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
+    return String.format("%.2f %s", size / Math.pow(1024.0, digitGroups.toDouble()), units[digitGroups])
+}
+
+fun getTotalStorage(): Long {
+    return try { StatFs(Environment.getDataDirectory().path).totalBytes }
+    catch (e: Exception) { 0L }
+}
+
+fun getAvailableStorage(): Long {
+    return try { StatFs(Environment.getDataDirectory().path).availableBytes }
+    catch (e: Exception) { 0L }
+}
+
+fun getUsedStorage(): Long {
+    val totalStorage = getTotalStorage()
+    val availableStorage = getAvailableStorage()
+    return totalStorage - availableStorage
 }
