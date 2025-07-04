@@ -53,6 +53,7 @@
     public static ** valueOf(java.lang.String);
 }
 -dontwarn com.umeng.ccg.ActionInfo
+-dontwarn java.lang.reflect.AnnotatedType
 -classobfuscationdictionary proguard-dict.txt
 -obfuscationdictionary proguard-dict.txt
 -packageobfuscationdictionary proguard-dict.txt
