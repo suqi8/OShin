@@ -77,7 +77,6 @@ import androidx.navigation.compose.rememberNavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.ui.activity.about.Main_About
 import com.suqi8.oshin.ui.activity.about.about_contributors
-import com.suqi8.oshin.ui.activity.about.about_donors
 import com.suqi8.oshin.ui.activity.about.about_group
 import com.suqi8.oshin.ui.activity.about.about_references
 import com.suqi8.oshin.ui.activity.about.about_setting
@@ -571,7 +570,6 @@ fun Main0(context: Context) {
             composable("about_group") { about_group(navController) }
             composable("about_references") { about_references(navController) }
             composable("about_contributors") { about_contributors(navController) }
-            composable("about_donors") { about_donors(navController) }
             composable("settings") { settings(navController) }
             composable("settings\\feature") { feature(navController) }
             composable("battery") { battery(navController) }
