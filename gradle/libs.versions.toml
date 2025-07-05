@@ -34,7 +34,7 @@ paletteKtx = "1.0.0"
 roomRuntime = "2.7.2"
 toolbarComposeVersion = "2.3.5"
 uyumao = "1.1.4"
-xxpermissionsVersion = "20.0"
+xxpermissionsVersion = "23.0"
 [libraries]
 accompanist-flowlayout = { module = "com.google.accompanist:accompanist-flowlayout", version.ref = "accompanistFlowlayoutVersion" }
 androidx-activity-compose-v190 = { module = "androidx.activity:activity-compose", version.ref = "activityComposeVersion" }
