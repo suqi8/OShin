@@ -127,7 +127,7 @@ jobs:
             🚀 **OShin 新版本构建完成！**
             
             **提交信息:**
-            \`\`\`
+            ```
             ${{ github.event.head_commit.message }}
-            \`\`\`
+            ```
             🔗 **查看本次提交:** [${{ github.sha }}](${{ github.event.head_commit.url }})
