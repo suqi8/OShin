@@ -39,14 +39,12 @@ jobs:
 
     steps:
       # 第 1 步：检出代码
-      # `actions/checkout` 用于从仓库中拉取代码。
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0 # 获取所有历史提交记录，以便 `git rev-list` 可以正确计算版本号。
 
       # 第 2 步：设置 JDK 环境
-      # `actions/setup-java` 用于安装指定版本的 Java。
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -55,47 +53,51 @@ jobs:
           cache: gradle             # 启用 Gradle 依赖项的缓存，以加快后续构建速度。
 
       # 第 3 步：设置签名密钥库
-      # 从 GitHub Secrets 中解码 Base64 编码的密钥库文件。
       - name: Setup Keystore
         run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > keystore.jks
 
       # 第 4 步：构建并签名应用
-      # 执行 Gradle 构建任务来生成已签名的 Release APK。
       - name: Build with Gradle
         run: |
           chmod +x gradlew # 授予 gradlew 脚本执行权限。
           ./gradlew assembleRelease
         env:
-          # 将签名所需的信息作为环境变量传递给 Gradle。
-          # 这些信息应在 GitHub 仓库的 Settings > Secrets and variables > Actions 中配置。
           KEYSTORE_PATH: "../keystore.jks"
           KEYSTORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       # 第 5 步：准备构建产物信息
-      # 查找构建生成的 APK 和元数据文件，计算其 SHA256 哈希值，并生成一个格式化的构建摘要。
       - name: Prepare Artifacts and Generate Summary
-        id: artifacts # 为此步骤设置一个 ID，以便后续步骤可以引用其输出。
+        id: artifacts
         run: |
-          # 查找文件并将其路径导出到 GITHUB_ENV，供后续步骤使用。
           apk_dir="app/build/outputs/apk/release"
-          echo "APK_FILE_ARMEABI=$(find $apk_dir -name 'OShin_armeabi-v7a_v*.apk')" >> $GITHUB_ENV
-          echo "APK_FILE_ARM64=$(find $apk_dir -name 'OShin_arm64-v8a_v*.apk')" >> $GITHUB_ENV
-          echo "APK_FILE_ARMALL=$(find $apk_dir -name 'OShin_all_v*.apk')" >> $GITHUB_ENV
+          apk_file_armeabi=$(find "$apk_dir" -name 'OShin_armeabi-v7a_v*.apk')
+          apk_file_arm64=$(find "$apk_dir" -name 'OShin_arm64-v8a_v*.apk')
+          apk_file_armall=$(find "$apk_dir" -name 'OShin_all_v*.apk')
           
-          # 计算 SHA256 哈希值
-          sha_armeabi=$(sha256sum $APK_FILE_ARMEABI | awk '{print $1}')
-          sha_arm64=$(sha256sum $APK_FILE_ARM64 | awk '{print $1}')
-          sha_armall=$(sha256sum $APK_FILE_ARMALL | awk '{print $1}')
+          # 添加一个检查，如果找不到文件就让工作流失败，而不是静默地继续。
+          if [ -z "$apk_file_armall" ]; then
+            echo "::error::Universal APK not found! Build may have failed to produce artifacts."
+            exit 1
+          fi
           
-          # 将哈希值设置为此步骤的输出，以便在其他步骤中引用。
+          # 将文件路径导出到 GITHUB_ENV，供后续步骤（如 Telegram 通知）使用。
+          echo "APK_FILE_ARMEABI=$apk_file_armeabi" >> $GITHUB_ENV
+          echo "APK_FILE_ARM64=$apk_file_arm64" >> $GITHUB_ENV
+          echo "APK_FILE_ARMALL=$apk_file_armall" >> $GITHUB_ENV
+          
+          # 使用可靠的本地变量计算 SHA256 哈希值。
+          sha_armeabi=$(sha256sum "$apk_file_armeabi" | awk '{print $1}')
+          sha_arm64=$(sha256sum "$apk_file_arm64" | awk '{print $1}')
+          sha_armall=$(sha256sum "$apk_file_armall" | awk '{print $1}')
+          
+          # 将哈希值设置为此步骤的输出（GITHUB_OUTPUT），以便在其他步骤中通过 steps.artifacts.outputs.sha_... 引用。
           echo "sha_armeabi=$sha_armeabi" >> $GITHUB_OUTPUT
           echo "sha_arm64=$sha_arm64" >> $GITHUB_OUTPUT
           echo "sha_armall=$sha_armall" >> $GITHUB_OUTPUT
           
-          # 使用 Markdown 格式化构建摘要，并写入 GITHUB_STEP_SUMMARY。
-          # 此摘要将显示在 GitHub Actions 的作业摘要页面。
+          # 生成将在 GitHub Actions 摘要页面显示的 Markdown 表格。
           {
             echo "### OShin 构建成功 :rocket:"
             echo ""
@@ -107,7 +109,6 @@ jobs:
           } >> $GITHUB_STEP_SUMMARY
 
       # 第 6 步：上传构建产物
-      # 将所有生成的 APK 和元数据文件打包上传，以便在工作流结束后可以下载。
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
@@ -121,7 +122,6 @@ jobs:
           to: ${{ secrets.TELEGRAM_TO }} # Telegram 接收者的 Chat ID，建议配置为 Secret。
           token: ${{ secrets.TELEGRAM_TOKEN }} # Telegram Bot 的 Token，必须配置为 Secret。
           document: ${{ env.APK_FILE_ARMALL }} # 将包含所有架构的 APK 作为文件发送。
-          # 格式化的消息内容，支持 Markdown。
           message: |
             🚀 **OShin 新版本构建完成！**
             
