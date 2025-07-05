@@ -76,28 +76,23 @@ jobs:
           apk_file_arm64=$(find "$apk_dir" -name 'OShin_arm64-v8a_v*.apk')
           apk_file_armall=$(find "$apk_dir" -name 'OShin_all_v*.apk')
           
-          # 添加一个检查，如果找不到文件就让工作流失败，而不是静默地继续。
           if [ -z "$apk_file_armall" ]; then
             echo "::error::Universal APK not found! Build may have failed to produce artifacts."
             exit 1
           fi
           
-          # 将文件路径导出到 GITHUB_ENV，供后续步骤（如 Telegram 通知）使用。
           echo "APK_FILE_ARMEABI=$apk_file_armeabi" >> $GITHUB_ENV
           echo "APK_FILE_ARM64=$apk_file_arm64" >> $GITHUB_ENV
           echo "APK_FILE_ARMALL=$apk_file_armall" >> $GITHUB_ENV
           
-          # 使用可靠的本地变量计算 SHA256 哈希值。
           sha_armeabi=$(sha256sum "$apk_file_armeabi" | awk '{print $1}')
           sha_arm64=$(sha256sum "$apk_file_arm64" | awk '{print $1}')
           sha_armall=$(sha256sum "$apk_file_armall" | awk '{print $1}')
           
-          # 将哈希值设置为此步骤的输出（GITHUB_OUTPUT），以便在其他步骤中通过 steps.artifacts.outputs.sha_... 引用。
           echo "sha_armeabi=$sha_armeabi" >> $GITHUB_OUTPUT
           echo "sha_arm64=$sha_arm64" >> $GITHUB_OUTPUT
           echo "sha_armall=$sha_armall" >> $GITHUB_OUTPUT
           
-          # 生成将在 GitHub Actions 摘要页面显示的 Markdown 表格。
           {
             echo "### OShin 构建成功 :rocket:"
             echo ""
@@ -112,27 +107,35 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: OShin-Build-${{ github.sha }} # 为产物包指定一个包含提交ID的唯一名称。
-          path: app/build/outputs/apk/release/ # 上传 release 目录下的所有文件。
+          name: OShin-Build-${{ github.sha }}
+          path: app/build/outputs/apk/release/
 
       # 第 7 步：发送通知到 Telegram
       - name: Send Notification to Telegram
-        uses: appleboy/telegram-action@v0.1.1
-        with:
-          to: ${{ secrets.TELEGRAM_TO }} # Telegram 接收者的 Chat ID，建议配置为 Secret。
-          token: ${{ secrets.TELEGRAM_TOKEN }} # Telegram Bot 的 Token，必须配置为 Secret。
-          document: ${{ env.APK_FILE_ARMALL }} # 将包含所有架构的 APK 作为文件发送。
-          message: |
+        env:
+          # 定义要发送的消息内容
+          TELEGRAM_MESSAGE: |
             🚀 **OShin 新版本构建完成！**
             
             **提交信息:**
-            \`\`\`
+            ```
             ${{ github.event.head_commit.message }}
-            \`\`\`
-            
-            **构建详情:**
-            - **armeabi-v7a:** `${{ steps.artifacts.outputs.sha_armeabi }}`
-            - **arm64-v8a:** `${{ steps.artifacts.outputs.sha_arm64 }}`
-            - **all:** `${{ steps.artifacts.outputs.sha_armall }}`
-            
+            ```
             🔗 **查看本次提交:** [${{ github.sha }}](${{ github.event.head_commit.url }})
+        run: |
+          # 使用 Python 对消息内容进行转义和编码，以适配 Telegram API 的 sendMediaGroup URL 参数格式
+          ESCAPED_MESSAGE=$(python3 -c '
+          import json, os, re, urllib.parse;
+          msg = os.environ["TELEGRAM_MESSAGE"];
+          # 为 MarkdownV2 转义所有必要的特殊字符
+          escape_chars = r"_[]()~`>#+-=|{}.!";
+          for char in escape_chars:
+              msg = msg.replace(char, "\\" + char);
+          # 使用 json.dumps 处理引号等，然后进行 URL 编码
+          print(urllib.parse.quote(json.dumps(msg)));
+          ')
+          
+          # 使用 curl 调用 sendMediaGroup 方法发送带文件的消息
+          # 这是用户原始工作流中验证过可以成功发送的方法
+          curl "https://api.telegram.org/bot${{ secrets.TELEGRAM_TOKEN }}/sendMediaGroup?chat_id=${{ secrets.TELEGRAM_TO }}&media=%5B%7B%22type%22%3A%22document%22%2C%22media%22%3A%22attach%3A%2F%2Fapkfile%22%2C%22parse_mode%22%3A%22MarkdownV2%22%2C%22caption%22%3A$ESCAPED_MESSAGE%7D%5D" \
+               -F apkfile=@"${{ env.APK_FILE_ARMALL }}"
