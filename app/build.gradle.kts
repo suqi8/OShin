@@ -1,191 +1,229 @@
-
-import com.android.build.gradle.internal.dsl.SigningConfig
-import java.io.ByteArrayOutputStream
-
+// 声明项目构建所需的 Gradle 插件。
 plugins {
-    id("com.android.application") version "8.11.0"
-    id("org.jetbrains.kotlin.android") version "2.1.20"
-    id("com.google.devtools.ksp") version "2.1.20-1.0.32"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.1.20"
+    // 通过 Gradle 版本目录（Version Catalog）的别名方式引用插件，以实现集中管理。
+    alias(libs.plugins.android.application) // Android 应用程序插件，用于构建 .apk 文件。
+    alias(libs.plugins.kotlin.android)      // 提供 Kotlin 语言在 Android 平台上的支持。
+    alias(libs.plugins.ksp)                 // Kotlin 符号处理（KSP）插件，用于执行编译时代码生成。
+    alias(libs.plugins.kotlin.compose)      // Jetpack Compose 编译器插件，用于处理 @Composable 注解。
 }
 
-abstract class GitHashService @Inject constructor(private val execOps: ExecOperations) {
-    fun getCommitHash(): String {
-        val stdout = ByteArrayOutputStream()
-        execOps.exec {
-            commandLine("git", "rev-parse", "--short", "HEAD")
-            standardOutput = stdout
-        }
-        return stdout.toString().trim()
-    }
-    fun commitCount(): String {
-        val stdout = ByteArrayOutputStream()
-        execOps.exec {
-            commandLine("git", "rev-list", "--count", "HEAD")
-            standardOutput = stdout
-        }
-        return stdout.toString().trim()
-    }
-}
+/**
+ * Git 版本信息提供者。
+ *
+ * 通过 Gradle 的 Provider API 实现构建信息的延迟化配置（Lazy Configuration）。
+ * `git` 命令仅在配置属性（如 `versionCode`）被实际需要时执行，
+ * 以此优化 Gradle 在配置阶段（Configuration Phase）的性能。
+ */
+// 获取当前 Git 提交的短哈希值。
+val gitCommitHashProvider = providers.exec {
+    commandLine("git", "rev-parse", "--short", "HEAD")
+}.standardOutput.asText.map { it.trim() }
 
+// 获取从项目起始到当前 HEAD 的总提交次数。
+val gitCommitCountProvider = providers.exec {
+    commandLine("git", "rev-list", "--count", "HEAD")
+}.standardOutput.asText.map { it.trim() }
+
+// Android 项目的核心配置。
 android {
-    namespace = "com.suqi8.oshin"
-    compileSdk = 36
+    namespace = "com.suqi8.oshin" // 定义应用的包名，用于生成 R 类和 Manifest。
+    compileSdk = 36               // 指定用于编译应用的 Android API 版本。
 
-    lint {
-        baseline = file("lint-baseline.xml")
-    }
+    // 默认配置，应用于所有的构建变体（Build Variant）。
+    defaultConfig {
+        applicationId = "com.suqi8.oshin" // 应用程序在设备和应用商店上的唯一标识符。
+        minSdk = 35                       // 应用可以运行的最低 Android API 级别。
+        targetSdk = 36                    // 应用设计和测试所基于的目标 Android API 级别。
 
-    splits {
-        abi {
-            isEnable = true
-            reset()
-            include("arm64-v8a", "armeabi-v7a")
-            isUniversalApk = true
+        // 动态设置版本信息。
+        // .getOrElse() 提供了一个回退值，确保在非 Git 环境下构建的健壮性。
+        versionCode = gitCommitCountProvider.map { it.toInt() }.getOrElse(1)
+        versionName = gitCommitCountProvider.zip(gitCommitHashProvider) { count, hash ->
+            "15.5.$count.$hash" // 版本名格式：主版本.次版本.提交总数.提交哈希
+        }.getOrElse("15.5.0.local") // 在 Git 不可用时使用的默认版本名。
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" // 指定仪器测试的运行器。
+        vectorDrawables {
+            useSupportLibrary = true // 为 API 21 以下的设备启用对矢量图的支持。
         }
     }
 
+    // 配置 APK 输出文件名。
+    // 注意：此处使用已废弃的 `applicationVariants.all` API。
+    // 这是为了兼容当前构建环境，以确保 APK 文件名自定义功能的稳定性。
+    // 未来的项目应迁移至 `androidComponents` API。
     applicationVariants.all {
         val variant = this
-        variant.outputs
-            .map { it as com.android.build.gradle.internal.api.BaseVariantOutputImpl }
-            .forEach { output ->
-                val name = "OShin"
-                val abi = output.getFilter("ABI") ?: "all"
-                val version = variant.versionName
-                val versionCode = variant.versionCode
-                val outputFileName = "${name}_${abi}_${"v"}${version}(${versionCode}).apk"
-                output.outputFileName = outputFileName
-            }
-    }
-
-    val gitHashService = project.objects.newInstance(GitHashService::class.java)
-    val number = gitHashService.commitCount().toInt()
-    defaultConfig {
-        applicationId = "com.suqi8.oshin"
-        minSdk = 35
-        targetSdk = 36
-        versionName = "15.5"+"."+number+"."+gitHashService.getCommitHash()
-        versionCode = number
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables {
-            useSupportLibrary = true
+        variant.outputs.all {
+            val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
+            val name = "OShin"
+            // 从输出过滤器中获取 ABI（Application Binary Interface）名称。
+            val abi = outputImpl.filters.find { it.filterType == "ABI" }?.identifier ?: "all"
+            val version = variant.versionName
+            val versionCode = variant.versionCode
+            val outputFileName = "${name}_${abi}_v${version}(${versionCode}).apk"
+            outputImpl.outputFileName = outputFileName
         }
     }
-    val keystoreFile = System.getenv("KEYSTORE_PATH")
+
+    // 配置应用的签名信息。
     signingConfigs {
-        if (keystoreFile != null) {
+        val keystoreFile = System.getenv("KEYSTORE_PATH")
+        val isCiBuild = keystoreFile != null
+
+        // 若检测到 CI/CD 环境变量，则创建用于持续集成的签名配置。
+        if (isCiBuild) {
             create("ci") {
                 storeFile = file(keystoreFile)
                 storePassword = System.getenv("KEYSTORE_PASSWORD")
                 keyAlias = System.getenv("KEY_ALIAS")
                 keyPassword = System.getenv("KEY_PASSWORD")
-                enableV4Signing = true
-            }
-        } else {
-            create("release") {
-                enableV4Signing = true
+                enableV4Signing = true // 启用 APK 签名方案 v4，以支持增量安装等优化。
             }
         }
+        // 创建一个通用的 "release" 签名配置，用于本地构建或在 CI/CD 环境之外的场景。
+        create("release") {
+            enableV4Signing = true
+        }
     }
+
+    // 配置不同的构建类型，如 "release" 和 "debug"。
     buildTypes {
         release {
-            signingConfig = signingConfigs.getByName(if (keystoreFile != null) "ci" else "release")
-            buildConfigField("String", "BUILD_TYPE_TAG", "\"${if ((signingConfig as SigningConfig).name == "ci") "CI Build" else "Release"}\"")
-            isMinifyEnabled = true
-            isShrinkResources = true
-            isDebuggable = false
-            isJniDebuggable = false
-            isCrunchPngs = true
-            multiDexEnabled = true
+            val keystoreFile = System.getenv("KEYSTORE_PATH")
+            val isCiBuild = keystoreFile != null
+            // 根据是否存在 CI 环境变量来决定使用哪个签名配置。
+            signingConfig = signingConfigs.getByName(if (isCiBuild) "ci" else "release")
+
+            // 通过 `buildConfigField` 在 `BuildConfig.java` 中生成一个常量。
+            // 这允许在运行时代码中识别当前的构建类型。
+            val buildTag = if (isCiBuild) "CI Build" else "Release"
+            buildConfigField("String", "BUILD_TYPE_TAG", "\"$buildTag\"")
+
+            isMinifyEnabled = true      // 启用 R8/ProGuard 进行代码压缩、优化和混淆。
+            isShrinkResources = true    // 启用资源缩减，移除未被引用的资源文件。
+            isDebuggable = false        // 发布版本禁止调试。
+            isJniDebuggable = false     // 禁止对 JNI (C/C++) 代码进行调试。
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
             buildConfigField("String", "BUILD_TYPE_TAG", "\"Debug\"")
         }
     }
+
+    // Java/Kotlin 编译选项。
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_21 // 设置 Java 源代码的语言级别。
+        targetCompatibility = JavaVersion.VERSION_21 // 设置生成的 Java 字节码的目标 JVM 版本。
     }
-    kotlinOptions {
-        jvmTarget = "21"
-        freeCompilerArgs = listOf(
-            "-Xno-param-assertions",
-            "-Xno-call-assertions",
-            "-Xno-receiver-assertions"
-        )
+
+    // 配置 Kotlin 编译器选项。
+    // `kotlinOptions` 已被废弃，推荐使用 `tasks.withType<...>` 的方式进行精细化配置。
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21) // 设置 Kotlin 编译输出的 JVM 目标版本。
+            // 添加额外的 Kotlin 编译器参数以进行底层优化。
+            freeCompilerArgs.addAll(
+                "-Xno-param-assertions",
+                "-Xno-call-assertions",
+                "-Xno-receiver-assertions"
+            )
+        }
     }
+
+    // 启用或禁用特定的构建功能。
     buildFeatures {
-        buildConfig = true
-        viewBinding = true
-        compose = true
+        buildConfig = true // 启用 `BuildConfig.java` 的自动生成。
+        viewBinding = true // 启用视图绑定功能。
+        compose = true     // 启用 Jetpack Compose 支持。
     }
-    lint { checkReleaseBuilds = false }
-    ndkVersion = "29.0.13113456 rc1"
-    buildToolsVersion = "36.0.0"
+
+    // Jetpack Compose 相关的编译器配置。
+    // 注意：`composeOptions` API 标记为 @Incubating，表示其在未来版本中可能发生变更。
     composeOptions {
+        // 指定与项目 Kotlin 版本兼容的 Compose 编译器扩展版本。
         kotlinCompilerExtensionVersion = "1.5.14"
     }
+
+    // APK 打包相关的配置。
     packaging {
         resources {
+            // 从最终的 APK 中排除可能引起冲突的元数据文件。
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
-        jniLibs {
-            useLegacyPackaging = false
-        }
     }
+
+    // Android 资源处理相关的配置。
     androidResources {
+        // 定义一个模式，用于在打包 `assets` 目录时忽略不匹配的文件。
         ignoreAssetsPattern = "!*.ttf:!*.json:!*.bin"
+        // 指定不进行压缩的文件扩展名列表。
         noCompress += listOf("zip", "txt", "raw", "png")
     }
-    // TODO Please visit https://highcapable.github.io/YukiHookAPI/en/api/special-features/host-inject
-    // TODO 请参考 https://highcapable.github.io/YukiHookAPI/zh-cn/api/special-features/host-inject
-    // androidResources.additionalParameters += listOf("--allow-reserved-package-id", "--package-id", "0x64")
+
+    // Lint 静态代码分析工具的配置。
+    lint {
+        baseline = file("lint-baseline.xml") // 设置一个基线文件，用于忽略已存在的 Lint 问题。
+    }
 }
 
+// 依赖项声明块
 dependencies {
-    implementation(libs.accompanist.flowlayout)
-    implementation(libs.androidx.material.icons.extended)
-    implementation(libs.dexkit)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
-    implementation(libs.toolbar.compose)
-    implementation(libs.xxpermissions)
-    implementation(libs.common)
-    implementation(libs.umsdk.asms)
-    implementation(libs.umsdk.uyumao)
-    implementation(libs.okhttp)
-    implementation(libs.lottie.compose)
-    implementation(libs.ezxhelper)
-    runtimeOnly(libs.androidx.room.runtime)
-    implementation(libs.androidx.palette.ktx)
-    annotationProcessor(libs.androidx.room.compiler)
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.haze)
-    implementation(libs.miuix)
-    implementation(libs.gson)
-    implementation(libs.compose.shimmer)
-    implementation(libs.expandablebottombar)
-    implementation(libs.composeneumorphism)
-    implementation(libs.androidx.navigation.compose)
-    implementation(libs.androidx.lifecycle.runtime.ktx.v282)
-    implementation(libs.androidx.activity.compose.v190)
-    implementation(platform(libs.androidx.compose.bom.v20240600))
-    implementation(libs.ui)
-    implementation(libs.ui.graphics)
-    implementation(libs.ui.tooling.preview)
-    implementation(libs.androidx.navigation.runtime.ktx)
-    androidTestImplementation(platform(libs.androidx.compose.bom))
-    androidTestImplementation(libs.ui.test.junit4)
-    compileOnly(libs.api)
-    implementation(libs.yukihookapi.api)
-    ksp(libs.ksp.xposed)
-    implementation(libs.drawabletoolbox)
+    // ------------------- AndroidX & Jetpack 核心库 -------------------
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.navigation.runtime.ktx)
+    implementation(libs.androidx.palette.ktx) // 用于从图片中提取颜色主题。
+    implementation(libs.androidx.activity.compose)
+
+    // ------------------- Jetpack Compose UI -------------------
+    implementation(platform(libs.androidx.compose.bom)) // Compose BOM (Bill of Materials) 用于统一管理 Compose 相关库的版本。
+    implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.ui.graphics)
+    implementation(libs.androidx.compose.ui.tooling.preview)
+    implementation(libs.androidx.compose.material.icons.extended)
+    implementation(libs.androidx.navigation.compose)
+
+    // ------------------- Compose 生态第三方库 -------------------
+    implementation(libs.accompanist.flowlayout)
+    implementation(libs.airbnb.lottie.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.haze)
+    implementation(libs.shimmer.compose)
+    implementation(libs.toolbar.compose)
+    implementation(libs.expandablebottombar)
+    implementation(libs.neumorphism.compose)
+
+    // ------------------- 底层与工具库 -------------------
+    implementation(libs.luckypray.dexkit)
+    implementation(libs.xxpermissions)
+    implementation(libs.squareup.okhttp)
+    implementation(libs.coil.network.okhttp)
+    implementation(libs.gson)
+    implementation(libs.drawabletoolbox)
+    implementation(libs.miuix) // 小米 UI 库
+
+    // ------------------- Hook API 相关 -------------------
+    implementation(libs.ezxhelper)
+    compileOnly(libs.xposed.api)
+    implementation(libs.yukihook.api)
+    ksp(libs.yukihook.ksp.xposed) // 用于处理 Xposed 相关注解的 KSP 处理器。
+
+    // ------------------- Room 数据库 -------------------
+    runtimeOnly(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler) // Room 的 KSP 注解处理器。
+
+    // ------------------- Umeng (友盟) SDK -------------------
+    implementation(libs.umeng.common)
+    implementation(libs.umeng.asms)
+    implementation(libs.umeng.uyumao)
+
+    // ------------------- 测试相关库 -------------------
     testImplementation(libs.junit)
+    androidTestImplementation(libs.androidx.test.junit)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
 }

@@ -2,7 +2,6 @@
 <resources>
     <string name="app_name">OShin</string>
     <string name="xposed_desc">System support module for ColorOS, RealmeUI, and OxygenOS. Free software – redistribution, sharing, or selling is prohibited! Contact: github@suqi8</string>
-    <string name="about_module">This module is made by YukiHookAPI. \nLearn more https://github.com/HighCapable/YuKiHookAPI</string>
     <string name="module_version">モジュールのバージョン: %1$s</string>
     <string name="module_not_activated">モジュールが非アクティブです</string>
     <string name="module_is_activated">モジュールはアクティブです</string>
