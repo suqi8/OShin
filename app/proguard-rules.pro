@@ -54,6 +54,9 @@
 }
 -dontwarn com.umeng.ccg.ActionInfo
 -dontwarn java.lang.reflect.AnnotatedType
+-dontwarn com.umeng.**
+-dontwarn org.repackage.**
+
 -classobfuscationdictionary proguard-dict.txt
 -obfuscationdictionary proguard-dict.txt
 -packageobfuscationdictionary proguard-dict.txt
