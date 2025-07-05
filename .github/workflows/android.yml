@@ -68,7 +68,7 @@ jobs:
         env:
           # 将签名所需的信息作为环境变量传递给 Gradle。
           # 这些信息应在 GitHub 仓库的 Settings > Secrets and variables > Actions 中配置。
-          KEYSTORE_PATH: "./keystore.jks" # 密钥库文件在本机的位置。
+          KEYSTORE_PATH: "../keystore.jks"
           KEYSTORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
           KEY_ALIAS: ${{ secrets.ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
@@ -108,7 +108,6 @@ jobs:
 
       # 第 6 步：上传构建产物
       # 将所有生成的 APK 和元数据文件打包上传，以便在工作流结束后可以下载。
-      # 优化点：将多个上传步骤合并为一个。
       - name: Upload Build Artifacts
         uses: actions/upload-artifact@v4
         with:
