@@ -123,6 +123,7 @@ jobs:
           token: ${{ secrets.TELEGRAM_TOKEN }} # Telegram Bot 的 Token
           document: ${{ env.APK_FILE_ARMALL }} # 将包含所有架构的 APK 作为文件发送。
           debug: true
+          format: markdown
           message: |
             🚀 **OShin 新版本构建完成！**
             
