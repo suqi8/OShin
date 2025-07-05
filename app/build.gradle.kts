@@ -48,10 +48,20 @@ android {
         }
     }
 
+    // --- ABI 拆分配置 ---
+    // 此配置块用于指示 Gradle 为不同的 CPU 架构生成独立的 APK。
+    splits {
+        abi {
+            isEnable = true // 启用 ABI 拆分。
+            reset()         // 清除默认的 ABI 列表。
+            include("arm64-v8a", "armeabi-v7a") // 指定要为其生成独立 APK 的架构。
+            isUniversalApk = true // 同时生成一个包含所有架构的通用 APK。
+        }
+    }
+
     // 配置 APK 输出文件名。
     // 注意：此处使用已废弃的 `applicationVariants.all` API。
     // 这是为了兼容当前构建环境，以确保 APK 文件名自定义功能的稳定性。
-    // 未来的项目应迁移至 `androidComponents` API。
     applicationVariants.all {
         val variant = this
         variant.outputs.all {
@@ -96,7 +106,6 @@ android {
             signingConfig = signingConfigs.getByName(if (isCiBuild) "ci" else "release")
 
             // 通过 `buildConfigField` 在 `BuildConfig.java` 中生成一个常量。
-            // 这允许在运行时代码中识别当前的构建类型。
             val buildTag = if (isCiBuild) "CI Build" else "Release"
             buildConfigField("String", "BUILD_TYPE_TAG", "\"$buildTag\"")
 
@@ -118,11 +127,9 @@ android {
     }
 
     // 配置 Kotlin 编译器选项。
-    // `kotlinOptions` 已被废弃，推荐使用 `tasks.withType<...>` 的方式进行精细化配置。
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
         compilerOptions {
             jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21) // 设置 Kotlin 编译输出的 JVM 目标版本。
-            // 添加额外的 Kotlin 编译器参数以进行底层优化。
             freeCompilerArgs.addAll(
                 "-Xno-param-assertions",
                 "-Xno-call-assertions",
@@ -139,25 +146,20 @@ android {
     }
 
     // Jetpack Compose 相关的编译器配置。
-    // 注意：`composeOptions` API 标记为 @Incubating，表示其在未来版本中可能发生变更。
     composeOptions {
-        // 指定与项目 Kotlin 版本兼容的 Compose 编译器扩展版本。
         kotlinCompilerExtensionVersion = "1.5.14"
     }
 
     // APK 打包相关的配置。
     packaging {
         resources {
-            // 从最终的 APK 中排除可能引起冲突的元数据文件。
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
 
     // Android 资源处理相关的配置。
     androidResources {
-        // 定义一个模式，用于在打包 `assets` 目录时忽略不匹配的文件。
         ignoreAssetsPattern = "!*.ttf:!*.json:!*.bin"
-        // 指定不进行压缩的文件扩展名列表。
         noCompress += listOf("zip", "txt", "raw", "png")
     }
 
@@ -175,11 +177,11 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.navigation.runtime.ktx)
-    implementation(libs.androidx.palette.ktx) // 用于从图片中提取颜色主题。
+    implementation(libs.androidx.palette.ktx)
     implementation(libs.androidx.activity.compose)
 
     // ------------------- Jetpack Compose UI -------------------
-    implementation(platform(libs.androidx.compose.bom)) // Compose BOM (Bill of Materials) 用于统一管理 Compose 相关库的版本。
+    implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
@@ -203,17 +205,17 @@ dependencies {
     implementation(libs.coil.network.okhttp)
     implementation(libs.gson)
     implementation(libs.drawabletoolbox)
-    implementation(libs.miuix) // 小米 UI 库
+    implementation(libs.miuix)
 
     // ------------------- Hook API 相关 -------------------
     implementation(libs.ezxhelper)
     compileOnly(libs.xposed.api)
     implementation(libs.yukihook.api)
-    ksp(libs.yukihook.ksp.xposed) // 用于处理 Xposed 相关注解的 KSP 处理器。
+    ksp(libs.yukihook.ksp.xposed)
 
     // ------------------- Room 数据库 -------------------
     runtimeOnly(libs.androidx.room.runtime)
-    ksp(libs.androidx.room.compiler) // Room 的 KSP 注解处理器。
+    ksp(libs.androidx.room.compiler)
 
     // ------------------- Umeng (友盟) SDK -------------------
     implementation(libs.umeng.common)
