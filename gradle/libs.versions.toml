@@ -55,6 +55,7 @@ umengUyumao = "1.1.4"
 xposedApi = "82"
 yukiHookApi = "1.3.0"
 yukiKspXposed = "1.3.0"
+kavaref = "1.0.0"
 
 
 # --- 库定义 [libraries] ---
@@ -118,6 +119,8 @@ xposed-api = { group = "de.robv.android.xposed", name = "api", version.ref = "xp
 yukihook-api = { group = "com.highcapable.yukihookapi", name = "api", version.ref = "yukiHookApi" }
 yukihook-ksp-xposed = { group = "com.highcapable.yukihookapi", name = "ksp-xposed", version.ref = "yukiKspXposed" }
 ezxhelper = { group = "com.github.kyuubiran", name = "EzXHelper", version.ref = "ezxhelper" }
+kavaref-extension = { module = "com.highcapable.kavaref:kavaref-extension", version.ref = "kavaref" }
+kavaref-core = { module = "com.highcapable.kavaref:kavaref-core", version.ref = "kavaref" }
 
 
 # --- 插件定义 [plugins] ---

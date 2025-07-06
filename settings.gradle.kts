@@ -26,6 +26,7 @@ dependencyResolutionManagement {
         mavenCentral()
         google()
         maven("https://jitpack.io")
+        maven("https://raw.githubusercontent.com/HighCapable/maven-repository/main/repository/releases")
         // Xposed 框架的专用 Maven 仓库。
         maven {
             url = uri("https://api.xposed.info/")
