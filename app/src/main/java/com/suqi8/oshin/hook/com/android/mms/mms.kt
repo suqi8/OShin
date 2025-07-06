@@ -11,7 +11,14 @@ class mms: YukiBaseHooker() {
         loadApp("com.android.mms"){
             if (prefs("mms").getBoolean("remove_message_ads", false)) {
                 DexKitBridge.create(this.appInfo.sourceDir).use {
-                    it.findMethod {
+                    it.findClass {
+                        matcher {
+                            usingStrings("e = ","TedCardUtil")
+                            usingStrings("isParsedSmsEntity: isSyncingMessage = ")
+                            usingStrings("isVerificationCode = ")
+                            usingStrings("getSmsEntity: JSONException")
+                        }
+                    } .findMethod {
                         matcher {
                             paramTypes(null, "java.util.HashMap", "java.util.HashMap")
                             returnType = "java.util.List"
