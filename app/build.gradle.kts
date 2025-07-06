@@ -212,6 +212,8 @@ dependencies {
     compileOnly(libs.xposed.api)
     implementation(libs.yukihook.api)
     ksp(libs.yukihook.ksp.xposed)
+    implementation(libs.kavaref.core)
+    implementation(libs.kavaref.extension)
 
     // ------------------- Room 数据库 -------------------
     runtimeOnly(libs.androidx.room.runtime)
