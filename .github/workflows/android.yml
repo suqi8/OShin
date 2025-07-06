@@ -127,7 +127,5 @@ jobs:
           message: |
             🚀 **OShin New CI Build！**
             
-            ```
             ${{ github.event.head_commit.message }}
-            ```
             🔗 **查看[本次提交](${{ github.event.head_commit.url }})**
