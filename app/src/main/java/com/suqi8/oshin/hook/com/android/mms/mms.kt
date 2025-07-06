@@ -3,7 +3,6 @@ package com.suqi8.oshin.hook.com.android.mms
 import android.annotation.SuppressLint
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.log.YLog
 import org.luckypray.dexkit.DexKitBridge
 
 class mms: YukiBaseHooker() {
@@ -19,7 +18,6 @@ class mms: YukiBaseHooker() {
                             usingStrings("\\s")
                         }
                     }.singleOrNull()?.also {
-                        YLog.info("methodName:"+it.methodName + " className:" + it.className)
                         it.className.toClass().method { name = it.methodName }.hook { before { result = emptyList<message_ads>() } }
                     }
                 }
