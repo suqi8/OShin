@@ -6,26 +6,37 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 
 class Notification: YukiBaseHooker() {
     override fun onHook() {
-        if (prefs("systemui\\notification").getBoolean("remove_developer_options_notification", false)) {
-            loadApp(name = "com.android.systemui") {
+        loadApp(name = "com.android.systemui") {
+            if (prefs("systemui\\notification").getBoolean("remove_developer_options_notification", false)) {
                 "com.oplus.systemui.statusbar.controller.SystemPromptController".toClass().resolve().apply {
                     firstMethod {
                         name = "updateDeveloperMode"
                     }.hook {
-                        replaceUnit {
-
-                        }
+                        replaceUnit { }
                     }
                 }
+
             }
-        }
-        if (prefs("systemui\\notification").getBoolean("remove_and_do_not_disturb_notification", false)) {
-            loadApp(name = "com.android.systemui") {
+            if (prefs("systemui\\notification").getBoolean("remove_and_do_not_disturb_notification", false)) {
                 "com.oplus.systemui.statusbar.controller.NoDisturbController".toClass().resolve().apply {
                     firstMethod {
                         modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
                         name = "updateNoDisturbStatus"
                         emptyParameters()
+                        returnType = Void.TYPE
+                    }.hook {
+                        replaceUnit {  }
+                    }
+                }
+            }
+        }
+        loadSystem {
+            if (prefs("systemui\\notification").getBoolean("remove_active_vpn_notification", false)) {
+                "com.android.server.connectivity.VpnExtImpl".toClass().resolve().apply {
+                    firstMethod {
+                        modifiers(Modifiers.PUBLIC)
+                        name = "showNotification"
+                        parameters(String::class, Int::class, Int::class, String::class, "android.app.PendingIntent", "com.android.internal.net.VpnConfig")
                         returnType = Void.TYPE
                     }.hook {
                         replaceUnit {  }
