@@ -61,6 +61,11 @@ fun systemui(navController: NavController) {
                 onClick = {
                     navController.navigate("systemui\\notification")
                 })
+            addline()
+            SuperArrow(title = stringResource(id = R.string.control_center),
+                onClick = {
+                    navController.navigate("systemui\\controlCenter")
+                })
         }
         Card(
             modifier = Modifier
