@@ -564,5 +564,7 @@
     <string name="chip_label_system">系统</string>
     <string name="chip_label_status">状态</string>
     <string name="section_title_apps">应用列表</string>
-
+    <string name="control_center">控制中心</string>
+    <string name="enlarge_media_cover">放大媒体封面</string>
+    <string name="media_cover_background_description">媒体封面显示时，作为音乐卡片的背景平铺展示</string>
 </resources>

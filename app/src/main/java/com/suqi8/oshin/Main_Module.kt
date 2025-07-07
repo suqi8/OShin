@@ -66,6 +66,7 @@ import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.GetFuncRoute
@@ -1238,5 +1239,8 @@ fun features(context: Context) = listOf(
     FeatureItem(title = context.getString(R.string.set_anim_level),
         category = "launcher"),
     FeatureItem(title = context.getString(R.string.hide_call_ringtone),
-        category = "incallui")
+        category = "incallui"),
+    FeatureItem(title = context.getString(R.string.enlarge_media_cover),
+        summary = context.getString(R.string.media_cover_background_description),
+        category = "systemui\\controlCenter")
 )

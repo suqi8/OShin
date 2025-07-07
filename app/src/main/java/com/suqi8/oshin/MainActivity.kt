@@ -90,6 +90,7 @@ import com.suqi8.oshin.ui.activity.com.android.launcher.recent_task
 import com.suqi8.oshin.ui.activity.com.android.mms.mms
 import com.suqi8.oshin.ui.activity.com.android.settings.feature
 import com.suqi8.oshin.ui.activity.com.android.settings.settings
+import com.suqi8.oshin.ui.activity.com.android.systemui.controlCenter
 import com.suqi8.oshin.ui.activity.com.android.systemui.hardware_indicator
 import com.suqi8.oshin.ui.activity.com.android.systemui.notification
 import com.suqi8.oshin.ui.activity.com.android.systemui.status_bar_clock
@@ -564,6 +565,7 @@ fun Main0(context: Context) {
             composable("systemui\\statusbar_icon") { statusbar_icon(navController = navController) }
             composable("systemui\\notification") { notification(navController = navController) }
             composable("systemui\\status_bar_wifi") { status_bar_wifi(navController = navController) }
+            composable("systemui\\controlCenter") { controlCenter(navController = navController) }
             composable("launcher") { launcher(navController = navController) }
             composable("launcher\\recent_task") { recent_task(navController = navController) }
             composable("about_setting") { about_setting(navController,alpha,blurRadius,noiseFactor) }
