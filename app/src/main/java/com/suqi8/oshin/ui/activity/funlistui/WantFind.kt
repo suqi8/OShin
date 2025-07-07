@@ -27,7 +27,6 @@ data class WantFind(
 )
 @Composable
 fun WantFind(funclist: List<WantFind>, navController: NavController) {
-    val context = LocalContext.current
     Card(color = MiuixTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.75f),
         modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 12.dp)) {
         Surface(color = Color.Transparent) {

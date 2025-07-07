@@ -2,25 +2,15 @@
 <resources>
     <string name="app_name">O神</string>
     <string name="xposed_desc">Системный вспомогательный модуль для ColorOS, RealmeUI, OxygenOS. Бесплатное ПО. Запрещено перераспространение, продажа! github@suqi8</string>
-    <string name="module_version">Версия модуля: %1$s</string>
     <string name="module_not_activated">Модуль не активирован</string>
-    <string name="module_is_activated">Модуль активирован</string>
-    <string name="display_settings">Настройки отображения</string>
-    <string name="hide_app_icon_on_launcher">Скрыть иконку модуля на рабочем столе</string>
-    <string name="hide_app_icon_on_launcher_tip">После скрытия иконки интерфейс может закрыться. Для настройки используйте EdXposed/LSPosed.</string>
-    <string name="hide_app_icon_on_launcher_notice">Внимание: Отключите \"Принудительно показывать иконку\" в LSPosed</string>
     <string name="package_manager_services">Службы управления пакетами</string>
     <string name="downgr">Разрешить понижение версии приложений</string>
     <string name="Device_Name">Псевдоним устройства</string>
     <string name="ok">ОК</string>
     <string name="Device_Memory">Память</string>
     <string name="Search">Поиск</string>
-    <string name="ignore">Игнорировать</string>
-    <string name="config_error">Ошибка инициализации конфигурации</string>
-    <string name="not_supported">Устаревшая версия LSPosed или модуль не активирован. Обновите LSPosed и активируйте модуль.</string>
     <string name="usepresig_warn">!! ЛЮБОЙ APK МОЖЕТ ПЕРЕЗАПИСАТЬ УСТАНОВЛЕННЫЙ APK !!\nБудьте осторожны с неизвестными APK</string>
     <string name="settings">Настройки</string>
-    <string name="corepatch">Только для Android 9–14. Используйте последнюю версию LSPosed.</string>
     <string name="hide_unit">Скрыть единицы измерения</string>
     <string name="cancel">Отмена</string>
     <string name="Color_Mode">Цветовой режим</string>
@@ -53,7 +43,6 @@
     <string name="clock_size">Размер часов</string>
     <string name="font_size">Размер шрифта</string>
     <string name="clock_size_summary">Размер часов в строке состояния (0 = стандартный)</string>
-    <string name="clock_update_time">Частота обновления часов</string>
     <string name="update_time">Частота обновления</string>
     <string name="absolute_value">Абсолютное значение</string>
     <string name="bold_text">Жирный текст</string>
@@ -74,18 +63,6 @@
     <string name="change_cpu_temp_source">Изменить источник температуры CPU</string>
     <string name="battery_temperature">Температура батареи</string>
     <string name="cpu_temperature">Температура CPU</string>
-    <string name="module_notice">Модуль бесплатен и открыт. Запрещено распространение, продажа, использование для привлечения трафика. Нарушения - сообщайте автору.</string>
-    <string name="clock_style_title">Стиль часов</string>
-    <string name="clock_style_summary">Выберите стиль отображения часов</string>
-    <string name="soc_model">Модель SOC</string>
-    <string name="android_version">Версия Android</string>
-    <string name="android_api_version">Версия Android API</string>
-    <string name="system_version">Версия системы</string>
-    <string name="cpu_codename">Кодовое имя CPU</string>
-    <string name="device_manufacturer">Производитель</string>
-    <string name="supported_abi">Поддерживаемые ABI</string>
-    <string name="android_security_patch">Служебное обновление безопасности</string>
-    <string name="device_fingerprint">Цифровой отпечаток устройства</string>
     <string name="yuki_hook_api_version">Версия YukiHookAPI</string>
     <string name="compiled_timestamp">Метка времени сборки</string>
     <string name="compiled_time">Время сборки</string>
@@ -120,14 +97,9 @@
     <string name="confirm_restart_applications">Перезапустить выбранные приложения?</string>
     <string name="common_settings">Основные настройки</string>
     <string name="other_settings">Другие настройки</string>
-    <string name="module_activated">Модуль активирован</string>
-    <string name="please_activate">Активируйте модуль в LSPosed</string>
-    <string name="app_settings">Настройки приложения</string>
     <string name="check_update">Проверить обновления</string>
     <string name="by_the_way">Кстати</string>
     <string name="alignment">Выравнивание</string>
-    <string name="status_bar_clock_custom_tips">Формат времени:\nГод: y, yy, yyyy\nМесяц: M, MM, MMM, MMMM\nДень: d, D\nНеделя: E, EEEE\nНеделя месяца: F, w, W\nЧас: h (12ч), H (24ч), K (0-11), k (1-24)\nМинуты: m\nСекунды: s\nМиллисекунды: S\nAM/PM: a\nЧасовой пояс: z, zzzz, Z, X, XX, XXX</string>
-    <string name="both">Оба</string>
     <string name="power">Мощность</string>
     <string name="current">Ток</string>
     <string name="clock_format">Формат часов</string>
@@ -135,7 +107,6 @@
     <string name="power_consumption_indicator">Индикатор потребления</string>
     <string name="temperature_indicator">Индикатор температуры</string>
     <string name="display_content">Отображаемое содержимое</string>
-    <string name="content_not_empty">Содержимое не может быть пустым</string>
     <string name="clock_top_margin">Верхний отступ часов</string>
     <string name="clock_bottom_margin">Нижний отступ часов</string>
     <string name="clock_left_margin">Левый отступ часов</string>
@@ -162,7 +133,6 @@
     <string name="nvid_BR">BR Бразилия Brazil 🇧🇷</string>
     <string name="nvid_ME">MEA Ближний Восток и Африка The Middle East and Africa 🇦🇪</string>
     <string name="nvid_unknown">Код страны/региона (NV (оператор) = %1$s</string>
-    <string name="countries_and_regions">Страны и регионы</string>
     <string name="battery_health_good">Отличное</string>
     <string name="battery_health_overheat">Перегрев</string>
     <string name="battery_health_dead">Разряжена</string>
@@ -170,25 +140,8 @@
     <string name="battery_health_cold">Низкая температура</string>
     <string name="battery_health_unknown">Неизвестно</string>
     <string name="battery_health_not_found">Информация отсутствует</string>
-    <string name="battery_status">Состояние батареи</string>
-    <string name="battery_equivalent_capacity">Эквивалентная ёмкость (тип.)</string>
-    <string name="battery_current_capacity">Текущая ёмкость</string>
-    <string name="battery_cycle_count">Количество циклов</string>
-    <string name="battery_health">Здоровье батареи</string>
-    <string name="battery_full_capacity">Максимальная ёмкость</string>
-    <string name="magisk_version">Версия Magisk</string>
-    <string name="ksu_version">Версия KernelSU</string>
-    <string name="feature_auto_color_picking_enabled">Автовыбор цвета иконки</string>
-    <string name="feature_auto_color_picking_warning">Фон иконок на странице функций будет автоматически подбираться</string>
-    <string name="root_permission_error">Требуются Root-права</string>
-    <string name="retry">Повторить</string>
-    <string name="retrying">Повтор...</string>
     <string name="exit">Выход</string>
-    <string name="root_access_denied">Root-права не предоставлены</string>
-    <string name="root_granted">Root-права предоставлены</string>
-    <string name="detecting_root">Обнаружение Root</string>
     <string name="status_bar_icon">Иконка строки состояния</string>
-    <string name="loading">Загрузка...</string>
     <string name="default_">По умолчанию</string>
     <string name="hide">Скрыть</string>
     <string name="wifi_icon">Иконка Wi-Fi</string>
@@ -201,7 +154,6 @@
     <string name="github_summary">Приглашаем разработчиков и пользователей к сотрудничеству!</string>
     <string name="thank">Благодарности</string>
     <string name="contributors">Участники</string>
-    <string name="donors_list">Список донатеров</string>
     <string name="donors">Донатеры</string>
     <string name="references">Использованные материалы</string>
     <string name="discussion_group">Группа обсуждения</string>
@@ -226,10 +178,8 @@
     <string name="notification_restriction_message">Блокирует новые уведомления. Существующие закройте вручную.</string>
     <string name="remove_and_do_not_disturb_notification">Удалить уведомление \"Не беспокоить\"</string>
     <string name="hide_launcher_icon">Скрыть иконку лаунчера</string>
-    <string name="recommended_features">Рекомендуемые функции</string>
     <string name="force_enable_xiaobu_call">Принудительно включить голосовые вызовы Xiao Bu</string>
     <string name="recent_update">Последние обновления</string>
-    <string name="no_introduction">Описание отсутствует ╥﹏╥...</string>
     <string name="remove_full_screen_translation_restriction">Убрать ограничения полного перевода</string>
     <string name="enable_ultra_combo">Включить \"ультра-комбо\"</string>
     <string name="enable_blur">Включить размытие</string>
@@ -300,7 +250,6 @@
     <string name="force_enable_3d_camera_color">Принудительно включить 3D-камеру</string>
     <string name="force_breathing_light_sync">Принудительно: Синхронизация подсветки с музыкой</string>
     <string name="force_breathing_light_color">Принудительно: Настройка цвета подсветки</string>
-    <string name="emulate_breathing_hardware">Эмуляция аппаратной подсветки</string>
     <string name="force_dirac_audio">Принудительно: Dirac Audio</string>
     <string name="force_dolby_audio">Принудительно: Dolby Audio</string>
     <string name="force_dual_earbuds">Принудительно: Двойное подключение наушников</string>
@@ -540,9 +489,7 @@
     <string name="stealth_security">Стелс-безопасность</string>
     <string name="pwm_reboot">Отключение PWM при перезагрузке</string>
     <string name="anti_voyeur">Анти-подглядывание</string>
-    <string name="taskbar_support">Панель задач</string>
     <string name="resolution_pic">Изображение разрешения</string>
-    <string name="brightness_rm">Вторичная регулировка яркости</string>
     <string name="sharpness_switch">Переключение резкости</string>
     <string name="palm_unlock">Разблокировка ладонью</string>
     <string name="enable_redpacket_helper">Помощник \"красных конвертов\"</string>
@@ -565,7 +512,6 @@
     <string name="hide_space">Скрыть пробелы</string>
     <string name="swap_upload_download">Поменять местами отправку/загрузку</string>
     <string name="position_speed_indicator_front">Индикатор скорости впереди</string>
-    <string name="frequency_activation_hint">Частоты: Max > Min. Равные значения сохраняют текущую настройку.</string>
     <string name="cpu_freq_main">Настройка частоты CPU</string>
     <string name="cpu_group_min_freq">Мин. частота</string>
     <string name="cpu_group_max_freq">Макс. частота</string>

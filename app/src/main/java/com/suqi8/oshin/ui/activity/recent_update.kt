@@ -33,11 +33,11 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.FeatureItem
 import com.suqi8.oshin.R
 import com.suqi8.oshin.features
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetFuncRoute
-import com.suqi8.oshin.utils.item
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeEffectScope
 import dev.chrisbanes.haze.HazeInputScale
@@ -60,7 +60,6 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
-import kotlin.collections.lastIndex
 
 @OptIn(ExperimentalHazeApi::class)
 @Composable
@@ -113,7 +112,7 @@ fun recent_update(navController: NavController) {
         )
         Image(painter = painterResource(R.drawable.osu),contentDescription = null, modifier = Modifier.fillMaxWidth())
     }) { padding ->
-        val recentFeatureState = remember { mutableStateOf<List<item>?>(null) }
+        val recentFeatureState = remember { mutableStateOf<List<FeatureItem>?>(null) }
         val context = LocalContext.current
         LaunchedEffect(Unit) {
             recentFeatureState.value = withContext(Dispatchers.IO) {

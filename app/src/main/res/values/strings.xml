@@ -2,25 +2,15 @@
 <resources>
     <string name="app_name">O神</string>
     <string name="xposed_desc">系统辅助模块，支持 ColorOS、RealmeUI、OxygenOS。免费软件，请勿二次转发，分享，售卖！github@suqi8</string>
-    <string name="module_version">模块版本：%1$s</string>
     <string name="module_not_activated">模块未激活</string>
-    <string name="module_is_activated">模块已激活</string>
-    <string name="display_settings">显示设置</string>
-    <string name="hide_app_icon_on_launcher">在桌面隐藏模块图标</string>
-    <string name="hide_app_icon_on_launcher_tip">隐藏模块图标后界面可能会被关闭，将不会再在桌面显示，你可以在 EdXposed、LSPosed 中找到模块设置并打开。</string>
-    <string name="hide_app_icon_on_launcher_notice">注意：请务必在 LSPosed 中关闭“强制显示桌面图标”功能</string>
     <string name="package_manager_services">包管理服务</string>
     <string name="downgr">允许降级安装应用</string>
     <string name="Device_Name">设备昵称</string>
     <string name="ok">确定</string>
     <string name="Device_Memory">储存空间</string>
     <string name="Search">搜索</string>
-    <string name="ignore">忽略</string>
-    <string name="config_error">配置初始化失败</string>
-    <string name="not_supported">您似乎正在使用过时版本的 LSPosed，或者 LSPosed 未激活，请更新 LSPosed 或在激活后重试。</string>
     <string name="usepresig_warn">!! 任何 APK 都可以覆盖已安装的 APK !!\n安装未知 APK 时请小心</string>
     <string name="settings">设置</string>
-    <string name="corepatch">此版本仅适用于 Android 9–14。\n请使用最新版本的 LSPosed。</string>
     <string name="hide_unit">隐藏单位</string>
     <string name="cancel">取消</string>
     <string name="Color_Mode">颜色模式</string>
@@ -53,7 +43,6 @@
     <string name="clock_size">时钟大小</string>
     <string name="font_size">字体大小</string>
     <string name="clock_size_summary">调整状态栏时钟大小，0为不设置大小</string>
-    <string name="clock_update_time">时钟更新频率</string>
     <string name="update_time">更新频率</string>
     <string name="absolute_value">绝对值</string>
     <string name="bold_text">粗体</string>
@@ -74,18 +63,6 @@
     <string name="change_cpu_temp_source">更改 CPU 温度获取源</string>
     <string name="battery_temperature">电池温度</string>
     <string name="cpu_temperature">CPU温度</string>
-    <string name="module_notice">该模块完全免费且开源，请务必遵守GNU Affero General Public License v3.0协议，禁止将此模块用来引流，禁止分享、搬运、售卖。如果你在其他地方看到有人分享该模块，请向模块作者进行举报。</string>
-    <string name="clock_style_title">时钟样式</string>
-    <string name="clock_style_summary">选择时钟的显示样式</string>
-    <string name="soc_model">SOC 型号</string>
-    <string name="android_version">Android 版本</string>
-    <string name="android_api_version">Android API 版本</string>
-    <string name="system_version">系统版本</string>
-    <string name="cpu_codename">CPU 代号</string>
-    <string name="device_manufacturer">设备制造商</string>
-    <string name="supported_abi">支持的 Abi</string>
-    <string name="android_security_patch">Android 安全补丁</string>
-    <string name="device_fingerprint">设备指纹</string>
     <string name="yuki_hook_api_version">YukiHookAPI版本</string>
     <string name="compiled_timestamp">编译时间戳</string>
     <string name="compiled_time">编译时间</string>
@@ -120,14 +97,9 @@
     <string name="confirm_restart_applications">确认重启以下应用吗？</string>
     <string name="common_settings">常用设置</string>
     <string name="other_settings">其他设置</string>
-    <string name="module_activated">模块已激活</string>
-    <string name="please_activate">请到LSPosed中激活本模块</string>
-    <string name="app_settings">软件设置</string>
     <string name="check_update">检查更新</string>
     <string name="by_the_way">题外话</string>
     <string name="alignment">对齐方式</string>
-    <string name="status_bar_clock_custom_tips">年、月、日：\n y 年\n yy 两位数年份（例如 23 表示 2023 年）\n yyyy 四位数年份（例如 2023）\n  M 月\n MM 两位数的月份（01–12）\n MMM 月份缩写（如 Jan）\n MMMM 月份全称（如 January）\n  d 月中的天数（1–31）\n  D 年中的天数（1-366）\n  E 星期\n E 星期的缩写（如 Tue）\n EEEE 星期的全称（如 Tuesday）\n  F 月中的第几周的星期几（1-7）\n  w 年中的周数（1-53）\n  W 月中的周数（1-5）\n  ---\n  时、分、秒：\n h 12 小时制的小时数（1-12）\n  H 24 小时制的小时数（0-23）\n  m 分钟数（0-59）\n  s 秒数（0-59）\n  S 毫秒数（0-999）\n  K 12 小时制的小时数（0-11）\n  k 24 小时制的小时数（1-24）\n  ---\n  上午/下午：\n a AM/PM 标记（如 AM 或 PM）\n  ---\n  时区：\n z 时区\n z 时区缩写（如 PST）\n zzzz 时区全称（如 Pacific Standard Time）\n  Z RFC 822 时区格式（如 -0800）\n  X ISO 8601 时区\n X -08 或 +08\n XX -0800 或 +0800\n XXX -08:00 或 +08:00</string>
-    <string name="both">两者</string>
     <string name="power">功率</string>
     <string name="current">电流</string>
     <string name="clock_format">时钟格式</string>
@@ -135,7 +107,6 @@
     <string name="power_consumption_indicator">功耗指示器</string>
     <string name="temperature_indicator">温度指示器</string>
     <string name="display_content">显示内容</string>
-    <string name="content_not_empty">该内容不可为空</string>
     <string name="clock_top_margin">时钟上边距</string>
     <string name="clock_bottom_margin">时钟下边距</string>
     <string name="clock_left_margin">时钟左边距</string>
@@ -162,7 +133,6 @@
     <string name="nvid_BR">BR 巴西 Brazil 🇧🇷</string>
     <string name="nvid_ME">MEA 中东和非洲 The Middle East and Africa 🇦🇪</string>
     <string name="nvid_unknown">设备的国家/地区代码 (NV (carrier) identifier) = %1$s</string>
-    <string name="countries_and_regions">国家和地区</string>
     <string name="battery_health_good">简直完美</string>
     <string name="battery_health_overheat">热热的</string>
     <string name="battery_health_dead">没电啦</string>
@@ -170,25 +140,8 @@
     <string name="battery_health_cold">冷冷的</string>
     <string name="battery_health_unknown">未知呢</string>
     <string name="battery_health_not_found">找不到相关信息</string>
-    <string name="battery_status">电池状态</string>
-    <string name="battery_equivalent_capacity">电池等效容量(典型值)</string>
-    <string name="battery_current_capacity">电池现时容量</string>
-    <string name="battery_cycle_count">电池循环次数</string>
-    <string name="battery_health">电池健康</string>
-    <string name="battery_full_capacity">电池充满容量</string>
-    <string name="magisk_version">Magisk版本</string>
-    <string name="ksu_version">KernelSU版本</string>
-    <string name="feature_auto_color_picking_enabled">图标背景自动取色</string>
-    <string name="feature_auto_color_picking_warning">开启后功能页面的应用图标的背景颜色将会自动取色</string>
-    <string name="root_permission_error">请授予 Root 权限</string>
-    <string name="retry">重试</string>
-    <string name="retrying">重试中...</string>
     <string name="exit">退出</string>
-    <string name="root_access_denied">未授权 Root 权限</string>
-    <string name="root_granted">已授予 Root 权限</string>
-    <string name="detecting_root">正在检测 Root</string>
     <string name="status_bar_icon">状态栏图标</string>
-    <string name="loading">加载中...</string>
     <string name="default_">默认</string>
     <string name="hide">隐藏</string>
     <string name="wifi_icon">Wifi图标</string>
@@ -201,7 +154,6 @@
     <string name="github_summary">欢迎各位开发者与用户与我们共同开发或提出建议！</string>
     <string name="thank">感谢</string>
     <string name="contributors">贡献人员</string>
-    <string name="donors_list">捐赠列表</string>
     <string name="donors">捐赠</string>
     <string name="references">引用内容</string>
     <string name="discussion_group">讨论群组</string>
@@ -226,10 +178,8 @@
     <string name="notification_restriction_message">此功能限制该通知的后续弹出，已有的通知请自行关闭</string>
     <string name="remove_and_do_not_disturb_notification">移除通知勿扰通知</string>
     <string name="hide_launcher_icon">隐藏桌面图标</string>
-    <string name="recommended_features">推荐功能</string>
     <string name="force_enable_xiaobu_call">强制启用小布通话</string>
     <string name="recent_update">最近更新</string>
-    <string name="no_introduction">暂时还没有介绍╥﹏╥...</string>
     <string name="remove_full_screen_translation_restriction">去除全屏翻译限制</string>
     <string name="enable_ultra_combo">启用超神一键连招</string>
     <string name="enable_blur">开启模糊</string>
@@ -300,7 +250,6 @@
     <string name="force_enable_3d_camera_color">强制启用3D色彩摄像头</string>
     <string name="force_breathing_light_sync">强制呼吸灯支持音乐节奏同步</string>
     <string name="force_breathing_light_color">强制呼吸灯支持颜色调节</string>
-    <string name="emulate_breathing_hardware">伪装呼吸灯硬件</string>
     <string name="force_dirac_audio">强制支持Dirac音频增强</string>
     <string name="force_dolby_audio">强制支持Dolby音效</string>
     <string name="force_dual_earbuds">强制支持双耳机连接</string>
@@ -540,9 +489,7 @@
     <string name="stealth_security">隐身安全模式</string>
     <string name="pwm_reboot">PWM重启关闭</string>
     <string name="anti_voyeur">智能防窥</string>
-    <string name="taskbar_support">任务栏支持</string>
     <string name="resolution_pic">分辨率图片</string>
-    <string name="brightness_rm">二级亮度调节</string>
     <string name="sharpness_switch">锐度切换</string>
     <string name="palm_unlock">掌纹解锁</string>
     <string name="enable_redpacket_helper">启用红包助手</string>
@@ -565,7 +512,6 @@
     <string name="hide_space">隐藏空格</string>
     <string name="swap_upload_download">交换上下行位置</string>
     <string name="position_speed_indicator_front">图标指示器前置</string>
-    <string name="frequency_activation_hint">启用时应用选定频率阈值，关闭后释放配置。频率参数须满足Max > Min约束条件，等值情况将保持当前设定。</string>
     <string name="cpu_freq_main">CPU动态调频配置</string>
     <string name="cpu_group_min_freq">最小频率阈值</string>
     <string name="cpu_group_max_freq">最大频率阈值</string>
@@ -607,8 +553,6 @@
     <string name="section_title_features">功能模块</string>
     <string name="module_status">模块状态</string>
     <string name="root_status">Root 状态</string>
-    <string name="frida_status">Frida 服务</string>
-    <string name="frida_not_connected">未连接</string>
     <string name="gauge_title_health">健康度</string>
     <string name="gauge_title_capacity">当前容量</string>
     <string name="gauge_title_cycles">循环次数</string>
@@ -620,4 +564,5 @@
     <string name="chip_label_system">系统</string>
     <string name="chip_label_status">状态</string>
     <string name="section_title_apps">应用列表</string>
+
 </resources>

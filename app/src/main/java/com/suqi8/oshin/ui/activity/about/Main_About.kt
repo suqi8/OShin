@@ -426,7 +426,7 @@ fun DeviceNameDialog(showDeviceNameDialog: MutableState<Boolean>, deviceNameCach
         TextField(
             value = deviceNameCache.value,
             onValueChange = { deviceNameCache.value = it },
-            backgroundColor = MiuixTheme.colorScheme.secondaryContainer,
+            backgroundColor = colorScheme.secondaryContainer,
             label = "",
             modifier = Modifier.padding(),
             keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),

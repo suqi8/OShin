@@ -476,7 +476,7 @@ fun Main0(context: Context) {
     LaunchedEffect(privacy.value) {
         privacy.value = context.prefs("settings").getBoolean("privacy",true)
         if (!context.prefs("settings").getBoolean("privacy",true)) {
-            UMConfigure.init(context, "67c7dea68f232a05f127781e", "android", UMConfigure.DEVICE_TYPE_PHONE, "");
+            UMConfigure.init(context, "67c7dea68f232a05f127781e", "android", UMConfigure.DEVICE_TYPE_PHONE, "")
             withContext(Dispatchers.IO) {
                 val lsposed_versionname = executeCommand("awk -F= '/version=/ {print \$2}' /data/adb/modules/zygisk_lsposed/module.prop")
                 lspVersion.value = lsposed_versionname
