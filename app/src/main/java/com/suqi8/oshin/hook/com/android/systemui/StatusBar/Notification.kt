@@ -29,6 +29,21 @@ class Notification: YukiBaseHooker() {
                     }
                 }
             }
+            if (prefs("systemui\\notification").getBoolean("remove_charging_complete_notification", false)) {
+                "com.oplus.systemui.statusbar.notification.power.OplusPowerNotificationWarnings".toClass().resolve().apply {
+                    firstMethod {
+                        modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
+                        name = "showChargeErrorDialog"
+                        parameters(Int::class)
+                        returnType = Void.TYPE
+                    }.hook {
+                        before {
+                            if (args[0] != 7) return@before
+                            resultNull()
+                        }
+                    }
+                }
+            }
         }
         loadSystem {
             if (prefs("systemui\\notification").getBoolean("remove_active_vpn_notification", false)) {

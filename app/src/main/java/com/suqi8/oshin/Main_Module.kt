@@ -1244,5 +1244,7 @@ fun features(context: Context) = listOf(
         category = "systemui\\controlCenter"),
     FeatureItem(title = context.getString(R.string.remove_active_vpn_notification),
         summary = context.getString(R.string.reboot_required_to_take_effect),
+        category = "systemui\\notification"),
+    FeatureItem(title = context.getString(R.string.remove_charging_complete_notification),
         category = "systemui\\notification")
 )

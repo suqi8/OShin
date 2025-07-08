@@ -569,4 +569,5 @@
     <string name="media_cover_background_description">媒体封面显示时，作为音乐卡片的背景平铺展示</string>
     <string name="remove_active_vpn_notification">移除已激活 VPN 通知</string>
     <string name="reboot_required_to_take_effect">需要重启系统生效</string>
+    <string name="remove_charging_complete_notification">移除充电完成通知</string>
 </resources>

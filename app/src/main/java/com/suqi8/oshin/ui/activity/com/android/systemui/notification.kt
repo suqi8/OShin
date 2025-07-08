@@ -50,6 +50,13 @@ fun notification(navController: NavController) {
                 key = "remove_active_vpn_notification",
                 defValue = false
             )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.remove_charging_complete_notification),
+                category = "systemui\\notification",
+                key = "remove_charging_complete_notification",
+                defValue = false
+            )
         }
         SmallTitle(stringResource(R.string.notification_restriction_message))
     }
