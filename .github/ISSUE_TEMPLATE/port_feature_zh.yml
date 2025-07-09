@@ -1,0 +1,38 @@
+name: 🚀 移植功能
+description: 请求将其他系统或模块已有的功能移植到 O神。
+title: "[Port] <想要移植的功能名称>"
+labels: ["port", "enhancement"]
+body:
+  - type: input
+    id: feature-source
+    attributes:
+      label: 功能来源
+      description: 这个功能来自哪里？
+      placeholder: "例如：原生 Android 15、Flyme 系统、某个特定 App 或 Xposed 模块"
+    validations:
+      required: true
+
+  - type: input
+    id: source-repo
+    attributes:
+      label: 开源仓库地址 (选填)
+      description: 如果该功能来自一个开源项目（如另一个 Xposed 模块），请在此处提供其仓库链接 (例如 GitHub, GitLab)。这能极大地帮助开发者理解其实现方式。
+      placeholder: "https://github.com/user/repository"
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: 功能描述
+      description: |
+        请详细描述这个功能是什么，以及它如何工作。
+        最好能提供截图或屏幕录制来展示该功能的效果。
+    validations:
+      required: true
+
+  - type: textarea
+    id: value-proposition
+    attributes:
+      label: 为什么这个功能对 O神 用户有价值？
+      description: 请说明为什么你认为将这个功能带到 ColorOS 会很有用。
+    validations:
+      required: true

@@ -1,0 +1,38 @@
+name: 🚀 Port Feature
+description: Request to port an existing feature from another system or module to OShin.
+title: "[Port] <Name of the feature to be ported>"
+labels: ["port", "enhancement"]
+body:
+  - type: input
+    id: feature-source
+    attributes:
+      label: Feature Source
+      description: Where does this feature come from?
+      placeholder: "e.g., Stock Android 15, Flyme OS, a specific app, or an Xposed module"
+    validations:
+      required: true
+
+  - type: input
+    id: source-repo
+    attributes:
+      label: Open-Source Repository URL (Optional)
+      description: If this feature comes from an open-source project (e.g., another Xposed module), please provide the link to its repository here (e.g., GitHub, GitLab). This greatly helps the developer understand how it is implemented.
+      placeholder: "https://github.com/user/repository"
+
+  - type: textarea
+    id: feature-description
+    attributes:
+      label: Feature Description
+      description: |
+        Please describe in detail what this feature is and how it works.
+        Screenshots or screen recordings demonstrating the feature are highly recommended.
+    validations:
+      required: true
+
+  - type: textarea
+    id: value-proposition
+    attributes:
+      label: Why is this feature valuable for OShin users?
+      description: Please explain why you think bringing this feature to ColorOS would be useful.
+    validations:
+      required: true

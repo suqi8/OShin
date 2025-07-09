@@ -1,0 +1,38 @@
+name: ✨ 功能请求
+description: 提出一个全新的功能或改进建议。
+title: "[Feature] <请简要描述你的功能建议>"
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem-description
+    attributes:
+      label: 这个功能解决了什么问题？
+      description: |
+        请清晰地描述你希望通过这个新功能解决的痛点或遇到的不便。
+        例如：我总是因为...而感到困扰，如果有一个...功能就好了。
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution-description
+    attributes:
+      label: 你期望的解决方案是怎样的？
+      description: |
+        请详细描述你建议的功能应该如何工作。
+        它应该出现在哪里？用户应该如何操作它？
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives-considered
+    attributes:
+      label: 你是否考虑过其他替代方案？
+      description: 如果有的话，请描述一下你考虑过的其他实现方式或替代方案。
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 额外信息
+      description: |
+        可以在此处添加任何与该功能请求相关的其他背景信息或截图。
+        例如，其他App或模块中类似功能的参考。

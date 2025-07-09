@@ -1,0 +1,89 @@
+name: 🐞 错误报告
+description: 报告一个模块中出现的错误、崩溃或问题。
+title: "[Bug] <请在这里简要描述你遇到的问题>"
+labels: ["bug", "需要确认"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你花时间来填写这份错误报告！为了帮助我们更快地定位和解决问题，请你尽可能详细地提供以下信息。
+
+  - type: checkboxes
+    id: pre-check
+    attributes:
+      label: 提交前确认
+      description: 在提交此 Issue 之前，请确认并勾选以下所有项目。不符合要求的 Issue 将可能被直接关闭。
+      options:
+        - label: 我确认，此问题在最新的 CI 构建版本中同样存在。 (你可以在 [这里](https://t.me/OPatchC) 获取最新版本)
+          required: true
+        - label: 我确认，我已经排查过其他所有已安装的 (LSPosed/Magisk) 模块，并确定此问题是由 O神 模块本身引起的。
+          required: true
+        - label: 我确认，我已经在 Issue Tracker 中进行过搜索，没有发现与此问题重复的 Issue。
+          required: true
+
+  - type: input
+    id: oshin-version
+    attributes:
+      label: OShin 模块版本
+      description: 你正在使用哪个版本的 O神 模块？
+      placeholder: "例如：v15.0.123"
+    validations:
+      required: true
+
+  - type: input
+    id: device-model
+    attributes:
+      label: 设备型号
+      description: 你的手机具体型号是什么？
+      placeholder: "例如：一加 Ace 3"
+    validations:
+      required: true
+
+  - type: input
+    id: os-version
+    attributes:
+      label: 系统版本
+      description: 你的 ColorOS 版本和 Android 版本是什么？
+      placeholder: "例如：ColorOS 15.0.0.830 / Android 15"
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: 问题描述
+      description: |
+        请清晰、详细地描述你遇到的问题。
+        发生了什么？你期望的结果是什么？
+      placeholder: "当我尝试...时，应用崩溃了 / ...功能没有按预期工作。"
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: 复现步骤
+      description: 请一步步地告诉我们如何复现这个问题。
+      placeholder: |
+        1. 打开 '...' 应用
+        2. 点击 '...' 按钮
+        3. 滚动到 '...'
+        4. 问题出现
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: 相关日志 (Logcat, LSPosed Log)
+      description: |
+        这是定位问题的关键！请在问题发生后，立即捕获并上传相关的 Logcat 或 LSPosed 日志。
+        **请不要以截图形式提供日志，而是将日志文本粘贴在此处或上传为 `.txt` 文件。**
+      placeholder: "在此处粘贴你的 logcat 或 LSPosed 日志..."
+      render: shell
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: 额外信息
+      description: 是否有其他任何你认为相关的信息？例如截图、屏幕录制等。
