@@ -14,7 +14,7 @@ body:
       label: Pre-submission Checklist
       description: Before submitting, please check all the following items. Issues that do not meet these requirements may be closed immediately.
       options:
-        - label: I confirm that this issue also exists in the latest CI build. (You can get the latest version [here](https://t.me/OPatchC>))
+        - label: I confirm that this issue also exists in the latest CI build. (You can get the latest version [here](https://t.me/OPatchC))
           required: true
         - label: I confirm I have tested with all other (LSPosed/Magisk) modules disabled to ensure this issue is caused by the OShin module itself.
           required: true
