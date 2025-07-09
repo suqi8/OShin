@@ -43,6 +43,7 @@ class BigMediaArt: YukiBaseHooker() {
                                     endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
                                     bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
                                 }
+                                id = View.generateViewId()
                             }
                             hookedView.addView(mediaBackground, 0)
 
