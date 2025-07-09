@@ -1,0 +1,89 @@
+name: 🐞 Bug Report
+description: Report an error, crash, or other issue with the module.
+title: "[Bug] <A brief description of your issue>"
+labels: ["bug", "needs triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! To help us resolve the issue faster, please provide as much detail as possible.
+
+  - type: checkboxes
+    id: pre-check
+    attributes:
+      label: Pre-submission Checklist
+      description: Before submitting, please check all the following items. Issues that do not meet these requirements may be closed immediately.
+      options:
+        - label: I confirm that this issue also exists in the latest CI build. (You can get the latest version [here](https://t.me/OPatchC>))
+          required: true
+        - label: I confirm I have tested with all other (LSPosed/Magisk) modules disabled to ensure this issue is caused by the OShin module itself.
+          required: true
+        - label: I confirm I have searched the Issue Tracker and found no similar issue.
+          required: true
+
+  - type: input
+    id: oshin-version
+    attributes:
+      label: OShin Module Version
+      description: Which version of the OShin module are you using?
+      placeholder: "e.g., v15.0.123"
+    validations:
+      required: true
+
+  - type: input
+    id: device-model
+    attributes:
+      label: Device Model
+      description: What is your specific phone model?
+      placeholder: "e.g., OnePlus Ace 3"
+    validations:
+      required: true
+
+  - type: input
+    id: os-version
+    attributes:
+      label: System Version
+      description: What are your ColorOS and Android versions?
+      placeholder: "e.g., ColorOS 15.0.0.830 / Android 15"
+    validations:
+      required: true
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description
+      description: |
+        Provide a clear and concise description of the bug.
+        What happened? What did you expect to happen?
+      placeholder: "When I try to..., the app crashes / the feature... doesn't work as expected."
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Please provide step-by-step instructions on how to reproduce this issue.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant Logs (Logcat, LSPosed Log)
+      description: |
+        This is crucial for debugging! Please capture and upload the relevant Logcat or LSPosed logs right after the issue occurs.
+        **Please do not provide logs as screenshots. Paste the text here or upload it as a .txt file.**
+      placeholder: "Paste your logcat or LSPosed logs here..."
+      render: shell
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Is there anything else you think is relevant? e.g., screenshots, screen recordings, etc.
