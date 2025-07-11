@@ -8,7 +8,7 @@
 # 在此区域统一定义所有库和插件的版本号。
 [versions]
 # Android Gradle 插件 (AGP) 和核心工具链
-agp = "8.11.0"
+agp = "8.11.1"
 kotlin = "2.2.0"
 ksp = "2.2.0-2.0.2"
 
