@@ -135,38 +135,39 @@ class BigMediaArt: YukiBaseHooker() {
                                 views.background.background = fullBitmap.toDrawable(context.resources)
                                 views.background.visibility = View.VISIBLE
 
-                                // --- ✨ 颜色分离逻辑 ---
-                                val width = fullBitmap.width
-                                val height = fullBitmap.height
-                                if (width <= 0 || height <= 1) return@let // 确保Bitmap有效
+                                if (prefs("systemui\\controlCenter").getBoolean("qs_media_auto_color_label", false)) {
+                                    // --- ✨ 颜色分离逻辑 ---
+                                    val width = fullBitmap.width
+                                    val height = fullBitmap.height
+                                    if (width <= 0 || height <= 1) return@let // 确保Bitmap有效
 
-                                // 裁切出上半部分和下半部分
-                                val upperBitmap = Bitmap.createBitmap(fullBitmap, 0, 0, width, height / 2)
-                                val lowerBitmap = Bitmap.createBitmap(fullBitmap, 0, height / 2, width, height / 2)
+                                    // 裁切出上半部分和下半部分
+                                    val upperBitmap = Bitmap.createBitmap(fullBitmap, 0, 0, width, height / 2)
+                                    val lowerBitmap = Bitmap.createBitmap(fullBitmap, 0, height / 2, width, height / 2)
 
-                                // 分析上半部分，设置文本颜色
-                                Palette.from(upperBitmap).generate { palette ->
-                                    val dominantColor = palette?.dominantSwatch?.rgb ?: Color.GRAY
-                                    val textColor = dominantColor.invert()
-                                    hookedView.post {
-                                        views.title?.setTextColor(textColor)
-                                        views.text?.setTextColor(textColor)
+                                    // 分析上半部分，设置文本颜色
+                                    Palette.from(upperBitmap).generate { palette ->
+                                        val dominantColor = palette?.dominantSwatch?.rgb ?: Color.GRAY
+                                        val textColor = dominantColor.invert()
+                                        hookedView.post {
+                                            views.title?.setTextColor(textColor)
+                                            views.text?.setTextColor(textColor)
+                                        }
                                     }
-                                }
 
-                                // 分析下半部分，设置图标颜色
-                                Palette.from(lowerBitmap).generate { palette ->
-                                    val dominantColor = palette?.dominantSwatch?.rgb ?: Color.GRAY
-                                    val iconColor = dominantColor.invert()
-                                    hookedView.post {
-                                        val buttonTint = ColorStateList.valueOf(iconColor)
-                                        views.preBtn?.imageTintList = buttonTint
-                                        views.playOrPauseBtn?.imageTintList = buttonTint
-                                        views.nextBtn?.imageTintList = buttonTint
+                                    // 分析下半部分，设置图标颜色
+                                    Palette.from(lowerBitmap).generate { palette ->
+                                        val dominantColor = palette?.dominantSwatch?.rgb ?: Color.GRAY
+                                        val iconColor = dominantColor.invert()
+                                        hookedView.post {
+                                            val buttonTint = ColorStateList.valueOf(iconColor)
+                                            views.preBtn?.imageTintList = buttonTint
+                                            views.playOrPauseBtn?.imageTintList = buttonTint
+                                            views.nextBtn?.imageTintList = buttonTint
+                                        }
                                     }
+                                    // --- 颜色分离逻辑结束 ---
                                 }
-                                // --- 颜色分离逻辑结束 ---
-
                             } ?: run {
                                 views.background.visibility = View.GONE
                             }
