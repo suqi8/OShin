@@ -1,31 +1,22 @@
 package com.suqi8.oshin.hook.com.android.systemui.controlCenter
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.graphics.Outline
 import android.graphics.drawable.Icon
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewOutlineProvider
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.graphics.drawable.toDrawable
 import androidx.palette.graphics.Palette
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
-
-// 建议将这些扩展函数放在一个单独的工具类文件中
-fun Bitmap.toRoundedDrawable(context: Context, cornerRadiusDp: Float): RoundedBitmapDrawable {
-    val cornerRadiusPx = cornerRadiusDp * context.resources.displayMetrics.density
-    return RoundedBitmapDrawableFactory.create(context.resources, this).apply {
-        cornerRadius = cornerRadiusPx
-        setAntiAlias(true)
-    }
-}
 
 // 颜色反转扩展函数
 fun Int.invert(): Int {
@@ -53,7 +44,7 @@ class BigMediaArt: YukiBaseHooker() {
                 val viewMap = java.util.WeakHashMap<View, PanelViews>()
 
                 "com.oplus.systemui.qs.media.OplusQsMediaPanelView".toClass().resolve().apply {
-                    // Hook onFinishInflate: 创建背景视图并查找所有子视图
+                    // Hook onFinishInflate: 创建背景视图、查找子视图并设置视图裁切
                     firstMethod {
                         name = "onFinishInflate"
                         emptyParameters()
@@ -86,10 +77,21 @@ class BigMediaArt: YukiBaseHooker() {
                                     endToEnd = ConstraintLayout.LayoutParams.PARENT_ID
                                     bottomToBottom = ConstraintLayout.LayoutParams.PARENT_ID
                                 }
+
+                                // --- ✨ 新增：通过视图轮廓实现圆角裁切 ---
+                                val cornerRadiusDp = 18f
+                                val cornerRadiusPx = cornerRadiusDp * context.resources.displayMetrics.density
+                                outlineProvider = object : ViewOutlineProvider() {
+                                    override fun getOutline(view: View, outline: Outline) {
+                                        outline.setRoundRect(0, 0, view.width, view.height, cornerRadiusPx)
+                                    }
+                                }
+                                clipToOutline = true
+                                // --- 视图裁切设置结束 ---
                             }
                             hookedView.addView(mediaBackground, 0)
 
-                            // 将所有找到的视图存入Map，与当前面板实例关联
+                            // 将所有找到的视图存入Map
                             viewMap[hookedView] = PanelViews(
                                 background = mediaBackground,
                                 title = mTitle,
@@ -101,7 +103,7 @@ class BigMediaArt: YukiBaseHooker() {
                         }
                     }
 
-                    // Hook bindCoverImg: 更新背景和颜色
+                    // Hook bindCoverImg: 更新背景和分离的颜色
                     firstMethod {
                         name = "bindCoverImg"
                         parameters("com.android.systemui.media.controls.shared.model.MediaData")
@@ -129,30 +131,41 @@ class BigMediaArt: YukiBaseHooker() {
                             }
 
                             artworkIcon.loadDrawable(context)?.let { originalDrawable ->
-                                // 使用 KTX 扩展函数将 Drawable 转换为 Bitmap
-                                val bitmap = originalDrawable.toBitmap()
-
-                                // 使用处理过的Bitmap创建背景
-                                views.background.background = bitmap.toRoundedDrawable(context, 18f)
+                                val fullBitmap = originalDrawable.toBitmap()
+                                views.background.background = fullBitmap.toDrawable(context.resources)
                                 views.background.visibility = View.VISIBLE
 
-                                // --- ✨ 颜色反转逻辑 ---
-                                Palette.from(bitmap).generate { palette ->
-                                    // 获取主导色，如果失败则默认为灰色
-                                    val dominantColor = palette?.dominantSwatch?.rgb ?: Color.GRAY
-                                    // 计算反色
-                                    val invertedColor = dominantColor.invert()
+                                // --- ✨ 颜色分离逻辑 ---
+                                val width = fullBitmap.width
+                                val height = fullBitmap.height
+                                if (width <= 0 || height <= 1) return@let // 确保Bitmap有效
 
+                                // 裁切出上半部分和下半部分
+                                val upperBitmap = Bitmap.createBitmap(fullBitmap, 0, 0, width, height / 2)
+                                val lowerBitmap = Bitmap.createBitmap(fullBitmap, 0, height / 2, width, height / 2)
+
+                                // 分析上半部分，设置文本颜色
+                                Palette.from(upperBitmap).generate { palette ->
+                                    val dominantColor = palette?.dominantSwatch?.rgb ?: Color.GRAY
+                                    val textColor = dominantColor.invert()
                                     hookedView.post {
-                                        views.title?.setTextColor(invertedColor)
-                                        views.text?.setTextColor(invertedColor)
-                                        val buttonTint = ColorStateList.valueOf(invertedColor)
+                                        views.title?.setTextColor(textColor)
+                                        views.text?.setTextColor(textColor)
+                                    }
+                                }
+
+                                // 分析下半部分，设置图标颜色
+                                Palette.from(lowerBitmap).generate { palette ->
+                                    val dominantColor = palette?.dominantSwatch?.rgb ?: Color.GRAY
+                                    val iconColor = dominantColor.invert()
+                                    hookedView.post {
+                                        val buttonTint = ColorStateList.valueOf(iconColor)
                                         views.preBtn?.imageTintList = buttonTint
                                         views.playOrPauseBtn?.imageTintList = buttonTint
                                         views.nextBtn?.imageTintList = buttonTint
                                     }
                                 }
-                                // --- 颜色反转逻辑结束 ---
+                                // --- 颜色分离逻辑结束 ---
 
                             } ?: run {
                                 views.background.visibility = View.GONE
