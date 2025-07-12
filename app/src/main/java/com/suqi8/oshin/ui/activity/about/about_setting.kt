@@ -87,17 +87,21 @@ fun about_setting(
             )
             addline()
             val context = LocalContext.current
+            // 1. 确保你的 R.array.language 数组里已经加上了“梗体中文”
+            //    假设它在第6个位置，也就是索引为 5
             val languageArray = stringArrayResource(id = R.array.language).toList()
-            var selectedLanguageIndex = remember { mutableStateOf(context.prefs("settings").getInt("app_language", 0)) } // 默认选中：跟随系统
+            val selectedLanguageIndex = remember { mutableStateOf(context.prefs("settings").getInt("app_language", 0)) }
             val recompose = currentRecomposeScope
 
-            // 切换语言逻辑
+            // 2. 切换语言逻辑
             fun changeLanguage(index: Int) {
+                // ✨ 在这里添加我们的自定义语言
                 val newLocale = when (index) {
                     1 -> Locale.SIMPLIFIED_CHINESE
                     2 -> Locale.ENGLISH
                     3 -> Locale.JAPANESE
                     4 -> Locale.Builder().setLanguage("ru").build()
+                    5 -> Locale.Builder().setLanguage("zh").setExtension('x', "meme").build()
                     else -> Locale.getDefault() // 跟随系统
                 }
 
@@ -105,18 +109,21 @@ fun about_setting(
                 val config = Configuration(resources.configuration)
                 config.setLocale(newLocale)
 
+                // 更新应用配置
                 resources.updateConfiguration(config, resources.displayMetrics)
 
+                // 强制重组以刷新UI
                 recompose.invalidate()
             }
+
             SuperDropdown(
                 title = stringResource(R.string.app_language),
                 items = languageArray,
                 selectedIndex = selectedLanguageIndex.value,
-                onSelectedIndexChange = {
-                    selectedLanguageIndex.value = it
-                    context.prefs("settings").edit { putInt("app_language", it) }
-                    changeLanguage(it)
+                onSelectedIndexChange = { index ->
+                    selectedLanguageIndex.value = index
+                    context.prefs("settings").edit { putInt("app_language", index) }
+                    changeLanguage(index)
                 }
             )
             addline()

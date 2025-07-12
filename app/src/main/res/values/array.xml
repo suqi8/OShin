@@ -26,6 +26,7 @@
         <item>English</item>
         <item>日本語</item>
         <item>Русский</item>
+        <item>梗体中文</item>
     </string-array>
     <integer-array name="my_card_stroke_gradient_colors_light">
         <item>0x29ffffff</item>
