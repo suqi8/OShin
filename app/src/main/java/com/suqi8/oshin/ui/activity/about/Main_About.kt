@@ -36,7 +36,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -46,6 +45,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -89,7 +89,6 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.ui.theme.BgEffectView
 import com.suqi8.oshin.utils.executeCommand
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
@@ -254,10 +253,54 @@ fun Main_About(
                         .padding(bottom = 6.dp)
                         .alpha(cardAlpha)
                 ) {
-                    SuperArrow(title = stringResource(R.string.Device_Name), onClick = {
-                        showDeviceNameDialog.value = true
-                    }, rightText = deviceName.value + "")
-                    DeviceNameDialog(showDeviceNameDialog, deviceNameCache, deviceName, focusManager)
+                    val coroutineScope = rememberCoroutineScope()
+                    SuperArrow(
+                        title = stringResource(R.string.Device_Name),
+                        rightText = deviceName.value,
+                        onClick = {
+                            showDeviceNameDialog.value = true
+                        }
+                    )
+                    if (showDeviceNameDialog.value) {
+                        SuperDialog(
+                            title = stringResource(R.string.Device_Name),
+                            onDismissRequest = { showDeviceNameDialog.value = false },
+                            show = showDeviceNameDialog
+                        ) {
+                            TextField(
+                                value = deviceNameCache.value,
+                                onValueChange = { deviceNameCache.value = it },
+                                backgroundColor = colorScheme.secondaryContainer,
+                                label = "",
+                                modifier = Modifier.padding(),
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
+                            )
+                            Spacer(Modifier.height(12.dp))
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                TextButton(
+                                    modifier = Modifier.weight(1f),
+                                    text = stringResource(R.string.cancel),
+                                    onClick = { showDeviceNameDialog.value = false }
+                                )
+                                Spacer(Modifier.width(12.dp))
+                                TextButton(
+                                    modifier = Modifier.weight(1f),
+                                    text = stringResource(R.string.ok),
+                                    colors = ButtonDefaults.textButtonColorsPrimary(),
+                                    onClick = {
+                                        deviceName.value = deviceNameCache.value
+                                        showDeviceNameDialog.value = false
+                                        coroutineScope.launch(Dispatchers.IO) {
+                                            executeCommand("settings put global revise_device_name \"$deviceName\"")
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
                     addline()
                     SuperArrow(title = stringResource(R.string.Device_Memory),
                         rightText = "$usedStorage / $physicalTotalStorage",
@@ -417,39 +460,6 @@ fun IconSuperArrow(title: String, summary: String? = null, iconRes: Int, onClick
         },
         onClick = onClick
     )
-}
-
-@Composable
-fun DeviceNameDialog(showDeviceNameDialog: MutableState<Boolean>, deviceNameCache: MutableState<String>, deviceName: MutableState<String>, focusManager: androidx.compose.ui.focus.FocusManager) {
-    if (!showDeviceNameDialog.value) return
-    SuperDialog(title = stringResource(R.string.Device_Name), show = showDeviceNameDialog, onDismissRequest = { showDeviceNameDialog.value = false }) {
-        TextField(
-            value = deviceNameCache.value,
-            onValueChange = { deviceNameCache.value = it },
-            backgroundColor = colorScheme.secondaryContainer,
-            label = "",
-            modifier = Modifier.padding(),
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() }),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
-        )
-        Spacer(Modifier.height(12.dp))
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            TextButton(modifier = Modifier.weight(1f), text = stringResource(R.string.cancel), onClick = { showDeviceNameDialog.value = false })
-            Spacer(Modifier.width(12.dp))
-            TextButton(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.ok),
-                colors = ButtonDefaults.textButtonColorsPrimary(),
-                onClick = {
-                    showDeviceNameDialog.value = false
-                    deviceName.value = deviceNameCache.value
-                    CoroutineScope(Dispatchers.IO).launch {
-                        executeCommand("settings put global revise_device_name \"${deviceName.value}\"")
-                    }
-                }
-            )
-        }
-    }
 }
 
 @Composable

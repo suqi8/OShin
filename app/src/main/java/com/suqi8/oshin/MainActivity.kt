@@ -75,6 +75,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.kyant.liquidglass.GlassBorder
+import com.kyant.liquidglass.GlassMaterial
+import com.kyant.liquidglass.InnerRefraction
+import com.kyant.liquidglass.LiquidGlassStyle
+import com.kyant.liquidglass.LocalLiquidGlassProviderState
+import com.kyant.liquidglass.liquidGlass
+import com.kyant.liquidglass.liquidGlassProvider
+import com.kyant.liquidglass.rememberLiquidGlassProviderState
 import com.suqi8.oshin.ui.activity.about.Main_About
 import com.suqi8.oshin.ui.activity.about.about_contributors
 import com.suqi8.oshin.ui.activity.about.about_group
@@ -121,14 +129,9 @@ import com.suqi8.oshin.utils.executeCommand
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import dev.chrisbanes.haze.ExperimentalHazeApi
-import dev.chrisbanes.haze.HazeEffectScope
-import dev.chrisbanes.haze.HazeInputScale
-import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -635,112 +638,119 @@ fun Main1(context: Context,navController: NavController,
             targetPage = pagerState.currentPage
         }
     }
-    Scaffold(modifier = Modifier.fillMaxSize(),bottomBar = {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(
-                bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-            ), horizontalAlignment = Alignment.CenterHorizontally) {
-            Card(modifier = Modifier
-                .padding(bottom = 10.dp)
-                .drawColoredShadow(
-                    MiuixTheme.colorScheme.onSurface,
-                    0.1f,
-                    borderRadius = CardDefaults.CornerRadius,
-                    shadowRadius = 10.dp,
-                    offsetX = 0.dp,
-                    offsetY = 0.dp,
-                    roundedRect = false
-                )) {
-                NavigationBar(
-                    items = items,
-                    color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.surfaceContainer,
-                    modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
-                        Modifier.hazeEffect(
-                            state = hazeState,
-                            style = hazeStyle, block = fun HazeEffectScope.() {
-                                inputScale = HazeInputScale.Auto
+    // 在 Composable 函数顶层创建 state
+    val providerState = rememberLiquidGlassProviderState()
+    val context = LocalContext.current
+
+// 使用 CompositionLocalProvider 包裹 Scaffold
+    CompositionLocalProvider(
+        LocalLiquidGlassProviderState provides providerState
+    ) {
+        // 1. ✅ 提取可复用的玻璃材质，用于统一视觉风格
+        val commonGlassMaterial = GlassMaterial(
+            blurRadius = 0.dp,
+            whitePoint = 0.1f,  // 高光
+            chromaMultiplier = 1.2f // 增强透过玻璃看到的颜色饱和度
+        )
+
+        // 2. ✅ 为 TopAppBar 定义一个丰富的玻璃样式
+        val topAppBarStyle = LiquidGlassStyle(
+            shape = RoundedCornerShape(28.dp),
+            material = commonGlassMaterial,
+            innerRefraction = InnerRefraction.Default, // 添加默认的内部折射效果，产生凹凸感
+            border = GlassBorder.Light(width = 1.dp)    // 添加一个细微的发光边框
+        )
+
+        // 3. ✅ 为 BottomBar 定义一个丰富的玻璃样式
+        val bottomNavigationStyle = LiquidGlassStyle(
+            shape = RoundedCornerShape(size = CardDefaults.CornerRadius),
+            material = commonGlassMaterial,
+            innerRefraction = InnerRefraction.Default,
+            border = GlassBorder.Light(width = 1.dp)
+        )
+
+        Scaffold(
+            modifier = Modifier.fillMaxSize(),
+            topBar = {
+                AnimatedVisibility(pagerState.currentPage != 3) {
+                    Box(modifier = Modifier.clip(RoundedCornerShape(28.dp))) {
+                        val enableBlur = context.prefs("settings").getBoolean("enable_blur", true)
+                        TopAppBar(
+                            scrollBehavior = currentScrollBehavior,
+                            color = if (enableBlur) Color.Transparent else MiuixTheme.colorScheme.background,
+                            title = when (pagerState.currentPage) {
+                                0 -> stringResource(R.string.app_name)
+                                1 -> stringResource(R.string.module)
+                                2 -> stringResource(R.string.func)
+                                else -> stringResource(R.string.about)
+                            },
+                            modifier = if (enableBlur) {
+                                // 直接应用预设好的样式
+                                Modifier.liquidGlass(style = topAppBarStyle)
+                            } else Modifier
+                        )
+                    }
+                }
+            },
+            bottomBar = {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(
+                            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+                        ),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    val enableBlur = context.prefs("settings").getBoolean("enable_blur", true)
+                    Card(
+                        // 4. ✅ 当玻璃效果启用时，不再需要额外的阴影
+                        modifier = if (enableBlur) {
+                            Modifier.padding(bottom = 10.dp)
+                        } else {
+                            Modifier
+                                .padding(bottom = 10.dp)
+                                .drawColoredShadow(
+                                    MiuixTheme.colorScheme.onSurface,
+                                    0.1f,
+                                    borderRadius = CardDefaults.CornerRadius,
+                                    shadowRadius = 10.dp
+                                )
+                        },
+                        color = Color.Transparent // Card 必须透明才能透出内部的 NavigationBar 效果
+                    ) {
+                        NavigationBar(
+                            items = items,
+                            color = if (enableBlur) Color.Transparent else MiuixTheme.colorScheme.surfaceContainer,
+                            modifier = if (enableBlur) {
+                                // 直接应用预设好的样式
+                                Modifier.liquidGlass(style = bottomNavigationStyle)
+                            } else Modifier,
+                            selected = targetPage,
+                            onClick = { index ->
+                                targetPage = index
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
                             }
                         )
-                    } else Modifier,
-                    selected = targetPage,
-                    onClick = { index ->
-                        targetPage = index
-                        coroutineScope.launch {
-                            pagerState.animateScrollToPage(index)
-                        }
                     }
+                }
+            },
+        ) { padding ->
+            Box(
+                modifier = Modifier
+                    .liquidGlassProvider(providerState)
+            ) {
+                AppHorizontalPager(
+                    modifier = Modifier.imePadding(),
+                    pagerState = pagerState,
+                    topAppBarScrollBehaviorList = topAppBarScrollBehaviorList,
+                    padding = padding,
+                    navController = navController,
+                    context = context
                 )
             }
         }
-    }, topBar = {
-        AnimatedVisibility(pagerState.currentPage != 3) {
-            Box(modifier = Modifier.clip(RoundedCornerShape(28.dp))) {
-                TopAppBar(scrollBehavior = currentScrollBehavior,color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.background,
-                    title = when (pagerState.currentPage) {
-                        0 -> stringResource(R.string.app_name)
-                        1 -> stringResource(R.string.module)
-                        2 -> stringResource(R.string.func)
-                        else -> stringResource(R.string.about)
-                    }, modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
-                        Modifier.hazeEffect(
-                            state = hazeState,
-                            style = hazeStyle, block = fun HazeEffectScope.() {
-                                inputScale = HazeInputScale.Auto
-                                if (context.prefs("settings").getBoolean("enable_gradient_blur", true)) progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
-                            })
-                    } else Modifier, navigationIcon = {
-                        /*Image(painter = painterResource(id = R.drawable.ic_launcher_foreground), contentDescription = null,
-                            modifier = Modifier.size(50.dp))*/
-                        /*Card(modifier = Modifier
-                            .size(55.dp)
-                            .padding(10.dp)) {
-                            Box(modifier = Modifier.fillMaxSize()) {
-                                *//*Image(
-                                    painter = painterResource(id = R.drawable.icon_background_newyear),
-                                    contentDescription = null,
-                                    modifier = Modifier.fillMaxSize().graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
-                                    *//**//*.offset(y = (-20).dp)*//**//*,
-                        contentScale = ContentScale.Crop
-                    )*//*
-                                Image(
-                                    painter = painterResource(id = R.drawable.icon),
-                                    contentDescription = null,
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .graphicsLayer(scaleX = 1.5f, scaleY = 1.5f)
-                                        .clickable {
-                                            //context.prefs("settings").edit { putBoolean("privacy",true) }
-                                        }
-                                    *//*.offset(y = (-20).dp)*//*,
-                                    contentScale = ContentScale.Crop
-                                )
-                            }
-                        }*/
-                    })
-                //Image(painter = painterResource(R.drawable.osu),contentDescription = null, modifier = Modifier.fillMaxWidth())
-            }
-        }
-    }) { padding ->
-        Box(modifier = Modifier.hazeSource(
-            state = hazeState)
-        ) {
-            AppHorizontalPager(
-                modifier = Modifier.imePadding(),
-                pagerState = pagerState,
-                topAppBarScrollBehaviorList = topAppBarScrollBehaviorList,
-                padding = padding,
-                navController = navController,
-                context = context
-            )
-        }
-        /*Column(modifier = Modifier.padding(Padding)) {
-            NavHost(navController = navController1, startDestination = "Main_Home") {
-                composable("Main_Function") { Main_Function(navController) }
-                composable("Main_Home") { Main_Home() }
-                composable("Main_About") { Main_About(navController) }
-            }
-        }*/
     }
 }
 
