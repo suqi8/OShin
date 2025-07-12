@@ -40,7 +40,10 @@ fun controlCenter(navController: NavController) {
                 summary = stringResource(R.string.media_cover_background_description),
                 category = "systemui\\controlCenter",
                 key = "enlarge_media_cover",
-                defValue = false
+                defValue = false,
+                onCheckedChange = {
+                    enlarge_media_cover.value = it
+                }
             )
             AnimatedVisibility(enlarge_media_cover.value) {
                 addline()
