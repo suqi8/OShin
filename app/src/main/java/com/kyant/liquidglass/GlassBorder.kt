@@ -42,6 +42,15 @@ sealed interface GlassBorder {
         }
     }
 
+    /**
+     * 表示类似玻璃的 UI 元素的亮边框效果。
+     * 此效果模拟光与元素边缘的相互作用。
+     *
+     * @property color 亮边框的颜色。默认为半透明白色。
+     * @property width 亮边框的宽度，单位为 Dp。默认为 1.dp。
+     * @property angle 光源的角度，单位为度。这决定了光线看起来来自哪个方向。默认为 45 度。
+     * @property decay 控制光强度衰减速度的因子。较高的值会导致更急剧的衰减。默认为 2f。
+     */
     @Immutable
     data class Light(
         override val color: Color = Color.White.copy(alpha = 0.6f),
