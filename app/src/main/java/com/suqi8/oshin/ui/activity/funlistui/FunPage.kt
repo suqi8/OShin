@@ -1,6 +1,7 @@
 package com.suqi8.oshin.ui.activity.funlistui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -33,6 +34,7 @@ import com.kyant.liquidglass.RefractionValue
 import com.kyant.liquidglass.liquidGlass
 import com.kyant.liquidglass.liquidGlassProvider
 import com.kyant.liquidglass.rememberLiquidGlassProviderState
+import com.suqi8.oshin.LocalColorMode
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -59,12 +61,18 @@ fun FunPage(
     val lazyListState = rememberLazyListState()
     val providerState = rememberLiquidGlassProviderState()
     val enableBlur = context.prefs("settings").getBoolean("enable_blur", true)
-
+    val colorMode = LocalColorMode.current.value
+    val isEffectivelyDark = when (colorMode) {
+        1 -> false // 模式1：强制浅色
+        2 -> true  // 模式2：强制深色
+        else -> isSystemInDarkTheme() // 其他：跟随系统
+    }
+    val whitePoint = if (!isEffectivelyDark) -0.3f else 0.3f
     val buttonGlassStyle = LiquidGlassStyle(
         shape = CircleShape,
         material = GlassMaterial(
             blurRadius = 10.dp,
-            whitePoint = 0.3f
+            whitePoint = whitePoint
         ),
         innerRefraction = InnerRefraction(
             height = RefractionValue(24.dp),
