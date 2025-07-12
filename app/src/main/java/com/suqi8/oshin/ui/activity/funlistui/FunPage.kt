@@ -1,44 +1,35 @@
 package com.suqi8.oshin.ui.activity.funlistui
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.displayCutout
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBars
-import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
+import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.R
-import dev.chrisbanes.haze.ExperimentalHazeApi
-import dev.chrisbanes.haze.HazeEffectScope
-import dev.chrisbanes.haze.HazeInputScale
-import dev.chrisbanes.haze.HazeProgressive
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.HazeStyle
-import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.hazeEffect
-import dev.chrisbanes.haze.hazeSource
+import com.kyant.liquidglass.GlassBorder
+import com.kyant.liquidglass.GlassMaterial
+import com.kyant.liquidglass.InnerRefraction
+import com.kyant.liquidglass.LiquidGlassStyle
+import com.kyant.liquidglass.LocalLiquidGlassProviderState
+import com.kyant.liquidglass.liquidGlass
+import com.kyant.liquidglass.liquidGlassProvider
+import com.kyant.liquidglass.rememberLiquidGlassProviderState
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.IconButton
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -51,92 +42,99 @@ import top.yukonga.miuix.kmp.icon.icons.useful.Refresh
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
-@OptIn(ExperimentalHazeApi::class)
 @Composable
-fun FunPage(title: String, appList: List<String>? = listOf(), navController: NavController, content: @Composable () -> Unit) {
+fun FunPage(
+    title: String,
+    appList: List<String>? = listOf(),
+    navController: NavController,
+    content: @Composable () -> Unit
+) {
     val context = LocalContext.current
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
     val restartAPP = remember { mutableStateOf(false) }
     val resetApp = resetApp()
-    val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
-    val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
-    val noiseFactor = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
-    val containerColor: Color = MiuixTheme.colorScheme.background
-    val hazeState = remember { HazeState() }
-    val hazeStyle = remember(containerColor, alpha, blurRadius, noiseFactor) {
-        HazeStyle(
-            backgroundColor = containerColor,
-            tint = HazeTint(containerColor.copy(alpha)),
-            blurRadius = blurRadius,
-            noiseFactor = noiseFactor
-        )
-    }
-    val lazyListState = rememberSaveable(saver = LazyListState.Saver) {
-        LazyListState(firstVisibleItemIndex = 0) // 初始位置
-    }
-    Scaffold(topBar = {
-        TopAppBar(
-            scrollBehavior = topAppBarState,
-            title = title,
-            color = if (context.prefs("settings").getBoolean("enable_blur", true)) Color.Transparent else MiuixTheme.colorScheme.background,
-            modifier = if (context.prefs("settings").getBoolean("enable_blur", true)) {
-                Modifier.hazeEffect(
-                    state = hazeState,
-                    style = hazeStyle, block = fun HazeEffectScope.() {
-                        inputScale = HazeInputScale.Auto
-                        if (context.prefs("settings").getBoolean("enable_gradient_blur", true)) progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
-                    })
-            } else Modifier,
-            navigationIcon = {
-                IconButton(
-                    onClick = {
-                        navController.popBackStack()
+    val lazyListState = rememberLazyListState()
+    val providerState = rememberLiquidGlassProviderState()
+    val enableBlur = context.prefs("settings").getBoolean("enable_blur", true)
+
+    val liquidGlassStyle = LiquidGlassStyle(
+        shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
+        material = GlassMaterial(
+            blurRadius = 0.dp,
+            whitePoint = 0.1f,
+            chromaMultiplier = 1.2f
+        ),
+        innerRefraction = InnerRefraction.Default,
+        border = GlassBorder.Light(width = 1.dp)
+    )
+
+    CompositionLocalProvider(
+        LocalLiquidGlassProviderState provides providerState
+    ) {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    scrollBehavior = topAppBarState,
+                    title = title,
+                    color = if (enableBlur) Color.Transparent else MiuixTheme.colorScheme.background,
+                    modifier = if (enableBlur) {
+                        Modifier.liquidGlass(style = liquidGlassStyle)
+                    } else Modifier,
+                    navigationIcon = {
+                        IconButton(
+                            onClick = { navController.popBackStack() },
+                            modifier = Modifier.padding(start = 18.dp)
+                        ) {
+                            Icon(
+                                imageVector = MiuixIcons.Useful.Back,
+                                contentDescription = "Back",
+                                tint = MiuixTheme.colorScheme.onBackground
+                            )
+                        }
                     },
-                    modifier = Modifier.padding(start = 18.dp)
+                    actions = {
+                        if (!appList.isNullOrEmpty()) {
+                            IconButton(
+                                onClick = { restartAPP.value = true },
+                                modifier = Modifier.padding(end = 18.dp)
+                            ) {
+                                Icon(
+                                    imageVector = MiuixIcons.Useful.Refresh,
+                                    contentDescription = "Refresh",
+                                    tint = MiuixTheme.colorScheme.onBackground
+                                )
+                            }
+                        }
+                    }
+                )
+            }
+        ) { padding ->
+            // ✅ 核心改动：将 provider 移到 LazyColumn 的父级 Box 上
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .liquidGlassProvider(providerState)
+            ) {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .overScrollVertical()
+                        .nestedScroll(topAppBarState.nestedScrollConnection),
+                    contentPadding = padding,
+                    state = lazyListState
                 ) {
-                    Icon(
-                        imageVector = MiuixIcons.Useful.Back,
-                        contentDescription = null,
-                        tint = MiuixTheme.colorScheme.onBackground
-                    )
-                }
-            },
-            actions = {
-                if (!appList.isNullOrEmpty()) {
-                    IconButton(
-                        onClick = {
-                            restartAPP.value = true
-                        },
-                        modifier = Modifier.padding(end = 18.dp)
-                    ) {
-                        Icon(
-                            imageVector = MiuixIcons.Useful.Refresh,
-                            contentDescription = null,
-                            tint = MiuixTheme.colorScheme.onBackground
-                        )
+                    item {
+                        content()
+                        Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
                     }
                 }
             }
-        )
-        Image(painter = painterResource(R.drawable.osu),contentDescription = null, modifier = Modifier.fillMaxWidth())
-    }) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .overScrollVertical()
-                .hazeSource(state = hazeState)
-                .background(MiuixTheme.colorScheme.background)
-                .windowInsetsPadding(WindowInsets.displayCutout.only(WindowInsetsSides.Horizontal))
-                .windowInsetsPadding(WindowInsets.navigationBars.only(WindowInsetsSides.Horizontal))
-                .nestedScroll(topAppBarState.nestedScrollConnection),
-            contentPadding = padding,
-            state = lazyListState
-        ) {
-            item {
-                content()
-                Spacer(Modifier.height(WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()))
-            }
         }
     }
-    appList?.let { resetApp.AppRestartScreen(it, restartAPP) }
+
+    if (!appList.isNullOrEmpty()) {
+        if (restartAPP.value) {
+            resetApp.AppRestartScreen(appList, restartAPP)
+        }
+    }
 }
