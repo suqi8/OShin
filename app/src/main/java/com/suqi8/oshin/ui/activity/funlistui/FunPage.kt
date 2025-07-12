@@ -57,7 +57,6 @@ fun FunPage(
     val context = LocalContext.current
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
     val restartAPP = remember { mutableStateOf(false) }
-    val resetApp = resetApp()
     val lazyListState = rememberLazyListState()
     val providerState = rememberLiquidGlassProviderState()
     val enableBlur = context.prefs("settings").getBoolean("enable_blur", true)
@@ -176,10 +175,15 @@ fun FunPage(
             }
         }
     }
+    CompositionLocalProvider(LocalLiquidGlassProviderState provides providerState) {
+        // 这个 Box 是背景内容的“提供者”
+        Box(modifier = Modifier.fillMaxSize().liquidGlassProvider(providerState)) {
 
-    if (!appList.isNullOrEmpty()) {
-        if (restartAPP.value) {
-            resetApp.AppRestartScreen(appList, restartAPP)
+            if (!appList.isNullOrEmpty()) {
+                if (restartAPP.value) {
+                    AppRestartScreen(appList, restartAPP)
+                }
+            }
         }
     }
 }
