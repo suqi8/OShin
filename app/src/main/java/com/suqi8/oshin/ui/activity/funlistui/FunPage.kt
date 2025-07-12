@@ -1,5 +1,6 @@
 package com.suqi8.oshin.ui.activity.funlistui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -61,7 +62,7 @@ fun FunPage(
         shape = RoundedCornerShape(bottomStart = 16.dp, bottomEnd = 16.dp),
         material = GlassMaterial(
             blurRadius = 0.dp,
-            whitePoint = 0.1f,
+            whitePoint = 0f,
             chromaMultiplier = 1.2f
         ),
         innerRefraction = InnerRefraction.Default,
@@ -113,6 +114,7 @@ fun FunPage(
             Box(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(MiuixTheme.colorScheme.background)
                     .liquidGlassProvider(providerState)
             ) {
                 LazyColumn(
