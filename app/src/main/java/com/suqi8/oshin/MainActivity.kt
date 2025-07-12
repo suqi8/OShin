@@ -648,7 +648,8 @@ fun Main1(context: Context,navController: NavController,
     ) {
         // 1. ✅ 提取可复用的玻璃材质，用于统一视觉风格
         val commonGlassMaterial = GlassMaterial(
-            blurRadius = 0.dp,
+            blurRadius = 0.3.dp,
+            tint = MiuixTheme.colorScheme.background.copy(alpha = 0.1f),
             whitePoint = 0f,  // 高光
             chromaMultiplier = 1.2f // 增强透过玻璃看到的颜色饱和度
         )

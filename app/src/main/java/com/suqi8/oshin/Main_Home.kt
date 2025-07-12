@@ -182,7 +182,7 @@ fun Main_Home(
                 }
             }
             // 功能列表
-            items(features, key = { it.title }) { feature ->
+            items(features) { feature ->
                 AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 350)) { -it } + fadeIn()) {
                     FeatureItem(feature = feature, navController = navController)
                 }

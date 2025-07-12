@@ -2,8 +2,6 @@ package com.kyant.liquidglass
 
 import android.graphics.RenderEffect
 import android.graphics.Shader
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,16 +39,11 @@ fun Modifier.liquidGlass(
     style: LiquidGlassStyle,
     providerState: LiquidGlassProviderState = LocalLiquidGlassProviderState.current
 ): Modifier =
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        this then LiquidGlassElement(
-            style = style,
-            providerState = providerState
-        )
-    } else {
-        this
-    }
+    this then LiquidGlassElement(
+        style = style,
+        providerState = providerState
+    )
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 private class LiquidGlassElement(
     val style: LiquidGlassStyle,
     val providerState: LiquidGlassProviderState
@@ -93,7 +86,6 @@ private class LiquidGlassElement(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 internal class LiquidGlassModifierNode(
     var style: LiquidGlassStyle,
     var providerState: LiquidGlassProviderState
