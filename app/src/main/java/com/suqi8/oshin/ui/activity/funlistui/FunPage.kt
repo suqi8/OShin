@@ -67,39 +67,37 @@ fun FunPage(
         2 -> true  // 模式2：强制深色
         else -> isSystemInDarkTheme() // 其他：跟随系统
     }
-    val whitePoint = if (!isEffectivelyDark) -0.3f else 0.3f
+    val whitePoint = if (isEffectivelyDark) -0.3f else 0.3f
     val buttonGlassStyle = LiquidGlassStyle(
         shape = CircleShape,
         material = GlassMaterial(
-            blurRadius = 10.dp,
+            blurRadius = 3.dp,
             whitePoint = whitePoint
         ),
         innerRefraction = InnerRefraction(
             height = RefractionValue(24.dp),
             amount = RefractionValue((-24).dp)
         ),
-        border = GlassBorder.Light(width = 0.5.dp)
+        border = GlassBorder.Light(width = 0.5.dp, color = MiuixTheme.colorScheme.onBackground, angle = if (isEffectivelyDark) 45f else -45f)
     )
 
     CompositionLocalProvider(
         LocalLiquidGlassProviderState provides providerState
     ) {
-        // 重要提醒：这个版本是我们之前发现可能会导致渲染崩溃的版本。
-        // 如果您测试不再崩溃，可以放心使用。如果崩溃复现，建议换回手动 Box 叠放的稳定版。
         Scaffold(
             topBar = {
                 TopAppBar(
                     scrollBehavior = topAppBarState,
                     title = title,
                     color = if (enableBlur) Color.Transparent else MiuixTheme.colorScheme.background,
-                    modifier = Modifier, // ✅ 背景没有玻璃效果
+                    modifier = Modifier,
                     navigationIcon = {
                         if (enableBlur) {
                             Box(
                                 modifier = Modifier
-                                    .padding(start = 16.dp) // 调整了边距以保持一致
+                                    .padding(start = 16.dp)
                                     .clip(CircleShape)
-                                    .liquidGlass(style = buttonGlassStyle) // ✅ 按钮有玻璃效果
+                                    .liquidGlass(style = buttonGlassStyle)
                             ) {
                                 IconButton(onClick = { navController.popBackStack() }) {
                                     Icon(
@@ -156,7 +154,6 @@ fun FunPage(
                 )
             }
         ) { padding ->
-            // ✅ Provider 在内容区内，可能会引发稳定性问题
             Box(
                 modifier = Modifier
                     .fillMaxSize()
