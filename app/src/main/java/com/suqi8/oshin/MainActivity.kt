@@ -170,7 +170,7 @@ class MainActivity : ComponentActivity() {
                 2 -> Locale.ENGLISH
                 3 -> Locale.JAPANESE
                 4 -> Locale.Builder().setLanguage("ru").build()
-                5 -> Locale.Builder().setLanguage("zh").setExtension('x', "meme").build()
+                5 -> Locale.Builder().setLanguage("qaa").setExtension('x', "meme").build()
                 else -> Locale.getDefault()
             }
 
