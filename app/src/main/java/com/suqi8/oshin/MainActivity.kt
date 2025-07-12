@@ -129,6 +129,8 @@ import com.suqi8.oshin.utils.executeCommand
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
 import dev.chrisbanes.haze.ExperimentalHazeApi
+import dev.chrisbanes.haze.HazeDefaults.blurRadius
+import dev.chrisbanes.haze.HazeDefaults.noiseFactor
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
@@ -456,44 +458,27 @@ fun Main0(context: Context) {
     val windowWidth = getWindowSize().width
     val easing = SpringEasing(0.95f, 0.4f)//CubicBezierEasing(0.4f, 0.95f, 0.2f, 1f)
     val duration = easing.duration.toInt()
-    val alpha: MutableFloatState = remember { mutableFloatStateOf(0.75f) }
-    val blurRadius: MutableState<Dp> = remember { mutableStateOf(25.dp) }
-    val noiseFactor = remember { mutableFloatStateOf(0f) }
-    val containerColor: Color = MiuixTheme.colorScheme.background
-    val hazeState = remember { HazeState() }
-    val hazeStyle =
-        remember(containerColor, alpha.floatValue, blurRadius.value, noiseFactor.floatValue) {
-            HazeStyle(
-                backgroundColor = containerColor,
-                tint = HazeTint(containerColor.copy(alpha.floatValue)),
-                blurRadius = blurRadius.value,
-                noiseFactor = noiseFactor.floatValue
-            )
-        }
-    LaunchedEffect(Unit) {
-        alpha.floatValue = context.prefs("settings").getFloat("AppAlpha", 0.75f)
-        blurRadius.value = context.prefs("settings").getInt("AppblurRadius", 25).dp
-        noiseFactor.floatValue = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
-    }
+    val isPrivacyEnabled = remember { mutableStateOf(context.prefs("settings").getBoolean("privacy", true)) }
 
-    val privacy = rememberSaveable { mutableStateOf(false) }
-    LaunchedEffect(privacy.value) {
-        privacy.value = context.prefs("settings").getBoolean("privacy",true)
-        if (!context.prefs("settings").getBoolean("privacy",true)) {
+    LaunchedEffect(Unit) {
+        if (!isPrivacyEnabled.value) {
             UMConfigure.init(context, "67c7dea68f232a05f127781e", "android", UMConfigure.DEVICE_TYPE_PHONE, "")
             withContext(Dispatchers.IO) {
-                val lsposed_versionname = executeCommand("awk -F= '/version=/ {print \$2}' /data/adb/modules/zygisk_lsposed/module.prop")
-                lspVersion.value = lsposed_versionname
-                if (lsposed_versionname != "" && context.prefs("settings").getString("privacy_lspvername","") != lsposed_versionname) {
-                    MobclickAgent.onEvent(context,"lsposed_usage", mapOf("version_name" to lsposed_versionname))
-                    context.prefs("settings").edit { putString("privacy_lspvername",lsposed_versionname) }
+                val lsposedVersionName = executeCommand("awk -F= '/version=/ {print \$2}' /data/adb/modules/zygisk_lsposed/module.prop")
+                lspVersion.value = lsposedVersionName
+                val savedLspVersion = context.prefs("settings").getString("privacy_lspvername", "")
+                if (lsposedVersionName.isNotEmpty() && lsposedVersionName != savedLspVersion) {
+                    val eventData = mapOf("version_name" to lsposedVersionName)
+                    MobclickAgent.onEvent(context, "lsposed_usage", eventData)
+                    context.prefs("settings").edit {
+                        putString("privacy_lspvername", lsposedVersionName)
+                    }
                 }
-                MobclickAgent.onEvent(context,"lsposed_usage", mapOf("lsposed_versionname" to lsposed_versionname))
             }
         }
     }
     SuperDialog(
-        show = privacy,
+        show = isPrivacyEnabled,
         title = stringResource(R.string.privacy_title),
         //summary = stringResource(R.string.privacy_content),
         onDismissRequest = {
@@ -520,7 +505,7 @@ fun Main0(context: Context) {
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
                 onClick = {
-                    privacy.value = false
+                    isPrivacyEnabled.value = false
                     context.prefs("settings").edit { putBoolean("privacy",false) }
                 }
             )
@@ -556,7 +541,7 @@ fun Main0(context: Context) {
                     SizeTransform(clip = true)  // 允许页面在过渡时进行缩放，但不裁剪内容
                 }
         ) {
-            composable("Main") { Main1(context = context,navController, hazeState, hazeStyle) }
+            composable("Main") { Main1(navController) }
             composable("recent_update") { recent_update(navController) }
             composable("android") { android(navController) }
             composable("android\\package_manager_services") { package_manager_services(navController = navController) }
@@ -571,7 +556,7 @@ fun Main0(context: Context) {
             composable("systemui\\controlCenter") { controlCenter(navController = navController) }
             composable("launcher") { launcher(navController = navController) }
             composable("launcher\\recent_task") { recent_task(navController = navController) }
-            composable("about_setting") { about_setting(navController,alpha,blurRadius,noiseFactor) }
+            composable("about_setting") { about_setting(navController) }
             composable("about_group") { about_group(navController) }
             composable("about_references") { about_references(navController) }
             composable("about_contributors") { about_contributors(navController) }
@@ -605,8 +590,7 @@ fun Main0(context: Context) {
 )
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "InflateParams", "ResourceType")
 @Composable
-fun Main1(context: Context,navController: NavController,
-          hazeState: HazeState, hazeStyle: HazeStyle) {
+fun Main1(navController: NavController) {
     val topAppBarScrollBehavior0 = MiuixScrollBehavior(rememberTopAppBarState())
     val topAppBarScrollBehavior1 = MiuixScrollBehavior(rememberTopAppBarState())
     val topAppBarScrollBehavior2 = MiuixScrollBehavior(rememberTopAppBarState())
