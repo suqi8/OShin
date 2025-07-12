@@ -76,7 +76,7 @@ fun ConfirmationDialog(
     val dialogGlassStyle = LiquidGlassStyle(
         shape = RoundedCornerShape(28.dp),
         material = GlassMaterial(
-            blurRadius = 0.dp,
+            blurRadius = 25.dp,
             whitePoint = 0f
         ),
         innerRefraction = InnerRefraction.Default.copy(height = RefractionValue(40.dp)),
