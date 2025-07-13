@@ -197,6 +197,8 @@ dependencies {
     implementation(libs.toolbar.compose)
     implementation(libs.expandablebottombar)
     implementation(libs.neumorphism.compose)
+    implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
 
     // ------------------- 底层与工具库 -------------------
     implementation(libs.luckypray.dexkit)
