@@ -2,6 +2,7 @@ package com.suqi8.oshin.ui.activity.funlistui
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ import com.kyant.liquidglass.InnerRefraction
 import com.kyant.liquidglass.LiquidGlassStyle
 import com.kyant.liquidglass.RefractionValue
 import com.kyant.liquidglass.liquidGlass
+import com.suqi8.oshin.LocalColorMode
 import com.suqi8.oshin.R
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.drawColoredShadow
@@ -72,12 +74,18 @@ fun ConfirmationDialog(
     onDismiss: () -> Unit
 ) {
     if (!show.value) return
-
+    val colorMode = LocalColorMode.current.value
+    val isEffectivelyDark = when (colorMode) {
+        1 -> false // 模式1：强制浅色
+        2 -> true  // 模式2：强制深色
+        else -> isSystemInDarkTheme() // 其他：跟随系统
+    }
+    val whitePoint = if (!isEffectivelyDark) -0.1f else 0.1f
     val dialogGlassStyle = LiquidGlassStyle(
         shape = RoundedCornerShape(28.dp),
         material = GlassMaterial(
-            blurRadius = 25.dp,
-            whitePoint = 0f
+            blurRadius = 5.dp,
+            whitePoint = whitePoint
         ),
         innerRefraction = InnerRefraction.Default.copy(height = RefractionValue(40.dp)),
         border = GlassBorder.Light(width = 1.dp)
@@ -89,17 +97,19 @@ fun ConfirmationDialog(
         onDismissRequest = {
             onDismiss()
         },
+        enableWindowDim = false,
         summary = stringResource(R.string.confirm_restart_applications),
         backgroundColor = Color.Transparent,
-        modifier = Modifier.liquidGlass(style = dialogGlassStyle)
+        modifier = Modifier.liquidGlass(style = dialogGlassStyle.copy(material = GlassMaterial(blurRadius = 1.dp)))
     ) {
         LazyColumn {
             item {
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 12.dp),
-                    color = MiuixTheme.colorScheme.background
+                        .padding(bottom = 12.dp)
+                        .liquidGlass(style = dialogGlassStyle),
+                    color = Color.Transparent
                 ) {
                     appPackage.forEachIndexed { index, it ->
                         ResetAppList(it)
@@ -115,7 +125,12 @@ fun ConfirmationDialog(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             TextButton(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .liquidGlass(style = dialogGlassStyle.copy(shape = RoundedCornerShape(16.dp),
+                        material = GlassMaterial(blurRadius = 8.dp,
+                            tint = MiuixTheme.colorScheme.secondaryVariant.copy(alpha = 0.3f)))),
+                colors = ButtonDefaults.textButtonColors(color = Color.Transparent),
                 text = stringResource(R.string.cancel),
                 onClick = {
                     onDismiss()
@@ -123,9 +138,13 @@ fun ConfirmationDialog(
             )
             Spacer(Modifier.width(12.dp))
             TextButton(
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .liquidGlass(style = dialogGlassStyle.copy(shape = RoundedCornerShape(16.dp),
+                        material = GlassMaterial(blurRadius = 8.dp,
+                            tint = MiuixTheme.colorScheme.primary.copy(alpha = 0.3f)))),
                 text = stringResource(R.string.ok),
-                colors = ButtonDefaults.textButtonColorsPrimary(),
+                colors = ButtonDefaults.textButtonColors(color = Color.Transparent),
                 onClick = {
                     onConfirm()
                 }

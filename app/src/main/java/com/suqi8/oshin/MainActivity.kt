@@ -625,7 +625,7 @@ fun Main1(navController: NavController) {
         val commonGlassMaterial = GlassMaterial(
             blurRadius = 0.3.dp,
             tint = MiuixTheme.colorScheme.background.copy(alpha = 0.1f),
-            whitePoint = 0f,  // 高光
+            whitePoint = 0.1f,  // 高光
             chromaMultiplier = 1.2f // 增强透过玻璃看到的颜色饱和度
         )
 
@@ -736,7 +736,7 @@ fun NavigationBar(
     selected: Int,
     onClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
-    color: Color = MiuixTheme.colorScheme.surfaceContainer
+    color: Color = MiuixTheme.colorScheme.background
 ) {
     require(items.size in 2..5) { "BottomBar must have between 2 and 5 items" }
     Surface(
@@ -744,7 +744,7 @@ fun NavigationBar(
     ) {
         Column(
             modifier = modifier
-                .background(Color.Transparent),
+                .background(color),
             verticalArrangement = Arrangement.Center
         ) {
             Row(
@@ -816,7 +816,7 @@ fun AppHorizontalPager(
     context: Context
 ) {
     HorizontalPager(
-        modifier = modifier,
+        modifier = modifier.background(MiuixTheme.colorScheme.background),
         state = pagerState,
         userScrollEnabled = true,
         pageContent = { page ->
