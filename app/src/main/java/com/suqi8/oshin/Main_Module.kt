@@ -545,55 +545,6 @@ fun HUDModuleContainer(modifier: Modifier = Modifier, content: @Composable Colum
     ) { content() }
 }
 
-@Composable
-fun HUDBackground() {
-    MiuixTheme.colorScheme.primary
-    val gridColor = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.05f)
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val gridSize = 40.dp.toPx()
-        for (i in 0 until (size.width / gridSize).toInt()) {
-            drawLine(gridColor, Offset(i * gridSize, 0f), Offset(i * gridSize, size.height), 1f)
-        }
-        for (i in 0 until (size.height / gridSize).toInt()) {
-            drawLine(gridColor, Offset(0f, i * gridSize), Offset(size.width, i * gridSize), 1f)
-        }
-    }
-}
-
-@Composable
-fun SectionTitle(titleResId: Int) {
-    val primaryColor = MiuixTheme.colorScheme.primary.copy(alpha = 0.5f)
-    val textColor = MiuixTheme.colorScheme.onBackground
-    var animated by remember { mutableStateOf(false) }
-
-    LaunchedEffect(Unit) { animated = true }
-
-    val lineWidth by animateFloatAsState(
-        targetValue = if (animated) 1f else 0.00001f,
-        animationSpec = tween(durationMillis = 700)
-    )
-    val textAlpha by animateFloatAsState(
-        targetValue = if (animated) 1f else 0f,
-        animationSpec = tween(durationMillis = 500, delayMillis = 200)
-    )
-
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Box(modifier = Modifier.weight(lineWidth).height(1.dp).background(Brush.horizontalGradient(listOf(Color.Transparent, primaryColor))))
-        Text(
-            text = " ${stringResource(id = titleResId)} ",
-            fontSize = 20.sp,
-            fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.Bold,
-            color = textColor.copy(alpha = textAlpha),
-            modifier = Modifier.padding(horizontal = 8.dp)
-        )
-        Box(modifier = Modifier.weight(lineWidth).height(1.dp).background(Brush.horizontalGradient(listOf(primaryColor, Color.Transparent))))
-    }
-}
-
 @SuppressLint("UseKtx")
 fun Modifier.drawColoredShadow(
     color: Color,

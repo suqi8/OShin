@@ -3,6 +3,7 @@ package com.suqi8.oshin
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.RepeatMode
@@ -14,6 +15,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -32,6 +34,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BugReport
 import androidx.compose.material.icons.filled.Layers
@@ -61,9 +66,11 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -74,6 +81,7 @@ import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import coil3.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.utils.GetFuncRoute
@@ -83,12 +91,16 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeoutOrNull
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import org.json.JSONArray
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import java.io.BufferedReader
 import java.io.InputStreamReader
+import kotlin.math.abs
 import kotlin.math.ceil
 import kotlin.math.cos
 import kotlin.math.roundToInt
@@ -108,6 +120,15 @@ data class DeviceInfo(
     val calculatedHealth: Float = 0f,
     val cycleCount: Int = 0
 )
+data class CarouselItem(
+    val title: String?,
+    val description: String?,
+    val actionUrl: String?,
+    val imageUrl: String?
+)
+
+
+var carouselItems by mutableStateOf<List<CarouselItem>?>(null)
 
 // --- UI (Composable) ---
 @Composable
@@ -132,11 +153,13 @@ fun Main_Home(
         }
 
         launch(Dispatchers.IO) {
+            val carouselDeferred = async { fetchCarouselData() }
             val moduleStatusDeferred = async { getModuleStatus() }
             val rootStatusDeferred = async { getRootStatus() }
             val deviceInfoDeferred = async { getDeviceInfo(context) }
             val featuresDeferred = async { getFeatures(context) }
 
+            carouselItems = carouselDeferred.await()
             moduleStatus = moduleStatusDeferred.await()
             rootStatus = rootStatusDeferred.await()
             deviceInfo = deviceInfoDeferred.await()
@@ -157,33 +180,42 @@ fun Main_Home(
             ),
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
-            // 仪表盘区块
             item {
-                AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800)) { -it } + fadeIn()) {
+                AnimatedVisibility(
+                    visible = visible && carouselItems != null,
+                    enter = slideInVertically(animationSpec = tween(800)) { -it } + fadeIn()
+                ) {
+                    if (!carouselItems.isNullOrEmpty()) {
+                        CarouselSection(items = carouselItems!!)
+                    }
+                }
+                AnimatedVisibility(visible = carouselItems == null) {
+                    CarouselSkeleton()
+                }
+            }
+
+            item {
+                AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 100)) { -it } + fadeIn()) {
                     DashboardSection(moduleStatus, rootStatus, fridaStatus)
                 }
             }
-            // 最近更新区块
             item {
-                AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 100)) { -it } + fadeIn()) {
+                AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 200)) { -it } + fadeIn()) {
                     RecentUpdatesModule(navController)
                 }
             }
-            // 设备信息区块
             item {
-                AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 200)) { -it } + fadeIn()) {
+                AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 300)) { -it } + fadeIn()) {
                     DeviceInfoSection(deviceInfo, visible)
                 }
             }
-            // 功能列表标题
             item {
-                AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 350)) { -it } + fadeIn()) {
+                AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 450)) { -it } + fadeIn()) {
                     SectionTitle(titleResId = R.string.section_title_features)
                 }
             }
-            // 功能列表
-            items(features) { feature ->
-                AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 350)) { -it } + fadeIn()) {
+            items(features, key = { it.title }) { feature ->
+                AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 450)) { -it } + fadeIn()) {
                     FeatureItem(feature = feature, navController = navController)
                 }
             }
@@ -192,6 +224,45 @@ fun Main_Home(
 }
 
 // --- 数据获取逻辑 ---
+
+suspend fun fetchCarouselData(): List<CarouselItem> = withContext(Dispatchers.IO) {
+    val client = OkHttpClient.Builder()
+        .cache(null)
+        .build()
+
+    val request = Request.Builder()
+        .url("https://gitee.com/yo-gurt/OShin/raw/master/lunbo.json")
+        .header("Cache-Control", "no-cache")
+        .build()
+
+    try {
+        client.newCall(request).execute().use { response ->
+            if (response.isSuccessful) {
+                val body = response.body.string()
+                val jsonArray = JSONArray(body)
+                val items = mutableListOf<CarouselItem>()
+                for (i in 0 until jsonArray.length()) {
+                    val jsonObject = jsonArray.getJSONObject(i)
+                    items.add(
+                        CarouselItem(
+                            title = jsonObject.optString("title", null),
+                            description = jsonObject.optString("description", null),
+                            actionUrl = jsonObject.optString("action_url", null),
+                            imageUrl = jsonObject.optString("image_url", null)
+                        )
+                    )
+                }
+                items
+            } else {
+                emptyList()
+            }
+        }
+    } catch (e: Exception) {
+        Log.e("CarouselFetch", "Error fetching carousel data", e)
+        emptyList()
+    }
+}
+
 suspend fun getModuleStatus(): ModuleStatus = withContext(Dispatchers.IO) {
     if (YukiHookAPI.Status.isModuleActive) ModuleStatus(Status.SUCCESS, "LSPosed v" + YukiHookAPI.Status.Executor.apiLevel)
     else ModuleStatus(Status.ERROR, "未在LSPosed中激活")
@@ -320,6 +391,211 @@ class CutCornerShape(private val cut: Dp) : Shape {
             close()
         }
         return Outline.Generic(path)
+    }
+}
+
+@Composable
+fun HUDBackground() {
+    val infiniteTransition = rememberInfiniteTransition()
+    val scanLinePosition by infiniteTransition.animateFloat(
+        initialValue = -0.1f,
+        targetValue = 1.1f,
+        animationSpec = infiniteRepeatable(tween(4000, delayMillis = 500), RepeatMode.Restart)
+    )
+    val primaryColor = MiuixTheme.colorScheme.primary
+    val gridColor = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.05f)
+
+    Canvas(modifier = Modifier.fillMaxSize()) {
+        val gridSize = 40.dp.toPx()
+        for (i in 0 until (size.width / gridSize).toInt()) {
+            drawLine(gridColor, Offset(i * gridSize, 0f), Offset(i * gridSize, size.height), 1f)
+        }
+        for (i in 0 until (size.height / gridSize).toInt()) {
+            drawLine(gridColor, Offset(0f, i * gridSize), Offset(size.width, i * gridSize), 1f)
+        }
+
+        val scanLineY = size.height * scanLinePosition
+        drawRect(
+            brush = Brush.verticalGradient(
+                colors = listOf(Color.Transparent, primaryColor.copy(alpha = 0.2f), Color.Transparent),
+                startY = scanLineY - 30.dp.toPx(),
+                endY = scanLineY
+            ),
+            topLeft = Offset(0f, scanLineY - 30.dp.toPx()),
+            size = Size(size.width, 30.dp.toPx())
+        )
+    }
+}
+
+@Composable
+fun SectionTitle(titleResId: Int) {
+    val primaryColor = MiuixTheme.colorScheme.primary.copy(alpha = 0.5f)
+    val textColor = MiuixTheme.colorScheme.onBackground
+    var animated by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) { animated = true }
+
+    val lineWidth by animateFloatAsState(
+        targetValue = if (animated) 1f else 0.00001f,
+        animationSpec = tween(durationMillis = 700)
+    )
+    val textAlpha by animateFloatAsState(
+        targetValue = if (animated) 1f else 0f,
+        animationSpec = tween(durationMillis = 500, delayMillis = 200)
+    )
+
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(modifier = Modifier.weight(lineWidth).height(1.dp).background(Brush.horizontalGradient(listOf(Color.Transparent, primaryColor))))
+        Text(
+            text = " ${stringResource(id = titleResId)} ",
+            fontSize = 20.sp,
+            fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Bold,
+            color = textColor.copy(alpha = textAlpha),
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
+        Box(modifier = Modifier.weight(lineWidth).height(1.dp).background(Brush.horizontalGradient(listOf(primaryColor, Color.Transparent))))
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CarouselSection(items: List<CarouselItem>) {
+    val pagerState = rememberPagerState { items.size }
+    val uriHandler = LocalUriHandler.current
+
+    LaunchedEffect(pagerState.pageCount) {
+        while (true) {
+            delay(5000)
+            val nextPage = (pagerState.currentPage + 1) % pagerState.pageCount
+            pagerState.animateScrollToPage(nextPage, animationSpec = tween(durationMillis = 600))
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentPadding = PaddingValues(horizontal = 40.dp)
+        ) { page ->
+            val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+
+            val scale = lerp(1f, 0.85f, abs(pageOffset))
+            val alpha = lerp(1f, 0.5f, abs(pageOffset))
+
+            val item = items[page]
+            val isClickable = item.actionUrl != null
+
+            Box(
+                modifier = Modifier
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        this.alpha = alpha
+                    }
+                    .fillMaxWidth()
+                    .clip(CutCornerShape(8.dp))
+                    .background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.03f))
+                    .border(1.dp, MiuixTheme.colorScheme.primary.copy(alpha = 0.3f), CutCornerShape(8.dp))
+                    .then(if (isClickable) Modifier.clickable { uriHandler.openUri(item.actionUrl) } else Modifier)
+            ) {
+                Column(
+                    modifier = Modifier
+                    .fillMaxWidth()
+                ) {
+                    if (item.imageUrl != null) {
+                        AsyncImage(
+                            model = item.imageUrl,
+                            contentDescription = item.title,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                    }
+
+                    if (item.title != null || item.description != null) {
+                        Column(modifier = Modifier.padding(12.dp)
+                            .fillMaxWidth()) {
+                            item.title?.let {
+                                Spacer(Modifier.height(if (item.imageUrl != null) 8.dp else 0.dp))
+                                Text(
+                                    text = it,
+                                    color = MiuixTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp,
+                                    fontFamily = FontFamily.Monospace
+                                )
+                            }
+                            item.description?.let {
+                                Spacer(Modifier.height(4.dp))
+                                Text(
+                                    text = it,
+                                    color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+                                    fontSize = 12.sp,
+                                    fontFamily = FontFamily.Monospace,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Spacer(Modifier.height(12.dp))
+
+        Row(
+            Modifier.height(20.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            repeat(pagerState.pageCount) { iteration ->
+                val color = if (pagerState.currentPage == iteration) MiuixTheme.colorScheme.primary else MiuixTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                val width by animateFloatAsState(targetValue = if (pagerState.currentPage == iteration) 20f else 8f, animationSpec = tween(300))
+                Box(
+                    modifier = Modifier
+                        .size(width.dp, 8.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                )
+            }
+        }
+    }
+}
+
+// 线性插值函数，用于平滑动画过渡
+private fun lerp(start: Float, stop: Float, fraction: Float): Float {
+    return (1 - fraction) * start + fraction * stop
+}
+
+
+@Composable
+fun CarouselSkeleton() {
+    val infiniteTransition = rememberInfiniteTransition()
+    val alpha by infiniteTransition.animateFloat(
+        initialValue = 0.1f,
+        targetValue = 0.2f,
+        animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse)
+    )
+    HUDModuleContainer(modifier = Modifier.padding(horizontal = 16.dp)) {
+        Column(modifier = Modifier.padding(8.dp)) {
+            Box(modifier = Modifier.fillMaxWidth().height(150.dp).clip(CutCornerShape(8.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Spacer(Modifier.height(8.dp))
+            Box(modifier = Modifier.fillMaxWidth(0.7f).height(16.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Spacer(Modifier.height(8.dp))
+            Box(modifier = Modifier.fillMaxWidth().height(12.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Spacer(Modifier.height(4.dp))
+            Box(modifier = Modifier.fillMaxWidth(0.8f).height(12.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+        }
     }
 }
 
@@ -539,20 +815,6 @@ fun DeviceInfoSkeleton() {
         ) {
             repeat(4) {
                 Box(modifier = Modifier.height(40.dp).width(120.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
-            }
-        }
-    }
-}
-
-@Composable
-fun FeaturesSectionSkeleton() {
-    Column(modifier = Modifier.padding(horizontal = 16.dp)) {
-        SectionTitle(titleResId = R.string.section_title_features)
-        HUDModuleContainer {
-            Column(Modifier.padding(horizontal = 8.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                repeat(4) {
-                    Box(modifier = Modifier.fillMaxWidth().height(40.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.1f)))
-                }
             }
         }
     }
