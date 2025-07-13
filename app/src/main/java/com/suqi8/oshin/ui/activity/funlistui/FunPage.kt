@@ -71,13 +71,13 @@ fun FunPage(
         shape = CircleShape,
         material = GlassMaterial(
             blurRadius = 3.dp,
-            whitePoint = whitePoint
+            whitePoint = 0f
         ),
         innerRefraction = InnerRefraction(
             height = RefractionValue(24.dp),
             amount = RefractionValue((-24).dp)
         ),
-        border = GlassBorder.Light(width = 0.5.dp, color = MiuixTheme.colorScheme.onBackground, angle = if (isEffectivelyDark) 45f else -45f)
+        border = GlassBorder.Light(width = 1.dp)
     )
 
     CompositionLocalProvider(
@@ -162,6 +162,7 @@ fun FunPage(
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
+                        .background(MiuixTheme.colorScheme.background)
                         .overScrollVertical()
                         .nestedScroll(topAppBarState.nestedScrollConnection),
                     contentPadding = padding,
@@ -176,7 +177,6 @@ fun FunPage(
         }
     }
     CompositionLocalProvider(LocalLiquidGlassProviderState provides providerState) {
-        // 这个 Box 是背景内容的“提供者”
         Box(modifier = Modifier.fillMaxSize().liquidGlassProvider(providerState)) {
 
             if (!appList.isNullOrEmpty()) {
