@@ -3,9 +3,6 @@ package com.suqi8.oshin
 import android.annotation.SuppressLint
 import android.content.Context
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -38,8 +35,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Paint
@@ -103,7 +98,7 @@ fun Main_Module(
     // 修复：明确泛型类型，并正确处理类型映射
     val collator = remember { Collator.getInstance(Locale.CHINA) }
     val filteredFeatures by remember(searchValue) {
-        derivedStateOf<List<FeatureItem>> {
+        derivedStateOf {
             if (searchValue.isBlank()) {
                 emptyList()
             } else {

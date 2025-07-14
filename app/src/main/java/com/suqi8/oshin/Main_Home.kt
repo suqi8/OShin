@@ -213,7 +213,7 @@ fun Main_Home(
                     SectionTitle(titleResId = R.string.section_title_features)
                 }
             }
-            items(features, key = { it.title }) { feature ->
+            items(features) { feature ->
                 AnimatedVisibility(visible, enter = slideInVertically(animationSpec = tween(800, 450)) { -it } + fadeIn()) {
                     FeatureItem(feature = feature, navController = navController)
                 }
