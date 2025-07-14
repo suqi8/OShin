@@ -147,7 +147,6 @@ fun Main_Home(
 
     LaunchedEffect(Unit) {
         launch {
-            delay(100)
             visible = true
         }
 
@@ -188,7 +187,7 @@ fun Main_Home(
                         CarouselSection(items = carouselItems!!)
                     }
                 }
-                AnimatedVisibility(visible = carouselItems == null) {
+                AnimatedVisibility(visible = visible && carouselItems == null) {
                     CarouselSkeleton()
                 }
             }
@@ -585,7 +584,7 @@ fun CarouselSkeleton() {
     )
     HUDModuleContainer(modifier = Modifier.padding(horizontal = 16.dp)) {
         Column(modifier = Modifier.padding(8.dp)) {
-            Box(modifier = Modifier.fillMaxWidth().height(150.dp).clip(CutCornerShape(8.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(modifier = Modifier.fillMaxWidth().height(100.dp).clip(CutCornerShape(8.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
             Spacer(Modifier.height(8.dp))
             Box(modifier = Modifier.fillMaxWidth(0.7f).height(16.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
             Spacer(Modifier.height(8.dp))
