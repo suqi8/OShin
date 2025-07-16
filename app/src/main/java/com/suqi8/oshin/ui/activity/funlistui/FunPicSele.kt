@@ -21,7 +21,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.hjq.permissions.Permission
+import com.hjq.permissions.permission.PermissionLists
 import com.suqi8.oshin.utils.requestPermissions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -63,7 +63,7 @@ fun FunPicSele(title: String? = null, summary: String? = null, category: String,
     LaunchedEffect(reloadImg.value) {
         if (reloadImg.value) {
             withContext(Dispatchers.IO) {
-                requestPermissions(context, arrayOf(Permission.MANAGE_EXTERNAL_STORAGE)) {
+                requestPermissions(context, PermissionLists.getManageExternalStoragePermission()) {
                     reloadImg.value = true
                 }
                 try {

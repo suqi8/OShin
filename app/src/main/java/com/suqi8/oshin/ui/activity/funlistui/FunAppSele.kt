@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.hjq.permissions.Permission
+import com.hjq.permissions.permission.PermissionLists
 import com.suqi8.oshin.R
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.drawColoredShadow
@@ -69,7 +69,7 @@ fun FunAppSele(title: String, summary: String? = null, category: String, key: St
 
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
-            requestPermissions(context, arrayOf(Permission.GET_INSTALLED_APPS)) {}
+            requestPermissions(context, PermissionLists.getGetInstalledAppsPermission()) {}
         }
     }
 
