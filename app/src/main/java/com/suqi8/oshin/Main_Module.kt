@@ -1194,5 +1194,8 @@ fun features(context: Context) = listOf(
     FeatureItem(title = context.getString(R.string.remove_charging_complete_notification),
         category = "systemui\\notification"),
     FeatureItem(title = context.getString(R.string.qs_media_auto_color_label),
-        category = "systemui\\controlCenter")
+        category = "systemui\\controlCenter"),
+    FeatureItem(title = context.getString(R.string.allow_turn_off_all_categories),
+        summary = context.getString(R.string.enable_all_category_control_summary),
+        category = "android")
 )

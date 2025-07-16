@@ -64,5 +64,17 @@ fun android(navController: NavController) {
                 key = "AllowUntrustedTouch"
             )
         }
+        Card(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 6.dp,top = 6.dp)
+        ) {
+            FunSwich(
+                title = stringResource(R.string.allow_turn_off_all_categories),
+                summary = stringResource(R.string.enable_all_category_control_summary),
+                category = "android",
+                key = "allow_turn_off_all_categories"
+            )
+        }
     }
 }

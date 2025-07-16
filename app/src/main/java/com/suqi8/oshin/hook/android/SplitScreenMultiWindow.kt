@@ -5,7 +5,7 @@ import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.IntType
 
-class split_screen_multi_window : YukiBaseHooker() {
+class SplitScreenMultiWindow : YukiBaseHooker() {
     override fun onHook() {
         loadSystem {
             if (prefs("android\\split_screen_multi_window").getBoolean("remove_all_small_window_restrictions", false)) {
