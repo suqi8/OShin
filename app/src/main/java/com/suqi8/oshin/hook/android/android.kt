@@ -5,9 +5,10 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 class android : YukiBaseHooker() {
     override fun onHook() {
         loadApp(hooker = OplusRootCheck())
-        loadApp(hooker = split_screen_multi_window())
+        loadApp(hooker = SplitScreenMultiWindow())
         loadApp(hooker = DisablePinVerifyPer72h())
         loadApp(hooker = AllowUntrustedTouch())
+        loadApp(hooker = NotificationCategoryControl())
         //loadApp(hooker = Package_Installer())
     }
 }
