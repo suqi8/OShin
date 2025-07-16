@@ -13,6 +13,7 @@ fun GetFuncRoute(route: String, context: Context): String {
         "status_bar_clock" to context.getString(R.string.status_bar_clock),
         "hardware_indicator" to context.getString(R.string.hardware_indicator),
         "statusbar_icon" to context.getString(R.string.status_bar_icon),
+        "notificationmanager" to appNameCache.getAppName("com.oplus.notificationmanager"),
         "notification" to context.getString(R.string.status_bar_notification),
         "status_bar_wifi" to context.getString(R.string.network_speed_indicator),
         "recent_task" to context.getString(R.string.recent_tasks),
@@ -37,7 +38,7 @@ fun GetFuncRoute(route: String, context: Context): String {
         "quicksearchbox" to appNameCache.getAppName("com.heytap.quicksearchbox"),
         "ota" to appNameCache.getAppName("com.oplus.ota"),
         "oshare" to appNameCache.getAppName("com.coloros.oshare"),
-        "incallui" to appNameCache.getAppName("com.android.incallui")
+        "incallui" to appNameCache.getAppName("com.android.incallui"),
     )
 
     // 使用正则表达式和替换映射表进行替换

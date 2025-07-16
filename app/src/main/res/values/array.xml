@@ -19,6 +19,8 @@
         <item>com.mi.health</item>
         <item>com.oplus.ota</item>
         <item>com.coloros.oshare</item>
+        <item>com.android.incallui</item>
+        <item>com.oplus.notificationmanager</item>
     </string-array>
     <string-array name="language">
         <item>@string/follow_system</item>

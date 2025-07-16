@@ -28,6 +28,7 @@ import com.suqi8.oshin.hook.com.mi.health.mihealth
 import com.suqi8.oshin.hook.com.oplus.appdetail.appdetail
 import com.suqi8.oshin.hook.com.oplus.battery.battery
 import com.suqi8.oshin.hook.com.oplus.games.games
+import com.suqi8.oshin.hook.com.oplus.notificationmanager.NotificationManager
 import com.suqi8.oshin.hook.com.oplus.ota.ota
 import com.suqi8.oshin.hook.com.oplus.phonemanager.oplusphonemanager
 import de.robv.android.xposed.IXposedHookZygoteInit
@@ -68,6 +69,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = ota())
         loadApp(hooker = oshare())
         loadApp(hooker = incallui())
+        loadApp(hooker = NotificationManager())
     }
 
     override fun onXposedEvent() {
