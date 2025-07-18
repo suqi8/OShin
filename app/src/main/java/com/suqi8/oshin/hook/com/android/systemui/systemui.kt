@@ -25,6 +25,7 @@ class systemui: YukiBaseHooker() {
         loadApp(hooker = BatteryBar())
         loadApp(hooker = Wifi())
         loadApp(hooker = BigMediaArt())
+        loadApp(hooker = DisableDataTransferAuth())
 
         /*loadApp(name = "com.android.systemui") {
             "com.oplus.systemui.plugins.qs.OplusQSSpecialModeProvider".toClass().apply {

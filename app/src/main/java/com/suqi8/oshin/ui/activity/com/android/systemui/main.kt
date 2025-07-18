@@ -106,6 +106,19 @@ fun systemui(navController: NavController) {
                 )
             }
         }
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp)
+                .padding(bottom = 6.dp, top = 6.dp)
+        ) {
+            FunSwich(
+                title = stringResource(R.string.disable_data_transfer_auth),
+                category = "systemui",
+                key = "disable_data_transfer_auth",
+                defValue = false
+            )
+        }
         WantFind(
             listOf(
                 WantFind(stringResource(R.string.security_payment_remove_risky_fluid_cloud),"securepay"),
