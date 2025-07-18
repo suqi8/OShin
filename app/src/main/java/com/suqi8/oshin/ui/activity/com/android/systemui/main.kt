@@ -118,6 +118,13 @@ fun systemui(navController: NavController) {
                 key = "disable_data_transfer_auth",
                 defValue = false
             )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.usb_default_file_transfer),
+                category = "systemui",
+                key = "usb_default_file_transfer",
+                defValue = false
+            )
         }
         WantFind(
             listOf(

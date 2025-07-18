@@ -9,7 +9,9 @@ class NotificationCategoryControl : YukiBaseHooker() {
     override fun onHook() {
         if (prefs("notificationmanager").getBoolean("allow_turn_off_all_categories", false)) {
             NotificationChannel::class.java.resolve().apply {
-                constructor { }.hookAll {
+                constructor {
+                    optional()
+                }.hookAll {
                     after {
                         instance.resolve().firstField { name = "mBlockableSystem" }.set(true)
                         instance.resolve().firstField { name = "mImportanceLockedDefaultApp" }.set(false)
