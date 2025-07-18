@@ -61,6 +61,7 @@ import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.GetFuncRoute
@@ -1200,5 +1201,7 @@ fun features(context: Context) = listOf(
         summary = context.getString(R.string.enable_all_category_control_summary),
         category = "notificationmanager"),
     FeatureItem(title = context.getString(R.string.disable_data_transfer_auth),
+        category = "systemui"),
+    FeatureItem(title = context.getString(R.string.usb_default_file_transfer),
         category = "systemui")
 )
