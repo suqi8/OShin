@@ -313,7 +313,7 @@ fun AppListContent(
             AppInfo("com.oplus.ota", "ota"),
             AppInfo("com.coloros.oshare", "oshare"),
             AppInfo("com.android.incallui", "incallui"),
-                    AppInfo("com.oplus.notificationmanager", "notificationmanager")
+            AppInfo("com.oplus.notificationmanager", "notificationmanager")
         )
     }
 
@@ -1196,5 +1196,7 @@ fun features(context: Context) = listOf(
         category = "systemui\\controlCenter"),
     FeatureItem(title = context.getString(R.string.allow_turn_off_all_categories),
         summary = context.getString(R.string.enable_all_category_control_summary),
-        category = "notificationmanager")
+        category = "notificationmanager"),
+    FeatureItem(title = context.getString(R.string.disable_data_transfer_auth),
+        category = "systemui")
 )

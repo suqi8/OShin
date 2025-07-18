@@ -573,4 +573,5 @@
     <string name="qs_media_auto_color_label">标题与控件自动取色</string>
     <string name="allow_turn_off_all_categories">允许关闭所有类别通知</string>
     <string name="enable_all_category_control_summary">开启后所有应用的所有类别通知都将可自行控制开关</string>
+    <string name="disable_data_transfer_auth">禁用数据传输身份验证</string>
 </resources>
