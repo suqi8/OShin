@@ -125,6 +125,13 @@ fun systemui(navController: NavController) {
                 key = "usb_default_file_transfer",
                 defValue = false
             )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.remove_usb_selection_dialog),
+                category = "systemui",
+                key = "remove_usb_selection_dialog",
+                defValue = false
+            )
         }
         WantFind(
             listOf(
