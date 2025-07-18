@@ -1203,5 +1203,7 @@ fun features(context: Context) = listOf(
     FeatureItem(title = context.getString(R.string.disable_data_transfer_auth),
         category = "systemui"),
     FeatureItem(title = context.getString(R.string.usb_default_file_transfer),
+        category = "systemui"),
+    FeatureItem(title = context.getString(R.string.remove_usb_selection_dialog),
         category = "systemui")
 )
