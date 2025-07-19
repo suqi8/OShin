@@ -132,6 +132,14 @@ fun systemui(navController: NavController) {
                 key = "remove_usb_selection_dialog",
                 defValue = false
             )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.toast_force_show_app_icon),
+                summary = stringResource(R.string.toast_icon_source_module),
+                category = "systemui",
+                key = "toast_force_show_app_icon",
+                defValue = false
+            )
         }
         WantFind(
             listOf(
