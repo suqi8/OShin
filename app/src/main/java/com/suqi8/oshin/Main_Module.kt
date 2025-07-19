@@ -61,7 +61,6 @@ import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.GetFuncRoute
@@ -1205,5 +1204,8 @@ fun features(context: Context) = listOf(
     FeatureItem(title = context.getString(R.string.usb_default_file_transfer),
         category = "systemui"),
     FeatureItem(title = context.getString(R.string.remove_usb_selection_dialog),
+        category = "systemui"),
+    FeatureItem(title = context.getString(R.string.toast_force_show_app_icon),
+        summary = context.getString(R.string.toast_icon_source_module),
         category = "systemui")
 )

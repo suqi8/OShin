@@ -28,6 +28,7 @@ class systemui: YukiBaseHooker() {
         loadApp(hooker = DisableDataTransferAuth())
         loadApp(hooker = UsbDefaultFileTransfer())
         loadApp(hooker = RemoveUsbSelectionDialog())
+        loadApp(hooker = ToastForceShowAppIcon())
 
         /*loadApp(name = "com.android.systemui") {
             "com.oplus.systemui.plugins.qs.OplusQSSpecialModeProvider".toClass().apply {

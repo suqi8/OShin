@@ -576,4 +576,6 @@
     <string name="disable_data_transfer_auth">禁用数据传输身份验证</string>
     <string name="usb_default_file_transfer">插入 USB 默认使用文件传输模式</string>
     <string name="remove_usb_selection_dialog">移除插入 USB 选择弹窗</string>
+    <string name="toast_force_show_app_icon">吐司提示强制显示应用图标</string>
+    <string name="toast_icon_source_module">开启后吐司显示的应用图标将由模块获取</string>
 </resources>
