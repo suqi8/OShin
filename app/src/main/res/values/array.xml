@@ -21,6 +21,7 @@
         <item>com.coloros.oshare</item>
         <item>com.android.incallui</item>
         <item>com.oplus.notificationmanager</item>
+        <item>com.oplus.exsystemservice</item>
     </string-array>
     <string-array name="language">
         <item>@string/follow_system</item>

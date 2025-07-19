@@ -27,6 +27,7 @@ import com.suqi8.oshin.hook.com.heytap.speechassist.speechassist
 import com.suqi8.oshin.hook.com.mi.health.mihealth
 import com.suqi8.oshin.hook.com.oplus.appdetail.appdetail
 import com.suqi8.oshin.hook.com.oplus.battery.battery
+import com.suqi8.oshin.hook.com.oplus.exsystemservice.exsystemservice
 import com.suqi8.oshin.hook.com.oplus.games.games
 import com.suqi8.oshin.hook.com.oplus.notificationmanager.NotificationManager
 import com.suqi8.oshin.hook.com.oplus.ota.ota
@@ -70,6 +71,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = oshare())
         loadApp(hooker = incallui())
         loadApp(hooker = NotificationManager())
+        loadHooker(exsystemservice())
     }
 
     override fun onXposedEvent() {

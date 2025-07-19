@@ -314,7 +314,8 @@ fun AppListContent(
             AppInfo("com.oplus.ota", "ota"),
             AppInfo("com.coloros.oshare", "oshare"),
             AppInfo("com.android.incallui", "incallui"),
-            AppInfo("com.oplus.notificationmanager", "notificationmanager")
+            AppInfo("com.oplus.notificationmanager", "notificationmanager"),
+            AppInfo("com.oplus.exsystemservice", "exsystemservice")
         )
     }
 
@@ -1207,5 +1208,7 @@ fun features(context: Context) = listOf(
         category = "systemui"),
     FeatureItem(title = context.getString(R.string.toast_force_show_app_icon),
         summary = context.getString(R.string.toast_icon_source_module),
-        category = "systemui")
+        category = "systemui"),
+    FeatureItem(title = context.getString(R.string.remove_system_tamper_warning),
+        category = "exsystemservice")
 )

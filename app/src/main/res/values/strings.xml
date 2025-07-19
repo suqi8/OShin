@@ -578,4 +578,5 @@
     <string name="remove_usb_selection_dialog">移除插入 USB 选择弹窗</string>
     <string name="toast_force_show_app_icon">吐司提示强制显示应用图标</string>
     <string name="toast_icon_source_module">开启后吐司显示的应用图标将由模块获取</string>
+    <string name="remove_system_tamper_warning">移除尝试破坏系统警告</string>
 </resources>

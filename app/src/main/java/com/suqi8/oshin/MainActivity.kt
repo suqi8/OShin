@@ -110,6 +110,7 @@ import com.suqi8.oshin.ui.activity.com.heytap.speechassist.speechassist
 import com.suqi8.oshin.ui.activity.com.mi.health.mihealth
 import com.suqi8.oshin.ui.activity.com.oplus.appdetail.appdetail
 import com.suqi8.oshin.ui.activity.com.oplus.battery.battery
+import com.suqi8.oshin.ui.activity.com.oplus.exsystemservice.exsystemservice
 import com.suqi8.oshin.ui.activity.com.oplus.games.games
 import com.suqi8.oshin.ui.activity.com.oplus.notificationmanager.notificationmanager
 import com.suqi8.oshin.ui.activity.com.oplus.ota.ota
@@ -329,6 +330,7 @@ fun Main0() {
             composable("oshare") { oshare(navController) }
             composable("incallui") { incallui(navController) }
             composable("notificationmanager") { notificationmanager(navController) }
+            composable("exsystemservice") { exsystemservice(navController) }
         }
     }
 }
