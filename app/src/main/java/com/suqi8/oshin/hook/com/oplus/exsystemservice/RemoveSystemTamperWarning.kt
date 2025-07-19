@@ -2,7 +2,6 @@ package com.suqi8.oshin.hook.com.oplus.exsystemservice
 
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
-import com.highcapable.yukihookapi.hook.log.YLog
 import org.luckypray.dexkit.DexKitBridge
 
 class RemoveSystemTamperWarning: YukiBaseHooker() {
@@ -15,7 +14,6 @@ class RemoveSystemTamperWarning: YukiBaseHooker() {
                             usingStrings("OplusAntiRootDialogService","displayDialog uid = ","phone","power")
                         }
                     }.singleOrNull()?.also {
-                        YLog.info(it.className+"!!!"+it.methodName)
                         it.className.toClass().resolve().firstMethod { name = it.methodName }.hook { replaceUnit {  } }
                     }
                 }
