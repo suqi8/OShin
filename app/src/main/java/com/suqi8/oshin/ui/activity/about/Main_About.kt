@@ -294,7 +294,7 @@ fun Main_About(
                                         deviceName.value = deviceNameCache.value
                                         showDeviceNameDialog.value = false
                                         coroutineScope.launch(Dispatchers.IO) {
-                                            executeCommand("settings put global revise_device_name \"$deviceName\"")
+                                            executeCommand("settings put global revise_device_name '${deviceName.value}'")
                                         }
                                     }
                                 )
