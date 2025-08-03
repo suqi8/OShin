@@ -90,6 +90,7 @@ import com.suqi8.oshin.ui.activity.com.android.incallui.incallui
 import com.suqi8.oshin.ui.activity.com.android.launcher.launcher
 import com.suqi8.oshin.ui.activity.com.android.launcher.recent_task
 import com.suqi8.oshin.ui.activity.com.android.mms.mms
+import com.suqi8.oshin.ui.activity.com.android.phone.phone
 import com.suqi8.oshin.ui.activity.com.android.settings.feature
 import com.suqi8.oshin.ui.activity.com.android.settings.settings
 import com.suqi8.oshin.ui.activity.com.android.systemui.controlCenter
@@ -331,6 +332,7 @@ fun Main0() {
             composable("incallui") { incallui(navController) }
             composable("notificationmanager") { notificationmanager(navController) }
             composable("exsystemservice") { exsystemservice(navController) }
+            composable("phone") { phone(navController) }
         }
     }
 }

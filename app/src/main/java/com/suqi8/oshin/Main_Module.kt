@@ -61,6 +61,7 @@ import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.GetFuncRoute
@@ -315,7 +316,8 @@ fun AppListContent(
             AppInfo("com.coloros.oshare", "oshare"),
             AppInfo("com.android.incallui", "incallui"),
             AppInfo("com.oplus.notificationmanager", "notificationmanager"),
-            AppInfo("com.oplus.exsystemservice", "exsystemservice")
+            AppInfo("com.oplus.exsystemservice", "exsystemservice"),
+            AppInfo("com.android.phone", "phone")
         )
     }
 
@@ -1210,5 +1212,7 @@ fun features(context: Context) = listOf(
         summary = context.getString(R.string.toast_icon_source_module),
         category = "systemui"),
     FeatureItem(title = context.getString(R.string.remove_system_tamper_warning),
-        category = "exsystemservice")
+        category = "exsystemservice"),
+    FeatureItem(title = context.getString(R.string.sms_verification_code),
+        category = "phone")
 )

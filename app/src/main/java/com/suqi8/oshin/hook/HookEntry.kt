@@ -14,6 +14,7 @@ import com.suqi8.oshin.hook.com.android.launcher.LauncherIcon
 import com.suqi8.oshin.hook.com.android.launcher.launcher
 import com.suqi8.oshin.hook.com.android.launcher.recent_task
 import com.suqi8.oshin.hook.com.android.mms.mms
+import com.suqi8.oshin.hook.com.android.phone.phone
 import com.suqi8.oshin.hook.com.android.settings.settings
 import com.suqi8.oshin.hook.com.android.systemui.systemui
 import com.suqi8.oshin.hook.com.coloros.ocrscanner.ocrscanner
@@ -47,7 +48,7 @@ class HookEntry : IYukiHookXposedInit {
     }
 
     override fun onHook() = encase {
-        System.loadLibrary("dexkit")
+        try { System.loadLibrary("dexkit") } catch (e: Exception) {}
         loadApp(hooker = android())
         loadApp(hooker = systemui())
         loadApp(hooker = LauncherIcon())
@@ -72,6 +73,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = incallui())
         loadApp(hooker = NotificationManager())
         loadHooker(exsystemservice())
+        loadHooker(phone())
     }
 
     override fun onXposedEvent() {
