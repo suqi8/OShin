@@ -579,4 +579,8 @@
     <string name="toast_force_show_app_icon">吐司提示强制显示应用图标</string>
     <string name="toast_icon_source_module">开启后吐司显示的应用图标将由模块获取</string>
     <string name="remove_system_tamper_warning">移除尝试破坏系统警告</string>
+    <string name="channel_name_smscode_notification">验证码通知</string>
+    <string name="code_notification_content">验证码：%s</string>
+    <string name="prompt_sms_code_copied">已复制验证码: %s</string>
+    <string name="sms_verification_code">短信验证码</string>
 </resources>

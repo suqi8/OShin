@@ -40,6 +40,7 @@ fun GetFuncRoute(route: String, context: Context): String {
         "oshare" to appNameCache.getAppName("com.coloros.oshare"),
         "incallui" to appNameCache.getAppName("com.android.incallui"),
         "exsystemservice" to appNameCache.getAppName("com.oplus.exsystemservice"),
+        "phone" to appNameCache.getAppName("com.android.phone"),
     )
 
     // 使用正则表达式和替换映射表进行替换

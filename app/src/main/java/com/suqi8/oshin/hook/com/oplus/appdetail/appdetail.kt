@@ -1,5 +1,8 @@
 package com.suqi8.oshin.hook.com.oplus.appdetail
 
+import androidx.lifecycle.MutableLiveData
+import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
@@ -144,6 +147,24 @@ class appdetail: YukiBaseHooker() {
                     }.hook {
                         before {
                             result = true
+                        }
+                    }
+                }
+                "com.oplus.appdetail.modelv2.guide.viewmodel.RiskScanViewModel".toClass().resolve().apply {
+                    firstMethod {
+                        modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
+                        name = "r"
+                        parameters("com.oplus.appdetail.model.guide.repository.ExtJumpParam", "com.heytap.cdo.security.domain.safeguide.GuideResult", Long::class)
+                        returnType = Void.TYPE
+                    }.hook {
+                        before {
+                            "com.oplus.appdetail.modelv2.guide.viewmodel.RiskScanViewModel".toClass().resolve().apply {
+                                firstField {
+                                    modifiers(Modifiers.PRIVATE, Modifiers.FINAL)
+                                    name = "c"
+                                    type = "androidx.lifecycle.MutableLiveData"
+                                }.of(instance).get() as MutableLiveData<Any>
+                            }
                         }
                     }
                 }
