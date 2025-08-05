@@ -187,6 +187,8 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
+    implementation(files("../app/libs/expressa-components-release.aar"))
+    implementation(files("../app/libs/expressa-core-release.aar"))
 
     // ------------------- Compose 生态第三方库 -------------------
     implementation(libs.accompanist.flowlayout)

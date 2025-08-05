@@ -1,306 +1,368 @@
+@file:OptIn(ExperimentalLuminanceSamplerApi::class)
+
 package com.kyant.liquidglass
 
 import android.graphics.RenderEffect
+import android.graphics.RuntimeShader
 import android.graphics.Shader
-import androidx.compose.runtime.Composable
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.CacheDrawModifierNode
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
-import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.CompositingStrategy
-import androidx.compose.ui.graphics.GraphicsLayerScope
+import androidx.compose.ui.graphics.asAndroidColorFilter
 import androidx.compose.ui.graphics.asComposeRenderEffect
-import androidx.compose.ui.graphics.drawOutline
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.translate
-import androidx.compose.ui.graphics.isSpecified
+import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.layout.LayoutCoordinates
-import androidx.compose.ui.layout.Measurable
-import androidx.compose.ui.layout.MeasureResult
-import androidx.compose.ui.layout.MeasureScope
-import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.node.DelegatingNode
 import androidx.compose.ui.node.GlobalPositionAwareModifierNode
-import androidx.compose.ui.node.LayoutModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
+import androidx.compose.ui.node.ObserverModifierNode
+import androidx.compose.ui.node.observeReads
+import androidx.compose.ui.node.requireGraphicsContext
 import androidx.compose.ui.platform.InspectorInfo
-import androidx.compose.ui.unit.Constraints
-import kotlin.math.ceil
-import kotlin.math.min
+import com.kyant.liquidglass.highlight.GlassHighlightElement
+import com.kyant.liquidglass.material.GlassBrushElement
+import com.kyant.liquidglass.sampler.ExperimentalLuminanceSamplerApi
+import com.kyant.liquidglass.sampler.LuminanceSampler
+import com.kyant.liquidglass.utils.GlassShaders
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
 
-@Composable
 fun Modifier.liquidGlass(
-    style: LiquidGlassStyle,
-    providerState: LiquidGlassProviderState = LocalLiquidGlassProviderState.current
+    state: LiquidGlassProviderState,
+    style: GlassStyle,
+    compositingStrategy: CompositingStrategy = CompositingStrategy.Offscreen
 ): Modifier =
-    this then LiquidGlassElement(
-        style = style,
-        providerState = providerState
+    this.liquidGlass(
+        state = state,
+        luminanceSampler = null,
+        compositingStrategy = compositingStrategy,
+        style = { style }
     )
 
-private class LiquidGlassElement(
-    val style: LiquidGlassStyle,
-    val providerState: LiquidGlassProviderState
-) : ModifierNodeElement<LiquidGlassModifierNode>() {
+fun Modifier.liquidGlass(
+    state: LiquidGlassProviderState,
+    compositingStrategy: CompositingStrategy = CompositingStrategy.Offscreen,
+    style: () -> GlassStyle
+): Modifier =
+    this.liquidGlass(
+        state = state,
+        luminanceSampler = null,
+        compositingStrategy = compositingStrategy,
+        style = style
+    )
 
-    override fun create(): LiquidGlassModifierNode {
-        return LiquidGlassModifierNode(
+@ExperimentalLuminanceSamplerApi
+fun Modifier.liquidGlass(
+    state: LiquidGlassProviderState,
+    style: GlassStyle,
+    compositingStrategy: CompositingStrategy = CompositingStrategy.Offscreen,
+    luminanceSampler: LuminanceSampler? = null
+): Modifier =
+    this.liquidGlass(
+        state = state,
+        luminanceSampler = luminanceSampler,
+        compositingStrategy = compositingStrategy,
+        style = { style }
+    )
+
+@ExperimentalLuminanceSamplerApi
+fun Modifier.liquidGlass(
+    state: LiquidGlassProviderState,
+    luminanceSampler: LuminanceSampler? = null,
+    compositingStrategy: CompositingStrategy = CompositingStrategy.Offscreen,
+    style: () -> GlassStyle
+): Modifier =
+    this
+        .then(
+            GlassShapeElement(
+                style = style,
+                compositingStrategy = compositingStrategy
+            )
+        )
+        .then(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                LiquidGlassElement(
+                    state = state,
+                    style = style,
+                    luminanceSampler = luminanceSampler
+                ) then GlassBrushElement(
+                    style = style
+                ) then GlassHighlightElement(
+                    style = style
+                )
+            } else {
+                Modifier
+            }
+        )
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+private class LiquidGlassElement(
+    val state: LiquidGlassProviderState,
+    val style: () -> GlassStyle,
+    val luminanceSampler: LuminanceSampler?
+) : ModifierNodeElement<LiquidGlassNode>() {
+
+    override fun create(): LiquidGlassNode {
+        return LiquidGlassNode(
+            state = state,
             style = style,
-            providerState = providerState
+            luminanceSampler = luminanceSampler
         )
     }
 
-    override fun update(node: LiquidGlassModifierNode) {
+    override fun update(node: LiquidGlassNode) {
         node.update(
+            state = state,
             style = style,
-            providerState = providerState
+            luminanceSampler = luminanceSampler
         )
     }
 
     override fun InspectorInfo.inspectableProperties() {
         name = "liquidGlass"
+        properties["state"] = state
         properties["style"] = style
-        properties["providerState"] = providerState
+        properties["luminanceSampler"] = luminanceSampler
     }
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is LiquidGlassElement) return false
 
+        if (state != other.state) return false
         if (style != other.style) return false
-        if (providerState != other.providerState) return false
+        if (luminanceSampler != other.luminanceSampler) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = style.hashCode()
-        result = 31 * result + providerState.hashCode()
+        var result = state.hashCode()
+        result = 31 * result + style.hashCode()
+        result = 31 * result + (luminanceSampler?.hashCode() ?: 0)
         return result
     }
 }
 
-internal class LiquidGlassModifierNode(
-    var style: LiquidGlassStyle,
-    var providerState: LiquidGlassProviderState
-) : LayoutModifierNode, GlobalPositionAwareModifierNode, DelegatingNode() {
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+private class LiquidGlassNode(
+    var state: LiquidGlassProviderState,
+    var style: () -> GlassStyle,
+    var luminanceSampler: LuminanceSampler?
+) : GlobalPositionAwareModifierNode, ObserverModifierNode, DelegatingNode() {
 
     override val shouldAutoInvalidate: Boolean = false
 
-    private val shadersCache = LiquidGlassShadersCache()
-    private var rect: Rect? by mutableStateOf(null)
+    private var position: Offset by mutableStateOf(Offset.Zero)
+    private var graphicsLayer: GraphicsLayer? = null
+    private var samplerJob: Job? = null
 
-    private val drawWithCacheModifierNode =
-        delegate(
-            CacheDrawModifierNode {
-                val contentBlurRadiusPx = style.material.blurRadius.toPx()
-                val contentRenderEffect =
-                    if (contentBlurRadiusPx > 0f) {
+    private var currentStyle = style()
+
+    private var _colorFilter: ColorFilter? = null
+    private var _colorFilterEffect: RenderEffect? = null
+
+    private var _blurRadiusPx: Float = Float.NaN
+    private var _blurRenderEffect: RenderEffect? = null
+
+    private val refractionShader = RuntimeShader(GlassShaders.refractionShaderString)
+    private var _size: Size = Size.Unspecified
+    private var _cornerRadiusPx: Float = Float.NaN
+    private var _innerRefractionHeight: Float = Float.NaN
+    private var _innerRefractionAmount: Float = Float.NaN
+    private var _depthEffect: Float = Float.NaN
+    private var _innerRefractionRenderEffect: RenderEffect? = null
+
+    private var _renderEffect: androidx.compose.ui.graphics.RenderEffect? = null
+
+    private var _position: Offset? = null
+
+    private val drawNode = delegate(CacheDrawModifierNode {
+        val style = currentStyle
+
+        val colorFilter = style.material.colorFilter
+        val colorFilterChanged = _colorFilter != colorFilter
+        if (colorFilterChanged) {
+            _colorFilter = colorFilter
+            _colorFilterEffect =
+                if (colorFilter != null) {
+                    RenderEffect.createColorFilterEffect(colorFilter.asAndroidColorFilter())
+                } else {
+                    null
+                }
+        }
+        val colorFilterEffect = _colorFilterEffect
+
+        val blurRadiusPx = style.material.blurRadius.toPx()
+        val blurRadiusChanged = colorFilterChanged || _blurRadiusPx != blurRadiusPx
+        if (blurRadiusChanged) {
+            _blurRadiusPx = blurRadiusPx
+            _blurRenderEffect =
+                if (blurRadiusPx > 0f) {
+                    if (colorFilterEffect != null) {
                         RenderEffect.createBlurEffect(
-                            contentBlurRadiusPx,
-                            contentBlurRadiusPx,
-                            Shader.TileMode.DECAL
+                            blurRadiusPx,
+                            blurRadiusPx,
+                            colorFilterEffect,
+                            Shader.TileMode.CLAMP
                         )
                     } else {
-                        RenderEffect.createOffsetEffect(0f, 0f)
+                        RenderEffect.createBlurEffect(
+                            blurRadiusPx,
+                            blurRadiusPx,
+                            Shader.TileMode.CLAMP
+                        )
                     }
+                } else {
+                    colorFilterEffect
+                }
+        }
+        val blurRenderEffect = _blurRenderEffect
 
-                val cornerRadiusPx = style.shape.topStart.toPx(size, this)
+        val size = size
+        val sizeChanged = _size != size
+        _size = size
 
-                val hasBleed = style.bleed.opacity > 0f
-                val refractionRenderEffect =
+        val cornerRadiusPx = style.shape.topStart.toPx(size, this)
+        val cornerRadiusChanged = _cornerRadiusPx != cornerRadiusPx
+        _cornerRadiusPx = cornerRadiusPx
+
+        val innerRefractionHeight = style.innerRefraction.height.toPx(size, this)
+        val innerRefractionAmount = style.innerRefraction.amount.toPx(size, this)
+        val depthEffect = style.innerRefraction.depthEffect
+        val innerRefractionChanged =
+            sizeChanged || cornerRadiusChanged ||
+                    _innerRefractionHeight != innerRefractionHeight ||
+                    _innerRefractionAmount != innerRefractionAmount ||
+                    _depthEffect != depthEffect
+        if (innerRefractionChanged) {
+            _innerRefractionHeight = innerRefractionHeight
+            _innerRefractionAmount = innerRefractionAmount
+            _depthEffect = depthEffect
+            _innerRefractionRenderEffect =
+                RenderEffect.createRuntimeShaderEffect(
+                    refractionShader.apply {
+                        setFloatUniform("size", size.width, size.height)
+                        setFloatUniform("cornerRadius", cornerRadiusPx)
+
+                        setFloatUniform("refractionHeight", innerRefractionHeight)
+                        setFloatUniform("refractionAmount", innerRefractionAmount)
+                        setFloatUniform("depthEffect", depthEffect)
+                    },
+                    "image"
+                )
+        }
+        val innerRefractionRenderEffect = _innerRefractionRenderEffect!!
+
+        val renderEffectChanged = blurRadiusChanged || innerRefractionChanged
+        if (renderEffectChanged) {
+            _renderEffect =
+                if (blurRenderEffect != null) {
                     RenderEffect.createChainEffect(
-                        RenderEffect.createRuntimeShaderEffect(
-                            shadersCache.getRefractionShader(hasBleed).apply {
-                                setFloatUniform("size", size.width, size.height)
-                                setFloatUniform("cornerRadius", cornerRadiusPx)
-
-                                setFloatUniform(
-                                    "refractionHeight",
-                                    style.innerRefraction.height.toPx(this@CacheDrawModifierNode, size)
-                                )
-                                setFloatUniform(
-                                    "refractionAmount",
-                                    style.innerRefraction.amount.toPx(this@CacheDrawModifierNode, size)
-                                )
-                                setFloatUniform(
-                                    "eccentricFactor",
-                                    style.innerRefraction.eccentricFactor
-                                )
-
-                                if (hasBleed) {
-                                    setFloatUniform(
-                                        "bleedOpacity",
-                                        style.bleed.opacity
-                                    )
-                                }
-                            },
-                            "image"
-                        ),
-                        contentRenderEffect
+                        innerRefractionRenderEffect,
+                        blurRenderEffect
                     )
+                } else {
+                    innerRefractionRenderEffect
+                }.asComposeRenderEffect()
+        }
 
-                val refractionWithBleedRenderEffect =
-                    if (hasBleed) {
-                        val bleedRenderEffect =
-                            RenderEffect.createChainEffect(
-                                RenderEffect.createRuntimeShaderEffect(
-                                    shadersCache.getBleedShader().apply {
-                                        setFloatUniform("size", size.width, size.height)
-                                        setFloatUniform("cornerRadius", cornerRadiusPx)
+        graphicsLayer?.let { layer ->
+            layer.renderEffect = _renderEffect
 
-                                        setFloatUniform(
-                                            "eccentricFactor",
-                                            style.innerRefraction.eccentricFactor
-                                        )
-                                        setFloatUniform(
-                                            "bleedAmount",
-                                            style.bleed.amount.toPx(this@CacheDrawModifierNode, size)
-                                        )
-                                    },
-                                    "image"
-                                ),
-                                contentRenderEffect
-                            )
-
-                        val bleedBlurRadiusPx = style.bleed.blurRadius.toPx()
-                        val blurredBleedRenderEffect =
-                            if (bleedBlurRadiusPx > 0f) {
-                                RenderEffect.createChainEffect(
-                                    bleedRenderEffect,
-                                    RenderEffect.createBlurEffect(
-                                        bleedBlurRadiusPx,
-                                        bleedBlurRadiusPx,
-                                        Shader.TileMode.CLAMP
-                                    )
-                                )
-                            } else {
-                                bleedRenderEffect
-                            }
-
-                        RenderEffect.createBlendModeEffect(
-                            blurredBleedRenderEffect,
-                            refractionRenderEffect,
-                            android.graphics.BlendMode.SRC_OVER
-                        )
-                    } else {
-                        refractionRenderEffect
-                    }
-
-                val materialRenderEffect =
-                    if (style.material != GlassMaterial.Default) {
-                        RenderEffect.createRuntimeShaderEffect(
-                            shadersCache.getMaterialShader().apply {
-                                setFloatUniform(
-                                    "contrast",
-                                    style.material.contrast
-                                )
-                                setFloatUniform(
-                                    "whitePoint",
-                                    style.material.whitePoint
-                                )
-                                setFloatUniform(
-                                    "chromaMultiplier",
-                                    style.material.chromaMultiplier
-                                )
-                            },
-                            "image"
-                        )
-                    } else {
-                        null
-                    }
-
-                val renderEffect =
-                    if (materialRenderEffect != null) {
-                        RenderEffect.createChainEffect(
-                            materialRenderEffect,
-                            refractionWithBleedRenderEffect
-                        ).asComposeRenderEffect()
-                    } else {
-                        refractionWithBleedRenderEffect.asComposeRenderEffect()
-                    }
-
-                val graphicsLayer = obtainGraphicsLayer()
-                graphicsLayer.renderEffect = renderEffect
-
-                val strokeWidthPx = ceil(min(style.border.width.toPx(), size.minDimension / 2))
-                val halfStroke = strokeWidthPx / 2
-                val borderTopLeft = Offset(halfStroke, halfStroke)
-                val borderSize = Size(size.width - strokeWidthPx, size.height - strokeWidthPx)
-                val border =
-                    if (strokeWidthPx > 0f) {
-                        val borderBrush = style.border.createBrush(this, borderSize, cornerRadiusPx)
-                        if (borderBrush != null) {
-                            val borderOutline = style.shape.createOutline(borderSize, layoutDirection, this)
-                            Pair(borderOutline, borderBrush)
-                        } else {
-                            null
-                        }
-                    } else {
-                        null
-                    }
-                val stroke = Stroke(strokeWidthPx)
-
-                onDrawBehind {
-                    val rect = rect ?: return@onDrawBehind
-                    graphicsLayer.record {
-                        translate(-rect.left, -rect.top) {
-                            drawLayer(providerState.graphicsLayer)
-                        }
-                    }
-                    drawLayer(graphicsLayer)
-
-                    if (style.material.tint.isSpecified) {
-                        drawRect(style.material.tint)
-                    }
-
-                    if (border != null) {
-                        val (borderOutline, borderBrush) = border
-
-                        translate(borderTopLeft.x, borderTopLeft.y) {
-                            drawOutline(
-                                outline = borderOutline,
-                                brush = borderBrush,
-                                style = stroke,
-                                blendMode = BlendMode.Plus
-                            )
-                        }
+            val position = position
+            if (renderEffectChanged || _position != position) {
+                _position = position
+                layer.record {
+                    translate(-position.x, -position.y) {
+                        drawLayer(state.graphicsLayer)
                     }
                 }
             }
-        )
-
-    val layerBlock: GraphicsLayerScope.() -> Unit = {
-        compositingStrategy = CompositingStrategy.Offscreen
-        clip = true
-        shape = style.shape
-    }
-
-    override fun MeasureScope.measure(measurable: Measurable, constraints: Constraints): MeasureResult {
-        val placeable = measurable.measure(constraints)
-        return layout(placeable.width, placeable.height) {
-            placeable.placeWithLayer(0, 0, layerBlock = layerBlock)
         }
-    }
+
+        onDrawBehind {
+            graphicsLayer?.let { layer ->
+                drawLayer(layer)
+            }
+        }
+    })
 
     override fun onGloballyPositioned(coordinates: LayoutCoordinates) {
-        rect = providerState.rect?.let {
-            coordinates.boundsInRoot().translate(-it.topLeft)
+        if (coordinates.isAttached) {
+            val providerPosition = state.position
+            position = coordinates.positionOnScreen() - providerPosition
         }
+    }
+
+    override fun onObservedReadsChanged() {
+        updateStyle()
+    }
+
+    override fun onAttach() {
+        val graphicsContext = requireGraphicsContext()
+        graphicsLayer =
+            graphicsContext.createGraphicsLayer().apply {
+                compositingStrategy = androidx.compose.ui.graphics.layer.CompositingStrategy.Offscreen
+            }
+
+        luminanceSampler?.let { sampler ->
+            samplerJob =
+                coroutineScope.launch {
+                    while (isActive) {
+                        graphicsLayer?.let { layer ->
+                            sampler.sample(layer)
+                        }
+                        delay(sampler.sampleIntervalMillis)
+                    }
+                }
+        }
+
+        updateStyle()
+    }
+
+    override fun onDetach() {
+        val graphicsContext = requireGraphicsContext()
+        graphicsLayer?.let { layer ->
+            graphicsContext.releaseGraphicsLayer(layer)
+            graphicsLayer = null
+        }
+
+        samplerJob?.cancel()
+        samplerJob = null
     }
 
     fun update(
-        style: LiquidGlassStyle,
-        providerState: LiquidGlassProviderState
+        state: LiquidGlassProviderState,
+        style: () -> GlassStyle,
+        luminanceSampler: LuminanceSampler?
     ) {
-        this.style = style
-        this.providerState = providerState
-        drawWithCacheModifierNode.invalidateDrawCache()
+        if (this.state != state ||
+            this.style != style ||
+            this.luminanceSampler != luminanceSampler
+        ) {
+            this.state = state
+            this.style = style
+            this.luminanceSampler = luminanceSampler
+            updateStyle()
+        }
+    }
+
+    private fun updateStyle() {
+        observeReads { currentStyle = style() }
+        drawNode.invalidateDrawCache()
     }
 }

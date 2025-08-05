@@ -1,30 +1,34 @@
 package com.kyant.liquidglass
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.ProvidableCompositionLocal
+import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 
-val LocalLiquidGlassProviderState: ProvidableCompositionLocal<LiquidGlassProviderState> =
-    staticCompositionLocalOf { error("CompositionLocal LocalLiquidGlassProviderState not present") }
-
 @Composable
-fun rememberLiquidGlassProviderState(): LiquidGlassProviderState {
+fun rememberLiquidGlassProviderState(
+    backgroundColor: Color?
+): LiquidGlassProviderState {
     val graphicsLayer = rememberGraphicsLayer()
-    return remember(graphicsLayer) {
-        LiquidGlassProviderState(graphicsLayer)
+    return remember(backgroundColor, graphicsLayer) {
+        LiquidGlassProviderState(
+            backgroundColor = backgroundColor,
+            graphicsLayer = graphicsLayer
+        )
     }
 }
 
+@Stable
 class LiquidGlassProviderState internal constructor(
+    val backgroundColor: Color?,
     internal val graphicsLayer: GraphicsLayer
 ) {
 
-    internal var rect: Rect? by mutableStateOf(null)
+    internal var position: Offset by mutableStateOf(Offset.Zero)
 }
