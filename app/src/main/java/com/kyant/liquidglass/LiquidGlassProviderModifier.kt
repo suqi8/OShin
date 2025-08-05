@@ -3,52 +3,39 @@ package com.kyant.liquidglass
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.layout.LayoutCoordinates
-import androidx.compose.ui.layout.boundsInRoot
+import androidx.compose.ui.layout.positionOnScreen
 import androidx.compose.ui.node.DrawModifierNode
 import androidx.compose.ui.node.GlobalPositionAwareModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.platform.InspectorInfo
 
 fun Modifier.liquidGlassProvider(
-    state: LiquidGlassProviderState,
-    backgroundColor: Color? = null
+    state: LiquidGlassProviderState
 ): Modifier =
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        this then LiquidGlassProviderElement(
-            state = state,
-            backgroundColor = backgroundColor
-        )
+        this then LiquidGlassProviderElement(state = state)
     } else {
         this
     }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 private class LiquidGlassProviderElement(
-    val state: LiquidGlassProviderState,
-    val backgroundColor: Color?
-) : ModifierNodeElement<LiquidGlassProviderModifierNode>() {
+    val state: LiquidGlassProviderState
+) : ModifierNodeElement<LiquidGlassProviderNode>() {
 
-    override fun create(): LiquidGlassProviderModifierNode {
-        return LiquidGlassProviderModifierNode(
-            state = state,
-            backgroundColor = backgroundColor
-        )
+    override fun create(): LiquidGlassProviderNode {
+        return LiquidGlassProviderNode(state = state)
     }
 
-    override fun update(node: LiquidGlassProviderModifierNode) {
-        node.update(
-            state = state,
-            backgroundColor = backgroundColor
-        )
+    override fun update(node: LiquidGlassProviderNode) {
+        node.update(state = state)
     }
 
     override fun InspectorInfo.inspectableProperties() {
         name = "liquidGlassProvider"
         properties["state"] = state
-        properties["backgroundColor"] = backgroundColor
     }
 
     override fun equals(other: Any?): Boolean {
@@ -56,43 +43,40 @@ private class LiquidGlassProviderElement(
         if (other !is LiquidGlassProviderElement) return false
 
         if (state != other.state) return false
-        if (backgroundColor != other.backgroundColor) return false
 
         return true
     }
 
     override fun hashCode(): Int {
-        var result = state.hashCode()
-        result = 31 * result + backgroundColor.hashCode()
-        return result
+        return state.hashCode()
     }
 }
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-internal class LiquidGlassProviderModifierNode(
-    var state: LiquidGlassProviderState,
-    var backgroundColor: Color?
+private class LiquidGlassProviderNode(
+    var state: LiquidGlassProviderState
 ) : DrawModifierNode, GlobalPositionAwareModifierNode, Modifier.Node() {
 
     override val shouldAutoInvalidate: Boolean = false
 
     override fun ContentDrawScope.draw() {
         drawContent()
+
         state.graphicsLayer.record {
-            backgroundColor?.let { drawRect(it) }
+            state.backgroundColor?.let { drawRect(it) }
             this@draw.drawContent()
         }
     }
 
     override fun onGloballyPositioned(coordinates: LayoutCoordinates) {
-        state.rect = coordinates.boundsInRoot()
+        if (coordinates.isAttached) {
+            state.position = coordinates.positionOnScreen()
+        }
     }
 
     fun update(
-        state: LiquidGlassProviderState,
-        backgroundColor: Color?
+        state: LiquidGlassProviderState
     ) {
         this.state = state
-        this.backgroundColor = backgroundColor
     }
 }

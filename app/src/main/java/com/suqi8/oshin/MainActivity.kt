@@ -9,13 +9,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.SizeTransform
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -23,15 +20,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
@@ -43,39 +37,32 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.compositionLocalOf
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.kyant.liquidglass.GlassBorder
-import com.kyant.liquidglass.GlassMaterial
-import com.kyant.liquidglass.InnerRefraction
-import com.kyant.liquidglass.LiquidGlassStyle
-import com.kyant.liquidglass.LocalLiquidGlassProviderState
+import com.kyant.liquidglass.GlassStyle
+import com.kyant.liquidglass.highlight.GlassHighlight
 import com.kyant.liquidglass.liquidGlass
 import com.kyant.liquidglass.liquidGlassProvider
+import com.kyant.liquidglass.material.GlassMaterial
+import com.kyant.liquidglass.refraction.InnerRefraction
+import com.kyant.liquidglass.refraction.RefractionAmount
+import com.kyant.liquidglass.refraction.RefractionHeight
 import com.kyant.liquidglass.rememberLiquidGlassProviderState
 import com.suqi8.oshin.ui.activity.about.Main_About
 import com.suqi8.oshin.ui.activity.about.about_contributors
@@ -121,8 +108,9 @@ import com.suqi8.oshin.ui.activity.func.romworkshop.Rom_workshop
 import com.suqi8.oshin.ui.activity.hide_apps_notice
 import com.suqi8.oshin.ui.activity.recent_update
 import com.suqi8.oshin.ui.theme.AppTheme
+import com.suqi8.oshin.utils.BottomTabs
+import com.suqi8.oshin.utils.BottomTabsScope
 import com.suqi8.oshin.utils.SpringEasing
-import com.suqi8.oshin.utils.drawColoredShadow
 import com.suqi8.oshin.utils.executeCommand
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
@@ -134,13 +122,10 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
-import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.CardDefaults
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.basic.NavigationItem
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
-import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
@@ -353,7 +338,7 @@ fun Main1(navController: NavController) {
     )
 
     val pagerState = rememberPagerState(pageCount = { 4 },initialPage = 0)
-    var targetPage by remember { mutableIntStateOf(pagerState.currentPage) }
+    var targetPage = remember { mutableIntStateOf(pagerState.currentPage) }
     val coroutineScope = rememberCoroutineScope()
     val currentScrollBehavior = when (pagerState.currentPage) {
         0 -> topAppBarScrollBehaviorList[0]
@@ -361,206 +346,115 @@ fun Main1(navController: NavController) {
         2 -> topAppBarScrollBehaviorList[2]
         else -> topAppBarScrollBehaviorList[3]
     }
+    data class NavigationItem(
+        val label: String,
+        val icon: Int
+    )
 
     val items = listOf(
-        NavigationItem(stringResource(R.string.home), ImageVector.vectorResource(id = R.drawable.home)),
-        NavigationItem(stringResource(R.string.module), ImageVector.vectorResource(id = R.drawable.module)),
-        NavigationItem(stringResource(R.string.func), ImageVector.vectorResource(id = R.drawable.func)),
-        NavigationItem(stringResource(R.string.about), ImageVector.vectorResource(id = R.drawable.about))
+        NavigationItem(stringResource(R.string.home), R.drawable.home),
+        NavigationItem(stringResource(R.string.module), R.drawable.module),
+        NavigationItem(stringResource(R.string.func), R.drawable.func),
+        NavigationItem(stringResource(R.string.about),  R.drawable.about)
     )
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.debounce(150).collectLatest {
-            targetPage = pagerState.currentPage
+            targetPage.intValue = pagerState.currentPage
         }
     }
-    // 在 Composable 函数顶层创建 state
-    val providerState = rememberLiquidGlassProviderState()
+
     val context = LocalContext.current
-
-// 使用 CompositionLocalProvider 包裹 Scaffold
-    CompositionLocalProvider(
-        LocalLiquidGlassProviderState provides providerState
-    ) {
-        // 1. ✅ 提取可复用的玻璃材质，用于统一视觉风格
-        val commonGlassMaterial = GlassMaterial(
-            blurRadius = 0.3.dp,
-            tint = MiuixTheme.colorScheme.background.copy(alpha = 0.1f),
-            whitePoint = 0.1f,  // 高光
-            chromaMultiplier = 1.2f // 增强透过玻璃看到的颜色饱和度
+    val providerState = rememberLiquidGlassProviderState(
+        backgroundColor = MiuixTheme.colorScheme.background
+    )
+    val commonGlassMaterial = GlassMaterial(
+        blurRadius = 0.3.dp, // blurRadius 保留
+        brush = SolidColor(MiuixTheme.colorScheme.background), // tint 改为 brush
+        alpha = 0.1f // tint 的 alpha 独立为 alpha 参数
+    )
+    val topAppBarStyle = GlassStyle(
+        shape = RoundedCornerShape(CardDefaults.CornerRadius),
+        material = commonGlassMaterial,
+        // innerRefraction.Default 改为更具体的构造函数
+        innerRefraction = InnerRefraction(
+            height = RefractionHeight(8.dp),
+            amount = RefractionAmount.Full
+        ),
+        // GlassBorder.Light 改为 GlassHighlight
+        highlight = GlassHighlight.Default.copy(
+            width = 1.dp,
+            color = Color.White.copy(alpha = 0.5f)
         )
-
-        // 2. ✅ 为 TopAppBar 定义一个丰富的玻璃样式
-        val topAppBarStyle = LiquidGlassStyle(
-            shape = RoundedCornerShape(28.dp),
-            material = commonGlassMaterial,
-            innerRefraction = InnerRefraction.Default, // 添加默认的内部折射效果，产生凹凸感
-            border = GlassBorder.Light(width = 1.dp)    // 添加一个细微的发光边框
-        )
-
-        // 3. ✅ 为 BottomBar 定义一个丰富的玻璃样式
-        val bottomNavigationStyle = LiquidGlassStyle(
-            shape = RoundedCornerShape(size = CardDefaults.CornerRadius),
-            material = commonGlassMaterial,
-            innerRefraction = InnerRefraction.Default,
-            border = GlassBorder.Light(width = 1.dp)
-        )
-
-        Scaffold(
-            modifier = Modifier.fillMaxSize(),
-            topBar = {
-                AnimatedVisibility(pagerState.currentPage != 3) {
-                    Box(modifier = Modifier.clip(RoundedCornerShape(28.dp))) {
-                        val enableBlur = context.prefs("settings").getBoolean("enable_blur", true)
-                        TopAppBar(
-                            scrollBehavior = currentScrollBehavior,
-                            color = if (enableBlur) Color.Transparent else MiuixTheme.colorScheme.background,
-                            title = when (pagerState.currentPage) {
-                                0 -> stringResource(R.string.app_name)
-                                1 -> stringResource(R.string.module)
-                                2 -> stringResource(R.string.func)
-                                else -> stringResource(R.string.about)
-                            },
-                            modifier = if (enableBlur) {
-                                // 直接应用预设好的样式
-                                Modifier.liquidGlass(style = topAppBarStyle)
-                            } else Modifier
-                        )
-                    }
-                }
-            },
-            bottomBar = {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(
-                            bottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-                        ),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    val enableBlur = context.prefs("settings").getBoolean("enable_blur", true)
-                    Card(
-                        // 4. ✅ 当玻璃效果启用时，不再需要额外的阴影
-                        modifier = if (enableBlur) {
-                            Modifier.padding(bottom = 10.dp)
-                        } else {
-                            Modifier
-                                .padding(bottom = 10.dp)
-                                .drawColoredShadow(
-                                    MiuixTheme.colorScheme.onSurface,
-                                    0.1f,
-                                    borderRadius = CardDefaults.CornerRadius,
-                                    shadowRadius = 10.dp
-                                )
-                        },
-                        color = Color.Transparent // Card 必须透明才能透出内部的 NavigationBar 效果
-                    ) {
-                        NavigationBar(
-                            items = items,
-                            color = if (enableBlur) Color.Transparent else MiuixTheme.colorScheme.surfaceContainer,
-                            modifier = if (enableBlur) {
-                                // 直接应用预设好的样式
-                                Modifier.liquidGlass(style = bottomNavigationStyle)
-                            } else Modifier,
-                            selected = targetPage,
-                            onClick = { index ->
-                                targetPage = index
-                                coroutineScope.launch {
-                                    pagerState.animateScrollToPage(index)
-                                }
-                            }
-                        )
-                    }
-                }
-            },
-        ) { padding ->
-            Box(
-                modifier = Modifier
-                    .liquidGlassProvider(providerState)
-            ) {
-                AppHorizontalPager(
-                    modifier = Modifier.imePadding(),
-                    pagerState = pagerState,
-                    topAppBarScrollBehaviorList = topAppBarScrollBehaviorList,
-                    padding = padding,
-                    navController = navController,
-                    context = context
+    )
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        topBar = {
+            AnimatedVisibility(pagerState.currentPage != 3) {
+                TopAppBar(
+                    scrollBehavior = currentScrollBehavior,
+                    // 当玻璃效果启用时，背景应总是透明
+                    color = Color.Transparent,
+                    title = when (pagerState.currentPage) {
+                        0 -> stringResource(R.string.app_name)
+                        1 -> stringResource(R.string.module)
+                        2 -> stringResource(R.string.func)
+                        else -> stringResource(R.string.about)
+                    },
+                    modifier = Modifier.liquidGlass(providerState, style = topAppBarStyle)
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun NavigationBar(
-    items: List<NavigationItem>,
-    selected: Int,
-    onClick: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-    color: Color = MiuixTheme.colorScheme.background
-) {
-    require(items.size in 2..5) { "BottomBar must have between 2 and 5 items" }
-    Surface(
-        color = color
-    ) {
-        Column(
-            modifier = modifier
-                .background(color),
-            verticalArrangement = Arrangement.Center
-        ) {
-            Row(
-                modifier = Modifier,
-                verticalAlignment = Alignment.CenterVertically
+        },
+        bottomBar = {
+            Column(
+                Modifier
+                    .padding(32.dp, 8.dp)
+                    .safeDrawingPadding()
+                    .fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items.forEachIndexed { index, item ->
-                    val isSelected = selected == index
-                    var isPressed by remember { mutableStateOf(false) }
-                    val tint by animateColorAsState(
-                        targetValue = when {
-                            isPressed -> if (isSelected) {
-                                MiuixTheme.colorScheme.onSurfaceContainer.copy(alpha = 0.6f)
-                            } else {
-                                MiuixTheme.colorScheme.onSurfaceContainerVariant.copy(alpha = 0.6f)
+                Row(
+                    Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(4.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    BottomTabs(
+                        tabs = items,
+                        selectedIndexState = targetPage,
+                        liquidGlassProviderState = providerState,
+                        background = MiuixTheme.colorScheme.surfaceContainer,
+                        modifier = Modifier.weight(1f),
+                        onTabSelected = { index ->
+                            targetPage.intValue = index
+                            coroutineScope.launch {
+                                pagerState.animateScrollToPage(index)
                             }
-
-                            isSelected -> MiuixTheme.colorScheme.onSurfaceContainer
-                            else -> MiuixTheme.colorScheme.onSurfaceContainerVariant
                         }
-                    )
-                    val fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
-                    Column(
-                        modifier = Modifier
-                            .padding(vertical = 8.dp, horizontal = 20.dp)
-                            .pointerInput(Unit) {
-                                detectTapGestures(
-                                    onPress = {
-                                        isPressed = true
-                                        tryAwaitRelease()
-                                        isPressed = false
-                                    },
-                                    onTap = { onClick(index) }
-                                )
-                            },
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Image(
-                            modifier = Modifier.size(28.dp),
-                            imageVector = item.icon,
-                            contentDescription = item.label,
-                            colorFilter = ColorFilter.tint(tint)
-                        )
-                        Text(
-                            modifier = Modifier,
-                            text = item.label,
-                            color = tint,
-                            textAlign = TextAlign.Center,
-                            fontSize = 13.sp,
-                            fontWeight = fontWeight
+                    ) { tab ->
+                        val BottomTabsScope = BottomTabsScope()
+                        BottomTabsScope.BottomTab({
+                            com.kyant.expressa.ui.Icon(painterResource(tab.icon)) },
+                            {
+                                com.kyant.expressa.ui.Text(text = tab.label,)
+                            }
                         )
                     }
                 }
             }
+        },
+    ) { padding ->
+        Box(
+            modifier = Modifier
+                .liquidGlassProvider(providerState)
+        ) {
+            AppHorizontalPager(
+                modifier = Modifier.imePadding(),
+                pagerState = pagerState,
+                topAppBarScrollBehaviorList = topAppBarScrollBehaviorList,
+                padding = padding,
+                navController = navController,
+                context = context
+            )
         }
     }
 }
@@ -579,7 +473,7 @@ fun AppHorizontalPager(
     HorizontalPager(
         modifier = modifier.background(MiuixTheme.colorScheme.background),
         state = pagerState,
-        userScrollEnabled = true,
+        userScrollEnabled = false,
         pageContent = { page ->
             when (page) {
                 0 -> Main_Home(
