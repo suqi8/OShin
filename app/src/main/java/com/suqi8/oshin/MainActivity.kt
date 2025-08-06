@@ -420,7 +420,7 @@ fun Main1(navController: NavController) {
                 ) {
                     BottomTabs(
                         tabs = items,
-                        selectedIndexState = targetPage,
+                        selectedIndex = pagerState.currentPage,
                         liquidGlassProviderState = providerState,
                         background = MiuixTheme.colorScheme.surfaceContainer,
                         modifier = Modifier.weight(1f),
