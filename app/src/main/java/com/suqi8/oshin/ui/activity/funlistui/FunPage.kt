@@ -25,7 +25,6 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.highcapable.yukihookapi.hook.factory.prefs
 import com.kyant.expressa.m3.shape.CornerShape
 import com.kyant.liquidglass.GlassStyle
 import com.kyant.liquidglass.liquidGlass
@@ -57,7 +56,6 @@ fun FunPage(
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
     val restartAPP = remember { mutableStateOf(false) }
     val lazyListState = rememberLazyListState()
-    val enableBlur = context.prefs("settings").getBoolean("enable_blur", true)
     val liquidGlassProviderState = rememberLiquidGlassProviderState(MiuixTheme.colorScheme.surfaceContainer)
 
     val iconButtonLiquidGlassStyle =
@@ -76,7 +74,7 @@ fun FunPage(
             TopAppBar(
                 scrollBehavior = topAppBarState,
                 title = title,
-                color = if (enableBlur) Color.Transparent else MiuixTheme.colorScheme.background,
+                color = Color.Transparent,
                 modifier = Modifier,
                 navigationIcon = {
                     Box(

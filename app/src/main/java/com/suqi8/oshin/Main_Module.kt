@@ -420,7 +420,7 @@ fun FunctionApp(packageName: String, activityName: String, navController: NavCon
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Card(
-                    color = dominantColor.value,
+                    colors = CardDefaults.defaultColors(color = dominantColor.value),
                     modifier = Modifier
                         .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
                         .drawColoredShadow(
@@ -480,7 +480,7 @@ fun FunctionAppFlow(packageName: String, activityName: String, navController: Na
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Card(
-                    color = dominantColor.value,
+                    colors = CardDefaults.defaultColors(color = dominantColor.value),
                     modifier = Modifier
                         .padding(top = 10.dp)
                         .drawColoredShadow(

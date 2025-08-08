@@ -18,6 +18,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.suqi8.oshin.R
 import com.suqi8.oshin.utils.drawColoredShadow
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.CardDefaults
 import top.yukonga.miuix.kmp.basic.Text
 
 @Composable
@@ -35,7 +36,7 @@ fun FunNoEnable() {
                 offsetY = 0.dp,
                 roundedRect = false
             ),
-        color = Color.Red.copy(alpha = 0.03f)
+        colors = CardDefaults.defaultColors(Color.Red.copy(alpha = 0.03f))
     ) {
         val compositionResult = rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.error))
         val progress = animateLottieCompositionAsState(

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -17,6 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.suqi8.oshin.R
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.CardDefaults
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -27,7 +27,7 @@ data class WantFind(
 )
 @Composable
 fun WantFind(funclist: List<WantFind>, navController: NavController) {
-    Card(color = MiuixTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.75f),
+    Card(colors = CardDefaults.defaultColors(MiuixTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.75f)),
         modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 12.dp)) {
         Surface(color = Color.Transparent) {
             Column(modifier = Modifier.padding(horizontal = 18.dp, vertical = 18.dp)) {
