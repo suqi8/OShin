@@ -42,6 +42,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.CardDefaults
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperDialog
@@ -140,7 +141,7 @@ fun ConfirmationDialog(
                             liquidGlassProviderState,
                             cardAndCancelButtonStyle // 应用提取的样式
                         ),
-                    color = Color.Transparent
+                    colors = CardDefaults.defaultColors(Color.Transparent)
                 ) {
                     appPackage.forEachIndexed { index, it ->
                         ResetAppList(it)
@@ -229,7 +230,7 @@ fun ResetAppList(packageName: String) {
             ) {
                 if (!isLoading.value) {
                     Card(
-                        color = dominantColor.value,
+                        colors = CardDefaults.defaultColors(dominantColor.value),
                         modifier = Modifier
                             .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
                             .drawColoredShadow(

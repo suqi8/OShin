@@ -41,6 +41,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Card
+import top.yukonga.miuix.kmp.basic.CardDefaults
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.CheckboxLocation
 import top.yukonga.miuix.kmp.extra.SuperArrow
@@ -185,7 +186,7 @@ fun ResetAppList(packageName: String, isChecked: Boolean, onCheckedChange: (Bool
         ) {
             if (!isLoading.value) {
                 Card(
-                    color = dominantColor.value,
+                    colors = CardDefaults.defaultColors(dominantColor.value),
                     modifier = Modifier
                         .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
                         .drawColoredShadow(
