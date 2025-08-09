@@ -14,12 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -106,49 +103,4 @@ fun SearchList(
             )
         }
     }
-}
-
-object BasicComponentDefaults {
-
-    /**
-     * The default margin inside the [BasicComponent].
-     */
-    val InsideMargin = PaddingValues(16.dp)
-
-    /**
-     * The default color of the title.
-     */
-    @Composable
-    fun titleColor(
-        color: Color = MiuixTheme.colorScheme.onSurface,
-        disabledColor: Color = MiuixTheme.colorScheme.disabledOnSecondaryVariant
-    ): BasicComponentColors {
-        return BasicComponentColors(
-            color = color,
-            disabledColor = disabledColor
-        )
-    }
-
-    /**
-     * The default color of the summary.
-     */
-    @Composable
-    fun summaryColor(
-        color: Color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
-        disabledColor: Color = MiuixTheme.colorScheme.disabledOnSecondaryVariant
-    ): BasicComponentColors {
-        return BasicComponentColors(
-            color = color,
-            disabledColor = disabledColor
-        )
-    }
-}
-
-@Immutable
-class BasicComponentColors(
-    private val color: Color,
-    private val disabledColor: Color
-) {
-    @Stable
-    internal fun color(enabled: Boolean): Color = if (enabled) color else disabledColor
 }
