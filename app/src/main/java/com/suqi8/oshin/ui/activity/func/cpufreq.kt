@@ -124,7 +124,6 @@ fun cpu_freq(
         val cpuFrequencies = remember { mutableStateOf<Map<Int, Triple<List<String>, Int, Int>>>(emptyMap()) }
         LaunchedEffect(isRefreshing) {
             if (isRefreshing) {
-                isRefreshing = true
                 cpuFrequencies.value = getAllCoresFrequencies()
                 isRefreshing = false
             }
