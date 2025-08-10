@@ -4,6 +4,7 @@ import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
@@ -114,23 +115,33 @@ fun BasicComponent(
         val contentMaxWidth = maxOf(0, constraints.maxWidth - leftWidth - rightWidth - 16.dp.roundToPx())
         val titlePlaceable = title?.let {
             subcompose("title") {
-                Text(
-                    text = it,
-                    fontSize = 16.sp,
-                    lineHeight = 22.sp,
-                    fontWeight = FontWeight.Medium,
-                    color = titleColor.color(enabled)
-                )
+                Box(
+                    modifier = Modifier.heightIn(min = 21.14.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = it,
+                        fontSize = 16.sp,
+                        lineHeight = 22.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = titleColor.color(enabled)
+                    )
+                }
             }.first().measure(looseConstraints.copy(maxWidth = contentMaxWidth))
         }
         val summaryPlaceable = summary?.let {
             subcompose("summary") {
-                Text(
-                    text = it,
-                    fontSize = 14.sp,
-                    lineHeight = 20.sp,
-                    color = summaryColor.color(enabled)
-                )
+                Box(
+                    modifier = Modifier.heightIn(min = 18.57.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = it,
+                        fontSize = 14.sp,
+                        lineHeight = 20.sp,
+                        color = summaryColor.color(enabled)
+                    )
+                }
             }.first().measure(looseConstraints.copy(maxWidth = contentMaxWidth))
         }
         val gap = 4.dp.roundToPx()
