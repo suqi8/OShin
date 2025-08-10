@@ -2,25 +2,21 @@ package com.suqi8.oshin.ui.activity.com.android.systemui
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.activity.funlistui.Card
+import com.suqi8.oshin.ui.activity.funlistui.FunArrow
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.WantFind
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetAppName
-import com.suqi8.oshin.ui.activity.funlistui.Card
-import top.yukonga.miuix.kmp.extra.SuperArrow
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
@@ -32,32 +28,32 @@ fun systemui(navController: NavController) {
         navController = navController
     ) {
         Card {
-            SuperArrow(title = stringResource(id = R.string.status_bar_clock),
+            FunArrow(title = stringResource(id = R.string.status_bar_clock),
                 onClick = {
                     navController.navigate("systemui\\status_bar_clock")
                 })
             addline()
-            SuperArrow(title = stringResource(id = R.string.network_speed_indicator),
+            FunArrow(title = stringResource(id = R.string.network_speed_indicator),
                 onClick = {
                     navController.navigate("systemui\\status_bar_wifi")
                 })
             addline()
-            SuperArrow(title = stringResource(id = R.string.hardware_indicator),
+            FunArrow(title = stringResource(id = R.string.hardware_indicator),
                 onClick = {
                     navController.navigate("systemui\\hardware_indicator")
                 })
             addline()
-            SuperArrow(title = stringResource(id = R.string.status_bar_icon),
+            FunArrow(title = stringResource(id = R.string.status_bar_icon),
                 onClick = {
                     navController.navigate("systemui\\statusbar_icon")
                 })
             addline()
-            SuperArrow(title = stringResource(id = R.string.status_bar_notification),
+            FunArrow(title = stringResource(id = R.string.status_bar_notification),
                 onClick = {
                     navController.navigate("systemui\\notification")
                 })
             addline()
-            SuperArrow(title = stringResource(id = R.string.control_center),
+            FunArrow(title = stringResource(id = R.string.control_center),
                 onClick = {
                     navController.navigate("systemui\\controlCenter")
                 })

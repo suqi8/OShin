@@ -32,6 +32,7 @@ import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import com.suqi8.oshin.ui.activity.funlistui.Card
+import com.suqi8.oshin.ui.activity.funlistui.FunArrow
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperArrow
@@ -279,7 +280,7 @@ fun hardware_indicator(navController: NavController) {
                             .fillMaxWidth()
                             .padding(horizontal = 12.dp, vertical = 6.dp)
                     ) {
-                        SuperArrow(
+                        FunArrow(
                             title = stringResource(R.string.show_cpu_temp_data),
                             onClick = {
                                 show_cpu_temp_data.value = true

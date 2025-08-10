@@ -74,7 +74,7 @@ fun FunAppSele(title: String, summary: String? = null, category: String, key: St
         }
     }
 
-    SuperArrow(
+    FunArrow(
         title = title,
         summary = if (summary == null) stringResource(R.string.selected_app) + seleappList.value.joinToString(",") else summary + "\n" + stringResource(R.string.selected_app) + seleappList.value.joinToString(","),
         onClick = { showAppListSele.value = true }

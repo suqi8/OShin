@@ -36,6 +36,7 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.FeatureItem
 import com.suqi8.oshin.R
 import com.suqi8.oshin.features
+import com.suqi8.oshin.ui.activity.funlistui.FunArrow
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetFuncRoute
 import dev.chrisbanes.haze.ExperimentalHazeApi
@@ -55,7 +56,6 @@ import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
-import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -145,7 +145,7 @@ fun recent_update(navController: NavController) {
                             route.value = GetFuncRoute(feature.category, context)
                         }
                     }
-                    SuperArrow(
+                    FunArrow(
                         title = feature.title,
                         summary = if (feature.summary != null) feature.summary + "\n" + route.value else route.value,
                         onClick = onClick

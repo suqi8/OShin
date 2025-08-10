@@ -61,7 +61,7 @@ fun FunSlider(
     val cacheValue = remember { mutableStateOf(value.value) }
     var showDialog = remember { mutableStateOf(false) }
 
-    SuperArrow(
+    FunArrow(
         title = title,
         summary = summary,
         rightText = value.value + endtype,
