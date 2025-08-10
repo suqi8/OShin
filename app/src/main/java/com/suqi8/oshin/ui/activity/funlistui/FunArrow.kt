@@ -21,7 +21,7 @@ import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
-fun FunArrow(title: String, summary: String? = null, rightText: String? = null, leftAction: @Composable (() -> Unit)? = null, category: String? = "", navController: NavController?, onClick: () -> Unit) {
+fun FunArrow(title: String, summary: String? = null, rightText: String? = null, leftAction: @Composable (() -> Unit)? = null, category: String? = null, navController: NavController? = null, onClick: () -> Unit) {
     SuperArrow(title = title,
         summary = summary,
         rightText = rightText,
