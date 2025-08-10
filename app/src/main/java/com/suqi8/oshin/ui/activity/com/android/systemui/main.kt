@@ -19,7 +19,7 @@ import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.WantFind
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetAppName
-import top.yukonga.miuix.kmp.basic.Card
+import com.suqi8.oshin.ui.activity.funlistui.Card
 import top.yukonga.miuix.kmp.extra.SuperArrow
 
 @SuppressLint("SuspiciousIndentation")
@@ -31,12 +31,7 @@ fun systemui(navController: NavController) {
         appList = listOf("com.android.systemui"),
         navController = navController
     ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp, top = 6.dp)
-        ) {
+        Card {
             SuperArrow(title = stringResource(id = R.string.status_bar_clock),
                 onClick = {
                     navController.navigate("systemui\\status_bar_clock")
@@ -67,12 +62,7 @@ fun systemui(navController: NavController) {
                     navController.navigate("systemui\\controlCenter")
                 })
         }
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp, top = 6.dp)
-        ) {
+        Card {
             FunSwich(
                 title = stringResource(R.string.hide_status_bar),
                 category = "systemui",
@@ -80,12 +70,7 @@ fun systemui(navController: NavController) {
                 defValue = false
             )
         }
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp, top = 6.dp)
-        ) {
+        Card {
             val enable_all_day_screen_off = remember { mutableStateOf(context.prefs("systemui").getBoolean("enable_all_day_screen_off", false)) }
             FunSwich(
                 title = stringResource(R.string.enable_all_day_screen_off),
@@ -106,12 +91,7 @@ fun systemui(navController: NavController) {
                 )
             }
         }
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp, top = 6.dp)
-        ) {
+        Card {
             FunSwich(
                 title = stringResource(R.string.disable_data_transfer_auth),
                 category = "systemui",

@@ -27,7 +27,7 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
-import top.yukonga.miuix.kmp.basic.Card
+import com.suqi8.oshin.ui.activity.funlistui.Card
 import top.yukonga.miuix.kmp.extra.SuperDropdown
 import top.yukonga.miuix.kmp.extra.SuperSwitch
 import java.util.Locale
@@ -64,12 +64,7 @@ fun about_setting(
                 modifier = Modifier.padding(1.dp)
             )
         }
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp, top = 6.dp)
-        ) {
+        Card {
             SuperDropdown(
                 title = stringResource(R.string.Color_Mode),
                 items = listOf(
