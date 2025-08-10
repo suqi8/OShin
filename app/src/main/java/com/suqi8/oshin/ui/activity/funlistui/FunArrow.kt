@@ -11,7 +11,6 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -22,13 +21,15 @@ import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
-fun FunArrow(title: String, summary: String? = null, rightText: String? = null, leftAction: @Composable (() -> Unit)? = null, category: String? = "", navController: NavController = NavController(LocalContext.current), onClick: () -> Unit) {
+fun FunArrow(title: String, summary: String? = null, rightText: String? = null, leftAction: @Composable (() -> Unit)? = null, category: String? = "", navController: NavController?, onClick: () -> Unit) {
     SuperArrow(title = title,
         summary = summary,
         rightText = rightText,
         leftAction = leftAction,
         onClick = {
-            category?.let { route -> navController.navigate(route) }
+            category?.let { route ->
+                navController?.navigate(route)
+            }
             onClick()
         })
 }
