@@ -124,17 +124,28 @@ jobs:
             | sed 's/[\\`*_()\[\]]/ /g' >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
-      # 第 8 步：发送 Telegram 通知
+      - name: Get Commit Message
+        id: commit
+        run: echo "COMMIT_MSG=$(git log -1 --pretty=format:%B)" >> $GITHUB_ENV
+
+      - name: Escape special characters for Telegram
+        id: escape
+        run: |
+          escaped_msg=$(echo "${{ env.COMMIT_MSG }}" | sed -e 's/[]\[_*()~`>#+\-=|{}.!]/\\&/g')
+          echo "ESCAPED_COMMIT_MSG<<EOF" >> $GITHUB_OUTPUT
+          echo "$escaped_msg" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: Send Notification to Telegram
         uses: appleboy/telegram-action@v0.1.1
         with:
-          to: ${{ secrets.TELEGRAM_TO }} # Telegram 接收者的 Chat ID
-          token: ${{ secrets.TELEGRAM_TOKEN }} # Telegram Bot 的 Token
-          document: ${{ env.APK_FILE_ARMALL }} # 包含所有架构的 APK 文件
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          document: ${{ env.APK_FILE_ARMALL }}
           debug: true
           format: markdown
           message: |
             🚀 **OShin New CI Build！**
 
-            ${{ env.COMMIT_MSG }}
+            ${{ steps.escape.outputs.ESCAPED_COMMIT_MSG }}
             🔗 [查看本次提交](${{ github.event.head_commit.url }})
