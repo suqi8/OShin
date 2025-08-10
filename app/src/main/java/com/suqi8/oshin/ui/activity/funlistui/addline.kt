@@ -10,20 +10,12 @@ import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
-fun addline(mode: Boolean = true) {
+fun addline() {
     val context = LocalContext.current
     if (context.prefs("settings").getBoolean("addline", false))
-        if (mode) {
-            HorizontalDivider(
-                modifier = Modifier.padding(start = 25.dp, end = 25.dp),
-                thickness = 0.5.dp,
-                color = MiuixTheme.colorScheme.dividerLine
-            )
-        } else {
-            HorizontalDivider(
-                modifier = Modifier.padding(start = 5.dp, end = 5.dp),
-                thickness = 0.5.dp,
-                color = MiuixTheme.colorScheme.dividerLine
-            )
-        }
+        HorizontalDivider(
+            modifier = Modifier.padding(horizontal = 16.dp),
+            thickness = 0.5.dp,
+            color = MiuixTheme.colorScheme.dividerLine
+        )
 }

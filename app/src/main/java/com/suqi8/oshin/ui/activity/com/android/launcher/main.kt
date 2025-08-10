@@ -20,7 +20,7 @@ import com.suqi8.oshin.ui.activity.funlistui.FunSlider
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.GetAppName
-import top.yukonga.miuix.kmp.basic.Card
+import com.suqi8.oshin.ui.activity.funlistui.Card
 import top.yukonga.miuix.kmp.extra.SuperArrow
 
 @SuppressLint("SuspiciousIndentation")
@@ -31,23 +31,13 @@ fun launcher(navController: NavController) {
         appList = listOf("com.android.launcher"),
         navController = navController
     ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp, top = 6.dp)
-        ) {
+        Card {
             SuperArrow(title = stringResource(id = R.string.recent_tasks),
                 onClick = {
                     navController.navigate("launcher\\recent_task")
                 })
         }
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp, top = 6.dp)
-        ) {
+        Card {
             FunSlider(
                 title = stringResource(R.string.desktop_icon_and_text_size_multiplier),
                 summary = stringResource(R.string.icon_size_limit_note),

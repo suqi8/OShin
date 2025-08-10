@@ -33,7 +33,7 @@ import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import top.yukonga.miuix.kmp.basic.Card
+import com.suqi8.oshin.ui.activity.funlistui.Card
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.SuperArrow

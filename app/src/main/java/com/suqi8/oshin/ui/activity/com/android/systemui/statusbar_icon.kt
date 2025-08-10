@@ -20,7 +20,7 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.funlistui.FunNoEnable
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.FunSwich
-import top.yukonga.miuix.kmp.basic.Card
+import com.suqi8.oshin.ui.activity.funlistui.Card
 import top.yukonga.miuix.kmp.extra.SuperDropdown
 
 @SuppressLint("RtlHardcoded")

@@ -115,28 +115,26 @@ jobs:
           name: OShin-Build-${{ github.sha }} # 为产物包指定一个包含提交ID的唯一名称。
           path: app/build/outputs/apk/release/ # 上传 release 目录下的所有文件。
 
-      - name: Get and escape submission information
-        id: prepare_message
+      # 第 7 步：预处理提交信息，清除 Markdown 危险字符并保留换行
+      - name: Sanitize multiline commit message for Telegram
         run: |
-          commit_msg="$(git log -1 --pretty=format:%B)"
+          echo "处理提交信息，清理特殊字符..."
+          echo "COMMIT_MSG<<EOF" >> $GITHUB_ENV
+          echo "${{ github.event.head_commit.message }}" \
+            | sed 's/[\\`*_()\[\]]/ /g' >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
 
-          escaped_msg=$(echo "$commit_msg" | sed -e 's/[]\[_*()~`>#+=|{}.!-]/\\&/g')
-
-          echo "escaped_commit_msg<<EOF" >> $GITHUB_OUTPUT
-          echo "$escaped_msg" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
-
+      # 第 8 步：发送 Telegram 通知
       - name: Send Notification to Telegram
         uses: appleboy/telegram-action@master
         with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          document: ${{ env.APK_FILE_ARMALL }}
+          to: ${{ secrets.TELEGRAM_TO }} # Telegram 接收者的 Chat ID
+          token: ${{ secrets.TELEGRAM_TOKEN }} # Telegram Bot 的 Token
+          document: ${{ env.APK_FILE_ARMALL }} # 包含所有架构的 APK 文件
           debug: true
           format: markdown
           message: |
             🚀 **OShin New CI Build！**
 
-            ${{ steps.prepare_message.outputs.escaped_commit_msg }}
-
+            ${{ env.COMMIT_MSG }}
             🔗 [查看本次提交](${{ github.event.head_commit.url }})
