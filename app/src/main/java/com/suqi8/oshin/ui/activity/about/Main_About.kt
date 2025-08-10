@@ -95,6 +95,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import com.suqi8.oshin.ui.activity.funlistui.Card
+import com.suqi8.oshin.ui.activity.funlistui.FunArrow
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Surface
@@ -254,7 +255,7 @@ fun Main_About(
                         .alpha(cardAlpha)
                 ) {
                     val coroutineScope = rememberCoroutineScope()
-                    SuperArrow(
+                    FunArrow(
                         title = stringResource(R.string.Device_Name),
                         rightText = deviceName.value,
                         onClick = {
@@ -302,7 +303,7 @@ fun Main_About(
                         }
                     }
                     addline()
-                    SuperArrow(title = stringResource(R.string.Device_Memory),
+                    FunArrow(title = stringResource(R.string.Device_Memory),
                         rightText = "$usedStorage / $physicalTotalStorage",
                         onClick = { openStorageSettings(context) }
                     )
@@ -410,7 +411,7 @@ private fun CommunityCard(context: Context) {
             Image(painter = painterResource(R.drawable.qq_pic_merged_1727926207595), contentDescription = null, modifier = Modifier.fillMaxWidth())
         }
         val toastMessage = stringResource(R.string.please_install_cool_apk)
-        SuperArrow(title = stringResource(R.string.go_to_his_homepage), onClick = {
+        FunArrow(title = stringResource(R.string.go_to_his_homepage), onClick = {
             val coolApkUri = Uri.parse("coolmarket://u/894238")
             val intent = Intent(Intent.ACTION_VIEW, coolApkUri)
             try {
@@ -427,32 +428,32 @@ private fun ThanksCard(navController: NavController) {
     Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp).padding(bottom = 6.dp)) {
         item(name = "酸奶", coolapk = "Stracha酸奶菌", coolapkid = 15225420, github = "suqi8", qq = 3383787570)
         addline()
-        SuperArrow(title = stringResource(R.string.contributors), onClick = { navController.navigate("about_contributors") })
+        FunArrow(title = stringResource(R.string.contributors), onClick = { navController.navigate("about_contributors") })
         addline()
-        SuperArrow(title = stringResource(R.string.references), onClick = { navController.navigate("about_references") })
+        FunArrow(title = stringResource(R.string.references), onClick = { navController.navigate("about_references") })
     }
 }
 
 @Composable
 private fun AboutActionsCard(navController: NavController, context: Context) {
     Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp).padding(bottom = 6.dp)) {
-        IconSuperArrow(title = stringResource(R.string.settings), iconRes = R.drawable.settings, onClick = { navController.navigate("about_setting") })
+        IconFunArrow(title = stringResource(R.string.settings), iconRes = R.drawable.settings, onClick = { navController.navigate("about_setting") })
         addline()
-        IconSuperArrow(title = stringResource(R.string.donors), iconRes = R.drawable.donors, onClick = { openUrl(context, "https://oshin.mikusignal.top/docs/donate.html") })
+        IconFunArrow(title = stringResource(R.string.donors), iconRes = R.drawable.donors, onClick = { openUrl(context, "https://oshin.mikusignal.top/docs/donate.html") })
         addline()
-        IconSuperArrow(title = stringResource(R.string.official_channel), iconRes = R.drawable.group, onClick = { navController.navigate("about_group") })
+        IconFunArrow(title = stringResource(R.string.official_channel), iconRes = R.drawable.group, onClick = { navController.navigate("about_group") })
         addline()
-        IconSuperArrow(title = stringResource(R.string.official_website), iconRes = R.drawable.website, onClick = { openUrl(context, "https://oshin.mikusignal.top/") })
+        IconFunArrow(title = stringResource(R.string.official_website), iconRes = R.drawable.website, onClick = { openUrl(context, "https://oshin.mikusignal.top/") })
         addline()
-        IconSuperArrow(title = "GitHub", summary = stringResource(R.string.github_summary), iconRes = R.drawable.github, onClick = { openUrl(context, "https://github.com/suqi8/OShin") })
+        IconFunArrow(title = "GitHub", summary = stringResource(R.string.github_summary), iconRes = R.drawable.github, onClick = { openUrl(context, "https://github.com/suqi8/OShin") })
         addline()
-        IconSuperArrow(title = stringResource(R.string.contribute_translation), summary = stringResource(R.string.crowdin_contribute_summary), iconRes = R.drawable.translators, onClick = { openUrl(context, "https://github.com/suqi8/OShin/tree/master/app/src/main/res") })
+        IconFunArrow(title = stringResource(R.string.contribute_translation), summary = stringResource(R.string.crowdin_contribute_summary), iconRes = R.drawable.translators, onClick = { openUrl(context, "https://github.com/suqi8/OShin/tree/master/app/src/main/res") })
     }
 }
 
 @Composable
-fun IconSuperArrow(title: String, summary: String? = null, iconRes: Int, onClick: () -> Unit) {
-    SuperArrow(
+fun IconFunArrow(title: String, summary: String? = null, iconRes: Int, onClick: () -> Unit) {
+    FunArrow(
         title = title,
         summary = summary,
         leftAction = {

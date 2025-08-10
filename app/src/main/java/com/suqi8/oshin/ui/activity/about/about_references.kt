@@ -1,7 +1,6 @@
 package com.suqi8.oshin.ui.activity.about
 
 import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
@@ -9,16 +8,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.activity.funlistui.Card
+import com.suqi8.oshin.ui.activity.funlistui.CardDefaults
+import com.suqi8.oshin.ui.activity.funlistui.FunArrow
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentColors
-import com.suqi8.oshin.ui.activity.funlistui.Card
-import com.suqi8.oshin.ui.activity.funlistui.CardDefaults
 import top.yukonga.miuix.kmp.basic.SmallTitle
-import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
@@ -164,13 +164,13 @@ fun about_references_item(
     license: String? = null
 ) {
     val context = LocalContext.current
-    SuperArrow(title = name,
+    FunArrow(title = name,
         summary = username + if (license != null) " | $license" else " | " + stringResource(R.string.no_license),
         onClick = {
             if (url != null) {
                 val intent = Intent(
                     Intent.ACTION_VIEW,
-                    Uri.parse(url)
+                    url.toUri()
                 )
                 context.startActivity(intent)
             }

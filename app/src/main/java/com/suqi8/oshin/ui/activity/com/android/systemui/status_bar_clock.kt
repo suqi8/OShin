@@ -23,6 +23,8 @@ import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.tools.AnimTools
+import com.suqi8.oshin.ui.activity.funlistui.Card
+import com.suqi8.oshin.ui.activity.funlistui.FunArrow
 import com.suqi8.oshin.ui.activity.funlistui.FunDropdown
 import com.suqi8.oshin.ui.activity.funlistui.FunNoEnable
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
@@ -33,10 +35,8 @@ import com.suqi8.oshin.ui.activity.funlistui.addline
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import com.suqi8.oshin.ui.activity.funlistui.Card
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TextField
-import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDropdown
 
 @SuppressLint("RtlHardcoded")
@@ -311,7 +311,7 @@ fun status_bar_clock(navController: NavController) {
                             defValue = "HH:mm"
                         )
                         addline()
-                        SuperArrow(title = stringResource(R.string.clock_format_example), onClick = {
+                        FunArrow(title = stringResource(R.string.clock_format_example), onClick = {
                             val intent = Intent(
                                 Intent.ACTION_VIEW,
                                 "https://oshin.mikusignal.top/docs/timeformat.html".toUri()

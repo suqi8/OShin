@@ -29,13 +29,13 @@ import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.activity.funlistui.Card
+import com.suqi8.oshin.ui.activity.funlistui.CardDefaults
+import com.suqi8.oshin.ui.activity.funlistui.FunArrow
 import com.suqi8.oshin.ui.activity.funlistui.FunPage
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.BasicComponentColors
-import com.suqi8.oshin.ui.activity.funlistui.Card
-import com.suqi8.oshin.ui.activity.funlistui.CardDefaults
-import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
@@ -134,7 +134,7 @@ internal fun item(
         github?.let { append("Github@$it ") }
         qq?.let { append("QQ@$it ") }
     }
-    SuperArrow(
+    FunArrow(
         title = name,
         leftAction = {
             qq?.let {
@@ -178,7 +178,7 @@ internal fun item(
         ) {
             Column {
                 coolapk?.let {
-                    SuperArrow(
+                    FunArrow(
                         title = stringResource(R.string.coolapk),
                         leftAction = {
                             Image(
@@ -199,7 +199,7 @@ internal fun item(
                     addline()
                 }
                 github?.let {
-                    SuperArrow(
+                    FunArrow(
                         title = "Github",
                         leftAction = {
                             Image(
@@ -218,7 +218,7 @@ internal fun item(
                     addline()
                 }
                 qq?.let {
-                    SuperArrow(
+                    FunArrow(
                         title = "QQ",
                         leftAction = {
                             Image(

@@ -30,7 +30,7 @@ fun FunString(title: String, summary: String? = null, category: String, key: Str
     val value = remember { mutableStateOf(context.prefs(category).getString(key, defValue)) }
     val cachevalue = remember { mutableStateOf(value.value) }
     val Dialog = remember { mutableStateOf(false) }
-    SuperArrow(
+    FunArrow(
         title = title,
         summary = summary,
         rightText = value.value,
