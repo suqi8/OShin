@@ -120,7 +120,7 @@ jobs:
         run: |
           commit_msg="$(git log -1 --pretty=format:%B)"
 
-          escaped_msg=$(echo "$commit_msg" | sed -e 's/[]\[_*()~`>#+\-=|{}.!]/\\&/g')
+          escaped_msg=$(echo "$commit_msg" | sed -e 's/[]\[_*()~`>#+=|{}.!-]/\\&/g')
 
           echo "escaped_commit_msg<<EOF" >> $GITHUB_OUTPUT
           echo "$escaped_msg" >> $GITHUB_OUTPUT
