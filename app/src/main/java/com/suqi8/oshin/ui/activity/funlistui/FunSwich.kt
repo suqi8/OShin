@@ -1,6 +1,5 @@
 package com.suqi8.oshin.ui.activity.funlistui
 
-import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.keyframes
@@ -18,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -27,16 +27,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.LocalColorMode
 import top.yukonga.miuix.kmp.utils.SmoothRoundedCornerShape
 
 /**
- * 一个带有数据持久化功能的 Switch 开关组件。
+ * 一个带有数据持久化和触感反馈功能的 Switch 开关组件。
  *
  * 此组件作为顶层调用者，封装了 [SuperSwitch]，并使用 YukiHookAPI 的 `prefs` 来自动处理状态的读取和保存。
+ * 当开关切换动画完成时，会触发一次手机震动。
+ *
+ * **重要提示**: 请确保已在 AndroidManifest.xml 文件中添加震动权限：
+ * `<uses-permission android:name="android.permission.VIBRATE" />`
  *
  * @param title 开关行的主标题。
  * @param summary 可选的副标题或摘要信息。
@@ -55,15 +61,21 @@ fun FunSwich(
     onCheckedChange: ((Boolean) -> Unit)? = null
 ) {
     val context = LocalContext.current
+    val haptic = LocalHapticFeedback.current
     val isChecked = remember { mutableStateOf(context.prefs(category).getBoolean(key, defValue)) }
 
     SuperSwitch(
         title = title,
         checked = isChecked.value,
         onCheckedChange = {
+            // 点击时仅更新状态，不再立即触发震动
             context.prefs(category).edit { putBoolean(key, it) }
             isChecked.value = it
             onCheckedChange?.invoke(it)
+        },
+        // 将震动逻辑移至动画完成的回调中
+        onAnimationFinished = {
+            haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
         },
         summary = summary
     )
@@ -88,6 +100,7 @@ fun FunSwich(
  * @param insideMargin 组件行内部的边距。
  * @param onClick 整个组件行的点击事件回调。
  * @param enabled 组件是否可用。
+ * @param onAnimationFinished 动画完成时的回调。
  */
 @Composable
 fun SuperSwitch(
@@ -103,7 +116,8 @@ fun SuperSwitch(
     switchColors: SwitchColors = SwitchDefaults.switchColors(),
     insideMargin: PaddingValues = BasicComponentDefaults.InsideMargin,
     onClick: (() -> Unit)? = null,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    onAnimationFinished: () -> Unit = {}
 ) {
     BasicComponent(
         modifier = modifier,
@@ -118,7 +132,8 @@ fun SuperSwitch(
                 rightActions = rightActions,
                 checked = checked,
                 enabled = enabled,
-                switchColors = switchColors
+                switchColors = switchColors,
+                onAnimationFinished = onAnimationFinished // 向下传递回调
             )
         },
         onClick = {
@@ -139,33 +154,36 @@ private fun RowScope.SuperSwitchRightActions(
     rightActions: @Composable RowScope.() -> Unit,
     checked: Boolean,
     enabled: Boolean,
-    switchColors: SwitchColors
+    switchColors: SwitchColors,
+    onAnimationFinished: () -> Unit
 ) {
     rightActions()
     Switch(
         checked = checked,
         enabled = enabled,
-        colors = switchColors
+        colors = switchColors,
+        onAnimationFinished = onAnimationFinished // 向下传递回调
     )
 }
 
 /**
  * 一个纯视觉的 Switch 组件，不处理任何交互事件。
  *
- * 它的状态完全由外部的 `checked` 参数驱动，并实现了细腻的“粘滞拉伸”动画和阴影效果。
+ * 它的状态完全由外部的 `checked` 参数驱动，并实现了细腻的“粘滞拉伸”及“回弹”动画和阴影效果。
  *
  * @param checked 开关的当前状态 (on/off)。
  * @param modifier [Modifier] 应用于开关的根布局。
  * @param colors 开关在不同状态下的颜色配置。
  * @param enabled 开关是否可用，会影响颜色和视觉表现。
+ * @param onAnimationFinished 动画完成时的回调。
  */
-@SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun Switch(
     checked: Boolean,
     modifier: Modifier = Modifier,
     colors: SwitchColors = SwitchDefaults.switchColors(),
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    onAnimationFinished: () -> Unit = {}
 ) {
     // 尺寸定义
     val trackWidth = 38.dp
@@ -175,7 +193,8 @@ fun Switch(
 
     // 动画参数
     val thumbStretchedWidth = thumbDiameter + 5.dp
-    val animationDuration = 250
+    val animationDuration = 300 // 稍微增加总时长以容纳回弹动画
+    val overshoot = 1.5.dp // 定义回弹动画中“过头”的距离
 
     // 计算滑块在关/开状态下的左侧偏移量
     val uncheckedThumbOffset = thumbPadding
@@ -184,28 +203,41 @@ fun Switch(
     // 使用 updateTransition 管理基于 checked 状态的多个动画
     val transition = updateTransition(targetState = checked, label = "SwitchTransition")
 
+    // 新增：使用 LaunchedEffect 检测动画何时结束
+    val isRunning = transition.isRunning
+    val previousIsRunning = remember { mutableStateOf(isRunning) }
+    LaunchedEffect(isRunning) {
+        // 当动画从“运行中”变为“已停止”时，触发回调
+        if (previousIsRunning.value && !isRunning) {
+            onAnimationFinished()
+        }
+        previousIsRunning.value = isRunning
+    }
+
     // 动画化滑块宽度，实现拉伸效果
     val thumbWidth by transition.animateDp(
         transitionSpec = {
             keyframes {
                 durationMillis = animationDuration
-                thumbStretchedWidth at animationDuration / 2
+                thumbStretchedWidth at animationDuration * 2 / 5
             }
         },
         label = "ThumbWidth"
-    ) { @SuppressLint("UnusedTransitionTargetStateParameter")
+    ) { _ ->
         thumbDiameter
     }
 
-    // 动画化滑块偏移量，实现“粘滞”效果
+    // 动画化滑块偏移量，实现“粘滞”及“回弹”效果
     val thumbOffset by transition.animateDp(
         transitionSpec = {
             keyframes {
                 durationMillis = animationDuration
                 if (targetState) {
-                    uncheckedThumbOffset at animationDuration / 2
+                    uncheckedThumbOffset at animationDuration * 2 / 5
+                    (checkedThumbOffset + overshoot) at animationDuration * 4 / 5
                 } else {
-                    (checkedThumbOffset + thumbDiameter - thumbStretchedWidth) at animationDuration / 2
+                    (checkedThumbOffset + thumbDiameter - thumbStretchedWidth) at animationDuration * 2 / 5
+                    (uncheckedThumbOffset - overshoot) at animationDuration * 4 / 5
                 }
             }
         },
@@ -243,7 +275,6 @@ fun Switch(
                 .offset(x = thumbOffset)
                 .height(thumbDiameter)
                 .width(thumbWidth)
-                // 使用 graphicsLayer 提升动画质感和抗锯齿效果
                 .graphicsLayer {
                     this.shadowElevation = 2.dp.toPx()
                     this.shape = trackClipShape
