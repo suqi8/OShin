@@ -270,7 +270,7 @@ suspend fun getModuleStatus(): ModuleStatus = withContext(Dispatchers.IO) {
 suspend fun getRootStatus(): RootStatus = withContext(Dispatchers.IO) {
     try {
         val result = withTimeoutOrNull(2000L) {
-            val process = Runtime.getRuntime().exec("su -c cat /system/build.prop")
+            val process = Runtime.getRuntime().exec(arrayOf("su", "-c", "cat /system/build.prop"))
             if (process.waitFor() == 0) {
                 val ksuVersion = executeCommand("/data/adb/ksud -V")
                 val version = if (ksuVersion.isNotEmpty()) {
