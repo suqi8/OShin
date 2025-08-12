@@ -419,12 +419,11 @@ fun Main1(navController: NavController) {
                 ) {
                     BottomTabs(
                         tabs = items,
-                        selectedIndex = pagerState.currentPage,
+                        selectedIndexState = targetPage,
                         liquidGlassProviderState = providerState,
                         background = MiuixTheme.colorScheme.surfaceContainer,
                         modifier = Modifier.weight(1f),
                         onTabSelected = { index ->
-                            targetPage.intValue = index
                             coroutineScope.launch {
                                 pagerState.animateScrollToPage(index)
                             }
@@ -472,7 +471,7 @@ fun AppHorizontalPager(
     HorizontalPager(
         modifier = modifier.background(MiuixTheme.colorScheme.background),
         state = pagerState,
-        userScrollEnabled = false,
+        userScrollEnabled = true,
         pageContent = { page ->
             when (page) {
                 0 -> Main_Home(

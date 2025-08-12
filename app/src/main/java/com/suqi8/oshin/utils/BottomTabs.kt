@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -60,6 +61,7 @@ import com.kyant.liquidglass.refraction.RefractionHeight
 import com.kyant.liquidglass.rememberLiquidGlassProviderState
 import com.kyant.liquidglass.sampler.ContinuousLuminanceSampler
 import com.kyant.liquidglass.sampler.ExperimentalLuminanceSamplerApi
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import kotlin.math.ceil
@@ -70,7 +72,7 @@ import kotlin.math.pow
 @Composable
 fun <T> BottomTabs(
     tabs: List<T>,
-    selectedIndex: Int, // 1. 直接接收 Int 类型的索引
+    selectedIndexState: MutableState<Int>,
     onTabSelected: (index: Int) -> Unit, // 2. 通过回调通知父组件状态变更
     liquidGlassProviderState: LiquidGlassProviderState,
     background: Color,
@@ -100,7 +102,7 @@ fun <T> BottomTabs(
     val padding = 4.dp
     val paddingPx = with(density) { padding.roundToPx() }
 
-    val itemBackground = remember(selectedIndex) {
+    val itemBackground = remember(selectedIndexState.value) {
         Color(
             red = (0..255).random(),
             green = (0..255).random(),
@@ -121,10 +123,10 @@ fun <T> BottomTabs(
         val tabWidth = if (tabs.isEmpty()) 0f else widthWithoutPaddings / tabs.size
         val maxWidth = (widthWithoutPaddings - tabWidth).fastCoerceAtLeast(0f)
 
-        LaunchedEffect(selectedIndex, tabWidth, isDragging) {
+        LaunchedEffect(selectedIndexState.value, tabWidth, isDragging) {
             if (tabWidth > 0 && !isDragging) {
                 offset.animateTo(
-                    targetValue = (selectedIndex * tabWidth).fastCoerceIn(0f, maxWidth),
+                    targetValue = (selectedIndexState.value * tabWidth).fastCoerceIn(0f, maxWidth),
                     animationSpec = MotionScheme.defaultSpatial()
                 )
             }
@@ -168,7 +170,7 @@ fun <T> BottomTabs(
                 tabs.forEachIndexed { index, tab ->
                     key(tab) {
                         val itemBackgroundAlpha by animateFloatAsState(
-                            if (selectedIndex == index && !isDragging) {
+                            if (selectedIndexState.value == index && !isDragging) {
                                 0.8f
                             } else {
                                 0f
@@ -187,9 +189,22 @@ fun <T> BottomTabs(
                                 }
                                 .pointerInput(Unit) {
                                     detectTapGestures {
-                                        if (selectedIndex != index) {
-                                            // 5. 点击时，调用回调函数通知父组件
+                                        if (selectedIndexState.value != index) {
+                                            selectedIndexState.value = index
                                             onTabSelected(index)
+                                            animationScope.launch {
+                                                launch {
+                                                    offset.animateTo(
+                                                        (index * tabWidth).fastCoerceIn(0f, maxWidth),
+                                                        MotionScheme.slowSpatial()
+                                                    )
+                                                }
+                                                launch {
+                                                    isDragging = true
+                                                    delay(200)
+                                                    isDragging = false
+                                                }
+                                            }
                                         }
                                     }
                                 }
@@ -277,7 +292,17 @@ fun <T> BottomTabs(
                             else -> currentIndex.fastRoundToInt()
                         }.fastCoerceIn(0, tabs.lastIndex)
 
-                        onTabSelected(targetIndex)
+                        if (selectedIndexState.value != targetIndex) {
+                            selectedIndexState.value = targetIndex
+                            onTabSelected(targetIndex)
+                        }
+
+                        animationScope.launch {
+                            offset.animateTo(
+                                (targetIndex * tabWidth).fastCoerceIn(0f, maxWidth),
+                                MotionScheme.defaultSpatial()
+                            )
+                        }
                     }
                 )
         )
