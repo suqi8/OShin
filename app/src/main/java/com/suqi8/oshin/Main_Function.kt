@@ -15,10 +15,10 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.suqi8.oshin.ui.activity.funlistui.FunArrow
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
-import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
 @SuppressLint("UnrememberedMutableState")
@@ -45,14 +45,14 @@ fun Main_Function(
                     .padding(vertical = 6.dp)
             ) {
                 Column {
-                    SuperArrow(
+                    FunArrow(
                         title = stringResource(id = R.string.cpu_freq_main),
                         onClick = {
                             navController.navigate("func\\cpu_freq")
                         }
                     )
                     addline()
-                    SuperArrow(
+                    FunArrow(
                         title = stringResource(id = R.string.rom_workshop),
                         onClick = {
                             navController.navigate("func\\romworkshop")

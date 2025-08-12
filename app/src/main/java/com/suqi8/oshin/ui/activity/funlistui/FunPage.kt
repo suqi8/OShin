@@ -13,19 +13,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.kyant.expressa.m3.shape.CornerShape
 import com.kyant.liquidglass.GlassStyle
 import com.kyant.liquidglass.liquidGlass
 import com.kyant.liquidglass.liquidGlassProvider
@@ -60,7 +59,7 @@ fun FunPage(
 
     val iconButtonLiquidGlassStyle =
         GlassStyle(
-            CornerShape.full,
+            RoundedCornerShape(50),
             innerRefraction = InnerRefraction(
                 height = RefractionHeight(8.dp),
                 amount = RefractionAmount.Full
@@ -80,15 +79,9 @@ fun FunPage(
                     Box(
                         modifier = Modifier
                             .padding(start = 16.dp)
-                            .shadow(
-                                elevation = 8.dp,
-                                shape = CornerShape.full,
-                                ambientColor = MiuixTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                                spotColor = MiuixTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                            )
                             .liquidGlass(liquidGlassProviderState, iconButtonLiquidGlassStyle)
                             .clickable { navController.popBackStack() }
-                            .size(40.dp),
+                            .size(48.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -104,17 +97,11 @@ fun FunPage(
                         Box(
                             modifier = Modifier
                                 .padding(end = 16.dp)
-                                .shadow(
-                                    elevation = 8.dp,
-                                    shape = CornerShape.full,
-                                    ambientColor = MiuixTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                                    spotColor = MiuixTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                                )
                                 .liquidGlass(liquidGlassProviderState, iconButtonLiquidGlassStyle)
                                 .clickable {
                                     restartAPP.value = true
                                 }
-                                .size(40.dp),
+                                .size(48.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
