@@ -26,11 +26,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
@@ -44,7 +46,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.paint
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -122,7 +126,6 @@ import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
-import top.yukonga.miuix.kmp.basic.CardDefaults
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -374,7 +377,7 @@ fun Main1(navController: NavController) {
         alpha = 0.1f // tint 的 alpha 独立为 alpha 参数
     )
     val topAppBarStyle = GlassStyle(
-        shape = RoundedCornerShape(CardDefaults.CornerRadius),
+        shape = RoundedCornerShape(28.dp),
         material = commonGlassMaterial,
         // innerRefraction.Default 改为更具体的构造函数
         innerRefraction = InnerRefraction(
@@ -431,10 +434,15 @@ fun Main1(navController: NavController) {
                         }
                     ) { tab ->
                         val BottomTabsScope = BottomTabsScope()
-                        BottomTabsScope.BottomTab({
-                            com.kyant.expressa.ui.Icon(painterResource(tab.icon)) },
-                            {
-                                com.kyant.expressa.ui.Text(text = tab.label,)
+                        BottomTabsScope.BottomTab({ color ->
+                            Box(
+                                Modifier.size(24.dp).paint(
+                                    painterResource(tab.icon),
+                                    colorFilter = ColorFilter.tint(color())
+                                )
+                            ) },
+                            { color ->
+                                BasicText(tab.label, color = color)
                             }
                         )
                     }

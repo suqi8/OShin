@@ -43,6 +43,7 @@ import com.kyant.liquidglass.refraction.RefractionAmount
 import com.kyant.liquidglass.refraction.RefractionHeight
 import com.kyant.liquidglass.rememberLiquidGlassProviderState
 import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.activity.funlistui.Card
 import com.suqi8.oshin.ui.activity.funlistui.addline
 import com.suqi8.oshin.utils.executeCommand
 import kotlinx.coroutines.Dispatchers
@@ -51,7 +52,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.suqi8.oshin.ui.activity.funlistui.Card
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.PullToRefresh
@@ -124,14 +124,8 @@ fun cpu_freq(
         val scope = rememberCoroutineScope()
         val cpuFrequencies = remember { mutableStateOf<Map<Int, Triple<List<String>, Int, Int>>>(emptyMap()) }
         LaunchedEffect(isRefreshing) {
+            if (cpuFrequencies.value.isEmpty()) isRefreshing = true
             if (isRefreshing) {
-                cpuFrequencies.value = getAllCoresFrequencies()
-                isRefreshing = false
-            }
-        }
-        LaunchedEffect(cpuFrequencies.value.size) {
-            if (cpuFrequencies.value.isEmpty()) {
-                isRefreshing = true
                 cpuFrequencies.value = getAllCoresFrequencies()
                 isRefreshing = false
             }
@@ -207,7 +201,7 @@ fun cpu_freq(
     }
 }
 
-suspend fun setCpuFrequency(core: Int, frequency: String, isMax: Boolean) {
+fun setCpuFrequency(core: Int, frequency: String, isMax: Boolean) {
     val path = if (isMax) {
         "/sys/devices/system/cpu/cpu$core/cpufreq/scaling_max_freq"
     } else {
@@ -223,6 +217,7 @@ suspend fun setCpuFrequency(core: Int, frequency: String, isMax: Boolean) {
         Log.d("CPU", "成功写入: $command")
     }
 }
+
 suspend fun getAllCoresFrequencies(): Map<Int, Triple<List<String>, Int, Int>> =
     coroutineScope {
         val coreCount = withContext(Dispatchers.IO) {

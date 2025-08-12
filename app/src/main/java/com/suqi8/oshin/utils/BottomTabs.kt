@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
@@ -141,7 +142,7 @@ fun <T> BottomTabs(
                 ) {
                     val luminance = luminanceSampler.luminance.pow(2f)
                     GlassStyle(
-                        CornerShape.full,
+                        RoundedCornerShape(50),
                         innerRefraction = InnerRefraction(
                             height = RefractionHeight(12.dp),
                             amount = RefractionAmount.Half
@@ -175,12 +176,13 @@ fun <T> BottomTabs(
                             } else {
                                 0f
                             },
-                            animationSpec = MotionScheme.slowEffects()
+                            animationSpec = spring(0.8f, 200f)
                         )
 
                         scope.content(tab).Content(
+                            { contentColor.value },
                             Modifier
-                                .clip(CornerShape.full)
+                                .clip(RoundedCornerShape(50))
                                 .drawBehind {
                                     drawRect(
                                         itemBackground,
@@ -196,7 +198,7 @@ fun <T> BottomTabs(
                                                 launch {
                                                     offset.animateTo(
                                                         (index * tabWidth).fastCoerceIn(0f, maxWidth),
-                                                        MotionScheme.slowSpatial()
+                                                        spring(0.8f, 200f)
                                                     )
                                                 }
                                                 launch {
@@ -256,11 +258,11 @@ fun <T> BottomTabs(
                     scaleY = lerp(1f, 0.9f, scaleYFraction)
                     transformOrigin = TransformOrigin(0f, 0f)
                 }
-                .background(background, CornerShape.full)
+                .background(background, RoundedCornerShape(50))
                 .liquidGlass(
                     bottomTabsLiquidGlassProviderState,
                     GlassStyle(
-                        CornerShape.full,
+                        RoundedCornerShape(50),
                         innerRefraction = InnerRefraction(
                             height = RefractionHeight(
                                 animateFloatAsState(
@@ -300,7 +302,7 @@ fun <T> BottomTabs(
                         animationScope.launch {
                             offset.animateTo(
                                 (targetIndex * tabWidth).fastCoerceIn(0f, maxWidth),
-                                MotionScheme.defaultSpatial()
+                                spring(0.8f, 200f)
                             )
                         }
                     }
