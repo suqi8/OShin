@@ -29,13 +29,13 @@ import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
 import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.activity.funlistui.Card
-import com.suqi8.oshin.ui.activity.funlistui.CardDefaults
-import com.suqi8.oshin.ui.activity.funlistui.FunArrow
-import com.suqi8.oshin.ui.activity.funlistui.FunPage
-import com.suqi8.oshin.ui.activity.funlistui.addline
-import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.BasicComponentColors
+import com.suqi8.oshin.ui.activity.components.BasicComponent
+import com.suqi8.oshin.ui.activity.components.BasicComponentColors
+import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.CardDefaults
+import com.suqi8.oshin.ui.activity.components.FunArrow
+import com.suqi8.oshin.ui.activity.components.FunPage
+import com.suqi8.oshin.ui.activity.components.addline
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
@@ -44,12 +44,7 @@ fun about_contributors(navController: NavController) {
         title = stringResource(id = R.string.contributors),
         navController = navController
     ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 6.dp),
-            colors = CardDefaults.defaultColors(color = MiuixTheme.colorScheme.primaryVariant.copy(alpha = 0.1f))
-        ) {
+        Card(colors = CardDefaults.defaultColors(color = MiuixTheme.colorScheme.primaryVariant.copy(alpha = 0.1f))) {
             BasicComponent(
                 summary = stringResource(R.string.thanks_contributors),
                 summaryColor = BasicComponentColors(
@@ -102,6 +97,21 @@ fun about_contributors(navController: NavController) {
                 coolapk = "Mikusignal",
                 coolapkid = 12130388,
                 qq = 1809784522
+            )
+            addline()
+            item(
+                name = "hamjin",
+                github = "hamjin"
+            )
+            addline()
+            item(
+                name = "kmiit",
+                github = "kmiit"
+            )
+            addline()
+            item(
+                name = "fatal1101",
+                github = "fatal1101"
             )
         }
     }

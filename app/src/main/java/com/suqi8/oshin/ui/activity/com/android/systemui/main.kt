@@ -10,12 +10,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.activity.funlistui.Card
-import com.suqi8.oshin.ui.activity.funlistui.FunArrow
-import com.suqi8.oshin.ui.activity.funlistui.FunPage
-import com.suqi8.oshin.ui.activity.funlistui.FunSwich
-import com.suqi8.oshin.ui.activity.funlistui.WantFind
-import com.suqi8.oshin.ui.activity.funlistui.addline
+import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.FunArrow
+import com.suqi8.oshin.ui.activity.components.FunPage
+import com.suqi8.oshin.ui.activity.components.FunSwich
+import com.suqi8.oshin.ui.activity.components.WantFind
+import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.utils.GetAppName
 
 @SuppressLint("SuspiciousIndentation")

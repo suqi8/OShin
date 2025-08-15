@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.activity.funlistui
+package com.suqi8.oshin.ui.activity.components
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -40,11 +40,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.suqi8.oshin.ui.activity.funlistui.Card
-import com.suqi8.oshin.ui.activity.funlistui.CardDefaults
 import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.CheckboxLocation
-import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperCheckbox
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -76,7 +73,11 @@ fun FunAppSele(title: String, summary: String? = null, category: String, key: St
 
     FunArrow(
         title = title,
-        summary = if (summary == null) stringResource(R.string.selected_app) + seleappList.value.joinToString(",") else summary + "\n" + stringResource(R.string.selected_app) + seleappList.value.joinToString(","),
+        summary = if (summary == null) stringResource(R.string.selected_app) + seleappList.value.joinToString(
+            ","
+        ) else summary + "\n" + stringResource(R.string.selected_app) + seleappList.value.joinToString(
+            ","
+        ),
         onClick = { showAppListSele.value = true }
     )
 

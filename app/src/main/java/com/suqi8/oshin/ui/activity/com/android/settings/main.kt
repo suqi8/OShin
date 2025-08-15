@@ -16,16 +16,16 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.activity.funlistui.Card
-import com.suqi8.oshin.ui.activity.funlistui.FunAppSele
-import com.suqi8.oshin.ui.activity.funlistui.FunArrow
-import com.suqi8.oshin.ui.activity.funlistui.FunPage
-import com.suqi8.oshin.ui.activity.funlistui.FunPicSele
-import com.suqi8.oshin.ui.activity.funlistui.FunSlider
-import com.suqi8.oshin.ui.activity.funlistui.FunString
-import com.suqi8.oshin.ui.activity.funlistui.FunSwich
-import com.suqi8.oshin.ui.activity.funlistui.WantFind
-import com.suqi8.oshin.ui.activity.funlistui.addline
+import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.FunAppSele
+import com.suqi8.oshin.ui.activity.components.FunArrow
+import com.suqi8.oshin.ui.activity.components.FunPage
+import com.suqi8.oshin.ui.activity.components.FunPicSele
+import com.suqi8.oshin.ui.activity.components.FunSlider
+import com.suqi8.oshin.ui.activity.components.FunString
+import com.suqi8.oshin.ui.activity.components.FunSwich
+import com.suqi8.oshin.ui.activity.components.WantFind
+import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.utils.GetAppName
 
 @SuppressLint("SuspiciousIndentation")

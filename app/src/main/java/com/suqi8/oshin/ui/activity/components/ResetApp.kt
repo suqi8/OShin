@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.activity.funlistui
+package com.suqi8.oshin.ui.activity.components
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -41,8 +41,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
-import com.suqi8.oshin.ui.activity.funlistui.Card
-import com.suqi8.oshin.ui.activity.funlistui.CardDefaults
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperDialog
@@ -243,7 +241,11 @@ fun ResetAppList(packageName: String) {
                                 roundedRect = false
                             )
                     ) {
-                        Image(bitmap = icon, contentDescription = "App Icon", modifier = Modifier.size(45.dp))
+                        Image(
+                            bitmap = icon,
+                            contentDescription = "App Icon",
+                            modifier = Modifier.size(45.dp)
+                        )
                     }
                     Column(modifier = Modifier.padding(start = 16.dp)) {
                         Text(text = appName)

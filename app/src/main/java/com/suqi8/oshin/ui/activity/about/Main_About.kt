@@ -86,7 +86,7 @@ import com.highcapable.yukihookapi.YukiHookAPI_Impl
 import com.suqi8.oshin.BuildConfig
 import com.suqi8.oshin.LocalColorMode
 import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.activity.funlistui.addline
+import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.theme.BgEffectView
 import com.suqi8.oshin.utils.executeCommand
 import kotlinx.coroutines.Dispatchers
@@ -94,15 +94,14 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
-import com.suqi8.oshin.ui.activity.funlistui.Card
-import com.suqi8.oshin.ui.activity.funlistui.FunArrow
+import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.FunArrow
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TextField
-import top.yukonga.miuix.kmp.extra.SuperArrow
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.theme.MiuixTheme.colorScheme

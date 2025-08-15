@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.activity.funlistui
+package com.suqi8.oshin.ui.activity.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -81,7 +81,7 @@ fun FunPage(
                             .padding(start = 16.dp)
                             .liquidGlass(liquidGlassProviderState, iconButtonLiquidGlassStyle)
                             .clickable { navController.popBackStack() }
-                            .size(48.dp),
+                            .size(40.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
@@ -101,7 +101,7 @@ fun FunPage(
                                 .clickable {
                                     restartAPP.value = true
                                 }
-                                .size(48.dp),
+                                .size(40.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Icon(
@@ -140,7 +140,7 @@ fun FunPage(
     Box(modifier = Modifier.fillMaxSize().liquidGlassProvider(liquidGlassProviderState)) {
         if (!appList.isNullOrEmpty()) {
             if (restartAPP.value) {
-                AppRestartScreen(appList, restartAPP,liquidGlassProviderState)
+                AppRestartScreen(appList, restartAPP, liquidGlassProviderState)
             }
         }
     }

@@ -36,8 +36,8 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.FeatureItem
 import com.suqi8.oshin.R
 import com.suqi8.oshin.features
-import com.suqi8.oshin.ui.activity.funlistui.FunArrow
-import com.suqi8.oshin.ui.activity.funlistui.addline
+import com.suqi8.oshin.ui.activity.components.FunArrow
+import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.utils.GetFuncRoute
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeEffectScope

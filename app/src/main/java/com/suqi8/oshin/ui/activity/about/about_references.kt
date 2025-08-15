@@ -11,13 +11,13 @@ import androidx.compose.ui.unit.dp
 import androidx.core.net.toUri
 import androidx.navigation.NavController
 import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.activity.funlistui.Card
-import com.suqi8.oshin.ui.activity.funlistui.CardDefaults
-import com.suqi8.oshin.ui.activity.funlistui.FunArrow
-import com.suqi8.oshin.ui.activity.funlistui.FunPage
-import com.suqi8.oshin.ui.activity.funlistui.addline
-import top.yukonga.miuix.kmp.basic.BasicComponent
-import top.yukonga.miuix.kmp.basic.BasicComponentColors
+import com.suqi8.oshin.ui.activity.components.BasicComponent
+import com.suqi8.oshin.ui.activity.components.BasicComponentColors
+import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.CardDefaults
+import com.suqi8.oshin.ui.activity.components.FunArrow
+import com.suqi8.oshin.ui.activity.components.FunPage
+import com.suqi8.oshin.ui.activity.components.addline
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
@@ -27,12 +27,7 @@ fun about_references(navController: NavController) {
         title = stringResource(id = R.string.references),
         navController = navController
     ) {
-        Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 6.dp),
-            colors = CardDefaults.defaultColors(color = MiuixTheme.colorScheme.primaryVariant.copy(alpha = 0.1f))
-        ) {
+        Card(colors = CardDefaults.defaultColors(color = MiuixTheme.colorScheme.primaryVariant.copy(alpha = 0.1f))) {
             BasicComponent(
                 summary = stringResource(R.string.thanks_open_source_projects),
                 summaryColor = BasicComponentColors(
@@ -132,13 +127,32 @@ fun about_references(navController: NavController) {
             about_references_item(
                 name = "QAuxiliary",
                 username = "cinit",
-                url = "https://github.com/cinit/QAuxiliary")
+                url = "https://github.com/cinit/QAuxiliary",
+                license = "通用许可证")
             addline()
             about_references_item(
                 name = "HyperCeiler",
                 username = "Re.chronoRain & Sevtinge",
                 url = "https://github.com/ReChronoRain/HyperCeiler",
                 license = "AGPL-3.0")
+            addline()
+            about_references_item(
+                name = "Free Notifications",
+                username = "binarynoise",
+                url = "https://github.com/binarynoise/XposedModulets/tree/main/FreeNotifications",
+                license = "EUPL-1.2")
+            addline()
+            about_references_item(
+                name = "Liquid Glass",
+                username = "Kyant0",
+                url = "https://github.com/Kyant0/AndroidLiquidGlass",
+                license = "Apache-2.0")
+            addline()
+            about_references_item(
+                name = "HyperStar",
+                username = "YunZiA",
+                url = "https://github.com/YunZiA/HyperStar",
+                license = "GPL-3.0")
         }
         SmallTitle(text = stringResource(R.string.closed_source_project))
         Card(
