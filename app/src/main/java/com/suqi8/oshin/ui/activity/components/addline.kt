@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.activity.funlistui
+package com.suqi8.oshin.ui.activity.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable

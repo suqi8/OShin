@@ -9,9 +9,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.activity.funlistui.FunPage
-import com.suqi8.oshin.ui.activity.funlistui.FunSwich
-import com.suqi8.oshin.ui.activity.funlistui.Card
+import com.suqi8.oshin.ui.activity.components.FunPage
+import com.suqi8.oshin.ui.activity.components.FunSwich
+import com.suqi8.oshin.ui.activity.components.Card
 
 @Composable
 fun oplus_services(navController: NavController) {
