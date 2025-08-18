@@ -8,16 +8,16 @@
 # 在此区域统一定义所有库和插件的版本号。
 [versions]
 # Android Gradle 插件 (AGP) 和核心工具链
-agp = "8.11.1"
-kotlin = "2.2.0"
-ksp = "2.2.0-2.0.2"
+agp = "8.12.0"
+kotlin = "2.2.10"
+ksp = "2.2.10-2.0.2"
 
 # AndroidX & Jetpack 库
 activityCompose = "1.10.1"
 appcompat = "1.7.1"
-composeBom = "2025.07.00" # Compose Bill of Materials (BOM)
+composeBom = "2025.08.00" # Compose Bill of Materials (BOM)
 constraintlayout = "2.2.1"
-coreKtx = "1.16.0"
+coreKtx = "1.17.0"
 espressoCore = "3.7.0"
 junit = "4.13.2"
 junitExt = "1.3.0"
@@ -25,14 +25,14 @@ lifecycle = "2.9.2"
 navigation = "2.9.3"
 palette = "1.0.0"
 room = "2.7.2"
-compose = "1.9.0-rc01"
+compose = "1.9.0"
 
 # Jetpack Compose 相关第三方库
 accompanist = "0.36.0"
 coil = "3.3.0"
 composeNeumorphism = "1.0.0-alpha02"
 composeShimmer = "1.3.3"
-haze = "1.6.9"
+haze = "1.6.10"
 lottieCompose = "6.6.7"
 materialIconsExtended = "1.7.8"
 toolbarCompose = "2.3.5"
