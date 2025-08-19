@@ -5,6 +5,7 @@ import androidx.compose.runtime.Stable
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -34,10 +35,13 @@ data class GlassMaterial(
     val colorFilter: ColorFilter? = DefaultColorFilter,
     val brush: Brush? = null,
     val alpha: Float = 1f,
-    val blendMode: BlendMode = BlendMode.SrcOver
+    val blendMode: BlendMode = DrawScope.DefaultBlendMode
 ) {
 
     companion object {
+
+        @Stable
+        val DefaultColorFilter: ColorFilter = simpleColorFilter(contrast = 1.5f, saturation = 1.5f)
 
         @Stable
         val Default: GlassMaterial = GlassMaterial()
@@ -48,8 +52,5 @@ data class GlassMaterial(
                 blurRadius = 0.dp,
                 colorFilter = null
             )
-
-        @Stable
-        val DefaultColorFilter: ColorFilter = saturationColorFilter(1.5f)
     }
 }
