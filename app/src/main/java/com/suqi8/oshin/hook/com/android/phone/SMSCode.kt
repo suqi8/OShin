@@ -10,10 +10,10 @@ import android.provider.Telephony
 import com.highcapable.kavaref.KavaRef.Companion.asResolver
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.param.PackageParam
 import com.suqi8.oshin.BuildConfig.APPLICATION_ID
 import com.suqi8.oshin.R
-import de.robv.android.xposed.XposedHelpers
 
 var smsRule = "验证码|校验码|检验码|确认码|激活码|动态码|安全码|验证代码|校验代码|检验代码|激活代码|确认代码|动态代码|安全代码|登入码|认证码|识别码|短信口令|动态密码|交易码|上网密码|随机码|动态口令|驗證碼|校驗碼|檢驗碼|確認碼|激活碼|動態碼|驗證代碼|校驗代碼|檢驗代碼|確認代碼|激活代碼|動態代碼|登入碼|認證碼|識別碼|Code|code|CODE|Код|код|КОД|Пароль|пароль|ПАРОЛЬ|Kod|kod|KOD|Ma|Mã|OTP"
 class SMSCode: YukiBaseHooker() {
@@ -115,7 +115,9 @@ class SMSCode: YukiBaseHooker() {
         val token = Binder.clearCallingIdentity() // 临时获取系统权限
         try {
             deleteFromRawTable(inboundSmsHandler, smsReceiver) // 从数据库删除
-        } catch (e: Throwable) { } finally {
+        } catch (e: Throwable) {
+            YLog.error("删除短信失败: ", e)
+        } finally {
             Binder.restoreCallingIdentity(token) // 恢复原始身份
         }
         inboundSmsHandler.asResolver().firstMethod {
@@ -128,12 +130,16 @@ class SMSCode: YukiBaseHooker() {
     @Throws(ReflectiveOperationException::class)
     private fun deleteFromRawTable(inboundSmsHandler: Any, smsReceiver: Any?) {
         // 通过反射获取删除短信所需的条件和参数
-        val deleteWhere = XposedHelpers.getObjectField(smsReceiver, "mDeleteWhere")
-        val deleteWhereArgs = XposedHelpers.getObjectField(smsReceiver, "mDeleteWhereArgs")
+        val deleteWhere = smsReceiver?.asResolver()?.firstField { name = "mDeleteWhere" }
+            ?.get() as String?
+        @Suppress("UNCHECKED_CAST")
+        val deleteWhereArgs = smsReceiver?.asResolver()?.firstField { name = "mDeleteWhereArgs" }
+            ?.get() as Array<String>?
         val MARK_DELETED = 2
         inboundSmsHandler.asResolver().firstMethod {
             name = "deleteFromRawTable"
             parameters(String::class, Array<String>::class.java, Int::class)
+            superclass()
         }.invoke(deleteWhere, deleteWhereArgs, MARK_DELETED)
     }
 

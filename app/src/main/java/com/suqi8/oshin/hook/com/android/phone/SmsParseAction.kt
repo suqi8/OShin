@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import com.suqi8.oshin.hook.com.android.phone.EntityStoreManager.storeEntitiesToFile
+import kotlin.math.abs
 
 /**
  * 一个具体的操作类，负责从收到的短信中解析出验证码。
@@ -57,15 +59,18 @@ class SmsParseAction(
 
         // 6. 处理短信去重逻辑
         var duplicated = false
-        /*val prevSmsMsg = EntityStoreManager.loadEntityFromFile(EntityType.PREV_SMS_MSG, SmsMsg::class.java)
-        if (prevSmsMsg != null && abs(timestamp - prevSmsMsg.date) <= 15000) {
-            if ((sender == prevSmsMsg.sender && smsCode == prevSmsMsg.smsCode) || body == prevSmsMsg.body) {
-                duplicated = true
-                //("检测到重复短信，忽略")
+        val prevSmsMsg = EntityStoreManager.loadEntityFromFile(SmsMsg::class.java)
+        if (prevSmsMsg != null) {
+            val timeDiff = abs(timestamp - prevSmsMsg.date)
+            if (timeDiff <= 15000) {
+                // 时间接近，再检查内容是否一致
+                if ((sender == prevSmsMsg.sender && smsCode == prevSmsMsg.smsCode) || body == prevSmsMsg.body) {
+                    duplicated = true
+                }
             }
         }
         // 无论是否重复，都保存当前短信记录以备下次比较
-        EntityStoreManager.storeEntityToFile(EntityType.PREV_SMS_MSG, sms)*/
+        storeEntitiesToFile(listOf(sms))
 
         // 7. 将最终结果打包到 Bundle 中返回
         return Bundle().apply {

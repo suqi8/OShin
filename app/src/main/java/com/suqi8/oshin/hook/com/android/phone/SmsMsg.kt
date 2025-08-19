@@ -45,7 +45,7 @@ data class SmsMsg(
             val sender = smsMessageParts[0].displayOriginatingAddress?.let {
                 Normalizer.normalize(it, Normalizer.Form.NFC)
             }
-            val body = SmsMessageUtils.getMessageBody(smsMessageParts)?.let {
+            val body = SmsMessageUtils.getMessageBody(smsMessageParts).let {
                 Normalizer.normalize(it, Normalizer.Form.NFC)
             }
             return SmsMsg(sender = sender, body = body)
