@@ -59,6 +59,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.kyant.capsule.G2RoundedCornerShape
 import com.kyant.liquidglass.GlassStyle
 import com.kyant.liquidglass.highlight.GlassHighlight
 import com.kyant.liquidglass.liquidGlass
@@ -377,7 +378,7 @@ fun Main1(navController: NavController) {
         alpha = 0.1f // tint 的 alpha 独立为 alpha 参数
     )
     val topAppBarStyle = GlassStyle(
-        shape = RoundedCornerShape(28.dp),
+        shape = G2RoundedCornerShape(28.dp),
         material = commonGlassMaterial,
         // innerRefraction.Default 改为更具体的构造函数
         innerRefraction = InnerRefraction(

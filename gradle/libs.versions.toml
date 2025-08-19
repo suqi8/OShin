@@ -36,6 +36,7 @@ haze = "1.6.10"
 lottieCompose = "6.6.7"
 materialIconsExtended = "1.7.8"
 toolbarCompose = "2.3.5"
+capsule = "1.0.1"
 
 # 通用第三方库
 dexkit = "2.0.6"
@@ -100,6 +101,7 @@ haze = { group = "dev.chrisbanes.haze", name = "haze", version.ref = "haze" }
 shimmer-compose = { group = "com.valentinilk.shimmer", name = "compose-shimmer", version.ref = "composeShimmer" }
 toolbar-compose = { group = "me.onebone", name = "toolbar-compose", version.ref = "toolbarCompose" }
 neumorphism-compose = { group = "me.nikhilchaudhari", name = "composeNeumorphism", version.ref = "composeNeumorphism" }
+capsule = { module = "com.github.Kyant0:Capsule", version.ref = "capsule" }
 
 # 通用第三方库
 drawabletoolbox = { group = "com.github.duanhong169", name = "drawabletoolbox", version.ref = "drawabletoolbox" }

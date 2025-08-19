@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.Immutable
@@ -30,6 +29,7 @@ import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.kyant.capsule.G2RoundedCornerShape
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.PressFeedbackType
@@ -164,7 +164,7 @@ private fun BasicCard(
     content: @Composable () -> Unit,
 ) {
     val shape = remember(cornerRadius) { SmoothRoundedCornerShape(cornerRadius) }
-    val clipShape = remember(cornerRadius) { RoundedCornerShape(cornerRadius) }
+    val clipShape = remember(cornerRadius) { G2RoundedCornerShape(cornerRadius) }
 
     CompositionLocalProvider(
         LocalContentColor provides colors.contentColor,

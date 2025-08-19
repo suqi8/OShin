@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +27,7 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import coil3.request.CachePolicy
 import coil3.request.ImageRequest
+import com.kyant.capsule.G2RoundedCornerShape
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.BasicComponent
 import com.suqi8.oshin.ui.activity.components.BasicComponentColors
@@ -158,7 +158,7 @@ internal fun item(
                         contentDescription = null,
                         modifier = Modifier
                             .size(50.dp)
-                            .clip(RoundedCornerShape(15.dp))
+                            .clip(G2RoundedCornerShape(15.dp))
                     )
                 }
             }
