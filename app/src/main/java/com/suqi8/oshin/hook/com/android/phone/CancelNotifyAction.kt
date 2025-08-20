@@ -40,10 +40,7 @@ class CancelNotifyAction(
             val manager =
                 mPhoneContext?.let { it.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager? }
 
-            if (manager != null) {
-                // 根据 ID 清除指定的通知
-                manager.cancel(mNotificationId)
-            }
+            manager?.cancel(mNotificationId)
         }
     }
 
