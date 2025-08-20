@@ -62,6 +62,13 @@ fun phone(navController: NavController) {
                         category = "phone",
                         key = "copyCode"
                     )
+                    addline()
+                    FunSwich(
+                        title = stringResource(R.string.auto_input_verification_code),
+                        category = "phone",
+                        key = "inputCode",
+                        defValue = true
+                    )
                 }
             }
         }

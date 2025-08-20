@@ -587,5 +587,6 @@
     <string name="show_verification_toast">显示验证码吐司</string>
     <string name="show_verification_notification">显示验证码通知</string>
     <string name="copy_verification_to_clipboard">验证码复制剪切板</string>
+    <string name="auto_input_verification_code">自动输入验证码</string>
 
 </resources>
