@@ -68,7 +68,7 @@ fun FunPage(
             material = GlassMaterial(
                 brush = SolidColor(MiuixTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f))
             ),
-            shadow = GlassShadow(elevation = 16.dp, brush = SolidColor(Color.Black.copy(alpha = 0.15f)))
+            shadow = GlassShadow(elevation = 4.dp, brush = SolidColor(Color.Black.copy(alpha = 0.15f)))
         )
     Scaffold(
         topBar = {
