@@ -585,5 +585,6 @@
     <string name="sms_verification_code">短信验证码</string>
     <string name="sms_code_keyword">验证码短信关键字</string>
     <string name="show_verification_toast">显示验证码吐司</string>
+    <string name="show_verification_notification">显示验证码通知</string>
 
 </resources>
