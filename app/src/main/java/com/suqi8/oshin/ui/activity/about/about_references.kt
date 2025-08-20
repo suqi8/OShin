@@ -153,6 +153,18 @@ fun about_references(navController: NavController) {
                 username = "YunZiA",
                 url = "https://github.com/YunZiA/HyperStar",
                 license = "GPL-3.0")
+            addline()
+            about_references_item(
+                name = "Oxygen-Customizer",
+                username = "DHD2280",
+                url = "https://github.com/DHD2280/Oxygen-Customizer",
+                license = "GPL-3.0")
+            addline()
+            about_references_item(
+                name = "Capsule",
+                username = "Kyant0",
+                url = "https://github.com/Kyant0/Capsule",
+                license = "Apache-2.0")
         }
         SmallTitle(text = stringResource(R.string.closed_source_project))
         Card(
