@@ -583,4 +583,6 @@
     <string name="code_notification_content">验证码：%s</string>
     <string name="prompt_sms_code_copied">已复制验证码: %s</string>
     <string name="sms_verification_code">短信验证码</string>
+    <string name="sms_code_keyword">验证码短信关键字</string>
+
 </resources>

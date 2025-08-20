@@ -1214,5 +1214,7 @@ fun features(context: Context) = listOf(
     FeatureItem(title = context.getString(R.string.remove_system_tamper_warning),
         category = "exsystemservice"),
     FeatureItem(title = context.getString(R.string.sms_verification_code),
+        category = "phone"),
+    FeatureItem(title = context.getString(R.string.sms_code_keyword),
         category = "phone")
 )
