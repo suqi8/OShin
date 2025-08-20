@@ -33,6 +33,7 @@ import com.kyant.liquidglass.refraction.InnerRefraction
 import com.kyant.liquidglass.refraction.RefractionAmount
 import com.kyant.liquidglass.refraction.RefractionHeight
 import com.kyant.liquidglass.rememberLiquidGlassProviderState
+import com.kyant.liquidglass.shadow.GlassShadow
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
@@ -66,7 +67,8 @@ fun FunPage(
             ),
             material = GlassMaterial(
                 brush = SolidColor(MiuixTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f))
-            )
+            ),
+            shadow = GlassShadow(elevation = 16.dp, brush = SolidColor(Color.Black.copy(alpha = 0.15f)))
         )
     Scaffold(
         topBar = {

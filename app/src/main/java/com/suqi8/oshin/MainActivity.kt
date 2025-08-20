@@ -31,7 +31,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -65,10 +64,12 @@ import com.kyant.liquidglass.highlight.GlassHighlight
 import com.kyant.liquidglass.liquidGlass
 import com.kyant.liquidglass.liquidGlassProvider
 import com.kyant.liquidglass.material.GlassMaterial
+import com.kyant.liquidglass.material.saturationColorFilter
 import com.kyant.liquidglass.refraction.InnerRefraction
 import com.kyant.liquidglass.refraction.RefractionAmount
 import com.kyant.liquidglass.refraction.RefractionHeight
 import com.kyant.liquidglass.rememberLiquidGlassProviderState
+import com.kyant.liquidglass.shadow.GlassShadow
 import com.suqi8.oshin.ui.activity.about.Main_About
 import com.suqi8.oshin.ui.activity.about.about_contributors
 import com.suqi8.oshin.ui.activity.about.about_group
@@ -373,9 +374,9 @@ fun Main1(navController: NavController) {
         backgroundColor = MiuixTheme.colorScheme.background
     )
     val commonGlassMaterial = GlassMaterial(
-        blurRadius = 0.3.dp, // blurRadius 保留
-        brush = SolidColor(MiuixTheme.colorScheme.background), // tint 改为 brush
-        alpha = 0.1f // tint 的 alpha 独立为 alpha 参数
+        blurRadius = 3.dp, // blurRadius 保留
+        alpha = 0.1f, // tint 的 alpha 独立为 alpha 参数
+        colorFilter = saturationColorFilter(1.5f)
     )
     val topAppBarStyle = GlassStyle(
         shape = G2RoundedCornerShape(28.dp),
@@ -389,7 +390,8 @@ fun Main1(navController: NavController) {
         highlight = GlassHighlight.Default.copy(
             width = 1.dp,
             color = Color.White.copy(alpha = 0.5f)
-        )
+        ),
+        shadow = GlassShadow(elevation = 0.dp, brush = SolidColor(Color.Transparent.copy(alpha = 0.15f)), alpha = 0f)
     )
     Scaffold(
         modifier = Modifier.fillMaxSize(),
