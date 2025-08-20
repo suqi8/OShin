@@ -1216,5 +1216,7 @@ fun features(context: Context) = listOf(
     FeatureItem(title = context.getString(R.string.sms_verification_code),
         category = "phone"),
     FeatureItem(title = context.getString(R.string.sms_code_keyword),
+        category = "phone"),
+    FeatureItem(title = context.getString(R.string.show_verification_toast),
         category = "phone")
 )

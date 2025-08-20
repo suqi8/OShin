@@ -19,7 +19,7 @@ class ToastAction(
      */
     override fun action(): Bundle? {
         // 检查用户是否在设置中开启了“显示Toast”功能
-        if (true) {
+        if (showCodeToast) {
             showCodeToast() // 如果开启了，就显示 Toast
         }
         return null
