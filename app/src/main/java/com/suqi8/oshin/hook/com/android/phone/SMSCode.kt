@@ -39,6 +39,8 @@ class SMSCode: YukiBaseHooker() {
     override fun onHook() {
         loadApp(name = "com.android.phone") {
             if (!prefs("phone").getBoolean("sms_verification_code", false)) return
+
+            smsRule = prefs("phone").getString("SMSCodeRule", smsRule)
             hookConstructor(this) // Hook 构造方法，用于初始化
             hookDispatchIntent(this) // Hook 短信分发方法，用于拦截短信
         }
@@ -48,7 +50,6 @@ class SMSCode: YukiBaseHooker() {
         "com.android.internal.telephony.InboundSmsHandler".toClass().resolve().constructor {  }.hookAll {
             after {
                 val context = args[1] as Context?
-                smsRule = prefs("phone").getString("SMSCodeRule", smsRule)
                 if (mPhoneContext == null) { // 确保只初始化一次
                     mPhoneContext = context
                     // 创建本模块的上下文
