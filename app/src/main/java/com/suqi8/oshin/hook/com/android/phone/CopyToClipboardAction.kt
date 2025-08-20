@@ -23,7 +23,7 @@ class CopyToClipboardAction(
     override fun action(): Bundle? {
         // 首先检查用户是否在设置中开启了“自动复制”功能。
         // 假设 xsp 是从父类 RunnableAction 继承的属性。
-        if (true) {
+        if (copyCode) {
             copyToClipboard()
         }
         return null // 此操作不返回任何结果。

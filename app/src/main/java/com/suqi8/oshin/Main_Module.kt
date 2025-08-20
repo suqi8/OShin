@@ -1220,5 +1220,7 @@ fun features(context: Context) = listOf(
     FeatureItem(title = context.getString(R.string.show_verification_toast),
         category = "phone"),
     FeatureItem(title = context.getString(R.string.show_verification_notification),
+        category = "phone"),
+    FeatureItem(title = context.getString(R.string.copy_verification_to_clipboard),
         category = "phone")
 )
