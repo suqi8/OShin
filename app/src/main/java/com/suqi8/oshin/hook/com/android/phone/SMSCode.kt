@@ -17,6 +17,7 @@ import com.suqi8.oshin.R
 
 var smsRule = "验证码|校验码|检验码|确认码|激活码|动态码|安全码|验证代码|校验代码|检验代码|激活代码|确认代码|动态代码|安全代码|登入码|认证码|识别码|短信口令|动态密码|交易码|上网密码|随机码|动态口令|驗證碼|校驗碼|檢驗碼|確認碼|激活碼|動態碼|驗證代碼|校驗代碼|檢驗代碼|確認代碼|激活代碼|動態代碼|登入碼|認證碼|識別碼|Code|code|CODE|Код|код|КОД|Пароль|пароль|ПАРОЛЬ|Kod|kod|KOD|Ma|Mã|OTP"
 var showCodeToast = false
+var showCodeNotification = false
 class SMSCode: YukiBaseHooker() {
     // "电话"应用的上下文，用于创建通知、注册广播等
     private var mPhoneContext: Context? = null
@@ -43,6 +44,8 @@ class SMSCode: YukiBaseHooker() {
 
             smsRule = prefs("phone").getString("SMSCodeRule", smsRule)
             showCodeToast = prefs("phone").getBoolean("showCodeToast", false)
+            showCodeNotification = prefs("phone").getBoolean("showCodeNotification", false)
+
             hookConstructor(this) // Hook 构造方法，用于初始化
             hookDispatchIntent(this) // Hook 短信分发方法，用于拦截短信
         }

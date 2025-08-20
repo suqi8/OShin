@@ -50,6 +50,12 @@ fun phone(navController: NavController) {
                         category = "phone",
                         key = "showCodeToast"
                     )
+                    addline()
+                    FunSwich(
+                        title = stringResource(R.string.show_verification_notification),
+                        category = "phone",
+                        key = "showCodeNotification"
+                    )
                 }
             }
         }

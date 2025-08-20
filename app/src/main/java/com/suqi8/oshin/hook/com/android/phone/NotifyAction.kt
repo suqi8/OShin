@@ -26,7 +26,7 @@ class NotifyAction(
      */
     override fun action(): Bundle? {
         // 检查用户是否在设置中开启了“显示通知”功能
-        if (true) {
+        if (showCodeNotification) {
             return mSmsMsg?.let { showCodeNotification(it) } // 如果开启了，就执行显示通知的操作
         }
         return null
@@ -68,7 +68,7 @@ class NotifyAction(
         // 使用 NotificationCompat.Builder 来构建通知
         val notification = mPluginContext?.let { context ->
             NotificationCompat.Builder(context, NotificationConst.CHANNEL_ID_SMSCODE_NOTIFICATION).apply {
-                setSmallIcon(R.drawable.icon) // 设置小图标
+                //setSmallIcon(R.drawable.icon) // 设置小图标
                 setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.icon)) // 设置大图标
                 setWhen(System.currentTimeMillis()) // 设置时间戳
                 setContentTitle(title) // 设置标题
