@@ -65,7 +65,7 @@ class CodeWorker internal constructor(
         mUIHandler.post(ToastAction(mPluginContext, mPhoneContext, smsMsg))
 
         // 如果开启了自动输入功能
-        if (true) {
+        if (inputCode) {
             val autoInputAction = AutoInputAction(mPluginContext, mPhoneContext, smsMsg)
             val autoInputDelay = 0L * 1000L
             // 延迟指定时间后，执行自动输入任务

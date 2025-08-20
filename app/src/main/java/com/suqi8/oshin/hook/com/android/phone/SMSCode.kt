@@ -19,6 +19,7 @@ var smsRule = "验证码|校验码|检验码|确认码|激活码|动态码|安�
 var showCodeToast = false
 var showCodeNotification = false
 var copyCode = false
+var inputCode = true
 class SMSCode: YukiBaseHooker() {
     // "电话"应用的上下文，用于创建通知、注册广播等
     private var mPhoneContext: Context? = null
@@ -47,6 +48,7 @@ class SMSCode: YukiBaseHooker() {
             showCodeToast = prefs("phone").getBoolean("showCodeToast", false)
             showCodeNotification = prefs("phone").getBoolean("showCodeNotification", false)
             copyCode = prefs("phone").getBoolean("copyCode", false)
+            inputCode = prefs("phone").getBoolean("inputCode", true)
 
             hookConstructor(this) // Hook 构造方法，用于初始化
             hookDispatchIntent(this) // Hook 短信分发方法，用于拦截短信
