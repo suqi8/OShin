@@ -2,14 +2,8 @@ package com.suqi8.oshin.ui.activity.components
 
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.waitForUpOrCancellation
-import androidx.compose.foundation.hoverable
-import androidx.compose.foundation.indication
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
@@ -24,18 +18,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.takeOrElse
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import com.kyant.capsule.G2RoundedCornerShape
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.CornerSmoothness
+import top.yukonga.miuix.kmp.utils.G2RoundedCornerShape
 import top.yukonga.miuix.kmp.utils.PressFeedbackType
-import top.yukonga.miuix.kmp.utils.SmoothRoundedCornerShape
-import top.yukonga.miuix.kmp.utils.pressSink
-import top.yukonga.miuix.kmp.utils.pressTilt
+import top.yukonga.miuix.kmp.utils.SinkFeedback
+import top.yukonga.miuix.kmp.utils.TiltFeedback
+import top.yukonga.miuix.kmp.utils.pressable
 
 /**
  * A [Card] component with Miuix style.
@@ -101,46 +95,30 @@ fun Card(
 ) {
     val interactionSource = remember { MutableInteractionSource() }
 
-    val pressFeedbackModifier = remember(pressFeedbackType, interactionSource) {
+    val pressFeedback = remember(pressFeedbackType) {
         when (pressFeedbackType) {
-            PressFeedbackType.None -> Modifier
-            PressFeedbackType.Sink -> Modifier.pressSink(interactionSource)
-            PressFeedbackType.Tilt -> Modifier.pressTilt(interactionSource)
+            PressFeedbackType.None -> null
+            PressFeedbackType.Sink -> SinkFeedback()
+            PressFeedbackType.Tilt -> TiltFeedback()
         }
     }
 
     BasicCard(
-        modifier = modifier
-            .pointerInput(onClick, onLongPress) {
-                detectTapGestures(
-                    onTap = { onClick?.invoke() },
-                    onLongPress = { onLongPress?.invoke() }
-                )
-            }
-            .pointerInput(interactionSource) {
-                awaitEachGesture {
-                    val pressInteraction: PressInteraction.Press
-                    awaitFirstDown().also {
-                        pressInteraction = PressInteraction.Press(it.position)
-                        interactionSource.tryEmit(pressInteraction)
-                    }
-                    if (waitForUpOrCancellation() == null) {
-                        interactionSource.tryEmit(PressInteraction.Cancel(pressInteraction))
-                    } else {
-                        interactionSource.tryEmit(PressInteraction.Release(pressInteraction))
-                    }
-                }
-            }
-            .hoverable(interactionSource)
-            .then(pressFeedbackModifier),
+        modifier = modifier.pressable(
+            interactionSource = if (pressFeedback != null) interactionSource else null,
+            indication = pressFeedback,
+            delay = null
+        ),
         cornerRadius = cornerRadius,
         colors = colors
     ) {
         Column(
             modifier = Modifier
-                .indication(
+                .combinedClickable(
                     interactionSource = interactionSource,
-                    indication = if (showIndication == true) LocalIndication.current else null
+                    indication = if (showIndication == true) LocalIndication.current else null,
+                    onClick = { onClick?.invoke() },
+                    onLongClick = onLongPress
                 )
                 .padding(insideMargin),
             content = content
@@ -163,8 +141,17 @@ private fun BasicCard(
     cornerRadius: Dp = CardDefaults.CornerRadius,
     content: @Composable () -> Unit,
 ) {
-    val shape = remember(cornerRadius) { SmoothRoundedCornerShape(cornerRadius) }
-    val clipShape = remember(cornerRadius) { G2RoundedCornerShape(cornerRadius) }
+    val shape = remember(cornerRadius) {
+        G2RoundedCornerShape(
+            cornerRadius
+        )
+    }
+    val clipShape = remember(cornerRadius) {
+        G2RoundedCornerShape(
+            cornerRadius,
+            CornerSmoothness.None
+        )
+    }
 
     CompositionLocalProvider(
         LocalContentColor provides colors.contentColor,
@@ -174,8 +161,8 @@ private fun BasicCard(
                 .semantics(mergeDescendants = false) {
                     isTraversalGroup = true
                 }
-                .background(color = colors.color, shape = shape)
-                .clip(clipShape), // For touch feedback, there is a problem when using SmoothRoundedCornerShape.
+                .clip(clipShape)  // For touch feedback, there is a problem when using G2RoundedCornerShape.
+                .background(color = colors.color, shape = shape),
             propagateMinConstraints = true,
         ) {
             content()
@@ -218,9 +205,8 @@ class CardColors(
     fun copy(
         color: Color = this.color,
         contentColor: Color = this.contentColor,
-    ) =
-        CardColors(
-            color.takeOrElse { this.color },
-            contentColor.takeOrElse { this.contentColor },
-        )
+    ) = CardColors(
+        color.takeOrElse { this.color },
+        contentColor.takeOrElse { this.contentColor },
+    )
 }

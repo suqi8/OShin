@@ -86,6 +86,8 @@ import com.highcapable.yukihookapi.YukiHookAPI_Impl
 import com.suqi8.oshin.BuildConfig
 import com.suqi8.oshin.LocalColorMode
 import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.theme.BgEffectView
 import com.suqi8.oshin.utils.executeCommand
@@ -94,8 +96,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
-import com.suqi8.oshin.ui.activity.components.Card
-import com.suqi8.oshin.ui.activity.components.FunArrow
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Surface
@@ -105,7 +105,7 @@ import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.theme.MiuixTheme.colorScheme
-import top.yukonga.miuix.kmp.utils.SmoothRoundedCornerShape
+import top.yukonga.miuix.kmp.utils.G2RoundedCornerShape
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import java.lang.reflect.Method
 import java.time.Instant
@@ -383,7 +383,7 @@ fun Main_About(
                         style = Stroke(width = strokeWidth)
                     )
                 }
-                .shadow(elevation = 1.5.dp, shape = SmoothRoundedCornerShape(16.dp), clip = true, ambientColor = shadowColor, spotColor = shadowColor),
+                .shadow(elevation = 1.5.dp, shape = G2RoundedCornerShape(16.dp), clip = true, ambientColor = shadowColor, spotColor = shadowColor),
             onClick = {  },
             interactionSource = interactionSource,
             colors = backgroundColor
@@ -464,7 +464,7 @@ fun IconFunArrow(title: String, summary: String? = null, iconRes: Int, onClick: 
 
 @Composable
 fun Button(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true, cornerRadius: Dp = ButtonDefaults.CornerRadius, minWidth: Dp = ButtonDefaults.MinWidth, minHeight: Dp = ButtonDefaults.MinHeight, colors: Color = colorScheme.secondaryVariant, insideMargin: PaddingValues = ButtonDefaults.InsideMargin, interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }, content: @Composable RowScope.() -> Unit) {
-    Surface(modifier = modifier.semantics { role = Role.Button }.clickable(interactionSource = interactionSource, indication = null, enabled = enabled, onClick = onClick), shape = SmoothRoundedCornerShape(cornerRadius), color = colors) {
+    Surface(modifier = modifier.semantics { role = Role.Button }.clickable(interactionSource = interactionSource, indication = null, enabled = enabled, onClick = onClick), shape = G2RoundedCornerShape(cornerRadius), color = colors) {
         Row(Modifier.defaultMinSize(minWidth = minWidth, minHeight = minHeight).padding(insideMargin), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically, content = content)
     }
 }

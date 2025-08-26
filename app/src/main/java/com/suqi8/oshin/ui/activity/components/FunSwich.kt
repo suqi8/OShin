@@ -1,5 +1,6 @@
 package com.suqi8.oshin.ui.activity.components
 
+import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDp
 import androidx.compose.animation.core.keyframes
@@ -33,7 +34,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.LocalColorMode
-import top.yukonga.miuix.kmp.utils.SmoothRoundedCornerShape
+import top.yukonga.miuix.kmp.utils.G2RoundedCornerShape
 
 /**
  * 一个带有数据持久化和触感反馈功能的 Switch 开关组件。
@@ -177,6 +178,7 @@ private fun RowScope.SuperSwitchRightActions(
  * @param enabled 开关是否可用，会影响颜色和视觉表现。
  * @param onAnimationFinished 动画完成时的回调。
  */
+@SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
 fun Switch(
     checked: Boolean,
@@ -258,7 +260,7 @@ fun Switch(
         label = "ThumbColor"
     )
 
-    val trackClipShape = remember { SmoothRoundedCornerShape(50.dp) }
+    val trackClipShape = remember { G2RoundedCornerShape(50.dp) }
 
     // 轨道 (Track)
     Box(

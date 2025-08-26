@@ -71,8 +71,8 @@ import top.yukonga.miuix.kmp.icon.icons.basic.ArrowUpDownIntegrated
 import top.yukonga.miuix.kmp.icon.icons.basic.Check
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.BackHandler
+import top.yukonga.miuix.kmp.utils.G2RoundedCornerShape
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.PopupLayout
-import top.yukonga.miuix.kmp.utils.SmoothRoundedCornerShape
 import top.yukonga.miuix.kmp.utils.getWindowSize
 import kotlin.math.min
 
@@ -497,7 +497,7 @@ fun ListPopup(
         enableWindowDim = enableWindowDim,
         transformOrigin = { transformOrigin },
     ) {
-        val shape = remember { SmoothRoundedCornerShape(12.dp) }
+        val shape = remember { G2RoundedCornerShape(12.dp) }
         val elevationPx = with(density) { shadowElevation.toPx() }
 
         Box(
