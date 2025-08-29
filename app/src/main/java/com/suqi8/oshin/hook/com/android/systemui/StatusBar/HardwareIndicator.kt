@@ -43,7 +43,10 @@ class HardwareIndicator : YukiBaseHooker() {
         var consumptionRunnable: Runnable? = null,
         var temperatureRunnable: Runnable? = null,
         var preDrawListener: ViewTreeObserver.OnPreDrawListener? = null,
-        var configChangeReceiver: BroadcastReceiver? = null
+        var configChangeReceiver: BroadcastReceiver? = null,
+        // 用于计算CPU使用率
+        var lastCpuTotalTime: Long = 0L,
+        var lastCpuIdleTime: Long = 0L
     )
 
     override fun onHook() {
@@ -118,7 +121,8 @@ class HardwareIndicator : YukiBaseHooker() {
             // 每次更新都重新读取样式和文本
             updateIndicator(
                 indicator = indicator,
-                prefix = "power_indicator"
+                prefix = "power_indicator",
+                resources = res
             )
             localPrefs.getInt("power_indicator_update_interval", 1000).toLong()
         }.also { uiHandler.post(it) }
@@ -137,7 +141,8 @@ class HardwareIndicator : YukiBaseHooker() {
             // 每次更新都重新读取样式和文本
             updateIndicator(
                 indicator = indicator,
-                prefix = "temp_indicator"
+                prefix = "temp_indicator",
+                resources = res
             )
             localPrefs.getInt("temp_indicator_update_interval", 1000).toLong()
         }.also { uiHandler.post(it) }
@@ -148,7 +153,7 @@ class HardwareIndicator : YukiBaseHooker() {
     /**
      * 更新单个指标的样式和文本
      */
-    private fun updateIndicator(indicator: TextView, prefix: String) {
+    private fun updateIndicator(indicator: TextView, prefix: String, resources: ClockHookResources) {
         // 1. 更新样式
         val fontSize = localPrefs.getFloat("${prefix}_font_size", 8f)
         val boldText = localPrefs.getBoolean("${prefix}_bold", false)
@@ -158,21 +163,27 @@ class HardwareIndicator : YukiBaseHooker() {
         indicator.setTypeface(null, if (boldText) Typeface.BOLD else Typeface.NORMAL)
 
         // 2. 在后台获取所有数据并更新文本
-        updateIndicatorText(indicator, prefix)
+        updateIndicatorText(indicator, prefix, resources)
     }
 
     @SuppressLint("SetTextI18n", "DefaultLocale")
-    private fun updateIndicatorText(indicator: TextView, prefix: String) {
+    private fun updateIndicatorText(indicator: TextView, prefix: String, resources: ClockHookResources) {
         // 在后台线程读取所有文件数据
         backgroundExecutor.execute {
             // --- 获取所有硬件数据 ---
             val props = runCatching { readBatteryProperties() }.getOrNull()
             val currentNow = props?.getProperty("POWER_SUPPLY_CURRENT_NOW")?.toFloatOrNull() ?: 0f
             val voltageNow = props?.getProperty("POWER_SUPPLY_VOLTAGE_NOW")?.toFloatOrNull() ?: 0f
+
             val cpuTempSource = localPrefs.getInt("data_temp_cpu_source", 0)
-            val cpuTemp = runCatching {
-                File("/sys/class/thermal/thermal_zone$cpuTempSource/temp").readText().trim().toFloat() / 1000f
-            }.getOrElse { 0f }
+            val cpuTemp = readCpuTemp(cpuTempSource)
+
+            val cpuFreqSource = localPrefs.getInt("data_freq_cpu_source", 0)
+            val cpuFreq = readCpuFreq(cpuFreqSource)
+
+            val cpuUsage = calculateCpuUsage(resources)
+            val ramUsage = readRamUsage()
+
             val batteryTemp = runCatching {
                 File("/sys/class/power_supply/battery/temp").readText().trim().toFloat() / 10f
             }.getOrElse { 0f }
@@ -196,7 +207,10 @@ class HardwareIndicator : YukiBaseHooker() {
                 val isDualRow = localPrefs.getBoolean("${prefix}_dual_row", false)
 
                 // --- 格式化所有数据为字符串 ---
-                val dataStrings = formatAllDataToStrings(batteryWatt, batteryCurrentMa, batteryCurrent, batteryVoltage, batteryTemp, cpuTemp)
+                val dataStrings = formatAllDataToStrings(
+                    batteryWatt, batteryCurrentMa, batteryCurrent, batteryVoltage,
+                    batteryTemp, cpuTemp, cpuFreq, cpuUsage, ramUsage
+                )
 
                 // --- 根据配置选择要显示的字符串 ---
                 val line1 = dataStrings.getOrElse(show1) { "" }
@@ -218,17 +232,20 @@ class HardwareIndicator : YukiBaseHooker() {
 
     /**
      * 将所有硬件数据格式化为字符串列表
-     * 顺序: 0:功率, 1:电流, 2:电压, 3:CPU温度, 4:电池温度
+     * 顺序: 0:功率, 1:电流, 2:电压, 3:CPU温度, 4:电池温度, 5:CPU频率, 6:CPU使用率, 7:内存占用
      */
     private fun formatAllDataToStrings(
         batteryWatt: Float, batteryCurrentMa: Float, batteryCurrent: Float, batteryVoltage: Float,
-        batteryTemp: Float, cpuTemp: Float
+        batteryTemp: Float, cpuTemp: Float, cpuFreq: Int, cpuUsage: Int, ramUsage: Int
     ): List<String> {
         val hidePowerUnit = localPrefs.getBoolean("unit_hide_power", false)
         val hideCurrentUnit = localPrefs.getBoolean("unit_hide_current", false)
         val hideVoltageUnit = localPrefs.getBoolean("unit_hide_voltage", false)
         val hideBatteryUnit = localPrefs.getBoolean("unit_hide_temp_battery", false)
         val hideCpuUnit = localPrefs.getBoolean("unit_hide_temp_cpu", false)
+        val hideCpuFreqUnit = localPrefs.getBoolean("unit_hide_cpu_frequency", false)
+        val hideCpuUsageUnit = localPrefs.getBoolean("unit_hide_cpu_usage", false)
+        val hideRamUsageUnit = localPrefs.getBoolean("unit_hide_ram_usage", false)
 
         val powerStr = String.format("%.2f", batteryWatt) + if (hidePowerUnit) "" else "W"
         val currentStr = if (abs(batteryCurrentMa) >= 800) {
@@ -239,8 +256,68 @@ class HardwareIndicator : YukiBaseHooker() {
         val voltageStr = String.format("%.2f", batteryVoltage) + if (hideVoltageUnit) "" else "V"
         val batteryTempStr = String.format("%.1f", batteryTemp) + if (hideBatteryUnit) "" else "°C"
         val cpuTempStr = String.format("%.1f", cpuTemp) + if (hideCpuUnit) "" else "°C"
+        val cpuFreqStr = "$cpuFreq" + if (hideCpuFreqUnit) "" else "MHz"
+        val cpuUsageStr = "$cpuUsage" + if (hideCpuUsageUnit) "" else "%"
+        val ramUsageStr = "$ramUsage" + if (hideRamUsageUnit) "" else "%"
 
-        return listOf(powerStr, currentStr, voltageStr, cpuTempStr, batteryTempStr)
+        return listOf(powerStr, currentStr, voltageStr, cpuTempStr, batteryTempStr, cpuFreqStr, cpuUsageStr, ramUsageStr)
+    }
+
+    private fun readCpuTemp(source: Int) = runCatching {
+        File("/sys/class/thermal/thermal_zone$source/temp").readText().trim().toFloat() / 1000f
+    }.getOrElse { 0f }
+
+    private fun readCpuFreq(source: Int) = runCatching {
+        File("/sys/devices/system/cpu/cpu$source/cpufreq/scaling_cur_freq").readText().trim().toInt() / 1000
+    }.getOrElse { 0 }
+
+    private fun readRamUsage(): Int {
+        return try {
+            val file = File("/proc/meminfo")
+            var memTotal: Long = -1
+            var memAvailable: Long = -1
+            file.forEachLine { line ->
+                when {
+                    line.startsWith("MemTotal:") -> memTotal = line.split("\\s+".toRegex())[1].toLong()
+                    line.startsWith("MemAvailable:") -> memAvailable = line.split("\\s+".toRegex())[1].toLong()
+                }
+                if (memTotal != -1L && memAvailable != -1L) return@forEachLine
+            }
+            if (memTotal > 0 && memAvailable > 0) {
+                (((memTotal - memAvailable) * 100) / memTotal).toInt()
+            } else 0
+        } catch (e: Exception) {
+            0
+        }
+    }
+
+    private fun calculateCpuUsage(res: ClockHookResources): Int {
+        return try {
+            val stats = File("/proc/stat").readText().lines().first()
+            val fields = stats.split("\\s+".toRegex()).drop(1)
+            val user = fields[0].toLong()
+            val nice = fields[1].toLong()
+            val system = fields[2].toLong()
+            val idle = fields[3].toLong()
+            val iowait = fields[4].toLong()
+            val irq = fields[5].toLong()
+            val softirq = fields[6].toLong()
+
+            val totalTime = user + nice + system + idle + iowait + irq + softirq
+            val idleTime = idle
+
+            val totalDiff = totalTime - res.lastCpuTotalTime
+            val idleDiff = idleTime - res.lastCpuIdleTime
+
+            res.lastCpuTotalTime = totalTime
+            res.lastCpuIdleTime = idleTime
+
+            if (totalDiff > 0) {
+                (100 * (totalDiff - idleDiff) / totalDiff).toInt()
+            } else 0
+        } catch (e: Exception) {
+            0
+        }
     }
 
     private fun createIndicatorTextView(clock: TextView): TextView =
