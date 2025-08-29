@@ -1,7 +1,6 @@
 package com.suqi8.oshin.ui.activity.com.android.systemui
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -26,6 +25,7 @@ import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.highcapable.yukihookapi.hook.xposed.prefs.YukiHookPrefsBridge
 import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.activity.components.BasicComponent
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.FunNoEnable
@@ -33,7 +33,6 @@ import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.FunSlider
 import com.suqi8.oshin.ui.activity.components.FunSwich
 import com.suqi8.oshin.ui.activity.components.addline
-import top.yukonga.miuix.kmp.basic.BasicComponent
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperDialog
@@ -65,14 +64,16 @@ fun hardware_indicator(navController: NavController) {
         stringResource(R.string.current),
         stringResource(R.string.voltage),
         stringResource(R.string.cpu_temperature),
-        stringResource(R.string.battery_temperature)
+        stringResource(R.string.battery_temperature),
+        stringResource(R.string.cpu_frequency),
+        stringResource(R.string.cpu_usage),
+        stringResource(R.string.ram_usage)
     )
     val show_cpu_temp_data = remember { mutableStateOf(false) }
+    val show_cpu_freq_data = remember { mutableStateOf(false) }
 
-    // --- 电量指示器状态 ---
+    // --- 指示器状态 ---
     val powerIndicatorEnabled = remember { mutableStateOf(prefs.getBoolean("power_indicator_enabled", false)) }
-
-    // --- 温度指示器状态 ---
     val tempIndicatorEnabled = remember { mutableStateOf(prefs.getBoolean("temp_indicator_enabled", false)) }
 
 
@@ -137,7 +138,7 @@ fun hardware_indicator(navController: NavController) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp)
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 FunSwich(
                     title = stringResource(R.string.dual_cell),
@@ -163,8 +164,24 @@ fun hardware_indicator(navController: NavController) {
                     summary = stringResource(R.string.enter_thermal_zone_number),
                     category = "systemui\\hardware_indicator",
                     key = "data_temp_cpu_source",
-                    defValue = 1,
+                    defValue = 0,
                     max = 100f,
+                    min = 0f,
+                    decimalPlaces = 0
+                )
+                addline()
+                FunArrow(
+                    title = stringResource(R.string.show_cpu_freq_data),
+                    onClick = { show_cpu_freq_data.value = true }
+                )
+                addline()
+                FunSlider(
+                    title = stringResource(R.string.change_cpu_freq_source),
+                    summary = stringResource(R.string.enter_cpu_core_number),
+                    category = "systemui\\hardware_indicator",
+                    key = "data_freq_cpu_source",
+                    defValue = 0,
+                    max = 15f, // Assuming max 16 cores (0-15)
                     min = 0f,
                     decimalPlaces = 0
                 )
@@ -175,7 +192,7 @@ fun hardware_indicator(navController: NavController) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 12.dp)
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 FunSwich(
                     title = stringResource(R.string.power),
@@ -211,10 +228,32 @@ fun hardware_indicator(navController: NavController) {
                     key = "unit_hide_temp_cpu",
                     defValue = false
                 )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.cpu_frequency),
+                    category = "systemui\\hardware_indicator",
+                    key = "unit_hide_cpu_frequency",
+                    defValue = false
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.cpu_usage),
+                    category = "systemui\\hardware_indicator",
+                    key = "unit_hide_cpu_usage",
+                    defValue = false
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.ram_usage),
+                    category = "systemui\\hardware_indicator",
+                    key = "unit_hide_ram_usage",
+                    defValue = false
+                )
             }
         }
     }
     cpu_temp_data(show_cpu_temp_data)
+    cpu_freq_data(show_cpu_freq_data)
 }
 
 /**
@@ -237,7 +276,7 @@ fun IndicatorSettings(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp)
+                .padding(horizontal = 12.dp, vertical = 6.dp)
         ) {
             FunSwich(
                 title = stringResource(R.string.dual_row_title),
@@ -273,7 +312,7 @@ fun IndicatorSettings(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 12.dp)
+                .padding(horizontal = 12.dp, vertical = 6.dp)
         ) {
             FunSwich(
                 title = stringResource(R.string.bold_text),
@@ -360,10 +399,50 @@ fun cpu_temp_data(show: MutableState<Boolean>) {
     }
 }
 
+@Composable
+fun cpu_freq_data(show: MutableState<Boolean>) {
+    if (!show.value) return
+    val frequencies = remember { getFrequencyList() }
+    SuperDialog(title = stringResource(R.string.show_cpu_freq_data),
+        show = show,
+        onDismissRequest = {
+            show.value = false
+        }) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(max = 300.dp)
+                .overScrollVertical()
+        ) {
+            items(frequencies) { freqInfo ->
+                BasicComponent(
+                    title = freqInfo.coreName,
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    summary = freqInfo.frequency
+                )
+            }
+        }
+        Spacer(Modifier.height(12.dp))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextButton(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.ok),
+                enabled = true,
+                onClick = {
+                    show.value = false
+                }
+            )
+        }
+    }
+}
+
 fun getTemperatureList(): List<TemperatureInfo> {
     val temperatureList = mutableListOf<TemperatureInfo>()
-
-    // /sys/class/thermal/thermal_zone* 文件路径
     val thermalZones =
         File("/sys/class/thermal/").listFiles { file -> file.name.startsWith("thermal_zone") }
 
@@ -371,29 +450,37 @@ fun getTemperatureList(): List<TemperatureInfo> {
         val tempFile = File(zone, "temp")
         if (tempFile.exists() && tempFile.canRead()) {
             try {
-                val temperature = tempFile.readText().trim().toIntOrNull()?.let {
-                    // 将读取的温度值除以1000，转换为摄氏度
-                    it / 1000.0
-                }
+                val temperature = tempFile.readText().trim().toIntOrNull()?.let { it / 1000.0 }
                 if (temperature != null && temperature in 30.0..100.0) {
                     temperatureList.add(TemperatureInfo(zone.name, "$temperature°C"))
-                } else {
-                    Log.d(
-                        "TemperatureFilter",
-                        "排除不合理温度: $temperature°C in zone ${zone.name}"
-                    )
                 }
             } catch (e: IOException) {
-                // 处理读取失败的情况
                 e.printStackTrace()
             }
-        } else {
-            // 文件不存在或不可读时处理
-            val TAG = ""
-            Log.d(TAG, "无法读取 $tempFile")
         }
     }
     return temperatureList
 }
 
+fun getFrequencyList(): List<FrequencyInfo> {
+    val frequencyList = mutableListOf<FrequencyInfo>()
+    val cpuCores = File("/sys/devices/system/cpu/").listFiles { file -> file.name.matches(Regex("cpu[0-9]+")) }
+
+    cpuCores?.forEach { core ->
+        val freqFile = File(core, "cpufreq/scaling_cur_freq")
+        if (freqFile.exists() && freqFile.canRead()) {
+            try {
+                val frequency = freqFile.readText().trim().toIntOrNull()?.let { it / 1000 }
+                if (frequency != null) {
+                    frequencyList.add(FrequencyInfo(core.name, "$frequency MHz"))
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+    return frequencyList
+}
+
 data class TemperatureInfo(val zoneName: String, val temperature: String)
+data class FrequencyInfo(val coreName: String, val frequency: String)
