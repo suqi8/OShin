@@ -588,5 +588,7 @@
     <string name="show_verification_notification">显示验证码通知</string>
     <string name="copy_verification_to_clipboard">验证码复制剪切板</string>
     <string name="auto_input_verification_code">自动输入验证码</string>
-
+    <string name="appearance_and_update">外观与更新</string>
+    <string name="data_source_settings">数据源设置</string>
+    <string name="unit_display_settings">单位隐藏</string>
 </resources>
