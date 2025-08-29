@@ -33,7 +33,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -50,16 +49,10 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
@@ -362,7 +355,7 @@ fun Main_About(
         val buttonAlpha by derivedStateOf {
             if (scroll.firstVisibleItemIndex > 0) 0f else (1f - (scroll.firstVisibleItemScrollOffset.toFloat() / 300)).coerceIn(0f, 1f)
         }
-        Button(
+        /*Button(
             modifier = Modifier
                 .fillMaxWidth(0.8f)
                 .wrapContentHeight()
@@ -389,7 +382,7 @@ fun Main_About(
             colors = backgroundColor
         ) {
             Text(text = stringResource(R.string.check_update), fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = colorScheme.onSurface)
-        }
+        }*/
     }
 }
 

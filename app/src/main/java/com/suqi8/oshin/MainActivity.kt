@@ -732,42 +732,44 @@ fun Main1(navController: NavController) {
             }
         },
         bottomBar = {
-            Column(
-                Modifier
-                    .padding(32.dp, 8.dp)
-                    .safeDrawingPadding()
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Row(
-                    Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(4.dp),
-                    verticalAlignment = Alignment.CenterVertically
+            AnimatedVisibility(pagerState.currentPage != 3) {
+                Column(
+                    Modifier
+                        .padding(32.dp, 8.dp)
+                        .safeDrawingPadding()
+                        .fillMaxWidth(),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    BottomTabs(
-                        tabs = items,
-                        selectedIndexState = targetPage,
-                        liquidGlassProviderState = providerState,
-                        background = MiuixTheme.colorScheme.surfaceContainer,
-                        modifier = Modifier.weight(1f),
-                        onTabSelected = { index ->
-                            coroutineScope.launch {
-                                pagerState.animateScrollToPage(index)
+                    Row(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        BottomTabs(
+                            tabs = items,
+                            selectedIndexState = targetPage,
+                            liquidGlassProviderState = providerState,
+                            background = MiuixTheme.colorScheme.surfaceContainer,
+                            modifier = Modifier.weight(1f),
+                            onTabSelected = { index ->
+                                coroutineScope.launch {
+                                    pagerState.animateScrollToPage(index)
+                                }
                             }
+                        ) { tab ->
+                            val BottomTabsScope = BottomTabsScope()
+                            BottomTabsScope.BottomTab({ color ->
+                                Box(
+                                    Modifier.size(24.dp).paint(
+                                        painterResource(tab.icon),
+                                        colorFilter = ColorFilter.tint(color())
+                                    )
+                                ) },
+                                { color ->
+                                    BasicText(tab.label, color = color)
+                                }
+                            )
                         }
-                    ) { tab ->
-                        val BottomTabsScope = BottomTabsScope()
-                        BottomTabsScope.BottomTab({ color ->
-                            Box(
-                                Modifier.size(24.dp).paint(
-                                    painterResource(tab.icon),
-                                    colorFilter = ColorFilter.tint(color())
-                                )
-                            ) },
-                            { color ->
-                                BasicText(tab.label, color = color)
-                            }
-                        )
                     }
                 }
             }
