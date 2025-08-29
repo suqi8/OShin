@@ -163,6 +163,7 @@ import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.getWindowSize
 import java.util.Locale
+import kotlin.math.abs
 import kotlin.system.exitProcess
 
 const val TAG = "OShin"
@@ -540,7 +541,7 @@ fun Main0() {
         if (!isPrivacyEnabled.value) {
             UMConfigure.init(context, "67c7dea68f232a05f127781e", "android", UMConfigure.DEVICE_TYPE_PHONE, "")
             withContext(Dispatchers.IO) {
-                val lsposedVersionName = executeCommand("awk -F= '/version=/ {print \$2}' /data/adb/modules/zygisk_lsposed/module.prop")
+                val lsposedVersionName = executeCommand("awk -F= '/version=/ {print $2}' /data/adb/modules/zygisk_lsposed/module.prop")
                 lspVersion.value = lsposedVersionName
                 val savedLspVersion = context.prefs("settings").getString("privacy_lspvername", "")
                 if (lsposedVersionName.isNotEmpty() && lsposedVersionName != savedLspVersion) {
@@ -662,15 +663,13 @@ fun Main1(navController: NavController) {
         topAppBarScrollBehavior0, topAppBarScrollBehavior1, topAppBarScrollBehavior2, topAppBarScrollBehavior3
     )
 
-    val pagerState = rememberPagerState(pageCount = { 4 },initialPage = 0)
-    var targetPage = remember { mutableIntStateOf(pagerState.currentPage) }
+    val pagerState = rememberPagerState(pageCount = { 4 }, initialPage = 0)
+    val targetPage = remember { mutableIntStateOf(pagerState.currentPage) }
     val coroutineScope = rememberCoroutineScope()
-    val currentScrollBehavior = when (pagerState.currentPage) {
-        0 -> topAppBarScrollBehaviorList[0]
-        1 -> topAppBarScrollBehaviorList[1]
-        2 -> topAppBarScrollBehaviorList[2]
-        else -> topAppBarScrollBehaviorList[3]
-    }
+
+    // 这个 currentScrollBehavior 的获取方式非常正确
+    val currentScrollBehavior = topAppBarScrollBehaviorList[pagerState.currentPage]
+
     data class NavigationItem(
         val label: String,
         val icon: Int
@@ -680,7 +679,7 @@ fun Main1(navController: NavController) {
         NavigationItem(stringResource(R.string.home), R.drawable.home),
         NavigationItem(stringResource(R.string.module), R.drawable.module),
         NavigationItem(stringResource(R.string.func), R.drawable.func),
-        NavigationItem(stringResource(R.string.about),  R.drawable.about)
+        NavigationItem(stringResource(R.string.about), R.drawable.about)
     )
 
     LaunchedEffect(pagerState) {
@@ -713,13 +712,45 @@ fun Main1(navController: NavController) {
         ),
         shadow = GlassShadow(elevation = 0.dp, brush = SolidColor(Color.Transparent.copy(alpha = 0.15f)), alpha = 0f)
     )
+    var isBottomBarVisible by remember { mutableStateOf(true) }
+    LaunchedEffect(currentScrollBehavior) {
+        var previousOffset = 0
+        // 定义一个像素阈值，可以根据手感调整
+        val threshold = 50
+
+        snapshotFlow { currentScrollBehavior.state.contentOffset.toInt() }
+            .collect { currentOffset ->
+                if (currentOffset >= -5) { // -5 作为一个小的容错范围
+                    isBottomBarVisible = true
+                    previousOffset = currentOffset
+                    return@collect // 处理完毕，跳过后续逻辑
+                }
+
+                // 计算滚动的距离
+                val delta = currentOffset - previousOffset
+
+                if (abs(delta) > threshold) {
+                    // 向下滚动 (数值变得更小)
+                    if (delta < 0) {
+                        isBottomBarVisible = false
+                    }
+                    // 向上滚动
+                    else {
+                        isBottomBarVisible = true
+                    }
+                    previousOffset = currentOffset
+                }
+            }
+    }
+    LaunchedEffect(pagerState.currentPage) {
+        isBottomBarVisible = true
+    }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             AnimatedVisibility(pagerState.currentPage != 3) {
                 TopAppBar(
                     scrollBehavior = currentScrollBehavior,
-                    // 当玻璃效果启用时，背景应总是透明
                     color = Color.Transparent,
                     title = when (pagerState.currentPage) {
                         0 -> stringResource(R.string.app_name)
@@ -732,7 +763,12 @@ fun Main1(navController: NavController) {
             }
         },
         bottomBar = {
-            AnimatedVisibility(pagerState.currentPage != 3) {
+            AnimatedVisibility(
+                // 同时根据滚动状态和当前页面来决定是否可见
+                visible = isBottomBarVisible,
+                enter = slideInVertically(initialOffsetY = { it }),
+                exit = slideOutVertically(targetOffsetY = { it })
+            ) {
                 Column(
                     Modifier
                         .padding(32.dp, 8.dp)
@@ -757,15 +793,12 @@ fun Main1(navController: NavController) {
                                 }
                             }
                         ) { tab ->
-                            val BottomTabsScope = BottomTabsScope()
-                            BottomTabsScope.BottomTab({ color ->
-                                Box(
-                                    Modifier.size(24.dp).paint(
-                                        painterResource(tab.icon),
-                                        colorFilter = ColorFilter.tint(color())
-                                    )
-                                ) },
-                                { color ->
+                            BottomTabsScope().BottomTab({ color ->
+                                Box(Modifier.size(24.dp).paint(
+                                    painterResource(tab.icon),
+                                    colorFilter = ColorFilter.tint(color()))
+                                )
+                            }, { color ->
                                     BasicText(tab.label, color = color)
                                 }
                             )
