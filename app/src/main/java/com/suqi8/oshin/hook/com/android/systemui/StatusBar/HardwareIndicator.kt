@@ -194,8 +194,13 @@ class HardwareIndicator : YukiBaseHooker() {
             if (absolute) {
                 batteryCurrentMa = abs(batteryCurrentMa)
             }
+
             val isDualCell = localPrefs.getBoolean("data_power_dual_cell", false)
-            val batteryCurrent = batteryCurrentMa / 1000f * (if (isDualCell) 2 else 1)
+            if (isDualCell) {
+                batteryCurrentMa *= 2
+            }
+
+            val batteryCurrent = batteryCurrentMa / 1000f
             val batteryVoltage = voltageNow / 1_000_000f
             val batteryWatt = batteryCurrent * batteryVoltage
 
