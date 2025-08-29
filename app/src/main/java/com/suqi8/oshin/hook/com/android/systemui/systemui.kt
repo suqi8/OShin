@@ -5,7 +5,7 @@ import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.suqi8.oshin.hook.com.android.systemui.StatusBar.BatteryBar
 import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Clock
 import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Fragment
-import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Hardware_indicator
+import com.suqi8.oshin.hook.com.android.systemui.StatusBar.HardwareIndicator
 import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Icon
 import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Notification
 import com.suqi8.oshin.hook.com.android.systemui.StatusBar.Wifi
@@ -17,7 +17,7 @@ class systemui: YukiBaseHooker() {
     @SuppressLint("UseCompatLoadingForDrawables", "UseKtx")
     override fun onHook() {
         loadApp(hooker = Clock())
-        loadApp(hooker = Hardware_indicator())
+        loadApp(hooker = HardwareIndicator())
         loadApp(hooker = Icon())
         loadApp(hooker = Notification())
         loadApp(hooker = Fragment())

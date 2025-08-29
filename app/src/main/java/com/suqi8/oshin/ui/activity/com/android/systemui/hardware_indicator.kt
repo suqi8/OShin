@@ -25,14 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.FunNoEnable
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.FunSlider
 import com.suqi8.oshin.ui.activity.components.FunSwich
 import com.suqi8.oshin.ui.activity.components.addline
 import top.yukonga.miuix.kmp.basic.BasicComponent
-import com.suqi8.oshin.ui.activity.components.Card
-import com.suqi8.oshin.ui.activity.components.FunArrow
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperDialog
@@ -45,6 +45,9 @@ import java.io.IOException
 @Composable
 fun hardware_indicator(navController: NavController) {
     val context = LocalContext.current
+    val prefs = remember { context.prefs("systemui\\hardware_indicator") }
+
+    // --- 通用设置数据 ---
     val gravityOptions = listOf(
         stringResource(R.string.status_bar_time_gravity_center),
         stringResource(R.string.status_bar_time_gravity_top),
@@ -56,27 +59,37 @@ fun hardware_indicator(navController: NavController) {
         stringResource(R.string.status_bar_time_gravity_fill_horizontal),
         stringResource(R.string.status_bar_time_gravity_fill_vertical)
     )
-    val powerDisplay = listOf(stringResource(R.string.power), stringResource(R.string.current), stringResource(R.string.voltage))
-    val powerDisplaySelect1 = remember { mutableIntStateOf(context.prefs("systemui\\hardware_indicator").getInt("powerDisplaySelect1", 0)) }
-    val powerDisplaySelect2 = remember { mutableIntStateOf(context.prefs("systemui\\hardware_indicator").getInt("powerDisplaySelect2", 0)) }
-    val power_consumption_indicator_alignment = remember { mutableIntStateOf(context.prefs("systemui\\hardware_indicator").getInt("power_consumption_indicator_alignment", 0)) }
+    val displayContentOptions = listOf(
+        stringResource(R.string.power),
+        stringResource(R.string.current),
+        stringResource(R.string.voltage),
+        stringResource(R.string.cpu_temperature),
+        stringResource(R.string.battery_temperature)
+    )
     val show_cpu_temp_data = remember { mutableStateOf(false) }
-    val temperatureDisplay = listOf(stringResource(R.string.battery_temperature), stringResource(R.string.cpu_temperature))
-    val temperatureDisplaySelect1 = remember { mutableIntStateOf(context.prefs("systemui\\hardware_indicator").getInt("temperature_indicator_display_select1", 0)) }
-    val temperatureDisplaySelect2 = remember { mutableIntStateOf(context.prefs("systemui\\hardware_indicator").getInt("temperature_indicator_display_select2", 0)) }
-    val temperature_indicator_alignment = remember { mutableIntStateOf(context.prefs("systemui\\hardware_indicator").getInt("temperature_indicator_alignment", 0)) }
+
+    // --- 电量指示器状态 ---
+    val powerIndicatorEnabled = remember { mutableStateOf(prefs.getBoolean("power_indicator_enabled", false)) }
+    val powerIndicatorAlignment = remember { mutableIntStateOf(prefs.getInt("power_indicator_alignment", 0)) }
+    val powerIndicatorDualRow = remember { mutableStateOf(prefs.getBoolean("power_indicator_dual_row", false)) }
+    val powerIndicatorLine1Content = remember { mutableIntStateOf(prefs.getInt("power_indicator_line1_content", 0)) }
+    val powerIndicatorLine2Content = remember { mutableIntStateOf(prefs.getInt("power_indicator_line2_content", 0)) }
+
+    // --- 温度指示器状态 ---
+    val tempIndicatorEnabled = remember { mutableStateOf(prefs.getBoolean("temp_indicator_enabled", false)) }
+    val tempIndicatorAlignment = remember { mutableIntStateOf(prefs.getInt("temp_indicator_alignment", 0)) }
+    val tempIndicatorDualRow = remember { mutableStateOf(prefs.getBoolean("temp_indicator_dual_row", false)) }
+    val tempIndicatorLine1Content = remember { mutableIntStateOf(prefs.getInt("temp_indicator_line1_content", 0)) }
+    val tempIndicatorLine2Content = remember { mutableIntStateOf(prefs.getInt("temp_indicator_line2_content", 0)) }
+
+
     FunPage(
         title = stringResource(id = R.string.hardware_indicator),
         appList = listOf("com.android.systemui"),
         navController = navController
     ) {
         Column {
-            val power_consumption_indicator = remember {
-                mutableStateOf(
-                    context.prefs("systemui\\hardware_indicator")
-                        .getBoolean("power_consumption_indicator", false)
-                )
-            }
+            // --- 电量消耗指示器 ---
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -86,21 +99,13 @@ fun hardware_indicator(navController: NavController) {
                 FunSwich(
                     title = stringResource(R.string.power_consumption_indicator),
                     category = "systemui\\hardware_indicator",
-                    key = "power_consumption_indicator",
+                    key = "power_indicator_enabled",
                     defValue = false,
-                    onCheckedChange = {
-                        power_consumption_indicator.value = it
-                    }
+                    onCheckedChange = { powerIndicatorEnabled.value = it }
                 )
             }
-            AnimatedVisibility(
-                visible = !power_consumption_indicator.value
-            ) {
-                FunNoEnable()
-            }
-            AnimatedVisibility(
-                visible = power_consumption_indicator.value
-            ) {
+            AnimatedVisibility(visible = !powerIndicatorEnabled.value) { FunNoEnable() }
+            AnimatedVisibility(visible = powerIndicatorEnabled.value) {
                 Column {
                     Card(
                         modifier = Modifier
@@ -110,44 +115,38 @@ fun hardware_indicator(navController: NavController) {
                         FunSwich(
                             title = stringResource(R.string.dual_cell),
                             category = "systemui\\hardware_indicator",
-                            key = "power_consumption_indicator_dual_cell",
+                            key = "data_power_dual_cell",
                             defValue = false
                         )
                         addline()
                         FunSwich(
                             title = stringResource(R.string.absolute_value),
                             category = "systemui\\hardware_indicator",
-                            key = "power_consumption_indicator_absolute",
+                            key = "data_power_absolute_current",
                             defValue = false
                         )
                         addline()
                         FunSwich(
                             title = stringResource(R.string.bold_text),
                             category = "systemui\\hardware_indicator",
-                            key = "power_consumption_indicator_bold_text",
+                            key = "power_indicator_bold",
                             defValue = false
                         )
                         addline()
                         SuperDropdown(
                             title = stringResource(R.string.alignment),
                             items = gravityOptions,
-                            selectedIndex = power_consumption_indicator_alignment.intValue,
+                            selectedIndex = powerIndicatorAlignment.intValue,
                             onSelectedIndexChange = { newOption ->
-                                power_consumption_indicator_alignment.intValue =
-                                    newOption
-                                context.prefs("systemui\\hardware_indicator").edit {
-                                    putInt(
-                                        "power_consumption_indicator_alignment",
-                                        newOption
-                                    )
-                                }
+                                powerIndicatorAlignment.intValue = newOption
+                                prefs.edit { putInt("power_indicator_alignment", newOption) }
                             }
                         )
                         addline()
                         FunSlider(
                             title = stringResource(R.string.update_time),
                             category = "systemui\\hardware_indicator",
-                            key = "power_consumption_indicator_update_time",
+                            key = "power_indicator_update_interval",
                             defValue = 1000,
                             endtype = "ms",
                             max = 2000f,
@@ -158,7 +157,7 @@ fun hardware_indicator(navController: NavController) {
                         FunSlider(
                             title = stringResource(R.string.font_size),
                             category = "systemui\\hardware_indicator",
-                            key = "power_consumption_indicator_font_size",
+                            key = "power_indicator_font_size",
                             defValue = 8f,
                             endtype = "sp",
                             max = 20f,
@@ -167,9 +166,6 @@ fun hardware_indicator(navController: NavController) {
                         )
                     }
                     SmallTitle(text = stringResource(R.string.display_content))
-                    val power_consumption_indicator_dual_row = remember {
-                        mutableStateOf(context.prefs("systemui\\hardware_indicator").getBoolean("power_consumption_indicator_dual_row", false))
-                    }
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -178,77 +174,37 @@ fun hardware_indicator(navController: NavController) {
                         FunSwich(
                             title = stringResource(R.string.dual_row_title),
                             category = "systemui\\hardware_indicator",
-                            key = "power_consumption_indicator_dual_row",
+                            key = "power_indicator_dual_row",
                             defValue = false,
-                            onCheckedChange = {
-                                power_consumption_indicator_dual_row.value = it
-                            }
+                            onCheckedChange = { powerIndicatorDualRow.value = it }
                         )
                         addline()
                         SuperDropdown(
                             title = stringResource(R.string.first_line_content),
-                            items = powerDisplay,
-                            selectedIndex = powerDisplaySelect1.intValue,
+                            items = displayContentOptions,
+                            selectedIndex = powerIndicatorLine1Content.intValue,
                             onSelectedIndexChange = {
-                                powerDisplaySelect1.intValue = it
-                                context.prefs("systemui\\hardware_indicator").edit {
-                                    putInt(
-                                        "powerDisplaySelect1",
-                                        it
-                                    )
-                                }
+                                powerIndicatorLine1Content.intValue = it
+                                prefs.edit { putInt("power_indicator_line1_content", it) }
                             }
                         )
-                        AnimatedVisibility(visible = power_consumption_indicator_dual_row.value) {
+                        AnimatedVisibility(visible = powerIndicatorDualRow.value) {
                             addline()
                             SuperDropdown(
                                 title = stringResource(R.string.second_line_content),
-                                items = powerDisplay,
-                                selectedIndex = powerDisplaySelect2.intValue,
+                                items = displayContentOptions,
+                                selectedIndex = powerIndicatorLine2Content.intValue,
                                 onSelectedIndexChange = {
-                                    powerDisplaySelect2.intValue = it
-                                    context.prefs("systemui\\hardware_indicator").edit {
-                                        putInt(
-                                            "powerDisplaySelect2",
-                                            it
-                                        )
-                                    }
+                                    powerIndicatorLine2Content.intValue = it
+                                    prefs.edit { putInt("power_indicator_line2_content", it) }
                                 }
                             )
                         }
                     }
-                    SmallTitle(text = stringResource(R.string.hide_unit))
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
-                    ) {
-                        FunSwich(
-                            title = stringResource(R.string.power),
-                            category = "systemui\\hardware_indicator",
-                            key = "power_consumption_hidePowerUnit",
-                            defValue = false
-                        )
-                        addline()
-                        FunSwich(
-                            title = stringResource(R.string.current),
-                            category = "systemui\\hardware_indicator",
-                            key = "power_consumption_hideCurrentUnit",
-                            defValue = false
-                        )
-                        addline()
-                        FunSwich(
-                            title = stringResource(R.string.voltage),
-                            category = "systemui\\hardware_indicator",
-                            key = "power_consumption_hideVoltageUnit",
-                            defValue = false
-                        )
-                    }
                 }
             }
-            val temperature_indicator = remember {
-                mutableStateOf(context.prefs("systemui\\hardware_indicator").getBoolean("temperature_indicator", false))
-            }
+
+            // --- 温度指示器 ---
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -258,21 +214,13 @@ fun hardware_indicator(navController: NavController) {
                 FunSwich(
                     title = stringResource(R.string.temperature_indicator),
                     category = "systemui\\hardware_indicator",
-                    key = "temperature_indicator",
+                    key = "temp_indicator_enabled",
                     defValue = false,
-                    onCheckedChange = {
-                        temperature_indicator.value = it
-                    }
+                    onCheckedChange = { tempIndicatorEnabled.value = it }
                 )
             }
-            AnimatedVisibility(
-                visible = !temperature_indicator.value
-            ) {
-                FunNoEnable()
-            }
-            AnimatedVisibility(
-                visible = temperature_indicator.value
-            ) {
+            AnimatedVisibility(visible = !tempIndicatorEnabled.value) { FunNoEnable() }
+            AnimatedVisibility(visible = tempIndicatorEnabled.value) {
                 Column {
                     Card(
                         modifier = Modifier
@@ -281,15 +229,14 @@ fun hardware_indicator(navController: NavController) {
                     ) {
                         FunArrow(
                             title = stringResource(R.string.show_cpu_temp_data),
-                            onClick = {
-                                show_cpu_temp_data.value = true
-                            })
+                            onClick = { show_cpu_temp_data.value = true }
+                        )
                         addline()
                         FunSlider(
                             title = stringResource(R.string.change_cpu_temp_source),
                             summary = stringResource(R.string.enter_thermal_zone_number),
                             category = "systemui\\hardware_indicator",
-                            key = "temperature_indicator_cpu_temp_source",
+                            key = "data_temp_cpu_source",
                             defValue = 1,
                             max = 100f,
                             min = 0f,
@@ -299,30 +246,24 @@ fun hardware_indicator(navController: NavController) {
                         FunSwich(
                             title = stringResource(R.string.bold_text),
                             category = "systemui\\hardware_indicator",
-                            key = "temperature_indicator_bold_text",
+                            key = "temp_indicator_bold",
                             defValue = false
                         )
                         addline()
                         SuperDropdown(
                             title = stringResource(R.string.alignment),
                             items = gravityOptions,
-                            selectedIndex = temperature_indicator_alignment.intValue,
+                            selectedIndex = tempIndicatorAlignment.intValue,
                             onSelectedIndexChange = { newOption ->
-                                temperature_indicator_alignment.intValue =
-                                    newOption
-                                context.prefs("systemui\\hardware_indicator").edit {
-                                    putInt(
-                                        "temperature_indicator_alignment",
-                                        newOption
-                                    )
-                                }
+                                tempIndicatorAlignment.intValue = newOption
+                                prefs.edit { putInt("temp_indicator_alignment", newOption) }
                             }
                         )
                         addline()
                         FunSlider(
                             title = stringResource(R.string.update_time),
                             category = "systemui\\hardware_indicator",
-                            key = "temperature_indicator_update_time",
+                            key = "temp_indicator_update_interval",
                             defValue = 1000,
                             endtype = "ms",
                             max = 2000f,
@@ -333,7 +274,7 @@ fun hardware_indicator(navController: NavController) {
                         FunSlider(
                             title = stringResource(R.string.font_size),
                             category = "systemui\\hardware_indicator",
-                            key = "temperature_indicator_font_size",
+                            key = "temp_indicator_font_size",
                             defValue = 8f,
                             endtype = "sp",
                             max = 20f,
@@ -342,9 +283,6 @@ fun hardware_indicator(navController: NavController) {
                         )
                     }
                     SmallTitle(text = stringResource(R.string.display_content))
-                    val temperature_indicator_dual_row = remember {
-                        mutableStateOf(context.prefs("systemui\\hardware_indicator").getBoolean("temperature_indicator_dual_row", false))
-                    }
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -353,66 +291,77 @@ fun hardware_indicator(navController: NavController) {
                         FunSwich(
                             title = stringResource(R.string.dual_row_title),
                             category = "systemui\\hardware_indicator",
-                            key = "temperature_indicator_dual_row",
+                            key = "temp_indicator_dual_row",
                             defValue = false,
-                            onCheckedChange = {
-                                temperature_indicator_dual_row.value = it
-                            }
+                            onCheckedChange = { tempIndicatorDualRow.value = it }
                         )
                         addline()
                         SuperDropdown(
                             title = stringResource(R.string.first_line_content),
-                            items = temperatureDisplay,
-                            selectedIndex = temperatureDisplaySelect1.intValue,
+                            items = displayContentOptions,
+                            selectedIndex = tempIndicatorLine1Content.intValue,
                             onSelectedIndexChange = {
-                                temperatureDisplaySelect1.intValue = it
-                                context.prefs("systemui\\hardware_indicator").edit {
-                                    putInt(
-                                        "temperature_indicator_display_select1",
-                                        it
-                                    )
-                                }
+                                tempIndicatorLine1Content.intValue = it
+                                prefs.edit { putInt("temp_indicator_line1_content", it) }
                             }
                         )
-                        AnimatedVisibility(visible = temperature_indicator_dual_row.value) {
+                        AnimatedVisibility(visible = tempIndicatorDualRow.value) {
                             addline()
                             SuperDropdown(
                                 title = stringResource(R.string.second_line_content),
-                                items = temperatureDisplay,
-                                selectedIndex = temperatureDisplaySelect2.intValue,
+                                items = displayContentOptions,
+                                selectedIndex = tempIndicatorLine2Content.intValue,
                                 onSelectedIndexChange = {
-                                    temperatureDisplaySelect2.intValue = it
-                                    context.prefs("systemui\\hardware_indicator").edit {
-                                        putInt(
-                                            "temperature_indicator_display_select2",
-                                            it
-                                        )
-                                    }
+                                    tempIndicatorLine2Content.intValue = it
+                                    prefs.edit { putInt("temp_indicator_line2_content", it) }
                                 }
                             )
                         }
                     }
-                    SmallTitle(text = stringResource(R.string.hide_unit))
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 12.dp, vertical = 6.dp)
-                    ) {
-                        FunSwich(
-                            title = stringResource(R.string.battery_temperature),
-                            category = "systemui\\hardware_indicator",
-                            key = "temperature_indicator_hideBatteryUnit",
-                            defValue = false
-                        )
-                        addline()
-                        FunSwich(
-                            title = stringResource(R.string.cpu_temperature),
-                            category = "systemui\\hardware_indicator",
-                            key = "temperature_indicator_hideCpuUnit",
-                            defValue = false
-                        )
-                    }
                 }
+            }
+
+            // --- 通用设置：隐藏单位 ---
+            SmallTitle(text = stringResource(R.string.hide_unit))
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 12.dp, vertical = 6.dp)
+            ) {
+                FunSwich(
+                    title = stringResource(R.string.power),
+                    category = "systemui\\hardware_indicator",
+                    key = "unit_hide_power",
+                    defValue = false
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.current),
+                    category = "systemui\\hardware_indicator",
+                    key = "unit_hide_current",
+                    defValue = false
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.voltage),
+                    category = "systemui\\hardware_indicator",
+                    key = "unit_hide_voltage",
+                    defValue = false
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.battery_temperature),
+                    category = "systemui\\hardware_indicator",
+                    key = "unit_hide_temp_battery",
+                    defValue = false
+                )
+                addline()
+                FunSwich(
+                    title = stringResource(R.string.cpu_temperature),
+                    category = "systemui\\hardware_indicator",
+                    key = "unit_hide_temp_cpu",
+                    defValue = false
+                )
             }
         }
     }
