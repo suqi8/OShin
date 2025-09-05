@@ -59,15 +59,11 @@ internal class GlassBrushNode(
         }
 
     override fun ContentDrawScope.draw() {
-        val brush = material.brush
-        val alpha = material.alpha
-        val blendMode = material.blendMode
-
-        brush?.let {
+        material.brush?.let { brush ->
             drawRect(
-                brush = it,
-                alpha = alpha,
-                blendMode = blendMode
+                brush = brush,
+                alpha = material.alpha,
+                blendMode = material.blendMode
             )
         }
 

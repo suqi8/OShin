@@ -1,6 +1,5 @@
 package com.kyant.liquidglass
 
-import androidx.compose.foundation.shape.CornerBasedShape
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.CompositingStrategy
 import androidx.compose.ui.graphics.GraphicsLayerScope
@@ -9,11 +8,10 @@ import androidx.compose.ui.layout.MeasureResult
 import androidx.compose.ui.layout.MeasureScope
 import androidx.compose.ui.node.LayoutModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
-import androidx.compose.ui.node.ObserverModifierNode
 import androidx.compose.ui.node.invalidateLayer
-import androidx.compose.ui.node.observeReads
 import androidx.compose.ui.platform.InspectorInfo
 import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.IntOffset
 
 internal class GlassShapeElement(
     val style: () -> GlassStyle,
@@ -21,11 +19,17 @@ internal class GlassShapeElement(
 ) : ModifierNodeElement<GlassShapeNode>() {
 
     override fun create(): GlassShapeNode {
-        return GlassShapeNode(style, compositingStrategy)
+        return GlassShapeNode(
+            style = style,
+            compositingStrategy = compositingStrategy
+        )
     }
 
     override fun update(node: GlassShapeNode) {
-        node.update(style, compositingStrategy)
+        node.update(
+            style = style,
+            compositingStrategy = compositingStrategy
+        )
     }
 
     override fun InspectorInfo.inspectableProperties() {
@@ -54,58 +58,35 @@ internal class GlassShapeElement(
 internal class GlassShapeNode(
     var style: () -> GlassStyle,
     var compositingStrategy: CompositingStrategy
-) : LayoutModifierNode, ObserverModifierNode, Modifier.Node() {
+) : LayoutModifierNode, Modifier.Node() {
 
     override val shouldAutoInvalidate: Boolean = false
 
-    private var shape: CornerBasedShape = style().shape
-        set(value) {
-            if (field != value) {
-                field = value
-                invalidateLayer()
-            }
-        }
-
     private val layerBlock: GraphicsLayerScope.() -> Unit = {
         clip = true
-        shape = this@GlassShapeNode.shape
+        shape = style().shape
         compositingStrategy = this@GlassShapeNode.compositingStrategy
     }
 
-    override fun MeasureScope.measure(measurable: Measurable, constraints: Constraints): MeasureResult {
+    override fun MeasureScope.measure(
+        measurable: Measurable,
+        constraints: Constraints
+    ): MeasureResult {
         val placeable = measurable.measure(constraints)
 
         return layout(placeable.width, placeable.height) {
-            placeable.placeWithLayer(0, 0, layerBlock = layerBlock)
+            placeable.placeWithLayer(IntOffset.Zero, layerBlock = layerBlock)
         }
-    }
-
-    override fun onObservedReadsChanged() {
-        updateShape()
-    }
-
-    override fun onAttach() {
-        updateShape()
     }
 
     fun update(
         style: () -> GlassStyle,
         compositingStrategy: CompositingStrategy
     ) {
-        if (this.style != style) {
+        if (this.style != style || this.compositingStrategy != compositingStrategy) {
             this.style = style
-            updateShape()
-        }
-        if (this.compositingStrategy != compositingStrategy) {
             this.compositingStrategy = compositingStrategy
             invalidateLayer()
-        }
-    }
-
-    private fun updateShape() {
-        observeReads {
-            val style = style()
-            shape = style.shape
         }
     }
 }
