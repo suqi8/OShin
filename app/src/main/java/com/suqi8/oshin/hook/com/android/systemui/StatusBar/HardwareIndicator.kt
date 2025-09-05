@@ -9,7 +9,6 @@ import android.graphics.Typeface
 import android.os.Handler
 import android.os.Looper
 import android.view.Gravity
-import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.LinearLayout
@@ -53,41 +52,51 @@ class HardwareIndicator : YukiBaseHooker() {
                     val clockTextView = instance as? TextView ?: return@after
                     if (clockTextView.javaClass.name != "com.oplus.systemui.statusbar.widget.StatClock") return@after
 
-                    val parent = clockTextView.parent as? ViewGroup ?: return@after
+                    // [核心修改] 将所有视图操作 post 到 UI 线程消息队列的末尾执行
+                    // 以确保系统自身的布局流程已经完成，避免竞争条件导致通知图标消失
+                    uiHandler.post {
+                        // 在 post 的代码块内部，需要重新检查 clock 是否还附着在窗口上
+                        if (!clockTextView.isAttachedToWindow) return@post
+                        val parent = clockTextView.parent as? ViewGroup ?: return@post
 
-                    cleanupResourcesFor(clockTextView)
+                        cleanupResourcesFor(clockTextView)
 
-                    val resources = ClockHookResources()
-                    clockResources[clockTextView] = resources
+                        val resources = ClockHookResources()
+                        clockResources[clockTextView] = resources
 
-                    val powerEnabled = localPrefs.getBoolean("power_indicator_enabled", false)
-                    val tempEnabled = localPrefs.getBoolean("temp_indicator_enabled", false)
+                        val powerEnabled = localPrefs.getBoolean("power_indicator_enabled", false)
+                        val tempEnabled = localPrefs.getBoolean("temp_indicator_enabled", false)
 
-                    if (!powerEnabled && !tempEnabled) return@after
+                        if (!powerEnabled && !tempEnabled) return@post
 
-                    val container = LinearLayout(clockTextView.context).apply {
-                        orientation = LinearLayout.HORIZONTAL
-                        layoutParams = LinearLayout.LayoutParams(
-                            LinearLayout.LayoutParams.WRAP_CONTENT,
-                            LinearLayout.LayoutParams.WRAP_CONTENT
-                        ).apply {
-                            gravity = Gravity.CENTER_VERTICAL
-                            marginStart = 4.dpToPx(context)
+                        // 1. 创建总容器
+                        val container = LinearLayout(clockTextView.context).apply {
+                            orientation = LinearLayout.HORIZONTAL
+                            layoutParams = LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT
+                            ).apply {
+                                gravity = Gravity.CENTER_VERTICAL
+                                marginStart = 2.dpToPx(context)
+                            }
                         }
+                        resources.indicatorContainer = container
+
+                        // 2. 添加指标到容器
+                        if (powerEnabled) createConsumptionIndicator(clockTextView, container, resources)
+                        if (tempEnabled) createTemperatureIndicator(clockTextView, container, resources)
+
+                        // 3. 将总容器一次性添加到时钟后面
+                        val clockIndex = parent.indexOfChild(clockTextView)
+                        if (clockIndex != -1) {
+                            parent.addView(container, clockIndex + 1)
+                        } else {
+                            parent.addView(container)
+                        }
+
+                        // 4. 启动监听
+                        startSyncListeners(clockTextView, resources)
                     }
-                    resources.indicatorContainer = container
-
-                    if (powerEnabled) createConsumptionIndicator(clockTextView, container, resources)
-                    if (tempEnabled) createTemperatureIndicator(clockTextView, container, resources)
-
-                    val clockIndex = parent.indexOfChild(clockTextView)
-                    if (clockIndex != -1) {
-                        parent.addView(container, clockIndex + 1)
-                    } else {
-                        parent.addView(container)
-                    }
-
-                    startSyncListeners(clockTextView, resources)
                 }
             }
 
