@@ -65,6 +65,13 @@ fun systemui(navController: NavController) {
                 key = "hide_status_bar",
                 defValue = false
             )
+            addline()
+            FunSwich(
+                title = stringResource(R.string.show_real_battery),
+                summary = stringResource(R.string.show_real_battery_summary),
+                category = "systemui",
+                key = "show_real_battery"
+            )
         }
         Card {
             val enable_all_day_screen_off = remember { mutableStateOf(context.prefs("systemui").getBoolean("enable_all_day_screen_off", false)) }
