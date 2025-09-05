@@ -114,6 +114,7 @@ import com.suqi8.oshin.ui.activity.com.oplus.exsystemservice.exsystemservice
 import com.suqi8.oshin.ui.activity.com.oplus.games.games
 import com.suqi8.oshin.ui.activity.com.oplus.notificationmanager.notificationmanager
 import com.suqi8.oshin.ui.activity.com.oplus.ota.ota
+import com.suqi8.oshin.ui.activity.com.oplus.padconnect.padconnect
 import com.suqi8.oshin.ui.activity.com.oplus.phonemanager.oplusphonemanager
 import com.suqi8.oshin.ui.activity.func.cpu_freq
 import com.suqi8.oshin.ui.activity.func.romworkshop.Rom_workshop
@@ -399,6 +400,7 @@ fun Main0() {
             composable("notificationmanager") { notificationmanager(navController) }
             composable("exsystemservice") { exsystemservice(navController) }
             composable("phone") { phone(navController) }
+            composable("padconnect") { padconnect(navController) }
         }
     }
 }

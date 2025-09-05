@@ -32,6 +32,7 @@ import com.suqi8.oshin.hook.com.oplus.exsystemservice.exsystemservice
 import com.suqi8.oshin.hook.com.oplus.games.games
 import com.suqi8.oshin.hook.com.oplus.notificationmanager.NotificationManager
 import com.suqi8.oshin.hook.com.oplus.ota.ota
+import com.suqi8.oshin.hook.com.oplus.padconnect.padconnect
 import com.suqi8.oshin.hook.com.oplus.phonemanager.oplusphonemanager
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
@@ -74,6 +75,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = NotificationManager())
         loadHooker(exsystemservice())
         loadHooker(phone())
+        loadHooker(padconnect())
     }
 
     override fun onXposedEvent() {

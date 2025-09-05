@@ -61,6 +61,7 @@ import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.ui.activity.components.FunSwich
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.GetFuncRoute
@@ -317,7 +318,8 @@ fun AppListContent(
             AppInfo("com.android.incallui", "incallui"),
             AppInfo("com.oplus.notificationmanager", "notificationmanager"),
             AppInfo("com.oplus.exsystemservice", "exsystemservice"),
-            AppInfo("com.android.phone", "phone")
+            AppInfo("com.android.phone", "phone"),
+            AppInfo("com.oplus.padconnect", "padconnect")
         )
     }
 
@@ -1227,5 +1229,8 @@ fun features(context: Context) = listOf(
         category = "phone"),
     FeatureItem(title = context.getString(R.string.show_real_battery),
         summary = context.getString(R.string.show_real_battery_summary),
-        category = "systemui")
+        category = "systemui"),
+    FeatureItem(title = context.getString(R.string.bypass_same_account_unlock_safety_check),
+        summary = context.getString(R.string.bypass_same_account_unlock_safety_check_summary),
+        category = "padconnect")
 )
