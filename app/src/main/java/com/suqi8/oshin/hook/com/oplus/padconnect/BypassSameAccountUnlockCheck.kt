@@ -10,6 +10,7 @@ class BypassSameAccountUnlockCheck: YukiBaseHooker() {
             DexKitBridge.create(this.appInfo.sourceDir).use {
                 if (prefs("padconnect").getBoolean("bypass_same_account_unlock_safety_check", false)) {
                     it.findClass {
+                        searchPackages("com.oplus.sdp")
                         matcher {
                             usingStrings("deviceNotSupportDialog != null && deviceNotSupportDialog.isShowing()")
                         }
