@@ -2,37 +2,28 @@ package com.suqi8.oshin
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.graphics.Paint
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
-import androidx.compose.animation.togetherWith
-import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -44,7 +35,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
@@ -60,17 +50,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.BiasAlignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.paint
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.drawscope.DrawScope
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -149,7 +133,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import top.yukonga.miuix.kmp.basic.Button
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
@@ -229,195 +212,47 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-data class Atom(
-    val id: Int, // 唯一ID
-    val element: String, // 元素符号
-    val position: Offset, // 相对坐标 (0.0f to 1.0f)
-    val isChiral: Boolean = false // 是否是手性碳
-)
-
-data class Bond(val fromAtomId: Int, val toAtomId: Int)
-
-data class Molecule(val atoms: List<Atom>, val bonds: List<Bond>)
-
-// 2. 创建葡萄糖分子数据的函数 (这是核心的“蓝图”)
-@Composable
-private fun rememberGlucoseMolecule(): Molecule {
-    return remember {
-        // 定义每个原子的位置和属性
-        val atoms = listOf(
-            // 环
-            Atom(1, "O", Offset(0.5f, 0.22f)),
-            Atom(2, "C", Offset(0.72f, 0.35f), isChiral = true), // C1
-            Atom(3, "C", Offset(0.72f, 0.65f), isChiral = true), // C2
-            Atom(4, "C", Offset(0.5f, 0.78f), isChiral = true), // C3
-            Atom(5, "C", Offset(0.28f, 0.65f), isChiral = true), // C4
-            Atom(6, "C", Offset(0.28f, 0.35f), isChiral = true), // C5
-            // C1 上的基团
-            Atom(7, "H", Offset(0.88f, 0.25f)),
-            Atom(8, "O", Offset(0.82f, 0.45f)), Atom(9, "H", Offset(0.92f, 0.48f)),
-            // C2 上的基团
-            Atom(10, "H", Offset(0.88f, 0.7f)),
-            Atom(11, "O", Offset(0.62f, 0.55f)), Atom(12, "H", Offset(0.6f, 0.45f)),
-            // C3 上的基团
-            Atom(13, "H", Offset(0.5f, 0.93f)),
-            Atom(14, "O", Offset(0.6f, 0.7f)), Atom(15, "H", Offset(0.68f, 0.76f)),
-            // C4 上的基团
-            Atom(16, "H", Offset(0.12f, 0.7f)),
-            Atom(17, "O", Offset(0.38f, 0.55f)), Atom(18, "H", Offset(0.4f, 0.45f)),
-            // C5 上的基团
-            Atom(19, "H", Offset(0.12f, 0.25f)),
-            // C6 基团
-            Atom(20, "C", Offset(0.18f, 0.2f), isChiral = false), // C6
-            Atom(21, "H", Offset(0.08f, 0.25f)),
-            Atom(22, "H", Offset(0.2f, 0.1f)),
-            Atom(23, "O", Offset(0.08f, 0.1f)), Atom(24, "H", Offset(0.01f, 0.13f))
-        )
-
-        // 定义化学键
-        val bonds = listOf(
-            Bond(1, 2), Bond(2, 3), Bond(3, 4), Bond(4, 5), Bond(5, 6), Bond(6, 1),
-            Bond(2, 7), Bond(2, 8), Bond(8, 9),
-            Bond(3, 10), Bond(3, 11), Bond(11, 12),
-            Bond(4, 13), Bond(4, 14), Bond(14, 15),
-            Bond(5, 16), Bond(5, 17), Bond(17, 18),
-            Bond(6, 19), Bond(6, 20),
-            Bond(20, 21), Bond(20, 22), Bond(20, 23), Bond(23, 24)
-        )
-        Molecule(atoms, bonds)
-    }
-}
-
-// 正确答案ID (C1到C5)
-private val correctChiralCarbons = setOf(2, 3, 4, 5, 6)
-
-private enum class VerificationMode {
-    MOLECULE, // 分子图形模式
-    TEXT      // 文本输入模式
-}
-
-// --- UI Composable ---
-
 @OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("LocalContextConfigurationRead")
 @Composable
 fun VerifyDialog() {
     val context = LocalContext.current
+
+    val fullVersion = BuildConfig.VERSION_NAME
+    val currentVersionPrefix = fullVersion.split(".")[0] + "." + fullVersion.split(".")[1]
+
     val show = remember {
-        mutableStateOf((context.prefs("settings").getString("verifyVersion", "0") != BuildConfig.VERSION_NAME) && context.resources.configuration.locales[0].language.endsWith("zh"))
+        mutableStateOf((context.prefs("settings").getString("verifyVersion", "0") != currentVersionPrefix) && context.resources.configuration.locales[0].language.endsWith("zh"))
     }
-    // 新增：用于管理当前验证模式的状态
-    var currentMode by remember { mutableStateOf(VerificationMode.MOLECULE) }
-    // 分子模式的状态
-    val selectedCarbons = remember { mutableStateOf(emptySet<Int>()) }
-    val molecule = rememberGlucoseMolecule() // 假设这个函数你已经有了
-    // 文本模式的状态
     var inputText by remember { mutableStateOf("") }
 
-    // --- 逻辑提取 ---
-    // 将验证成功的逻辑提取出来，方便复用
     val onVerificationSuccess = {
         Toast.makeText(context, "验证成功！", Toast.LENGTH_SHORT).show()
         context.prefs("settings").edit()
-            .putString("verifyVersion", BuildConfig.VERSION_NAME).apply()
+            .putString("verifyVersion", currentVersionPrefix).apply()
         show.value = false
     }
 
     if (show.value) {
         SuperDialog(
             show = show,
-            summary = "为了尊重开发者的劳动成果，请进行验证。您可以任选以下两项进行验证。模块仅在 GitHub 发布，如在第三方赚钱网盘（如 123 网盘、迅雷等）下载，请举报发布者，谢谢。"
+            summary = "为了尊重开发者的劳动成果，请输入模块下载地址进行验证。模块仅在 GitHub 发布，如在第三方赚钱网盘（如 123 网盘、迅雷等）下载，请举报发布者，谢谢。"
         ) {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                AnimatedContent(
-                    targetState = currentMode,
-                    transitionSpec = {
-                        // 定义切换动画
-                        if (targetState == VerificationMode.MOLECULE) {
-                            (slideInVertically { height -> height } + fadeIn()).togetherWith(
-                                slideOutVertically { height -> -height } + fadeOut())
-                        } else {
-                            (slideInVertically { height -> -height } + fadeIn()).togetherWith(
-                                slideOutVertically { height -> height } + fadeOut())
-                        }.using(SizeTransform(clip = false))
+                TextVerificationContent(
+                    text = inputText,
+                    onTextChange = { inputText = it },
+                    onVerify = {
+                        when {
+                            inputText.contains("github.com/suqi8/OShin", ignoreCase = true) -> onVerificationSuccess()
+                            inputText.contains("github.com/Xposed-Modules-Repo/com.suqi8.oshin", ignoreCase = true) -> onVerificationSuccess()
+                            else -> Toast.makeText(context, "输入内容不正确，请重试！", Toast.LENGTH_SHORT).show()
+                        }
                     }
-                ) { mode ->
-                    when (mode) {
-                        VerificationMode.MOLECULE -> MoleculeVerificationContent(
-                            molecule = molecule,
-                            selectedCarbons = selectedCarbons.value,
-                            onCarbonClick = { carbonId ->
-                                val currentSelection = selectedCarbons.value.toMutableSet()
-                                if (currentSelection.contains(carbonId)) currentSelection.remove(carbonId)
-                                else currentSelection.add(carbonId)
-                                selectedCarbons.value = currentSelection
-                            },
-                            onVerify = {
-                                if (selectedCarbons.value == correctChiralCarbons) {
-                                    onVerificationSuccess()
-                                } else {
-                                    Toast.makeText(context, "选择不完全正确，请重试！", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        )
-                        VerificationMode.TEXT -> TextVerificationContent(
-                            text = inputText,
-                            onTextChange = { inputText = it },
-                            onVerify = {
-                                if (inputText.contains("github.com/suqi8/OShin", ignoreCase = true)) {
-                                    onVerificationSuccess()
-                                } else {
-                                    Toast.makeText(context, "输入内容不正确，请重试！", Toast.LENGTH_SHORT).show()
-                                }
-                            }
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // 3. 模式切换按钮
-                val switchButtonText = if (currentMode == VerificationMode.MOLECULE) {
-                    "切换为文本验证"
-                } else {
-                    "切换为图形验证"
-                }
-                TextButton(switchButtonText,onClick = {
-                    currentMode = if (currentMode == VerificationMode.MOLECULE) {
-                        VerificationMode.TEXT
-                    } else {
-                        VerificationMode.MOLECULE
-                    }
-                }, modifier = Modifier.fillMaxWidth())
+                )
             }
-        }
-    }
-}
-
-@Composable
-private fun MoleculeVerificationContent(
-    molecule: Molecule,
-    selectedCarbons: Set<Int>,
-    onCarbonClick: (Int) -> Unit,
-    onVerify: () -> Unit
-) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("请点击选出下图分子中的所有手性碳原子。")
-        Spacer(Modifier.height(16.dp))
-        InteractiveMoleculeCanvas(
-            molecule = molecule,
-            selectedIds = selectedCarbons,
-            onAtomClick = onCarbonClick
-        )
-        Spacer(Modifier.height(16.dp))
-        val selectionText = if (selectedCarbons.isEmpty()) "未选择"
-        else "已选择: " + selectedCarbons.map { "C${it - 1}" }.sorted().joinToString(", ")
-        Text(text = selectionText)
-        Spacer(Modifier.height(16.dp))
-        Button(modifier = Modifier.fillMaxWidth(), onClick = onVerify, colors = ButtonDefaults.buttonColorsPrimary()) {
-            Text("验证")
         }
     }
 }
@@ -429,8 +264,6 @@ private fun TextVerificationContent(
     onVerify: () -> Unit
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
-        Text("请输入模块下载地址进行验证。")
-        Spacer(Modifier.height(16.dp))
         TextField(
             value = text,
             onValueChange = onTextChange,
@@ -438,92 +271,14 @@ private fun TextVerificationContent(
             modifier = Modifier.fillMaxWidth()
         )
         Spacer(Modifier.height(8.dp))
-        Button(modifier = Modifier.fillMaxWidth(), onClick = onVerify, colors = ButtonDefaults.buttonColorsPrimary()) {
-            Text("验证")
-        }
+        TextButton(
+            modifier = Modifier.fillMaxWidth(),
+            onClick = onVerify,
+            colors = ButtonDefaults.textButtonColorsPrimary(),
+            text = "验证"
+        )
     }
 }
-
-@Composable
-fun InteractiveMoleculeCanvas(
-    molecule: Molecule,
-    selectedIds: Set<Int>,
-    onAtomClick: (Int) -> Unit
-) {
-    BoxWithConstraints(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1.2f) // 调整宽高比
-    ) {
-        val width = constraints.maxWidth.toFloat()
-        val height = constraints.maxHeight.toFloat()
-        val atomIdMap = remember(molecule) { molecule.atoms.associateBy { it.id } }
-
-        // 1. Canvas 用于绘制
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            // 绘制化学键
-            molecule.bonds.forEach { bond ->
-                val fromAtom = atomIdMap[bond.fromAtomId]
-                val toAtom = atomIdMap[bond.toAtomId]
-                if (fromAtom != null && toAtom != null) {
-                    drawLine(
-                        color = Color.Black,
-                        start = fromAtom.position.scale(width, height),
-                        end = toAtom.position.scale(width, height),
-                        strokeWidth = 4f
-                    )
-                }
-            }
-
-            // 绘制原子
-            molecule.atoms.forEach { atom ->
-                drawAtom(atom, width, height)
-            }
-        }
-
-        // 2. Box 用于交互和选中效果
-        molecule.atoms.filter { it.element == "C" }.forEach { carbon ->
-            val isSelected = selectedIds.contains(carbon.id)
-            Box(
-                modifier = Modifier
-                    .align(
-                        BiasAlignment(
-                            horizontalBias = carbon.position.x * 2 - 1,
-                            verticalBias = carbon.position.y * 2 - 1
-                        )
-                    )
-                    .size(40.dp)
-                    .clip(CircleShape)
-                    .clickable { onAtomClick(carbon.id) }
-                    .then(
-                        if (isSelected) Modifier.background(Color.Green.copy(alpha = 0.4f))
-                        else Modifier
-                    )
-            )
-        }
-    }
-}
-
-// 绘制原子的辅助函数
-private fun DrawScope.drawAtom(atom: Atom, width: Float, height: Float) {
-    val center = atom.position.scale(width, height)
-    val paint = Paint().apply {
-        textAlign = Paint.Align.CENTER
-        textSize = 30f
-        color = when(atom.element) {
-            "O" -> 0xFFE53935.toInt() // 红色
-            "H" -> 0xFF37474F.toInt() // 深灰色
-            else -> android.graphics.Color.BLACK
-        }
-    }
-
-    drawIntoCanvas {
-        it.nativeCanvas.drawText(atom.element, center.x, center.y + paint.textSize / 3, paint)
-    }
-}
-
-// Offset 扩展函数，用于将相对坐标转为绝对坐标
-private fun Offset.scale(xScale: Float, yScale: Float) = Offset(x * xScale, y * yScale)
 
 @Composable
 fun Main0() {
