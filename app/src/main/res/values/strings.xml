@@ -597,4 +597,6 @@
     <string name="change_cpu_freq_source">更改CPU频率数据源</string>
     <string name="enter_cpu_core_number">输入 /sys/devices/system/cpu/ 文件夹下 cpu 后的数字以指定源。</string>
     <string name="show_cpu_freq_data">显示CPU频率源数据</string>
+    <string name="show_real_battery">显示真实电量</string>
+    <string name="show_real_battery_summary">仅在状态栏显示真实电量，其他应用读取的电量不受影响</string>
 </resources>

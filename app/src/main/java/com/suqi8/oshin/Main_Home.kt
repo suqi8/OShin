@@ -169,7 +169,9 @@ fun Main_Home(
         }
     }
 
-    Box(modifier = Modifier.fillMaxSize().background(MiuixTheme.colorScheme.background)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(MiuixTheme.colorScheme.background)) {
         HUDBackground()
 
         LazyColumn(
@@ -447,10 +449,15 @@ fun SectionTitle(titleResId: Int) {
     )
 
     Row(
-        modifier = Modifier.fillMaxWidth().padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(modifier = Modifier.weight(lineWidth).height(1.dp).background(Brush.horizontalGradient(listOf(Color.Transparent, primaryColor))))
+        Box(modifier = Modifier
+            .weight(lineWidth)
+            .height(1.dp)
+            .background(Brush.horizontalGradient(listOf(Color.Transparent, primaryColor))))
         Text(
             text = " ${stringResource(id = titleResId)} ",
             fontSize = 20.sp,
@@ -459,7 +466,10 @@ fun SectionTitle(titleResId: Int) {
             color = textColor.copy(alpha = textAlpha),
             modifier = Modifier.padding(horizontal = 8.dp)
         )
-        Box(modifier = Modifier.weight(lineWidth).height(1.dp).background(Brush.horizontalGradient(listOf(primaryColor, Color.Transparent))))
+        Box(modifier = Modifier
+            .weight(lineWidth)
+            .height(1.dp)
+            .background(Brush.horizontalGradient(listOf(primaryColor, Color.Transparent))))
     }
 }
 
@@ -507,7 +517,11 @@ fun CarouselSection(items: List<CarouselItem>) {
                     .fillMaxWidth()
                     .clip(CutCornerShape(8.dp))
                     .background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.03f))
-                    .border(1.dp, MiuixTheme.colorScheme.primary.copy(alpha = 0.3f), CutCornerShape(8.dp))
+                    .border(
+                        1.dp,
+                        MiuixTheme.colorScheme.primary.copy(alpha = 0.3f),
+                        CutCornerShape(8.dp)
+                    )
                     .then(if (isClickable) Modifier.clickable { uriHandler.openUri(item.actionUrl) } else Modifier)
             ) {
                 Column(
@@ -524,7 +538,8 @@ fun CarouselSection(items: List<CarouselItem>) {
                     }
 
                     if (item.title != null || item.description != null) {
-                        Column(modifier = Modifier.padding(12.dp)
+                        Column(modifier = Modifier
+                            .padding(12.dp)
                             .fillMaxWidth()) {
                             item.title?.let {
                                 Spacer(Modifier.height(if (item.imageUrl != null) 8.dp else 0.dp))
@@ -590,20 +605,38 @@ fun CarouselSkeleton() {
     )
     HUDModuleContainer(modifier = Modifier.padding(horizontal = 16.dp)) {
         Column(modifier = Modifier.padding(8.dp)) {
-            Box(modifier = Modifier.fillMaxWidth().height(100.dp).clip(CutCornerShape(8.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(100.dp)
+                .clip(CutCornerShape(8.dp))
+                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
             Spacer(Modifier.height(8.dp))
-            Box(modifier = Modifier.fillMaxWidth(0.7f).height(16.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(modifier = Modifier
+                .fillMaxWidth(0.7f)
+                .height(16.dp)
+                .clip(CutCornerShape(4.dp))
+                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
             Spacer(Modifier.height(8.dp))
-            Box(modifier = Modifier.fillMaxWidth().height(12.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(modifier = Modifier
+                .fillMaxWidth()
+                .height(12.dp)
+                .clip(CutCornerShape(4.dp))
+                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
             Spacer(Modifier.height(4.dp))
-            Box(modifier = Modifier.fillMaxWidth(0.8f).height(12.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .height(12.dp)
+                .clip(CutCornerShape(4.dp))
+                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
         }
     }
 }
 
 @Composable
 fun DashboardSection(moduleStatus: ModuleStatus, rootStatus: RootStatus, fridaStatus: FridaStatus) {
-    Column(modifier = Modifier.animateContentSize().padding(horizontal = 16.dp)) {
+    Column(modifier = Modifier
+        .animateContentSize()
+        .padding(horizontal = 16.dp)) {
         SectionTitle(titleResId = R.string.section_title_status)
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             HUDStatusModule(Modifier.weight(1f), moduleStatus.status, Icons.Default.VerifiedUser, stringResource(id = R.string.module_status), moduleStatus.lspVersion.ifEmpty { stringResource(id = R.string.module_not_activated) })
@@ -627,7 +660,9 @@ fun HUDStatusModule(modifier: Modifier = Modifier, status: Status, icon: ImageVe
     val moduleBgColor = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.03f)
 
     Box(
-        modifier = modifier.clip(shape).background(moduleBgColor)
+        modifier = modifier
+            .clip(shape)
+            .background(moduleBgColor)
             .border(1.dp, baseColor.copy(alpha = 0.3f), shape)
             .padding(1.dp)
             .border(1.dp, baseColor.copy(alpha = 0.4f), shape)
@@ -742,7 +777,9 @@ fun StatusIndicatorRing(status: Status, color: Color) {
 
 @Composable
 fun DeviceInfoSection(info: DeviceInfo, isVisible: Boolean) {
-    Column(modifier = Modifier.animateContentSize().padding(horizontal = 16.dp)) {
+    Column(modifier = Modifier
+        .animateContentSize()
+        .padding(horizontal = 16.dp)) {
         SectionTitle(titleResId = R.string.section_title_device_info)
 
         var startAnimation by remember { mutableStateOf(false) }
@@ -758,7 +795,9 @@ fun DeviceInfoSection(info: DeviceInfo, isVisible: Boolean) {
             DeviceInfoSkeleton()
         } else {
             HUDModuleContainer {
-                Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), Arrangement.SpaceEvenly, Alignment.CenterVertically) {
+                Row(Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp), Arrangement.SpaceEvenly, Alignment.CenterVertically) {
                     HUDCircularGauge(
                         value = info.batteryHealthPercent,
                         title = stringResource(id = R.string.gauge_title_health),
@@ -786,7 +825,11 @@ fun DeviceInfoSection(info: DeviceInfo, isVisible: Boolean) {
                         startAnimation = startAnimation
                     )
                 }
-                Box(Modifier.fillMaxWidth().height(1.dp).background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f)).padding(horizontal = 16.dp))
+                Box(Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f))
+                    .padding(horizontal = 16.dp))
 
                 Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(4.dp)) {
                     TextInfoRow(stringResource(id = R.string.text_info_design_capacity), "${info.designCapacity} mAh")
@@ -794,7 +837,11 @@ fun DeviceInfoSection(info: DeviceInfo, isVisible: Boolean) {
                     TextInfoRow(stringResource(id = R.string.text_info_calculated_health), "%.1f".format(info.calculatedHealth) + "%")
                 }
 
-                Box(Modifier.fillMaxWidth().height(1.dp).background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f)).padding(horizontal = 16.dp))
+                Box(Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f))
+                    .padding(horizontal = 16.dp))
 
                 FlowRow(
                     modifier = Modifier.padding(12.dp),
@@ -820,20 +867,51 @@ fun DeviceInfoSkeleton() {
         animationSpec = infiniteRepeatable(tween(1000), RepeatMode.Reverse)
     )
     HUDModuleContainer {
-        Row(Modifier.fillMaxWidth().padding(vertical = 8.dp), Arrangement.SpaceEvenly, Alignment.CenterVertically) {
-            Box(Modifier.size(80.dp).clip(CutCornerShape(8.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
-            Box(Modifier.size(80.dp).clip(CutCornerShape(8.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
-            Box(Modifier.size(80.dp).clip(CutCornerShape(8.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+        Row(Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp), Arrangement.SpaceEvenly, Alignment.CenterVertically) {
+            Box(Modifier
+                .size(80.dp)
+                .clip(CutCornerShape(8.dp))
+                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(Modifier
+                .size(80.dp)
+                .clip(CutCornerShape(8.dp))
+                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(Modifier
+                .size(80.dp)
+                .clip(CutCornerShape(8.dp))
+                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
         }
-        Box(Modifier.fillMaxWidth().height(1.dp).background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f)).padding(horizontal = 16.dp))
+        Box(Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f))
+            .padding(horizontal = 16.dp))
 
         Column(modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-            Box(modifier = Modifier.fillMaxWidth(0.6f).height(10.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
-            Box(modifier = Modifier.fillMaxWidth(0.5f).height(10.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
-            Box(modifier = Modifier.fillMaxWidth(0.55f).height(10.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(modifier = Modifier
+                .fillMaxWidth(0.6f)
+                .height(10.dp)
+                .clip(CutCornerShape(4.dp))
+                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(modifier = Modifier
+                .fillMaxWidth(0.5f)
+                .height(10.dp)
+                .clip(CutCornerShape(4.dp))
+                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(modifier = Modifier
+                .fillMaxWidth(0.55f)
+                .height(10.dp)
+                .clip(CutCornerShape(4.dp))
+                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
         }
 
-        Box(Modifier.fillMaxWidth().height(1.dp).background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f)).padding(horizontal = 16.dp))
+        Box(Modifier
+            .fillMaxWidth()
+            .height(1.dp)
+            .background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f))
+            .padding(horizontal = 16.dp))
 
         FlowRow(
             modifier = Modifier.padding(12.dp),
@@ -841,7 +919,11 @@ fun DeviceInfoSkeleton() {
             crossAxisSpacing = 8.dp
         ) {
             repeat(4) {
-                Box(modifier = Modifier.height(40.dp).width(120.dp).clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+                Box(modifier = Modifier
+                    .height(40.dp)
+                    .width(120.dp)
+                    .clip(CutCornerShape(4.dp))
+                    .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
             }
         }
     }
@@ -860,8 +942,11 @@ fun TextInfoRow(label: String, value: String) {
 fun HUDModuleContainer(content: @Composable ColumnScope.() -> Unit) {
     val shape = CutCornerShape(8.dp)
     Column(
-        modifier = Modifier.clip(shape).background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.03f))
-            .border(1.dp, MiuixTheme.colorScheme.primary.copy(alpha = 0.3f), shape).padding(8.dp)
+        modifier = Modifier
+            .clip(shape)
+            .background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.03f))
+            .border(1.dp, MiuixTheme.colorScheme.primary.copy(alpha = 0.3f), shape)
+            .padding(8.dp)
     ) { content() }
 }
 
@@ -900,7 +985,10 @@ fun HUDCircularGauge(value: Float, title: String, color: Color, strokeWidth: Dp 
 @Composable
 fun InfoChip(icon: ImageVector, label: String, value: String) {
     Row(
-        modifier = Modifier.clip(CutCornerShape(4.dp)).background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.1f)).padding(horizontal = 10.dp, vertical = 6.dp),
+        modifier = Modifier
+            .clip(CutCornerShape(4.dp))
+            .background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.1f))
+            .padding(horizontal = 10.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(imageVector = icon, contentDescription = label, tint = MiuixTheme.colorScheme.primary, modifier = Modifier.size(16.dp))
@@ -923,7 +1011,13 @@ fun FeatureItem(feature: FeatureUI, navController: NavController) {
     var isHovered by rememberSaveable { mutableStateOf(false) }
 
     Row(
-        modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp).clip(CutCornerShape(4.dp)).clickable { navController.navigate(feature.category) }.background(if (isHovered) MiuixTheme.colorScheme.primary.copy(alpha = 0.1f) else Color.Transparent).padding(horizontal = 8.dp, vertical = 10.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .clip(CutCornerShape(4.dp))
+            .clickable { navController.navigate(feature.category) }
+            .background(if (isHovered) MiuixTheme.colorScheme.primary.copy(alpha = 0.1f) else Color.Transparent)
+            .padding(horizontal = 8.dp, vertical = 10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(text = ">", color = MiuixTheme.colorScheme.primary, fontFamily = FontFamily.Monospace, fontWeight = FontWeight.Bold)
