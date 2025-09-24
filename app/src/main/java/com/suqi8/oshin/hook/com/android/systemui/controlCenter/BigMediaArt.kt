@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.graphics.drawable.toDrawable
 import androidx.palette.graphics.Palette
+import com.highcapable.kavaref.KavaRef.Companion.asResolver
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 
@@ -118,13 +119,13 @@ class BigMediaArt: YukiBaseHooker() {
                                 (it as View).visibility = View.GONE
                             }
 
-                            val isResumption = mediaData?.resolve()?.firstMethod { name = "getResumption" }?.invoke() as? Boolean ?: true
+                            val isResumption = mediaData?.asResolver()?.firstMethod { name = "getResumption" }?.invoke() as? Boolean ?: true
                             if (mediaData == null || isResumption) {
                                 views.background.visibility = View.GONE
                                 return@after
                             }
 
-                            val artworkIcon = mediaData.resolve().firstMethod { name = "getArtwork" }.invoke() as? Icon
+                            val artworkIcon = mediaData.asResolver().firstMethod { name = "getArtwork" }.invoke() as? Icon
                             if (artworkIcon == null) {
                                 views.background.visibility = View.GONE
                                 return@after

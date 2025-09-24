@@ -1,6 +1,7 @@
 package com.suqi8.oshin.hook.com.oplus.notificationmanager
 
 import android.app.NotificationChannel
+import com.highcapable.kavaref.KavaRef.Companion.asResolver
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
@@ -13,8 +14,8 @@ class NotificationCategoryControl : YukiBaseHooker() {
                     optional()
                 }.hookAll {
                     after {
-                        instance.resolve().firstField { name = "mBlockableSystem" }.set(true)
-                        instance.resolve().firstField { name = "mImportanceLockedDefaultApp" }.set(false)
+                        instance.asResolver().firstField { name = "mBlockableSystem" }.set(true)
+                        instance.asResolver().firstField { name = "mImportanceLockedDefaultApp" }.set(false)
                     }
                 }
                 firstMethod { name = "isBlockable" }.hook { replaceToTrue() }
