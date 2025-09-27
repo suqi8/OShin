@@ -65,7 +65,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.kyant.capsule.ContinuousRoundedRectangle
-import com.kyant.capsule.continuities.G2Continuity
 import com.kyant.liquidglass.GlassStyle
 import com.kyant.liquidglass.highlight.GlassHighlight
 import com.kyant.liquidglass.liquidGlass
@@ -128,6 +127,7 @@ import com.suqi8.oshin.utils.SpringEasing
 import com.suqi8.oshin.utils.executeCommand
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
+import dagger.hilt.android.AndroidEntryPoint
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
@@ -152,6 +152,8 @@ import kotlin.math.abs
 import kotlin.system.exitProcess
 
 const val TAG = "OShin"
+
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun attachBaseContext(newBase: Context) {
         val languageCode = newBase.prefs("settings").getInt("app_language", 0)

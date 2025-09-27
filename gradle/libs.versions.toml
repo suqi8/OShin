@@ -9,6 +9,7 @@
 [versions]
 # Android Gradle 插件 (AGP) 和核心工具链
 agp = "8.12.3"
+hiltAndroid = "2.57.2"
 kotlin = "2.2.20"
 ksp = "2.2.20-2.0.3"
 
@@ -91,6 +92,8 @@ androidx-room-runtime = { group = "androidx.room", name = "room-runtime", versio
 # AndroidX - 测试
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitExt" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "hiltAndroid" }
+hilt-android-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hiltAndroid" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 # Compose 生态第三方库
