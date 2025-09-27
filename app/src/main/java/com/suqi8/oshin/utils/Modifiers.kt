@@ -44,39 +44,40 @@ fun Modifier.drawColoredShadow(
     color: Color,
     alpha: Float = 0.2f,
     borderRadius: Dp = 0.dp,
-    shadowRadius: Dp = 20.dp, // 给一个默认的模糊半径
+    shadowRadius: Dp = 20.dp,
     offsetX: Dp = 0.dp,
     offsetY: Dp = 0.dp,
     roundedRect: Boolean = true
 ): Modifier = this.drawBehind {
-    /**将颜色转换为Argb的Int类型*/
-    val transparentColor = color.copy(alpha = 0f).toArgb() // 使用 toArgb() 更符合 Compose 习惯
-    val shadowColor = color.copy(alpha = alpha).toArgb()
-
-    /**调用Canvas绘制*/
-    this.drawIntoCanvas {
+    this.drawIntoCanvas { canvas ->
         val paint = Paint()
-        paint.color = Color.Transparent // 画笔本身是透明的
-        /**调用底层 framework Paint 绘制*/
         val frameworkPaint = paint.asFrameworkPaint()
+        val transparentColor = color.copy(alpha = 0f).toArgb()
+        val shadowColor = color.copy(alpha = alpha).toArgb()
+
+        // --- 核心修复 ---
+        // 手动保存画布状态
+        canvas.save()
+
         frameworkPaint.color = transparentColor
-        /**绘制阴影*/
         frameworkPaint.setShadowLayer(
             shadowRadius.toPx(),
             offsetX.toPx(),
             offsetY.toPx(),
             shadowColor
         )
-        /**形状绘制*/
-        it.drawRoundRect(
+
+        canvas.drawRoundRect(
             left = 0f,
             top = 0f,
             right = this.size.width,
             bottom = this.size.height,
-            // 如果是圆形，则圆角半径为高度的一半，否则使用传入的 borderRadius
             radiusX = if (roundedRect) this.size.height / 2 else borderRadius.toPx(),
             radiusY = if (roundedRect) this.size.height / 2 else borderRadius.toPx(),
             paint = paint
         )
+
+        // 手动恢复画布状态，与 save() 配对
+        canvas.restore()
     }
 }
