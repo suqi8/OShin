@@ -33,7 +33,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.LocalColorMode
+import com.suqi8.oshin.ui.main.LocalColorMode
 import top.yukonga.miuix.kmp.utils.G2RoundedCornerShape
 
 /**

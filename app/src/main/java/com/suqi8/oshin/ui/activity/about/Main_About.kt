@@ -55,7 +55,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.integerArrayResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -77,11 +76,11 @@ import androidx.navigation.NavController
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI_Impl
 import com.suqi8.oshin.BuildConfig
-import com.suqi8.oshin.LocalColorMode
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.addline
+import com.suqi8.oshin.ui.main.LocalColorMode
 import com.suqi8.oshin.ui.theme.BgEffectView
 import com.suqi8.oshin.utils.executeCommand
 import kotlinx.coroutines.Dispatchers
@@ -127,7 +126,6 @@ fun Main_About(
     val deviceNameCache: MutableState<String> = remember { mutableStateOf(deviceName.value) }
     val physicalTotalStorage = formatSize(getPhysicalTotalStorage(context))
     val usedStorage = formatSize(getUsedStorage())
-    val focusManager = LocalFocusManager.current
 
     val bgAlpha = remember { mutableFloatStateOf(1f) }
     val mainAlpha = remember { mutableFloatStateOf(1f) }
