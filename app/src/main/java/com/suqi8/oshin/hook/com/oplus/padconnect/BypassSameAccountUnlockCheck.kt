@@ -1,7 +1,9 @@
 package com.suqi8.oshin.hook.com.oplus.padconnect
 
 import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import com.highcapable.yukihookapi.hook.log.YLog
 import org.luckypray.dexkit.DexKitBridge
 
 class BypassSameAccountUnlockCheck: YukiBaseHooker() {
@@ -14,14 +16,20 @@ class BypassSameAccountUnlockCheck: YukiBaseHooker() {
                         matcher {
                             usingStrings("deviceNotSupportDialog != null && deviceNotSupportDialog.isShowing()")
                         }
-                    }.findMethod {
-                        matcher {
-                            paramTypes = listOf(null, null)
+                    }.singleOrNull()?.apply {
+                        name.toClass().resolve().apply {
+                            firstConstructor {
+                                modifiers(Modifiers.PUBLIC)
+                                parameters("com.oplus.padconnect.nfc.unlock.ui.NFCUnlockDevicePreference", Int::class)
+                            }.hook {
+                                before {
+                                    //YLog.debug("原始参数 args[1] = ${args[1]}")
+                                    if (args[1] == 0) {
+                                        args[1] = 1
+                                    }
+                                }
+                            }
                         }
-                    }.singleOrNull()?.also {
-                        it.className.toClass().resolve().firstMethod { name = it.methodName }.hook { before {
-                            if (args[1] == 0) args[1] = 1
-                        } }
                     }
                 }
             }
