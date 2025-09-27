@@ -64,7 +64,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.kyant.capsule.G2RoundedCornerShape
+import com.kyant.capsule.ContinuousRoundedRectangle
+import com.kyant.capsule.continuities.G2Continuity
 import com.kyant.liquidglass.GlassStyle
 import com.kyant.liquidglass.highlight.GlassHighlight
 import com.kyant.liquidglass.liquidGlass
@@ -455,7 +456,7 @@ fun Main1(navController: NavController) {
         colorFilter = saturationColorFilter(1.5f)
     )
     val topAppBarStyle = GlassStyle(
-        shape = G2RoundedCornerShape(28.dp),
+        shape = ContinuousRoundedRectangle(28.dp),
         material = commonGlassMaterial,
         // innerRefraction.Default 改为更具体的构造函数
         innerRefraction = InnerRefraction(

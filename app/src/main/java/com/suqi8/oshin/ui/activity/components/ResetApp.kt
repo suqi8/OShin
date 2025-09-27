@@ -24,7 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.highcapable.yukihookapi.YukiHookAPI
-import com.kyant.capsule.G2RoundedCornerShape
+import com.kyant.capsule.ContinuousRoundedRectangle
 import com.kyant.expressa.m3.shape.CornerShape
 import com.kyant.liquidglass.GlassStyle
 import com.kyant.liquidglass.LiquidGlassProviderState
@@ -77,7 +77,7 @@ fun ConfirmationDialog(
 ) {
     if (!show.value) return
     val dialogGlassStyle = GlassStyle(
-        G2RoundedCornerShape(28.dp),
+        ContinuousRoundedRectangle(28.dp),
         innerRefraction = InnerRefraction(
             height = RefractionHeight(28.dp),
             amount = RefractionAmount(-28.dp)
