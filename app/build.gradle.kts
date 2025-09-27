@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.kotlin.android)      // 提供 Kotlin 语言在 Android 平台上的支持。
     alias(libs.plugins.ksp)                 // Kotlin 符号处理（KSP）插件，用于执行编译时代码生成。
     alias(libs.plugins.kotlin.compose)      // Jetpack Compose 编译器插件，用于处理 @Composable 注解。
+    id("com.google.dagger.hilt.android")
 }
 
 /**
@@ -179,6 +180,8 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.palette.ktx)
     implementation(libs.androidx.activity.compose)
+    implementation(libs.hilt.android)
+    ksp(libs.hilt.android.compiler)
 
     // ------------------- Jetpack Compose UI -------------------
     implementation(platform(libs.androidx.compose.bom))
