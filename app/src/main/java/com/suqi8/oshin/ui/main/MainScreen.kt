@@ -252,6 +252,7 @@ fun AppHorizontalPager(
     HorizontalPager(
         modifier = modifier.background(MiuixTheme.colorScheme.background),
         state = pagerState,
+        beyondViewportPageCount = 3,
         userScrollEnabled = true,
         pageContent = { page ->
             when (page) {

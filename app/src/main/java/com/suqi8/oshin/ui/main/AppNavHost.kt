@@ -5,26 +5,11 @@ import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.about.about_contributors
 import com.suqi8.oshin.ui.activity.about.about_group
 import com.suqi8.oshin.ui.activity.about.about_references
@@ -68,83 +53,18 @@ import com.suqi8.oshin.ui.activity.func.romworkshop.Rom_workshop
 import com.suqi8.oshin.ui.activity.hide_apps_notice
 import com.suqi8.oshin.ui.activity.recent_update
 import com.suqi8.oshin.utils.SpringEasing
-import com.suqi8.oshin.utils.executeCommand
-import com.umeng.analytics.MobclickAgent
-import com.umeng.commonsdk.UMConfigure
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import top.yukonga.miuix.kmp.basic.ButtonDefaults
-import top.yukonga.miuix.kmp.basic.Text
-import top.yukonga.miuix.kmp.basic.TextButton
-import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.utils.getWindowSize
-import kotlin.system.exitProcess
 
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AppNavHost() {
-    val context = LocalContext.current
     val navController = rememberNavController()
     val windowWidth = getWindowSize().width
 
     val easing = SpringEasing.gentle()
     val duration = easing.durationMillis.toInt()
-
-    val lspVersion = remember { mutableStateOf("") }
-    val isPrivacyEnabled = remember { mutableStateOf(context.prefs("settings").getBoolean("privacy", true)) }
-
     VerifyDialog()
-
-    LaunchedEffect(isPrivacyEnabled.value) {
-        if (!isPrivacyEnabled.value) {
-            UMConfigure.init(context, "67c7dea68f232a05f127781e", "android", UMConfigure.DEVICE_TYPE_PHONE, "")
-            withContext(Dispatchers.IO) {
-                val lsposedVersionName = executeCommand("awk -F= '/version=/ {print $2}' /data/adb/modules/zygisk_lsposed/module.prop")
-                lspVersion.value = lsposedVersionName
-                val savedLspVersion = context.prefs("settings").getString("privacy_lspvername", "")
-                if (lsposedVersionName.isNotEmpty() && lsposedVersionName != savedLspVersion) {
-                    val eventData = mapOf("version_name" to lsposedVersionName)
-                    MobclickAgent.onEvent(context, "lsposed_usage", eventData)
-                    context.prefs("settings").edit {
-                        putString("privacy_lspvername", lsposedVersionName)
-                    }
-                }
-            }
-        }
-    }
-
-    if (isPrivacyEnabled.value) {
-        SuperDialog(
-            show = isPrivacyEnabled,
-            title = stringResource(R.string.privacy_title),
-            onDismissRequest = {}
-        ) {
-            Text(stringResource(R.string.privacy_content))
-            Spacer(Modifier.height(12.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.exit),
-                    onClick = {
-                        exitProcess(0)
-                    }
-                )
-                Spacer(Modifier.width(12.dp))
-                TextButton(
-                    modifier = Modifier.weight(1f),
-                    text = stringResource(R.string.ok),
-                    colors = ButtonDefaults.textButtonColorsPrimary(),
-                    onClick = {
-                        isPrivacyEnabled.value = false
-                        context.prefs("settings").edit { putBoolean("privacy", false) }
-                    }
-                )
-            }
-        }
-    }
+    PrivacyDialog()
 
 
     Column {
