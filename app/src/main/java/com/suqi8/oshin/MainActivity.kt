@@ -20,25 +20,34 @@ import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale
 
 const val TAG = "OShin"
+private const val APP_LANGUAGE_PREF_KEY = "app_language"
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun attachBaseContext(newBase: Context) {
-        val languageCode = newBase.prefs("settings").getInt("app_language", 0)
+        // 从 SharedPreferences 中读取语言设置
+        val languageCode = newBase.prefs("settings").getInt(APP_LANGUAGE_PREF_KEY, 0)
 
+        // 使用 when 表达式直接返回 Locale 对象，更简洁
         val localeToSet = when (languageCode) {
             1 -> Locale.SIMPLIFIED_CHINESE
             2 -> Locale.ENGLISH
             3 -> Locale.JAPANESE
             4 -> Locale.forLanguageTag("ru")
             5 -> Locale.Builder().setLanguage("qaa").setExtension('x', "meme").build()
-            else -> Locale.getDefault()
+            else -> null // 使用 null 代表系统默认
         }
 
-        val config = newBase.resources.configuration
-        config.setLocale(localeToSet)
-        val localizedContext = newBase.createConfigurationContext(config)
-        super.attachBaseContext(localizedContext)
+        // 如果 localeToSet 不为 null，则应用它
+        val context = if (localeToSet != null) {
+            val config = newBase.resources.configuration
+            config.setLocale(localeToSet)
+            newBase.createConfigurationContext(config)
+        } else {
+            newBase
+        }
+
+        super.attachBaseContext(context)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
