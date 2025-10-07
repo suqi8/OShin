@@ -4,7 +4,6 @@ import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -25,26 +24,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.kyant.expressa.m3.shape.CornerShape
-import com.kyant.liquidglass.GlassStyle
-import com.kyant.liquidglass.liquidGlass
-import com.kyant.liquidglass.material.GlassMaterial
-import com.kyant.liquidglass.refraction.InnerRefraction
-import com.kyant.liquidglass.refraction.RefractionAmount
-import com.kyant.liquidglass.refraction.RefractionHeight
-import com.kyant.liquidglass.rememberLiquidGlassProviderState
+import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.SuperDropdown
 import com.suqi8.oshin.ui.activity.components.addline
+import com.suqi8.oshin.ui.components.LiquidButton
 import com.suqi8.oshin.utils.executeCommand
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -60,7 +51,6 @@ import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberPullToRefreshState
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
-import top.yukonga.miuix.kmp.extra.SuperDropdown
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -73,19 +63,8 @@ fun cpu_freq(
 ) {
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
     val lazyListState = rememberLazyListState()
-    val liquidGlassProviderState = rememberLiquidGlassProviderState(MiuixTheme.colorScheme.surfaceContainer)
+    val backdrop = rememberLayerBackdrop()
 
-    val iconButtonLiquidGlassStyle =
-        GlassStyle(
-            CornerShape.full,
-            innerRefraction = InnerRefraction(
-                height = RefractionHeight(8.dp),
-                amount = RefractionAmount.Full
-            ),
-            material = GlassMaterial(
-                brush = SolidColor(MiuixTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f))
-            )
-        )
     Scaffold(
         topBar = {
             TopAppBar(
@@ -94,19 +73,13 @@ fun cpu_freq(
                 color = Color.Transparent,
                 modifier = Modifier,
                 navigationIcon = {
-                    Box(
+                    LiquidButton(
+                        { navController.popBackStack() },
                         modifier = Modifier
                             .padding(start = 16.dp)
-                            .shadow(
-                                elevation = 8.dp,
-                                shape = CornerShape.full,
-                                ambientColor = MiuixTheme.colorScheme.onSurface.copy(alpha = 0.5f),
-                                spotColor = MiuixTheme.colorScheme.onSurface.copy(alpha = 0.5f)
-                            )
-                            .liquidGlass(liquidGlassProviderState, iconButtonLiquidGlassStyle)
-                            .clickable { navController.popBackStack() }
+                            .clickable {  }
                             .size(40.dp),
-                        contentAlignment = Alignment.Center
+                        backdrop = backdrop
                     ) {
                         Icon(
                             imageVector = MiuixIcons.Useful.Back,

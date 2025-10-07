@@ -164,6 +164,15 @@ android {
         noCompress += listOf("zip", "txt", "raw", "png")
     }
 
+    kotlin {
+        jvmToolchain(21)
+        compilerOptions {
+            freeCompilerArgs.addAll(
+                "-Xcontext-parameters"
+            )
+        }
+    }
+
     // Lint 静态代码分析工具的配置。
     lint {
         baseline = file("lint-baseline.xml") // 设置一个基线文件，用于忽略已存在的 Lint 问题。

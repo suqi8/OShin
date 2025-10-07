@@ -13,27 +13,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.kyant.liquidglass.GlassStyle
-import com.kyant.liquidglass.liquidGlass
-import com.kyant.liquidglass.liquidGlassProvider
-import com.kyant.liquidglass.material.GlassMaterial
-import com.kyant.liquidglass.refraction.InnerRefraction
-import com.kyant.liquidglass.refraction.RefractionAmount
-import com.kyant.liquidglass.refraction.RefractionHeight
-import com.kyant.liquidglass.rememberLiquidGlassProviderState
-import com.kyant.liquidglass.shadow.GlassShadow
+import com.kyant.backdrop.backdrops.layerBackdrop
+import com.kyant.backdrop.backdrops.rememberLayerBackdrop
+import com.suqi8.oshin.ui.components.LiquidButton
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
@@ -52,24 +42,11 @@ fun FunPage(
     navController: NavController,
     content: @Composable () -> Unit
 ) {
-    val context = LocalContext.current
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
     val restartAPP = remember { mutableStateOf(false) }
     val lazyListState = rememberLazyListState()
-    val liquidGlassProviderState = rememberLiquidGlassProviderState(MiuixTheme.colorScheme.surfaceContainer)
+    val backdrop = rememberLayerBackdrop()
 
-    val iconButtonLiquidGlassStyle =
-        GlassStyle(
-            RoundedCornerShape(50),
-            innerRefraction = InnerRefraction(
-                height = RefractionHeight(8.dp),
-                amount = RefractionAmount.Full
-            ),
-            material = GlassMaterial(
-                brush = SolidColor(MiuixTheme.colorScheme.surfaceContainer.copy(alpha = 0.5f))
-            ),
-            shadow = GlassShadow(elevation = 4.dp, brush = SolidColor(Color.Black.copy(alpha = 0.15f)))
-        )
     Scaffold(
         topBar = {
             TopAppBar(
@@ -78,13 +55,13 @@ fun FunPage(
                 color = Color.Transparent,
                 modifier = Modifier,
                 navigationIcon = {
-                    Box(
+                    LiquidButton(
+                        { navController.popBackStack() },
                         modifier = Modifier
                             .padding(start = 16.dp)
-                            .liquidGlass(liquidGlassProviderState, iconButtonLiquidGlassStyle)
-                            .clickable { navController.popBackStack() }
+                            .clickable {  }
                             .size(40.dp),
-                        contentAlignment = Alignment.Center
+                        backdrop = backdrop
                     ) {
                         Icon(
                             imageVector = MiuixIcons.Useful.Back,
@@ -96,15 +73,13 @@ fun FunPage(
                 },
                 actions = {
                     if (!appList.isNullOrEmpty()) {
-                        Box(
+                        LiquidButton(
+                            { restartAPP.value = true },
                             modifier = Modifier
                                 .padding(end = 16.dp)
-                                .liquidGlass(liquidGlassProviderState, iconButtonLiquidGlassStyle)
-                                .clickable {
-                                    restartAPP.value = true
-                                }
+                                .clickable {  }
                                 .size(40.dp),
-                            contentAlignment = Alignment.Center
+                            backdrop = backdrop
                         ) {
                             Icon(
                                 imageVector = MiuixIcons.Useful.Refresh,
@@ -120,7 +95,7 @@ fun FunPage(
     ) { padding ->
         Box(
             Modifier
-                .liquidGlassProvider(liquidGlassProviderState)
+                .layerBackdrop(backdrop)
                 .fillMaxSize()
         ) {
             LazyColumn(
@@ -139,10 +114,10 @@ fun FunPage(
             }
         }
     }
-    Box(modifier = Modifier.fillMaxSize().liquidGlassProvider(liquidGlassProviderState)) {
+    Box(modifier = Modifier.fillMaxSize()) {
         if (!appList.isNullOrEmpty()) {
             if (restartAPP.value) {
-                AppRestartScreen(appList, restartAPP, liquidGlassProviderState)
+                AppRestartScreen(appList, restartAPP, backdrop)
             }
         }
     }
