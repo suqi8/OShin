@@ -3,10 +3,14 @@ package com.suqi8.oshin.hook.com.android.settings
 import android.annotation.SuppressLint
 import android.graphics.ImageDecoder
 import android.os.Environment
+import android.os.Handler
 import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+import com.highcapable.kavaref.KavaRef.Companion.asResolver
+import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
+import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.StringClass
 import com.highcapable.yukihookapi.hook.type.java.UnitType
@@ -15,7 +19,7 @@ import java.io.File
 class settings: YukiBaseHooker() {
     @SuppressLint("PrivateApi")
     override fun onHook() {
-        loadApp(hooker = feature())
+        //loadApp(hooker = feature())
         loadApp(hooker = Accessibility())
         loadApp(name = "com.android.settings") {
             if (prefs("settings").getString("custom_display_model", "") != "") {
@@ -58,6 +62,34 @@ class settings: YukiBaseHooker() {
                     }.hook {
                         before {
                             result = true
+                        }
+                    }
+                }
+            }
+            "com.oplus.settings.feature.fingerprint.NewFingerEnrollActivity".toClass().resolve().apply {
+                firstMethod {
+                    name = "handleEnrollHelp"
+                }.hook {
+                    before {
+                        YLog.info(args[0])
+                        //args[0] = 1303
+                        if (args[0] == 1002) {
+                            YLog.info("Duplicate fingerprint detected (1002). Forcing enrollment completion.")
+
+                            // 1. 阻止 handleEnrollHelp 方法的原始逻辑执行，避免任何多余的提示或操作
+                            resultNull()
+
+                            val uiHandler =
+                                instance.asResolver().firstField { name = "mUIHandler" }.get() as Handler
+
+                            uiHandler.post {
+                                YLog.info("Executing completion task now.")
+                                // 在 Runnable 任务中，安全地调用 handleEnrollCompleted
+                                instance.asResolver().firstMethod {
+                                    "handleEnrollCompleted"
+                                    emptyParameters()
+                                }.invoke()
+                            }
                         }
                     }
                 }

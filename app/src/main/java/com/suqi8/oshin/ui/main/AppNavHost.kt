@@ -1,6 +1,5 @@
 package com.suqi8.oshin.ui.main
 
-import android.widget.Toast
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.SizeTransform
 import androidx.compose.animation.core.tween
@@ -15,10 +14,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -27,7 +24,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.BuildConfig
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.about.about_contributors
 import com.suqi8.oshin.ui.activity.about.about_group
@@ -42,7 +38,6 @@ import com.suqi8.oshin.ui.activity.com.android.launcher.launcher
 import com.suqi8.oshin.ui.activity.com.android.launcher.recent_task
 import com.suqi8.oshin.ui.activity.com.android.mms.mms
 import com.suqi8.oshin.ui.activity.com.android.phone.phone
-import com.suqi8.oshin.ui.activity.com.android.settings.feature
 import com.suqi8.oshin.ui.activity.com.android.settings.settings
 import com.suqi8.oshin.ui.activity.com.android.systemui.controlCenter
 import com.suqi8.oshin.ui.activity.com.android.systemui.hardware_indicator
@@ -184,7 +179,6 @@ fun AppNavHost() {
             composable("about_references") { about_references(navController) }
             composable("about_contributors") { about_contributors(navController) }
             composable("settings") { settings(navController) }
-            composable("settings\\feature") { feature(navController) }
             composable("battery") { battery(navController) }
             composable("speechassist") { speechassist(navController) }
             composable("ocrscanner") { ocrscanner(navController) }
