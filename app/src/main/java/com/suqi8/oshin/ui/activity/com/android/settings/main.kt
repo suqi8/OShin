@@ -18,7 +18,6 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunAppSele
-import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.FunPicSele
 import com.suqi8.oshin.ui.activity.components.FunSlider
@@ -38,7 +37,7 @@ fun settings(navController: NavController) {
     ) {
         Column {
             val context = LocalContext.current
-            Card(
+            /*Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 12.dp)
@@ -48,7 +47,7 @@ fun settings(navController: NavController) {
                     onClick = {
                         navController.navigate("settings\\feature")
                     })
-            }
+            }*/
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
