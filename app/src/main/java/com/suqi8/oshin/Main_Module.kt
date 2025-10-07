@@ -122,9 +122,6 @@ fun Main_Module(
             .fillMaxSize()
             .background(MiuixTheme.colorScheme.background)
     ) {
-        // 应用HUD风格的动态背景
-        HUDBackground()
-
         // 使用LazyColumn构建主滚动列表
         LazyColumn(
             modifier = Modifier

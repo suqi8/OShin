@@ -172,8 +172,6 @@ fun Main_Home(
     Box(modifier = Modifier
         .fillMaxSize()
         .background(MiuixTheme.colorScheme.background)) {
-        HUDBackground()
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -395,39 +393,6 @@ class CutCornerShape(private val cut: Dp) : Shape {
             close()
         }
         return Outline.Generic(path)
-    }
-}
-
-@Composable
-fun HUDBackground() {
-    val infiniteTransition = rememberInfiniteTransition()
-    val scanLinePosition by infiniteTransition.animateFloat(
-        initialValue = -0.1f,
-        targetValue = 1.1f,
-        animationSpec = infiniteRepeatable(tween(4000, delayMillis = 500), RepeatMode.Restart)
-    )
-    val primaryColor = MiuixTheme.colorScheme.primary
-    val gridColor = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.05f)
-
-    Canvas(modifier = Modifier.fillMaxSize()) {
-        val gridSize = 40.dp.toPx()
-        for (i in 0 until (size.width / gridSize).toInt()) {
-            drawLine(gridColor, Offset(i * gridSize, 0f), Offset(i * gridSize, size.height), 1f)
-        }
-        for (i in 0 until (size.height / gridSize).toInt()) {
-            drawLine(gridColor, Offset(0f, i * gridSize), Offset(size.width, i * gridSize), 1f)
-        }
-
-        val scanLineY = size.height * scanLinePosition
-        drawRect(
-            brush = Brush.verticalGradient(
-                colors = listOf(Color.Transparent, primaryColor.copy(alpha = 0.2f), Color.Transparent),
-                startY = scanLineY - 30.dp.toPx(),
-                endY = scanLineY
-            ),
-            topLeft = Offset(0f, scanLineY - 30.dp.toPx()),
-            size = Size(size.width, 30.dp.toPx())
-        )
     }
 }
 
