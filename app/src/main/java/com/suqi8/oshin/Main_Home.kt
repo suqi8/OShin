@@ -87,6 +87,7 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.google.accompanist.flowlayout.FlowRow
 import com.highcapable.yukihookapi.YukiHookAPI
+import com.suqi8.oshin.ui.module.HUDModuleContainer
 import com.suqi8.oshin.utils.GetFuncRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -159,13 +160,13 @@ fun Main_Home(
             val moduleStatusDeferred = async { getModuleStatus() }
             val rootStatusDeferred = async { getRootStatus() }
             val deviceInfoDeferred = async { getDeviceInfo(context) }
-            val featuresDeferred = async { getFeatures(context) }
+            //val featuresDeferred = async { getFeatures(context) }
 
             carouselItems = carouselDeferred.await()
             moduleStatus = moduleStatusDeferred.await()
             rootStatus = rootStatusDeferred.await()
             deviceInfo = deviceInfoDeferred.await()
-            features = featuresDeferred.await()
+            //features = featuresDeferred.await()
         }
     }
 
@@ -341,10 +342,6 @@ suspend fun getDeviceInfo(context: Context): DeviceInfo = withContext(Dispatcher
         calculatedHealth = calculatedHealth,
         cycleCount = cycleCount
     )
-}
-
-fun getFeatures(context: Context): List<FeatureUI> = features(context).shuffled().map {
-    FeatureUI(it.title, it.summary, it.category)
 }
 
 fun mapNvidToCountry(context: Context, nvid: String): String = when (nvid) {
@@ -570,29 +567,37 @@ fun CarouselSkeleton() {
     )
     HUDModuleContainer(modifier = Modifier.padding(horizontal = 16.dp)) {
         Column(modifier = Modifier.padding(8.dp)) {
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(100.dp)
-                .clip(CutCornerShape(8.dp))
-                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(100.dp)
+                    .clip(CutCornerShape(8.dp))
+                    .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha))
+            )
             Spacer(Modifier.height(8.dp))
-            Box(modifier = Modifier
-                .fillMaxWidth(0.7f)
-                .height(16.dp)
-                .clip(CutCornerShape(4.dp))
-                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.7f)
+                    .height(16.dp)
+                    .clip(CutCornerShape(4.dp))
+                    .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha))
+            )
             Spacer(Modifier.height(8.dp))
-            Box(modifier = Modifier
-                .fillMaxWidth()
-                .height(12.dp)
-                .clip(CutCornerShape(4.dp))
-                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(12.dp)
+                    .clip(CutCornerShape(4.dp))
+                    .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha))
+            )
             Spacer(Modifier.height(4.dp))
-            Box(modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .height(12.dp)
-                .clip(CutCornerShape(4.dp))
-                .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha)))
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth(0.8f)
+                    .height(12.dp)
+                    .clip(CutCornerShape(4.dp))
+                    .background(MiuixTheme.colorScheme.onBackground.copy(alpha = alpha))
+            )
         }
     }
 }
