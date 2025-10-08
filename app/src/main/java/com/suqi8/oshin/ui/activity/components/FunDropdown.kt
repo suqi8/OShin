@@ -25,7 +25,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
@@ -50,7 +49,6 @@ import androidx.compose.ui.layout.SubcomposeLayout
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalLayoutDirection
@@ -64,7 +62,6 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.highcapable.yukihookapi.hook.factory.prefs
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.basic.ArrowUpDownIntegrated
@@ -77,19 +74,19 @@ import top.yukonga.miuix.kmp.utils.getWindowSize
 import kotlin.math.min
 
 @Composable
-fun FunDropdown(title: String, summary: String? = null, category: String, key: String, selectedList: List<String>, defValue: Int = 0, onCheckedChange: ((Int) -> Unit)? = null) {
-    val context = LocalContext.current
-    val selectedOption = remember { mutableIntStateOf(context.prefs(category).getInt(key, defValue)) }
+fun funDropdown(
+    title: String,
+    summary: String?,
+    selectedIndex: Int,
+    options: List<String>,
+    onSelectedIndexChange: (Int) -> Unit
+) {
     SuperDropdown(
         title = title,
         summary = summary,
-        items = selectedList,
-        selectedIndex = selectedOption.intValue,
-        onSelectedIndexChange = {
-            selectedOption.intValue = it
-            context.prefs(category).edit { putInt(key, it) }
-            onCheckedChange?.invoke(it)
-        }
+        items = options,
+        selectedIndex = selectedIndex,
+        onSelectedIndexChange = onSelectedIndexChange
     )
 }
 

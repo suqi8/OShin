@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.suqi8.oshin.R
+import com.suqi8.oshin.models.RelatedLinks
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -24,17 +25,20 @@ data class WantFind(
     val category: String
 )
 @Composable
-fun WantFind(funclist: List<WantFind>, navController: NavController) {
+fun wantFind(
+    links: List<RelatedLinks.Link>,
+    navController: NavController
+) {
     Card(colors = CardDefaults.defaultColors(MiuixTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.75f)),
         modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 12.dp)) {
         Surface(color = Color.Transparent) {
             Column(modifier = Modifier.padding(horizontal = 18.dp, vertical = 18.dp)) {
                 Text(stringResource(R.string.prompt_search_other_settings), fontSize = 16.sp, color = MiuixTheme.colorScheme.onSurfaceContainerHigh)
                 Spacer(modifier = Modifier.height(6.dp))
-                funclist.forEach {
-                    Text(it.title, color = MiuixTheme.colorScheme.primaryVariant, modifier = Modifier.padding(top = 6.dp, bottom = 6.dp)
+                links.forEach { link ->
+                    Text(stringResource(link.titleRes), color = MiuixTheme.colorScheme.primary, modifier = Modifier.padding(top = 6.dp, bottom = 6.dp)
                         .clickable {
-                            navController.navigate(it.category)
+                            navController.navigate("feature/${link.route}")
                         },fontWeight = FontWeight.Medium)
                 }
             }

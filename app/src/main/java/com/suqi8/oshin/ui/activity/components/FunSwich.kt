@@ -1,5 +1,6 @@
 package com.suqi8.oshin.ui.activity.components
 
+import android.R.attr.category
 import android.annotation.SuppressLint
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDp
@@ -29,10 +30,8 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.unit.dp
-import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.ui.main.LocalColorMode
 import top.yukonga.miuix.kmp.utils.G2RoundedCornerShape
 
@@ -53,32 +52,23 @@ import top.yukonga.miuix.kmp.utils.G2RoundedCornerShape
  * @param onCheckedChange 当开关状态改变时触发的回调，返回新的布尔值状态。
  */
 @Composable
-fun FunSwich(
+fun funSwitch(
     title: String,
     summary: String? = null,
-    category: String,
-    key: String,
-    defValue: Boolean = false,
-    onCheckedChange: ((Boolean) -> Unit)? = null
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+    enabled: Boolean = true
 ) {
-    val context = LocalContext.current
     val haptic = LocalHapticFeedback.current
-    val isChecked = remember { mutableStateOf(context.prefs(category).getBoolean(key, defValue)) }
-
     SuperSwitch(
         title = title,
-        checked = isChecked.value,
-        onCheckedChange = {
-            // 点击时仅更新状态，不再立即触发震动
-            context.prefs(category).edit { putBoolean(key, it) }
-            isChecked.value = it
-            onCheckedChange?.invoke(it)
-        },
-        // 将震动逻辑移至动画完成的回调中
+        summary = summary,
+        checked = checked,
+        onCheckedChange = onCheckedChange,
+        enabled = enabled,
         onAnimationFinished = {
             haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
         },
-        summary = summary
     )
 }
 

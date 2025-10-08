@@ -15,8 +15,8 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.addline
+import com.suqi8.oshin.ui.activity.components.funArrow
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.utils.overScrollVertical
@@ -45,14 +45,14 @@ fun Main_Function(
                     .padding(vertical = 6.dp)
             ) {
                 Column {
-                    FunArrow(
+                    funArrow(
                         title = stringResource(id = R.string.cpu_freq_main),
                         onClick = {
                             navController.navigate("func\\cpu_freq")
                         }
                     )
                     addline()
-                    FunArrow(
+                    funArrow(
                         title = stringResource(id = R.string.rom_workshop),
                         onClick = {
                             navController.navigate("func\\romworkshop")

@@ -52,7 +52,6 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.integerArrayResource
@@ -78,8 +77,8 @@ import com.highcapable.yukihookapi.YukiHookAPI_Impl
 import com.suqi8.oshin.BuildConfig
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
-import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.addline
+import com.suqi8.oshin.ui.activity.components.funArrow
 import com.suqi8.oshin.ui.main.LocalColorMode
 import com.suqi8.oshin.ui.theme.BgEffectView
 import com.suqi8.oshin.utils.executeCommand
@@ -245,7 +244,7 @@ fun Main_About(
                         .alpha(cardAlpha)
                 ) {
                     val coroutineScope = rememberCoroutineScope()
-                    FunArrow(
+                    funArrow(
                         title = stringResource(R.string.Device_Name),
                         rightText = deviceName.value,
                         onClick = {
@@ -293,7 +292,7 @@ fun Main_About(
                         }
                     }
                     addline()
-                    FunArrow(title = stringResource(R.string.Device_Memory),
+                    funArrow(title = stringResource(R.string.Device_Memory),
                         rightText = "$usedStorage / $physicalTotalStorage",
                         onClick = { openStorageSettings(context) }
                     )
@@ -401,7 +400,7 @@ private fun CommunityCard(context: Context) {
             Image(painter = painterResource(R.drawable.qq_pic_merged_1727926207595), contentDescription = null, modifier = Modifier.fillMaxWidth())
         }
         val toastMessage = stringResource(R.string.please_install_cool_apk)
-        FunArrow(title = stringResource(R.string.go_to_his_homepage), onClick = {
+        funArrow(title = stringResource(R.string.go_to_his_homepage), onClick = {
             val coolApkUri = Uri.parse("coolmarket://u/894238")
             val intent = Intent(Intent.ACTION_VIEW, coolApkUri)
             try {
@@ -418,9 +417,9 @@ private fun ThanksCard(navController: NavController) {
     Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp).padding(bottom = 6.dp)) {
         item(name = "酸奶", coolapk = "Stracha酸奶菌", coolapkid = 15225420, github = "suqi8", qq = 3383787570)
         addline()
-        FunArrow(title = stringResource(R.string.contributors), onClick = { navController.navigate("about_contributors") })
+        funArrow(title = stringResource(R.string.contributors), onClick = { navController.navigate("about_contributors") })
         addline()
-        FunArrow(title = stringResource(R.string.references), onClick = { navController.navigate("about_references") })
+        funArrow(title = stringResource(R.string.references), onClick = { navController.navigate("about_references") })
     }
 }
 
@@ -443,12 +442,12 @@ private fun AboutActionsCard(navController: NavController, context: Context) {
 
 @Composable
 fun IconFunArrow(title: String, summary: String? = null, iconRes: Int, onClick: () -> Unit) {
-    FunArrow(
+    funArrow(
         title = title,
         summary = summary,
-        leftAction = {
+        /*leftAction = {
             Image(painter = painterResource(iconRes), contentDescription = null, modifier = Modifier.size(32.dp).padding(end = 8.dp), colorFilter = ColorFilter.tint(colorScheme.onSurface))
-        },
+        },*/
         onClick = onClick
     )
 }

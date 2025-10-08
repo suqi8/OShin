@@ -15,23 +15,23 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.suqi8.oshin.R
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
-fun FunArrow(title: String, summary: String? = null, rightText: String? = null, leftAction: @Composable (() -> Unit)? = null, category: String? = null, navController: NavController? = null, onClick: () -> Unit) {
-    SuperArrow(title = title,
+fun funArrow(
+    title: String,
+    summary: String? = null,
+    rightText: String? = null,
+    onClick: () -> Unit
+) {
+    SuperArrow(
+        title = title,
         summary = summary,
         rightText = rightText,
-        leftAction = leftAction,
-        onClick = {
-            category?.let { route ->
-                navController?.navigate(route)
-            }
-            onClick()
-        })
+        onClick = onClick
+    )
 }
 
 /**

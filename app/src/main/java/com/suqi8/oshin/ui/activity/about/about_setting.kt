@@ -23,10 +23,9 @@ import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.activity.components.FunPage
-import com.suqi8.oshin.ui.activity.components.FunSwich
-import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.FunPage
+import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.main.LocalColorMode
 import top.yukonga.miuix.kmp.extra.SuperDropdown
 import top.yukonga.miuix.kmp.extra.SuperSwitch
@@ -122,18 +121,18 @@ fun about_setting(
                 }
             )
             addline()
-            FunSwich(
+            /*funSwich(
                 title = "Debug",
                 category = "settings",
                 key = "Debug"
             )
             addline()
-            FunSwich(
+            funSwich(
                 title = stringResource(R.string.addline),
                 category = "settings",
                 key = "addline"
             )
-            addline()
+            addline()*/
             val componentName = ComponentName(context, "com.suqi8.oshin.Home")
             val pm = context.packageManager
             val ishide = remember {
@@ -159,13 +158,13 @@ fun about_setting(
                         PackageManager.DONT_KILL_APP
                     )
                 })
-            addline()
+            /*addline()
             FunSwich(
                 title = stringResource(R.string.enable_blur),
                 category = "settings",
                 key = "enable_blur",
                 defValue = true
-            )
+            )*/
         }
     }
 }

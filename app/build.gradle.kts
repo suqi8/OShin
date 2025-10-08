@@ -199,6 +199,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.hilt.navigation.compose)
 
     // ------------------- Compose 生态第三方库 -------------------
     implementation(libs.accompanist.flowlayout)

@@ -38,7 +38,7 @@ import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import com.suqi8.oshin.Main_Function
 import com.suqi8.oshin.Main_Home
-import com.suqi8.oshin.Main_Module
+import com.suqi8.oshin.ui.module.Main_Module
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.about.Main_About
 import com.suqi8.oshin.ui.components.BottomTabs

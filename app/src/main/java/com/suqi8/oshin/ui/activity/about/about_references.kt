@@ -15,9 +15,9 @@ import com.suqi8.oshin.ui.activity.components.BasicComponent
 import com.suqi8.oshin.ui.activity.components.BasicComponentColors
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.CardDefaults
-import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.addline
+import com.suqi8.oshin.ui.activity.components.funArrow
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
@@ -190,7 +190,7 @@ fun about_references_item(
     license: String? = null
 ) {
     val context = LocalContext.current
-    FunArrow(title = name,
+    funArrow(title = name,
         summary = username + if (license != null) " | $license" else " | " + stringResource(R.string.no_license),
         onClick = {
             if (url != null) {

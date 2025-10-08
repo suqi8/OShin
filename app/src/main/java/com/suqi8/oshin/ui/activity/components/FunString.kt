@@ -8,14 +8,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.TextButton
@@ -23,31 +22,39 @@ import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.SuperDialog
 
 @Composable
-fun FunString(title: String, summary: String? = null, category: String, key: String, defValue: String = "", nullable: Boolean = false) {
-    val context = LocalContext.current
+fun funString(
+    title: String,
+    summary: String?,
+    value: String,
+    onValueChange: (String) -> Unit,
+    nullable: Boolean = false
+) {
+    val showDialog = remember { mutableStateOf(false) }
+    val cacheValue = remember { mutableStateOf(value) }
 
-    val value = remember { mutableStateOf(context.prefs(category).getString(key, defValue)) }
-    val cachevalue = remember { mutableStateOf(value.value) }
-    val Dialog = remember { mutableStateOf(false) }
-    FunArrow(
+    // 当弹窗打开时，确保它显示的是最新的外部传入值
+    LaunchedEffect(showDialog.value) {
+        if (showDialog.value) {
+            cacheValue.value = value
+        }
+    }
+
+    funArrow(
         title = title,
         summary = summary,
-        rightText = value.value,
-        onClick = {
-            Dialog.value = true
-        }
+        rightText = value,
+        onClick = { showDialog.value = true }
     )
+
     SuperDialog(
-        show = Dialog,
+        show = showDialog,
         title = stringResource(R.string.settings) + " " + title,
         summary = summary,
-        onDismissRequest = {
-            Dialog.value = false
-        }
+        onDismissRequest = { showDialog.value = false }
     ) {
         TextField(
-            value = cachevalue.value,
-            onValueChange = { cachevalue.value = it },
+            value = cacheValue.value,
+            onValueChange = { cacheValue.value = it },
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done)
         )
         Spacer(Modifier.height(12.dp))
@@ -59,20 +66,17 @@ fun FunString(title: String, summary: String? = null, category: String, key: Str
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.cancel),
-                onClick = {
-                    Dialog.value = false
-                }
+                onClick = { showDialog.value = false }
             )
             Spacer(Modifier.width(12.dp))
             TextButton(
                 modifier = Modifier.weight(1f),
                 text = stringResource(R.string.ok),
                 colors = ButtonDefaults.textButtonColorsPrimary(),
-                enabled = (if (nullable) true else cachevalue.value.isNotEmpty()),
+                enabled = (if (nullable) true else cacheValue.value.isNotEmpty()),
                 onClick = {
-                    Dialog.value = false
-                    value.value = cachevalue.value
-                    context.prefs(category).edit { putString(key, cachevalue.value) }
+                    onValueChange(cacheValue.value) // 通过回调通知 ViewModel
+                    showDialog.value = false
                 }
             )
         }
