@@ -3,14 +3,10 @@ package com.suqi8.oshin.hook.com.android.settings
 import android.annotation.SuppressLint
 import android.graphics.ImageDecoder
 import android.os.Environment
-import android.os.Handler
 import android.widget.RelativeLayout
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import com.highcapable.kavaref.KavaRef.Companion.asResolver
-import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.log.YLog
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.StringClass
 import com.highcapable.yukihookapi.hook.type.java.UnitType
@@ -66,7 +62,7 @@ class settings: YukiBaseHooker() {
                     }
                 }
             }
-            "com.oplus.settings.feature.fingerprint.NewFingerEnrollActivity".toClass().resolve().apply {
+            /*"com.oplus.settings.feature.fingerprint.NewFingerEnrollActivity".toClass().resolve().apply {
                 firstMethod {
                     name = "handleEnrollHelp"
                 }.hook {
@@ -93,7 +89,7 @@ class settings: YukiBaseHooker() {
                         }
                     }
                 }
-            }
+            }*/
             /*"com.android.settings.applications.appinfo.AppInfoDashboardFragment".toClass().apply {
                 method {
                     name = "onCreateOptionsMenu"
