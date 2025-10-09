@@ -57,6 +57,7 @@ fun funSwitch(
     summary: String? = null,
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
+    externalPadding: PaddingValues = PaddingValues(0.dp),
     enabled: Boolean = true
 ) {
     val haptic = LocalHapticFeedback.current
@@ -66,6 +67,7 @@ fun funSwitch(
         checked = checked,
         onCheckedChange = onCheckedChange,
         enabled = enabled,
+        externalPadding = externalPadding,
         onAnimationFinished = {
             haptic.performHapticFeedback(HapticFeedbackType.ContextClick)
         },
@@ -107,6 +109,7 @@ fun SuperSwitch(
     switchColors: SwitchColors = SwitchDefaults.switchColors(),
     insideMargin: PaddingValues = BasicComponentDefaults.InsideMargin,
     onClick: (() -> Unit)? = null,
+    externalPadding: PaddingValues = PaddingValues(0.dp),
     enabled: Boolean = true,
     onAnimationFinished: () -> Unit = {}
 ) {
@@ -118,6 +121,7 @@ fun SuperSwitch(
         summary = summary,
         summaryColor = summaryColor,
         leftAction = leftAction,
+        externalPadding = externalPadding,
         rightActions = {
             SuperSwitchRightActions(
                 rightActions = rightActions,

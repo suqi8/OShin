@@ -5,6 +5,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -19,6 +20,7 @@ fun funPicSele(
     title: String,
     summary: String?,
     imageBitmap: ImageBitmap?,
+    externalPadding: PaddingValues = PaddingValues(0.dp),
     onImageSelected: (Uri?) -> Unit
 ) {
     val imagePickerLauncher = rememberLauncherForActivityResult(
@@ -32,6 +34,7 @@ fun funPicSele(
     BasicComponent(
         title = title,
         summary = summary,
+        externalPadding = externalPadding,
         rightActions = {
             imageBitmap?.let { bitmap ->
                 Image(

@@ -2,6 +2,7 @@ package com.suqi8.oshin.ui.activity.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -32,7 +33,8 @@ fun funSlider(
     valueRange: ClosedFloatingPointRange<Float>,
     onValueChange: (Float) -> Unit,
     unit: String,
-    decimalPlaces: Int
+    decimalPlaces: Int,
+    externalPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     // 1. 弹窗的显示状态，这是临时的UI状态，可以保留在组件内部
     val showDialog = remember { mutableStateOf(false) }
@@ -64,6 +66,7 @@ fun funSlider(
         title = title,
         summary = summary,
         rightText = "$formattedDisplayValue$unit",
+        externalPadding = externalPadding,
         onClick = { showDialog.value = true }
     )
 

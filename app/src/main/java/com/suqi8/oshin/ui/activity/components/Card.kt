@@ -50,7 +50,7 @@ fun Card(
         .padding(horizontal = 16.dp, vertical = 6.dp),
     colors: CardColors = CardDefaults.defaultColors(),
     cornerRadius: Dp = 12.dp,
-    insideMargin: PaddingValues = PaddingValues(vertical = 2.dp),
+    insideMargin: PaddingValues = PaddingValues(vertical = 0.dp),
     content: @Composable ColumnScope.() -> Unit,
 ) {
     BasicCard(

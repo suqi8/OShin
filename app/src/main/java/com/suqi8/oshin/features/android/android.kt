@@ -43,15 +43,13 @@ object android {
             // --- 第二个 Card ---
             CardDefinition(
                 items = listOf(
-                    // 对应第一个 FunSwitch
                     Switch(
-                        key = "disable_72h_verify",
-                        title = StringResource(R.string.disable_72h_verify)
+                        title = StringResource(R.string.disable_72h_verify),
+                        key = "DisablePinVerifyPer72h"
                     ),
-                    // 对应第二个 FunSwitch
                     Switch(
-                        key = "allow_untrusted_touch",
-                        title = StringResource(R.string.allow_untrusted_touch)
+                        title = StringResource(R.string.allow_untrusted_touch),
+                        key = "AllowUntrustedTouch"
                     )
                 )
             ),
