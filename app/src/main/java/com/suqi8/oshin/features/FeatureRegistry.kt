@@ -11,6 +11,7 @@ object FeatureRegistry {
      */
     val moduleEntries = listOf(
         ModuleEntry("android", "android"),
+        ModuleEntry("android1", "android1"),
     )
 
     /**

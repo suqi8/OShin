@@ -40,6 +40,8 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.icon.icons.useful.Refresh
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.overScrollVertical
+import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
 // --- 版本 1 (兼容旧页面) ---
 // 这个版本接收一个无参数的 content lambda，并为其内部创建一个 LazyColumn。
@@ -66,6 +68,8 @@ fun FunPage(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
+                .overScrollVertical()
+                .scrollEndHaptic()
                 .nestedScroll(topAppBarState.nestedScrollConnection),
             contentPadding = padding
         ) {
