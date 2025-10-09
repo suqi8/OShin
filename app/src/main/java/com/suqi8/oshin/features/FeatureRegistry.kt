@@ -1,7 +1,10 @@
 package com.suqi8.oshin.features
 
+import com.suqi8.oshin.features.android.OplusServices
 import com.suqi8.oshin.features.android.PMS
+import com.suqi8.oshin.features.android.SplitScreenMultiWindow
 import com.suqi8.oshin.features.android.android
+import com.suqi8.oshin.features.systemui.systemui
 import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.models.PageDefinition
 
@@ -11,7 +14,7 @@ object FeatureRegistry {
      */
     val moduleEntries = listOf(
         ModuleEntry("android", "android"),
-        ModuleEntry("android1", "android1"),
+        ModuleEntry("com.android.systemui", "systemui"),
     )
 
     /**
@@ -22,5 +25,9 @@ object FeatureRegistry {
     val screenMap: Map<String, PageDefinition> = mapOf(
         "android" to android.definition,
         "android\\package_manager_services" to PMS.definition,
+        "android\\oplus_system_services" to OplusServices.definition,
+        "android\\split_screen_multi_window" to SplitScreenMultiWindow.definition,
+
+        "systemui" to systemui.definition,
     )
 }

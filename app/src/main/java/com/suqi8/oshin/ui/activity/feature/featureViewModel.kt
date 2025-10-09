@@ -154,11 +154,16 @@ class featureViewModel @Inject constructor(
     /**
      * 计算一个项的显示条件是否满足
      */
-    fun evaluateCondition(condition: DisplayCondition?): Boolean {
+    fun evaluateCondition(
+        condition: DisplayCondition?,
+        allCurrentStates: Map<String, Any>
+    ): Boolean {
         if (condition == null) {
-            return true // 没有条件，始终显示
+            return true
         }
-        val dependencyValue = _uiState.value.itemStates[condition.dependencyKey]
+
+        // 2. 从传入的参数中获取依赖项的值，而不是从 _uiState.value 中获取
+        val dependencyValue = allCurrentStates[condition.dependencyKey]
 
         return when (condition.operator) {
             Operator.EQUALS -> dependencyValue == condition.requiredValue
