@@ -5,18 +5,15 @@ import android.content.pm.PackageManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.data.repository.FeatureRepository
 import com.suqi8.oshin.features.FeatureRegistry
 import com.suqi8.oshin.models.AppName
-import com.suqi8.oshin.models.CardDefinition
 import com.suqi8.oshin.models.PlainText
 import com.suqi8.oshin.models.StringResource
 import com.suqi8.oshin.models.Title
-import com.suqi8.oshin.models.TitledScreenItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -26,7 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ModuleViewModel @Inject constructor(
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val featureRepository: FeatureRepository
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ModuleUiState())
@@ -55,38 +53,13 @@ class ModuleViewModel @Inject constructor(
     }
 
     private fun buildSearchIndex() {
-        viewModelScope.launch(Dispatchers.Default) { // 使用 Default 调度器进行 CPU 密集型操作
-            // 从注册表加载主模块的静态入口列表
-            val entries = FeatureRegistry.moduleEntries
+        viewModelScope.launch {
+            // 2. 直接从 Repository 获取数据，不再需要复杂的计算逻辑！
+            allSearchableItems = featureRepository.getAllSearchableItems()
 
-            // 核心：构建全量搜索索引
-            val searchableItemsJobs = FeatureRegistry.screenMap.flatMap { (routeId, pageDef) ->
-                // 1. 先从页面中筛选出所有 CardDefinition
-                pageDef.items.filterIsInstance<CardDefinition>()
-                    // 2. 将所有 Card 里的 items 拍平为一个列表
-                    .flatMap { it.items }
-                    // 3. 从 items 列表中筛选出所有可搜索的项
-                    .filterIsInstance<TitledScreenItem>()
-                    // 4. 使用 async 并发解析标题，为每一项创建一个 SearchableItem
-                    .map { item ->
-                        async {
-                            SearchableItem(
-                                title = resolveTitle(item.title),
-                                summary = item.summary?.let { context.getString(it) } ?: "",
-                                route = "feature/$routeId",
-                                key = item.key
-                            )
-                        }
-                    }
-            }
-
-            // 等待所有 async 任务完成
-            allSearchableItems = searchableItemsJobs.awaitAll()
-
-            // 更新 UI 状态，显示入口列表并结束加载状态
             _uiState.update {
                 it.copy(
-                    moduleEntries = entries,
+                    moduleEntries = FeatureRegistry.moduleEntries, // moduleEntries 依然从 Registry 获取
                     isLoading = false
                 )
             }

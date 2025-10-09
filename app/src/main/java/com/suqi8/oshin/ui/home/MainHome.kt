@@ -1,0 +1,856 @@
+package com.suqi8.oshin.ui.home
+
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.Layers
+import androidx.compose.material.icons.filled.PhoneAndroid
+import androidx.compose.material.icons.filled.Public
+import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Storage
+import androidx.compose.material.icons.filled.VerifiedUser
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Outline
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
+import coil3.compose.AsyncImage
+import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.main.CarouselItem
+import com.suqi8.oshin.ui.main.DeviceInfo
+import com.suqi8.oshin.ui.main.FridaStatus
+import com.suqi8.oshin.ui.main.HomeViewModel
+import com.suqi8.oshin.ui.main.ModuleStatus
+import com.suqi8.oshin.ui.main.RootStatus
+import com.suqi8.oshin.ui.main.Status
+import com.suqi8.oshin.ui.module.HUDModuleContainer
+import com.suqi8.oshin.ui.module.SearchableItem
+import com.suqi8.oshin.utils.GetFuncRoute
+import kotlinx.coroutines.delay
+import top.yukonga.miuix.kmp.basic.Icon
+import top.yukonga.miuix.kmp.basic.ScrollBehavior
+import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.overScrollVertical
+import top.yukonga.miuix.kmp.utils.scrollEndHaptic
+import kotlin.math.abs
+import kotlin.math.ceil
+import kotlin.math.cos
+import kotlin.math.roundToInt
+import kotlin.math.sin
+
+@Composable
+fun MainHome(
+    padding: PaddingValues,
+    topAppBarScrollBehavior: ScrollBehavior,
+    navController: NavController,
+    viewModel: HomeViewModel = hiltViewModel()
+) {
+    val uiState by viewModel.uiState.collectAsState()
+
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(MiuixTheme.colorScheme.background)) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .overScrollVertical()
+                .scrollEndHaptic()
+                .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+            contentPadding = PaddingValues(
+                top = padding.calculateTopPadding() + 16.dp,
+                bottom = padding.calculateBottomPadding()
+            ),
+            verticalArrangement = Arrangement.spacedBy(24.dp)
+        ) {
+            // --- 轮播图 ---
+            item {
+                uiState.carouselItems?.let { CarouselSection(items = it) }
+            }
+
+            // --- 状态面板 ---
+            item {
+                DashboardSection(
+                    moduleStatus = uiState.moduleStatus,
+                    rootStatus = uiState.rootStatus,
+                    fridaStatus = uiState.fridaStatus
+                )
+            }
+
+            // --- 最近更新/群组 (静态部分) ---
+            item {
+                RecentUpdatesModule(navController = navController)
+            }
+
+            // --- 设备信息 ---
+            item {
+                uiState.deviceInfo?.let { DeviceInfoSection(info = it) }
+            }
+
+            // --- 随机功能 ---
+            if (uiState.randomFeatures.isNotEmpty()) {
+                item {
+                    SectionTitle(titleResId = R.string.section_title_features)
+                }
+                items(uiState.randomFeatures) { feature ->
+                    FeatureItem(
+                        feature = feature,
+                        onClick = {
+                            navController.navigate("${feature.route}?highlightKey=${feature.key}")
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+// --- 视觉组件 ---
+
+class CutCornerShape(private val cut: Dp) : Shape {
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        val cutPx = with(density) { cut.toPx() }
+        val path = Path().apply {
+            moveTo(cutPx, 0f)
+            lineTo(size.width - cutPx, 0f)
+            lineTo(size.width, cutPx)
+            lineTo(size.width, size.height - cutPx)
+            lineTo(size.width - cutPx, size.height)
+            lineTo(cutPx, size.height)
+            lineTo(0f, size.height - cutPx)
+            lineTo(0f, cutPx)
+            close()
+        }
+        return Outline.Generic(path)
+    }
+}
+
+@Composable
+fun SectionTitle(titleResId: Int) {
+    val primaryColor = MiuixTheme.colorScheme.primary.copy(alpha = 0.5f)
+    val textColor = MiuixTheme.colorScheme.onBackground
+    var animated by rememberSaveable { mutableStateOf(false) }
+
+    LaunchedEffect(Unit) { animated = true }
+
+    val lineWidth by animateFloatAsState(
+        targetValue = if (animated) 1f else 0.00001f,
+        animationSpec = tween(durationMillis = 700)
+    )
+    val textAlpha by animateFloatAsState(
+        targetValue = if (animated) 1f else 0f,
+        animationSpec = tween(durationMillis = 500, delayMillis = 200)
+    )
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 16.dp, end = 16.dp, bottom = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier
+                .weight(lineWidth)
+                .height(1.dp)
+                .background(Brush.horizontalGradient(listOf(Color.Transparent, primaryColor)))
+        )
+        Text(
+            text = " ${stringResource(id = titleResId)} ",
+            fontSize = 20.sp,
+            fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Bold,
+            color = textColor.copy(alpha = textAlpha),
+            modifier = Modifier.padding(horizontal = 8.dp)
+        )
+        Box(
+            modifier = Modifier
+                .weight(lineWidth)
+                .height(1.dp)
+                .background(Brush.horizontalGradient(listOf(primaryColor, Color.Transparent)))
+        )
+    }
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun CarouselSection(items: List<CarouselItem>) {
+    val pagerState = rememberPagerState { items.size }
+    val uriHandler = LocalUriHandler.current
+
+    LaunchedEffect(pagerState.pageCount) {
+        while (true) {
+            delay(5000)
+            val nextPage = (pagerState.currentPage + 1) % pagerState.pageCount
+            pagerState.animateScrollToPage(nextPage, animationSpec = tween(durationMillis = 600))
+        }
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .animateContentSize(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentPadding = PaddingValues(horizontal = 40.dp)
+        ) { page ->
+            val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
+
+            val scale = lerp(1f, 0.85f, abs(pageOffset))
+            val alpha = lerp(1f, 0.5f, abs(pageOffset))
+
+            val item = items[page]
+            val isClickable = item.actionUrl != null
+
+            Box(
+                modifier = Modifier
+                    .graphicsLayer {
+                        scaleX = scale
+                        scaleY = scale
+                        this.alpha = alpha
+                    }
+                    .fillMaxWidth()
+                    .clip(CutCornerShape(8.dp))
+                    .background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.03f))
+                    .border(
+                        1.dp,
+                        MiuixTheme.colorScheme.primary.copy(alpha = 0.3f),
+                        CutCornerShape(8.dp)
+                    )
+                    .then(if (isClickable) Modifier.clickable { uriHandler.openUri(item.actionUrl) } else Modifier)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ) {
+                    if (item.imageUrl != null) {
+                        AsyncImage(
+                            model = item.imageUrl,
+                            contentDescription = item.title,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        )
+                    }
+
+                    if (item.title != null || item.description != null) {
+                        Column(
+                            modifier = Modifier
+                                .padding(12.dp)
+                                .fillMaxWidth()
+                        ) {
+                            item.title?.let {
+                                Spacer(Modifier.height(if (item.imageUrl != null) 8.dp else 0.dp))
+                                Text(
+                                    text = it,
+                                    color = MiuixTheme.colorScheme.primary,
+                                    fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp,
+                                    fontFamily = FontFamily.Monospace
+                                )
+                            }
+                            item.description?.let {
+                                Spacer(Modifier.height(4.dp))
+                                Text(
+                                    text = it,
+                                    color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+                                    fontSize = 12.sp,
+                                    fontFamily = FontFamily.Monospace,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        Spacer(Modifier.height(12.dp))
+
+        Row(
+            Modifier.height(20.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            repeat(pagerState.pageCount) { iteration ->
+                val color =
+                    if (pagerState.currentPage == iteration) MiuixTheme.colorScheme.primary else MiuixTheme.colorScheme.onBackground.copy(
+                        alpha = 0.3f
+                    )
+                val width by animateFloatAsState(
+                    targetValue = if (pagerState.currentPage == iteration) 20f else 8f,
+                    animationSpec = tween(300)
+                )
+                Box(
+                    modifier = Modifier
+                        .size(width.dp, 8.dp)
+                        .clip(CircleShape)
+                        .background(color)
+                )
+            }
+        }
+    }
+}
+
+// 线性插值函数，用于平滑动画过渡
+private fun lerp(start: Float, stop: Float, fraction: Float): Float {
+    return (1 - fraction) * start + fraction * stop
+}
+
+@Composable
+fun DashboardSection(moduleStatus: ModuleStatus, rootStatus: RootStatus, fridaStatus: FridaStatus) {
+    Column(
+        modifier = Modifier
+            .animateContentSize()
+            .padding(horizontal = 16.dp)
+    ) {
+        SectionTitle(titleResId = R.string.section_title_status)
+        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+            HUDStatusModule(
+                Modifier.weight(1f),
+                moduleStatus.status,
+                Icons.Default.VerifiedUser,
+                stringResource(id = R.string.module_status),
+                moduleStatus.message)
+            HUDStatusModule(
+                Modifier.weight(1f),
+                rootStatus.status,
+                Icons.Default.Security,
+                stringResource(id = R.string.root_status),
+                rootStatus.version
+            )
+        }/*
+        Spacer(Modifier.height(16.dp))
+        HUDStatusModule(
+            Modifier.fillMaxWidth(),
+            fridaStatus.status,
+            Icons.Default.BugReport,
+            "Frida Server",
+            fridaStatus.version
+        )*/
+    }
+}
+
+@Composable
+fun HUDStatusModule(
+    modifier: Modifier = Modifier,
+    status: Status,
+    icon: ImageVector,
+    title: String,
+    message: String
+) {
+    val baseColor = when (status) {
+        Status.SUCCESS -> Color(0xFF22C55E)
+        Status.ERROR -> Color(0xFFEF4444)
+        Status.WARNING -> Color(0xFFF59E0B)
+        Status.LOADING -> MiuixTheme.colorScheme.primary
+    }
+    val contentColor = MiuixTheme.colorScheme.onBackground
+    val shape = CutCornerShape(8.dp)
+    val moduleBgColor = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.03f)
+
+    Box(
+        modifier = modifier
+            .clip(shape)
+            .background(moduleBgColor)
+            .border(1.dp, baseColor.copy(alpha = 0.3f), shape)
+            .padding(1.dp)
+            .border(1.dp, baseColor.copy(alpha = 0.4f), shape)
+            .padding(12.dp)
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            StatusIndicatorRing(status = status, color = baseColor)
+            Spacer(Modifier.width(12.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = title,
+                    color = contentColor,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 14.sp
+                )
+                Text(
+                    text = message,
+                    color = contentColor.copy(alpha = 0.7f),
+                    fontSize = 12.sp,
+                    fontFamily = FontFamily.Monospace,
+                    lineHeight = 14.sp,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun RecentUpdatesModule(navController: NavController) {
+    val shape = CutCornerShape(8.dp)
+    val moduleBgColor = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.03f)
+    val primaryColor = MiuixTheme.colorScheme.primary
+
+    Column {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .clip(shape)
+                .background(moduleBgColor)
+                .border(1.dp, primaryColor.copy(alpha = 0.3f), shape)
+                .clickable { navController.navigate("about_group") }
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Image(
+                    painter = painterResource(R.drawable.group),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(primaryColor),
+                    modifier = Modifier.size(24.dp)
+                )
+                Spacer(Modifier.width(12.dp))
+                Text(
+                    text = stringResource(id = R.string.official_channel),
+                    color = MiuixTheme.colorScheme.onBackground,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = FontFamily.Monospace,
+                    fontSize = 14.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun StatusIndicatorRing(status: Status, color: Color) {
+    val infiniteTransition = rememberInfiniteTransition()
+
+    val ringAlpha by if (status == Status.LOADING) {
+        infiniteTransition.animateFloat(
+            0.3f,
+            1f,
+            infiniteRepeatable(tween(800), RepeatMode.Reverse)
+        )
+    } else {
+        remember { mutableStateOf(1f) }
+    }
+
+    val rotation by if (status == Status.LOADING) {
+        infiniteTransition.animateFloat(
+            0f,
+            360f,
+            infiniteRepeatable(tween(1500), RepeatMode.Restart)
+        )
+    } else {
+        remember { mutableStateOf(0f) }
+    }
+
+    Box(contentAlignment = Alignment.Center, modifier = Modifier.size(36.dp)) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            drawArc(
+                color = color,
+                startAngle = rotation,
+                sweepAngle = if (status == Status.LOADING) 90f else 360f,
+                useCenter = false,
+                style = Stroke(2.dp.toPx(), cap = StrokeCap.Round),
+                alpha = ringAlpha
+            )
+            if (status != Status.LOADING) {
+                drawCircle(color.copy(alpha = 0.2f), radius = center.x * 0.7f)
+            }
+        }
+        Icon(
+            imageVector = when (status) {
+                Status.SUCCESS -> Icons.Default.VerifiedUser
+                Status.ERROR -> Icons.Default.BugReport
+                Status.WARNING -> Icons.Default.Warning
+                Status.LOADING -> Icons.Default.Security
+            },
+            contentDescription = "Status",
+            tint = color,
+            modifier = Modifier.size(18.dp)
+        )
+    }
+}
+
+@Composable
+fun DeviceInfoSection(info: DeviceInfo) {
+    Column(
+        modifier = Modifier
+            .animateContentSize()
+            .padding(horizontal = 16.dp)
+    ) {
+        SectionTitle(titleResId = R.string.section_title_device_info)
+
+        HUDModuleContainer {
+            Row(
+                Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                Arrangement.SpaceEvenly,
+                Alignment.CenterVertically
+            ) {
+                HUDCircularGauge(
+                    value = info.batteryHealthPercent,
+                    title = stringResource(id = R.string.gauge_title_health),
+                    color = Color(0xFF22C55E)
+                )
+
+                val currentCapacityValue =
+                    if (info.designCapacity > 0) (info.currentCapacity.toFloat() / info.designCapacity.toFloat()) * 100 else 0f
+                val currentCapacityText =
+                    if (info.designCapacity > 0 && info.currentCapacity > 0) "${info.currentCapacity} mAh" else "N/A"
+                HUDCircularGauge(
+                    value = currentCapacityValue,
+                    title = stringResource(id = R.string.gauge_title_capacity),
+                    color = MiuixTheme.colorScheme.primary,
+                    valueText = currentCapacityText
+                )
+
+                val cycleCountMax =
+                    if (info.cycleCount == 0) 100 else (ceil(info.cycleCount / 100.0).toInt() * 100)
+                val cycleProgress =
+                    if (cycleCountMax > 0) (info.cycleCount.toFloat() / cycleCountMax.toFloat()) * 100f else 0f
+                HUDCircularGauge(
+                    value = cycleProgress,
+                    title = stringResource(id = R.string.gauge_title_cycles),
+                    color = Color(0xFFF59E0B),
+                    valueText = info.cycleCount.toString()
+                )
+            }
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f))
+                    .padding(horizontal = 16.dp)
+            )
+
+            Column(
+                modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.spacedBy(4.dp)
+            ) {
+                TextInfoRow(
+                    stringResource(id = R.string.text_info_design_capacity),
+                    "${info.designCapacity} mAh"
+                )
+                TextInfoRow(
+                    stringResource(id = R.string.text_info_actual_capacity),
+                    "${info.fullCapacity} mAh"
+                )
+                TextInfoRow(
+                    stringResource(id = R.string.text_info_calculated_health),
+                    "%.1f".format(info.calculatedHealth) + "%"
+                )
+            }
+
+            Box(
+                Modifier
+                    .fillMaxWidth()
+                    .height(1.dp)
+                    .background(MiuixTheme.colorScheme.primary.copy(alpha = 0.2f))
+                    .padding(horizontal = 16.dp)
+            )
+
+            FlowRow(
+                modifier = Modifier.padding(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                InfoChip(
+                    icon = Icons.Default.Public,
+                    label = stringResource(id = R.string.chip_label_region),
+                    value = info.country
+                )
+                InfoChip(
+                    icon = Icons.Default.PhoneAndroid,
+                    label = stringResource(id = R.string.chip_label_android),
+                    value = "${info.androidVersion} (API ${info.sdkVersion})"
+                )
+                InfoChip(
+                    icon = Icons.Default.Layers,
+                    label = stringResource(id = R.string.chip_label_system),
+                    value = info.systemVersion
+                )
+                InfoChip(
+                    icon = Icons.Default.Storage,
+                    label = stringResource(id = R.string.chip_label_status),
+                    value = "${info.batteryHealthDisplay} (${info.batteryHealthRaw})"
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun TextInfoRow(label: String, value: String) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = label,
+            color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+            fontFamily = FontFamily.Monospace,
+            fontSize = 12.sp
+        )
+        Spacer(Modifier.weight(1f))
+        Text(
+            text = value,
+            color = MiuixTheme.colorScheme.onBackground,
+            fontFamily = FontFamily.Monospace,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Bold
+        )
+    }
+}
+
+@Composable
+fun HUDModuleContainer(content: @Composable ColumnScope.() -> Unit) {
+    val shape = CutCornerShape(8.dp)
+    Column(
+        modifier = Modifier
+            .clip(shape)
+            .background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.03f))
+            .border(1.dp, MiuixTheme.colorScheme.primary.copy(alpha = 0.3f), shape)
+            .padding(8.dp)
+    ) { content() }
+}
+
+@Composable
+fun HUDCircularGauge(
+    value: Float,
+    title: String,
+    color: Color,
+    strokeWidth: Dp = 6.dp,
+    valueText: String? = null,
+    startAnimation: Boolean = true
+) {
+    val safeValue = if (value.isNaN() || value.isInfinite()) 0f else value
+    val animatedValue by animateFloatAsState(
+        targetValue = if (startAnimation) safeValue else 0f,
+        animationSpec = tween(1000, 300)
+    )
+    val textColor = MiuixTheme.colorScheme.onBackground
+
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        Box(contentAlignment = Alignment.Center, modifier = Modifier.size(80.dp)) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val sweepAngle = (animatedValue / 100f) * 360f
+                val angleRad = (sweepAngle - 90) * (Math.PI / 180f).toFloat()
+
+                for (i in 0..360 step 15) {
+                    val tickLength = if (i % 45 == 0) 6.dp.toPx() else 3.dp.toPx()
+                    val angle = i * (Math.PI / 180f).toFloat()
+                    drawLine(
+                        color = textColor.copy(alpha = 0.2f),
+                        start = Offset(
+                            center.x + (center.x - tickLength) * cos(angle),
+                            center.y + (center.y - tickLength) * sin(angle)
+                        ),
+                        end = Offset(
+                            center.x + center.x * cos(angle),
+                            center.y + center.y * sin(angle)
+                        ),
+                        strokeWidth = 1.dp.toPx()
+                    )
+                }
+
+                drawArc(
+                    color.copy(alpha = 0.2f),
+                    -90f,
+                    360f,
+                    false,
+                    style = Stroke(strokeWidth.toPx())
+                )
+                if (animatedValue > 0) drawArc(
+                    color,
+                    -90f,
+                    sweepAngle,
+                    false,
+                    style = Stroke(strokeWidth.toPx(), cap = StrokeCap.Round)
+                )
+
+                drawCircle(
+                    brush = Brush.radialGradient(
+                        listOf(
+                            color.copy(alpha = 0.8f),
+                            Color.Transparent
+                        )
+                    ),
+                    radius = strokeWidth.toPx() * 1.5f,
+                    center = Offset(
+                        center.x + (center.x - strokeWidth.toPx() / 2) * cos(angleRad),
+                        center.y + (center.y - strokeWidth.toPx() / 2) * sin(angleRad)
+                    )
+                )
+            }
+            Text(
+                valueText ?: "${animatedValue.roundToInt()}%",
+                color = textColor,
+                fontSize = if (valueText != null && valueText.length > 4) 12.sp else 18.sp,
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Monospace,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+        }
+        Text(
+            title,
+            color = textColor.copy(alpha = 0.7f),
+            fontSize = 12.sp,
+            fontFamily = FontFamily.Monospace
+        )
+    }
+}
+
+@Composable
+fun InfoChip(icon: ImageVector, label: String, value: String) {
+    Row(
+        modifier = Modifier
+            .clip(CutCornerShape(4.dp))
+            .background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.1f))
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            imageVector = icon,
+            contentDescription = label,
+            tint = MiuixTheme.colorScheme.primary,
+            modifier = Modifier.size(16.dp)
+        )
+        Spacer(Modifier.width(8.dp))
+        Column {
+            Text(
+                text = label,
+                fontSize = 11.sp,
+                fontFamily = FontFamily.Monospace,
+                color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+            )
+            Text(
+                text = value,
+                fontSize = 12.sp,
+                fontFamily = FontFamily.Monospace,
+                color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.9f)
+            )
+        }
+    }
+}
+
+@Composable
+fun FeatureItem(feature: SearchableItem, onClick: () -> Unit) {
+    val context = LocalContext.current
+
+    // 从 routeId 生成可读路径
+    val routeId = feature.route.substringAfter("feature/")
+    val summaryWithRoute = remember(feature.summary, routeId) {
+        val route = GetFuncRoute(routeId, context) // 使用我们之前的路径转换函数
+        (feature.summary) + if (route.isNotEmpty() && feature.summary.isNotEmpty()) "\n$route" else route
+    }
+
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp)
+            .clip(CutCornerShape(4.dp))
+            .clickable(onClick = onClick)
+            .padding(horizontal = 8.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = ">",
+            color = MiuixTheme.colorScheme.primary,
+            fontFamily = FontFamily.Monospace,
+            fontWeight = FontWeight.Bold
+        )
+        Spacer(Modifier.width(8.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            Text(
+                text = feature.title,
+                color = MiuixTheme.colorScheme.onBackground,
+                fontSize = 14.sp,
+                fontFamily = FontFamily.Monospace
+            )
+            if (summaryWithRoute.isNotEmpty()) {
+                Text(
+                    text = summaryWithRoute,
+                    color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                    fontSize = 11.sp,
+                    lineHeight = 13.sp,
+                    fontFamily = FontFamily.Monospace
+                )
+            }
+        }
+    }
+}
