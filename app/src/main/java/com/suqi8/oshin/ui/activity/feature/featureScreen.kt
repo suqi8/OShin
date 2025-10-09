@@ -7,6 +7,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -25,6 +26,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.suqi8.oshin.models.Action
@@ -145,14 +147,28 @@ fun featureScreen(
                         }
                         Card {
                             Column {
+                                val itemCount = pageItem.items.size
                                 pageItem.items.forEachIndexed { itemIndex, item ->
                                     val isHighlighted = (item as? TitledScreenItem)?.key == uiState.highlightKey
+
+                                    val topPadding = when {
+                                        itemCount == 1 -> 4.dp
+                                        itemIndex == 0 -> 2.dp
+                                        else -> 0.dp
+                                    }
+                                    val bottomPadding = when {
+                                        itemCount == 1 -> 4.dp
+                                        itemIndex == itemCount - 1 -> 2.dp
+                                        else -> 0.dp
+                                    }
+                                    val itemPadding = PaddingValues(top = topPadding, bottom = bottomPadding)
 
                                     RenderScreenItem(
                                         item = item,
                                         viewModel = viewModel,
                                         navController = navController,
-                                        isHighlighted = isHighlighted
+                                        isHighlighted = isHighlighted,
+                                        paddingValues = itemPadding
                                     )
 
                                     if (itemIndex < pageItem.items.lastIndex) {
@@ -186,7 +202,8 @@ private fun RenderScreenItem(
     item: ScreenItem,
     viewModel: featureViewModel,
     navController: NavController,
-    isHighlighted: Boolean
+    isHighlighted: Boolean,
+    paddingValues: PaddingValues
 ) {
     val itemStates by viewModel.uiState.collectAsState()
     val highlightColor = remember { Animatable(Color.Transparent) }
@@ -226,6 +243,7 @@ private fun RenderScreenItem(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
                     checked = checked,
+                    externalPadding = paddingValues,
                     onCheckedChange = { newValue -> viewModel.updateState(item.key, newValue) }
                 )
             }
@@ -238,7 +256,8 @@ private fun RenderScreenItem(
                     valueRange = item.valueRange,
                     onValueChange = { newValue -> viewModel.updateState(item.key, newValue) },
                     unit = item.unit,
-                    decimalPlaces = item.decimalPlaces
+                    decimalPlaces = item.decimalPlaces,
+                    externalPadding = paddingValues,
                 )
             }
             is Dropdown -> {
@@ -248,6 +267,7 @@ private fun RenderScreenItem(
                     summary = item.summary?.let { stringResource(it) },
                     selectedIndex = selectedIndex,
                     options = stringArrayResource(id = item.optionsRes).toList(),
+                    externalPadding = paddingValues,
                     onSelectedIndexChange = { newIndex -> viewModel.updateState(item.key, newIndex) }
                 )
             }
@@ -255,6 +275,7 @@ private fun RenderScreenItem(
                 funArrow(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
+                    externalPadding = paddingValues,
                     onClick = { navController.navigate("feature/${item.route}") }
                 )
             }
@@ -266,6 +287,7 @@ private fun RenderScreenItem(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
                     imageBitmap = imageBitmap,
+                    externalPadding = paddingValues,
                     onImageSelected = { uri ->
                         // 当用户选择了新图片，通知 ViewModel 处理
                         viewModel.saveImageFromUri(item.key, item.targetPath, uri)
@@ -278,6 +300,7 @@ private fun RenderScreenItem(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
                     value = value,
+                    externalPadding = paddingValues,
                     onValueChange = { newValue -> viewModel.updateState(item.key, newValue) },
                     nullable = item.nullable
                 )

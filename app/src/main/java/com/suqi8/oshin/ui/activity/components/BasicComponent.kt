@@ -55,6 +55,7 @@ fun BasicComponent(
     modifier: Modifier = Modifier,
     insideMargin: PaddingValues = BasicComponentDefaults.InsideMargin,
     onClick: (() -> Unit)? = null,
+    externalPadding: PaddingValues = PaddingValues(0.dp),
     holdDownState: Boolean = false,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
@@ -92,6 +93,7 @@ fun BasicComponent(
             .heightIn(min = 48.dp)
             .fillMaxWidth()
             .then(clickableModifier)
+            .padding(externalPadding)
             .padding(insideMargin)
     ) { constraints ->
         val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)

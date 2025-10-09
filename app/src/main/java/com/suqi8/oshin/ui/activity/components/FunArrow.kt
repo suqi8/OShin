@@ -24,12 +24,14 @@ fun funArrow(
     title: String,
     summary: String? = null,
     rightText: String? = null,
+    externalPadding: PaddingValues = PaddingValues(0.dp),
     onClick: () -> Unit
 ) {
     SuperArrow(
         title = title,
         summary = summary,
         rightText = rightText,
+        externalPadding = externalPadding,
         onClick = onClick
     )
 }
@@ -63,6 +65,7 @@ fun SuperArrow(
     insideMargin: PaddingValues = BasicComponentDefaults.InsideMargin,
     onClick: (() -> Unit)? = null,
     holdDownState: Boolean = false,
+    externalPadding: PaddingValues = PaddingValues(0.dp),
     enabled: Boolean = true
 ) {
     BasicComponent(
@@ -82,6 +85,7 @@ fun SuperArrow(
         },
         onClick = onClick?.takeIf { enabled },
         holdDownState = holdDownState,
+        externalPadding = externalPadding,
         enabled = enabled
     )
 }

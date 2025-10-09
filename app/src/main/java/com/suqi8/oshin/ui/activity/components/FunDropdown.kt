@@ -1,5 +1,6 @@
 package com.suqi8.oshin.ui.activity.components
 
+import android.R.attr.minHeight
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -79,6 +80,7 @@ fun funDropdown(
     summary: String?,
     selectedIndex: Int,
     options: List<String>,
+    externalPadding: PaddingValues = PaddingValues(0.dp),
     onSelectedIndexChange: (Int) -> Unit
 ) {
     SuperDropdown(
@@ -86,6 +88,7 @@ fun funDropdown(
         summary = summary,
         items = options,
         selectedIndex = selectedIndex,
+        externalPadding = externalPadding,
         onSelectedIndexChange = onSelectedIndexChange
     )
 }
@@ -124,6 +127,7 @@ fun SuperDropdown(
     maxHeight: Dp? = null,
     enabled: Boolean = true,
     showValue: Boolean = true,
+    externalPadding: PaddingValues = PaddingValues(0.dp),
     onClick: (() -> Unit)? = null,
     onSelectedIndexChange: ((Int) -> Unit)?,
 ) {
@@ -175,6 +179,7 @@ fun SuperDropdown(
         titleColor = titleColor,
         summary = summary,
         summaryColor = summaryColor,
+        externalPadding = externalPadding,
         leftAction = if (itemsNotEmpty) {
             {
                 SuperDropdownPopup(

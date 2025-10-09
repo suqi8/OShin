@@ -1,6 +1,7 @@
 package com.suqi8.oshin.ui.activity.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -27,7 +28,8 @@ fun funString(
     summary: String?,
     value: String,
     onValueChange: (String) -> Unit,
-    nullable: Boolean = false
+    nullable: Boolean = false,
+    externalPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     val showDialog = remember { mutableStateOf(false) }
     val cacheValue = remember { mutableStateOf(value) }
@@ -43,6 +45,7 @@ fun funString(
         title = title,
         summary = summary,
         rightText = value,
+        externalPadding = externalPadding,
         onClick = { showDialog.value = true }
     )
 
