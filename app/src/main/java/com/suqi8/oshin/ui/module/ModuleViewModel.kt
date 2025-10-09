@@ -8,7 +8,6 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.features.FeatureRegistry
 import com.suqi8.oshin.models.AppName
 import com.suqi8.oshin.models.CardDefinition
-import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.models.PlainText
 import com.suqi8.oshin.models.StringResource
 import com.suqi8.oshin.models.Title
@@ -24,26 +23,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
-
-// 定义UI状态
-data class ModuleUiState(
-    val searchQuery: String = "",
-    val isSearching: Boolean = false,
-    val isLoading: Boolean = true, // 用于初次加载索引时的加载状态
-    val appStyle: Int = 0,
-    val moduleEntries: List<ModuleEntry> = emptyList(),
-    val searchResults: List<SearchableItem> = emptyList()
-)
-
-/**
- * 搜索结果列表项的数据模型。
- */
-data class SearchableItem(
-    val title: String,
-    val summary: String,
-    val route: String,
-    val key: String
-)
 
 @HiltViewModel
 class ModuleViewModel @Inject constructor(
@@ -111,6 +90,12 @@ class ModuleViewModel @Inject constructor(
                     isLoading = false
                 )
             }
+        }
+    }
+
+    fun onAppNotFound(packageName: String) {
+        _uiState.update {
+            it.copy(notInstalledApps = it.notInstalledApps + packageName)
         }
     }
 

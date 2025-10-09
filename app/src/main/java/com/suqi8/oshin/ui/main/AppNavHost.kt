@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.suqi8.oshin.ui.activity.HideAppsNotice
 import com.suqi8.oshin.ui.activity.about.about_contributors
 import com.suqi8.oshin.ui.activity.about.about_group
 import com.suqi8.oshin.ui.activity.about.about_references
@@ -19,7 +20,6 @@ import com.suqi8.oshin.ui.activity.about.about_setting
 import com.suqi8.oshin.ui.activity.feature.featureScreen
 import com.suqi8.oshin.ui.activity.func.cpu_freq
 import com.suqi8.oshin.ui.activity.func.romworkshop.Rom_workshop
-import com.suqi8.oshin.ui.activity.hide_apps_notice
 import com.suqi8.oshin.ui.activity.recent_update
 import com.suqi8.oshin.utils.SpringEasing
 import top.yukonga.miuix.kmp.utils.getWindowSize
@@ -55,7 +55,18 @@ fun AppNavHost() {
             composable("about_references") { about_references(navController) }
             composable("about_contributors") { about_contributors(navController) }
             composable("func\\cpu_freq") { cpu_freq(navController) }
-            composable("hide_apps_notice") { hide_apps_notice(navController) }
+            composable(
+                route = "hide_apps_notice/{packages}",
+                arguments = listOf(navArgument("packages") {
+                    type = NavType.StringType
+                    nullable = true
+                })
+            ) { backStackEntry ->
+                HideAppsNotice(
+                    navController = navController,
+                    packages = backStackEntry.arguments?.getString("packages")
+                )
+            }
             composable("func\\romworkshop") { Rom_workshop(navController) }
             composable(
                 route = "feature/{categoryId}?highlightKey={highlightKey}",

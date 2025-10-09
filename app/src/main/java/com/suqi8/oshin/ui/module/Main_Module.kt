@@ -1,6 +1,7 @@
 package com.suqi8.oshin.ui.module
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -73,6 +74,8 @@ import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.models.ModuleEntry
+import com.suqi8.oshin.ui.activity.components.BasicComponentDefaults
+import com.suqi8.oshin.ui.activity.components.SuperArrow
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.GetFuncRoute
 import kotlinx.coroutines.Dispatchers
@@ -135,8 +138,25 @@ fun Main_Module(
                                 appStyle = uiState.appStyle,
                                 onStyleChange = viewModel::onAppStyleChanged,
                                 moduleEntries = uiState.moduleEntries,
-                                navController = navController,
-                                onAppNotFound = { /* TODO: 调用 ViewModel 处理 */ }
+                                onAppNotFound = viewModel::onAppNotFound,
+                                navController = navController
+                            )
+                        }
+                    }
+                }
+
+                item {
+                    // 仅当 notInstalledApps 列表不为空时，才显示这个箭头
+                    AnimatedVisibility(visible = uiState.notInstalledApps.isNotEmpty()) {
+                        HUDModuleContainer(modifier = Modifier.padding(horizontal = 16.dp)) {
+                            SuperArrow(
+                                title = stringResource(R.string.app_not_found_in_list),
+                                titleColor = BasicComponentDefaults.titleColor(color = MiuixTheme.colorScheme.primary),
+                                onClick = {
+                                    // 导航时，将包名列表作为参数传递过去
+                                    val packages = uiState.notInstalledApps.joinToString(",")
+                                    navController.navigate("hide_apps_notice/$packages")
+                                }
                             )
                         }
                     }
@@ -157,7 +177,6 @@ fun AppListContent(
     onAppNotFound: (String) -> Unit,
     navController: NavController
 ) {
-    // TODO: 未安装应用的逻辑可以后续在 ViewModel 中处理
     val installedEntries = moduleEntries
 
     Column(Modifier.padding(horizontal = 16.dp)) {
@@ -205,7 +224,6 @@ fun AppListContent(
                 }
             }
         }
-        // ... (未找到应用提示等 UI)
     }
 }
 
