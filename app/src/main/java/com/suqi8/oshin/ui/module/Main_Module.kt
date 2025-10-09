@@ -90,6 +90,8 @@ import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Search
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.overScrollVertical
+import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
 // --- 主屏幕入口 ---
 
@@ -113,6 +115,8 @@ fun Main_Module(
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
+                    .overScrollVertical()
+                    .scrollEndHaptic()
                     .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
                 contentPadding = padding,
                 verticalArrangement = Arrangement.spacedBy(16.dp)

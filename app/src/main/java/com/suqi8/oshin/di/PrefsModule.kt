@@ -13,7 +13,6 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object PrefsModule {
-
     @Provides
     @Singleton
     fun provideYukiHookPrefsBridge(@ApplicationContext context: Context): YukiHookPrefsBridge {

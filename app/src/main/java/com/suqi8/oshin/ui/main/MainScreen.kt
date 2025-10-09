@@ -37,11 +37,11 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import com.suqi8.oshin.Main_Function
-import com.suqi8.oshin.Main_Home
-import com.suqi8.oshin.ui.module.Main_Module
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.about.Main_About
 import com.suqi8.oshin.ui.components.BottomTabs
+import com.suqi8.oshin.ui.home.MainHome
+import com.suqi8.oshin.ui.module.Main_Module
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeEffectScope
 import dev.chrisbanes.haze.HazeInputScale
@@ -222,7 +222,7 @@ fun AppHorizontalPager(
         userScrollEnabled = true,
         pageContent = { page ->
             when (page) {
-                0 -> Main_Home(
+                0 -> MainHome(
                     topAppBarScrollBehavior = topAppBarScrollBehaviorList[0],
                     padding = padding,
                     navController = navController
