@@ -10,7 +10,6 @@ import com.suqi8.oshin.models.StringResource
 import com.suqi8.oshin.models.Switch
 
 object android {
-
     val definition = PageDefinition(
         // 1. 定义整个页面的共享信息
         category = "android", // 所有 Switch 项将使用这个 category

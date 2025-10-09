@@ -128,6 +128,7 @@ fun featureScreen(
         navController = navController,
         scrollBehavior = topAppBarState
     ) { padding ->
+        val itemStates = uiState.itemStates
         LazyColumn(
             state = listState,
             modifier = Modifier
@@ -138,10 +139,8 @@ fun featureScreen(
             contentPadding = padding
         ) {
             itemsIndexed(pageDef.items) { _, pageItem ->
-                // 使用 when 来区分渲染不同类型的 PageItem
                 when (pageItem) {
                     is CardDefinition -> {
-                        // 如果是 CardDefinition，则渲染标题和卡片
                         pageItem.titleRes?.let {
                             SmallTitle(text = stringResource(it))
                         }
@@ -149,38 +148,47 @@ fun featureScreen(
                             Column {
                                 val itemCount = pageItem.items.size
                                 pageItem.items.forEachIndexed { itemIndex, item ->
-                                    val isHighlighted = (item as? TitledScreenItem)?.key == uiState.highlightKey
+                                    // 可见性判断在这里，针对卡片内部的每一个 item
+                                    val isVisible = viewModel.evaluateCondition(item.condition, itemStates)
+                                    AnimatedVisibility(visible = isVisible) {
+                                        Column {
+                                            val isHighlighted = (item as? TitledScreenItem)?.key == uiState.highlightKey
 
-                                    val topPadding = when {
-                                        itemCount == 1 -> 4.dp
-                                        itemIndex == 0 -> 2.dp
-                                        else -> 0.dp
-                                    }
-                                    val bottomPadding = when {
-                                        itemCount == 1 -> 4.dp
-                                        itemIndex == itemCount - 1 -> 2.dp
-                                        else -> 0.dp
-                                    }
-                                    val itemPadding = PaddingValues(top = topPadding, bottom = bottomPadding)
+                                            val topPadding = when {
+                                                itemCount == 1 -> 4.dp
+                                                itemIndex == 0 -> 2.dp
+                                                else -> 0.dp
+                                            }
+                                            val bottomPadding = when {
+                                                itemCount == 1 -> 4.dp
+                                                itemIndex == itemCount - 1 -> 2.dp
+                                                else -> 0.dp
+                                            }
+                                            val itemPadding = PaddingValues(top = topPadding, bottom = bottomPadding)
 
-                                    RenderScreenItem(
-                                        item = item,
-                                        viewModel = viewModel,
-                                        navController = navController,
-                                        isHighlighted = isHighlighted,
-                                        paddingValues = itemPadding
-                                    )
+                                            AnimatedVisibility(visible = isVisible) {
+                                                RenderScreenItem(
+                                                    item = item,
+                                                    viewModel = viewModel,
+                                                    navController = navController,
+                                                    isHighlighted = isHighlighted,
+                                                    paddingValues = itemPadding
+                                                )
 
-                                    if (itemIndex < pageItem.items.lastIndex) {
-                                        addline()
+                                                if (itemIndex < pageItem.items.lastIndex) {
+                                                    addline()
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
                         }
                     }
+
                     is RelatedLinks -> {
-                        // 如果是 RelatedLinks，则直接渲染 wantFind 组件
-                        val isVisible = viewModel.evaluateCondition(pageItem.condition)
+                        // RelatedLinks 作为一个整体，有自己的显示条件
+                        val isVisible = viewModel.evaluateCondition(pageItem.condition, itemStates)
                         AnimatedVisibility(visible = isVisible) {
                             wantFind(
                                 links = pageItem.links,
