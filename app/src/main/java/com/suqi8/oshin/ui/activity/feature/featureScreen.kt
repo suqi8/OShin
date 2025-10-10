@@ -141,43 +141,48 @@ fun featureScreen(
             itemsIndexed(pageDef.items) { _, pageItem ->
                 when (pageItem) {
                     is CardDefinition -> {
-                        pageItem.titleRes?.let {
-                            SmallTitle(text = stringResource(it))
-                        }
-                        Card {
+                        val isVisible = viewModel.evaluateCondition(pageItem.condition, itemStates)
+                        AnimatedVisibility(visible = isVisible) {
                             Column {
-                                val itemCount = pageItem.items.size
-                                pageItem.items.forEachIndexed { itemIndex, item ->
-                                    // 可见性判断在这里，针对卡片内部的每一个 item
-                                    val isVisible = viewModel.evaluateCondition(item.condition, itemStates)
-                                    AnimatedVisibility(visible = isVisible) {
-                                        Column {
-                                            val isHighlighted = (item as? TitledScreenItem)?.key == uiState.highlightKey
-
-                                            val topPadding = when {
-                                                itemCount == 1 -> 4.dp
-                                                itemIndex == 0 -> 2.dp
-                                                else -> 0.dp
-                                            }
-                                            val bottomPadding = when {
-                                                itemCount == 1 -> 4.dp
-                                                itemIndex == itemCount - 1 -> 2.dp
-                                                else -> 0.dp
-                                            }
-                                            val itemPadding = PaddingValues(top = topPadding, bottom = bottomPadding)
-
+                                pageItem.titleRes?.let {
+                                    SmallTitle(text = stringResource(it))
+                                }
+                                Card {
+                                    Column {
+                                        val itemCount = pageItem.items.size
+                                        pageItem.items.forEachIndexed { itemIndex, item ->
+                                            // 可见性判断在这里，针对卡片内部的每一个 item
+                                            val isVisible = viewModel.evaluateCondition(item.condition, itemStates)
                                             AnimatedVisibility(visible = isVisible) {
                                                 Column {
-                                                    RenderScreenItem(
-                                                        item = item,
-                                                        viewModel = viewModel,
-                                                        navController = navController,
-                                                        isHighlighted = isHighlighted,
-                                                        paddingValues = itemPadding
-                                                    )
+                                                    val isHighlighted = (item as? TitledScreenItem)?.key == uiState.highlightKey
 
-                                                    if (itemIndex < pageItem.items.lastIndex) {
-                                                        addline()
+                                                    val topPadding = when {
+                                                        itemCount == 1 -> 4.dp
+                                                        itemIndex == 0 -> 2.dp
+                                                        else -> 0.dp
+                                                    }
+                                                    val bottomPadding = when {
+                                                        itemCount == 1 -> 4.dp
+                                                        itemIndex == itemCount - 1 -> 2.dp
+                                                        else -> 0.dp
+                                                    }
+                                                    val itemPadding = PaddingValues(top = topPadding, bottom = bottomPadding)
+
+                                                    AnimatedVisibility(visible = isVisible) {
+                                                        Column {
+                                                            RenderScreenItem(
+                                                                item = item,
+                                                                viewModel = viewModel,
+                                                                navController = navController,
+                                                                isHighlighted = isHighlighted,
+                                                                paddingValues = itemPadding
+                                                            )
+
+                                                            if (itemIndex < pageItem.items.lastIndex) {
+                                                                addline()
+                                                            }
+                                                        }
                                                     }
                                                 }
                                             }
@@ -196,6 +201,12 @@ fun featureScreen(
                                 links = pageItem.links,
                                 navController = navController
                             )
+                        }
+                    }
+                    is NoEnable -> {
+                        val isVisible = viewModel.evaluateCondition(pageItem.condition, itemStates)
+                        AnimatedVisibility(visible = isVisible) {
+                            FunNoEnable()
                         }
                     }
                 }
@@ -289,7 +300,6 @@ private fun RenderScreenItem(
                     onClick = { navController.navigate("feature/${item.route}") }
                 )
             }
-            is NoEnable -> FunNoEnable()
             is Picture -> {
                 // 从 itemStates 中获取当前显示的图片
                 val imageBitmap = itemStates.itemStates[item.key] as? ImageBitmap

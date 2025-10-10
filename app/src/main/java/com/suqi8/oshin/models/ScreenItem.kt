@@ -144,10 +144,3 @@ data class Action(
 ) : TitledScreenItem {
     override val key: String get() = route
 }
-
-/**
- * 描述一个静态的“未启用”提示块 (对应 FunNoEnable)。
- * 这是一个单例对象，因为它在所有地方展示的内容都一样，不需要任何参数。
- */
-data class NoEnable(override val condition: DisplayCondition? = null) : ScreenItem
-
