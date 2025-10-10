@@ -25,6 +25,7 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunPage
+import com.suqi8.oshin.ui.activity.components.FunSwitch
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.main.LocalColorMode
 import top.yukonga.miuix.kmp.extra.SuperDropdown
@@ -121,18 +122,18 @@ fun about_setting(
                 }
             )
             addline()
-            /*funSwich(
+            FunSwitch(
                 title = "Debug",
                 category = "settings",
                 key = "Debug"
             )
             addline()
-            funSwich(
+            FunSwitch(
                 title = stringResource(R.string.addline),
                 category = "settings",
                 key = "addline"
             )
-            addline()*/
+            addline()
             val componentName = ComponentName(context, "com.suqi8.oshin.Home")
             val pm = context.packageManager
             val ishide = remember {

@@ -52,6 +52,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.integerArrayResource
@@ -445,9 +446,9 @@ fun IconFunArrow(title: String, summary: String? = null, iconRes: Int, onClick: 
     funArrow(
         title = title,
         summary = summary,
-        /*leftAction = {
+        leftAction = {
             Image(painter = painterResource(iconRes), contentDescription = null, modifier = Modifier.size(32.dp).padding(end = 8.dp), colorFilter = ColorFilter.tint(colorScheme.onSurface))
-        },*/
+        },
         onClick = onClick
     )
 }

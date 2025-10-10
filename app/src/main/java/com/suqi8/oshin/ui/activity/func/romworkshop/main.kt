@@ -16,13 +16,13 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.FunPage
 import top.yukonga.miuix.kmp.basic.Text
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-fun Rom_workshop(navController: NavController) {
+fun RomWorkshop(navController: NavController) {
     FunPage(
         title = stringResource(R.string.rom_workshop),
         navController = navController

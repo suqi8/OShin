@@ -24,6 +24,7 @@ fun funArrow(
     title: String,
     summary: String? = null,
     rightText: String? = null,
+    leftAction: @Composable (() -> Unit)? = null,
     externalPadding: PaddingValues = PaddingValues(0.dp),
     onClick: () -> Unit
 ) {
@@ -31,6 +32,7 @@ fun funArrow(
         title = title,
         summary = summary,
         rightText = rightText,
+        leftAction = leftAction,
         externalPadding = externalPadding,
         onClick = onClick
     )

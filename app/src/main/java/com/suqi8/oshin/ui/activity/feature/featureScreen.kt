@@ -47,13 +47,13 @@ import com.suqi8.oshin.models.TitledScreenItem
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunNoEnable
 import com.suqi8.oshin.ui.activity.components.FunPage
+import com.suqi8.oshin.ui.activity.components.FunSwitch
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.activity.components.funArrow
 import com.suqi8.oshin.ui.activity.components.funDropdown
 import com.suqi8.oshin.ui.activity.components.funPicSele
 import com.suqi8.oshin.ui.activity.components.funSlider
 import com.suqi8.oshin.ui.activity.components.funString
-import com.suqi8.oshin.ui.activity.components.funSwitch
 import com.suqi8.oshin.ui.activity.components.wantFind
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.CircularProgressIndicator
@@ -167,16 +167,18 @@ fun featureScreen(
                                             val itemPadding = PaddingValues(top = topPadding, bottom = bottomPadding)
 
                                             AnimatedVisibility(visible = isVisible) {
-                                                RenderScreenItem(
-                                                    item = item,
-                                                    viewModel = viewModel,
-                                                    navController = navController,
-                                                    isHighlighted = isHighlighted,
-                                                    paddingValues = itemPadding
-                                                )
+                                                Column {
+                                                    RenderScreenItem(
+                                                        item = item,
+                                                        viewModel = viewModel,
+                                                        navController = navController,
+                                                        isHighlighted = isHighlighted,
+                                                        paddingValues = itemPadding
+                                                    )
 
-                                                if (itemIndex < pageItem.items.lastIndex) {
-                                                    addline()
+                                                    if (itemIndex < pageItem.items.lastIndex) {
+                                                        addline()
+                                                    }
                                                 }
                                             }
                                         }
@@ -247,7 +249,7 @@ private fun RenderScreenItem(
         when (item) {
             is Switch -> {
                 val checked = itemStates.itemStates[item.key] as? Boolean ?: item.defaultValue
-                funSwitch(
+                FunSwitch(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
                     checked = checked,
