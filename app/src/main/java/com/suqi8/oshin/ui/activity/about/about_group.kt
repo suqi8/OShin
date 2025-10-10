@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.navigation.NavController
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
@@ -34,14 +35,14 @@ fun about_group(navController: NavController) {
             funArrow(title = stringResource(id = R.string.official_channel),
                 onClick = {
                     val telegramIntent = Intent(Intent.ACTION_VIEW)
-                    telegramIntent.data = Uri.parse("tg://resolve?domain=OPatchA")
+                    telegramIntent.data = "tg://resolve?domain=OPatchA".toUri()
                     // 检查是否安装了 Telegram 应用
                     if (telegramIntent.resolveActivity(context.packageManager) != null) {
                         context.startActivity(telegramIntent)
                     } else {
                         // 如果未安装 Telegram，可以显示一个提示或打开 Telegram 网页版
                         val webIntent =
-                            Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/OPatchA"))
+                            Intent(Intent.ACTION_VIEW, "https://t.me/OPatchA".toUri())
                         context.startActivity(webIntent)
                     }
                 })
@@ -49,14 +50,14 @@ fun about_group(navController: NavController) {
             funArrow(title = stringResource(id = R.string.discussion_group),
                 onClick = {
                     val telegramIntent = Intent(Intent.ACTION_VIEW)
-                    telegramIntent.data = Uri.parse("tg://resolve?domain=OPatchB")
+                    telegramIntent.data = "tg://resolve?domain=OPatchB".toUri()
                     // 检查是否安装了 Telegram 应用
                     if (telegramIntent.resolveActivity(context.packageManager) != null) {
                         context.startActivity(telegramIntent)
                     } else {
                         // 如果未安装 Telegram，可以显示一个提示或打开 Telegram 网页版
                         val webIntent =
-                            Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/OPatchB"))
+                            Intent(Intent.ACTION_VIEW, "https://t.me/OPatchB".toUri())
                         context.startActivity(webIntent)
                     }
                 })
@@ -64,14 +65,14 @@ fun about_group(navController: NavController) {
             funArrow(title = stringResource(id = R.string.auto_build_release),
                 onClick = {
                     val telegramIntent = Intent(Intent.ACTION_VIEW)
-                    telegramIntent.data = Uri.parse("tg://resolve?domain=OPatchC")
+                    telegramIntent.data = "tg://resolve?domain=OPatchC".toUri()
                     // 检查是否安装了 Telegram 应用
                     if (telegramIntent.resolveActivity(context.packageManager) != null) {
                         context.startActivity(telegramIntent)
                     } else {
                         // 如果未安装 Telegram，可以显示一个提示或打开 Telegram 网页版
                         val webIntent =
-                            Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/OPatchC"))
+                            Intent(Intent.ACTION_VIEW, "https://t.me/OPatchC".toUri())
                         context.startActivity(webIntent)
                     }
                 })

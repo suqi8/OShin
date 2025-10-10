@@ -19,8 +19,7 @@ import com.suqi8.oshin.ui.activity.about.about_references
 import com.suqi8.oshin.ui.activity.about.about_setting
 import com.suqi8.oshin.ui.activity.feature.featureScreen
 import com.suqi8.oshin.ui.activity.func.cpu_freq
-import com.suqi8.oshin.ui.activity.func.romworkshop.Rom_workshop
-import com.suqi8.oshin.ui.activity.recent_update
+import com.suqi8.oshin.ui.activity.func.romworkshop.RomWorkshop
 import com.suqi8.oshin.utils.SpringEasing
 import top.yukonga.miuix.kmp.utils.getWindowSize
 
@@ -49,7 +48,6 @@ fun AppNavHost() {
             }
         ) {
             composable("Main") { MainScreen(navController) }
-            composable("recent_update") { recent_update(navController) }
             composable("about_setting") { about_setting(navController) }
             composable("about_group") { about_group(navController) }
             composable("about_references") { about_references(navController) }
@@ -67,7 +65,7 @@ fun AppNavHost() {
                     packages = backStackEntry.arguments?.getString("packages")
                 )
             }
-            composable("func\\romworkshop") { Rom_workshop(navController) }
+            composable("func\\romworkshop") { RomWorkshop(navController) }
             composable(
                 route = "feature/{categoryId}?highlightKey={highlightKey}",
                 // 定义 categoryId 参数为字符串类型
