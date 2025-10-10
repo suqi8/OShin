@@ -7,6 +7,7 @@ import com.suqi8.oshin.features.android.android
 import com.suqi8.oshin.features.incallui.incallui
 import com.suqi8.oshin.features.systemui.ControlCenter
 import com.suqi8.oshin.features.systemui.HardwareIndicator
+import com.suqi8.oshin.features.systemui.notification
 import com.suqi8.oshin.features.systemui.systemui
 import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.models.PageDefinition
@@ -35,6 +36,7 @@ object FeatureRegistry {
         "systemui" to systemui.definition,
         "systemui\\controlCenter" to ControlCenter.definition,
         "systemui\\hardware_indicator" to HardwareIndicator.definition,
+        "systemui\\notification" to notification.definition,
 
         "incallui" to incallui.definition,
     )
