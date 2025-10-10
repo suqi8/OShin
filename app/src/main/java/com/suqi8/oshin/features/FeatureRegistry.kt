@@ -5,6 +5,7 @@ import com.suqi8.oshin.features.android.PMS
 import com.suqi8.oshin.features.android.SplitScreenMultiWindow
 import com.suqi8.oshin.features.android.android
 import com.suqi8.oshin.features.incallui.incallui
+import com.suqi8.oshin.features.systemui.ControlCenter
 import com.suqi8.oshin.features.systemui.systemui
 import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.models.PageDefinition
@@ -31,6 +32,7 @@ object FeatureRegistry {
         "android\\split_screen_multi_window" to SplitScreenMultiWindow.definition,
 
         "systemui" to systemui.definition,
+        "systemui\\controlCenter" to ControlCenter.definition,
 
         "incallui" to incallui.definition,
     )
