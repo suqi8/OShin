@@ -40,4 +40,27 @@
         <item>0x00ffffff</item>
         <item>0x30ffffff</item>
     </integer-array>
+    <string-array name="hardware_indicator_display_options">
+
+        <item>@string/power</item>
+        <item>@string/current</item>
+        <item>@string/voltage</item>
+        <item>@string/cpu_temperature</item>
+        <item>@string/battery_temperature</item>
+        <item>@string/cpu_frequency</item>
+        <item>@string/cpu_usage</item>
+        <item>@string/ram_usage</item>
+    </string-array>
+
+    <string-array name="hardware_indicator_gravity_options">
+        <item>@string/status_bar_time_gravity_center</item>
+        <item>@string/status_bar_time_gravity_top</item>
+        <item>@string/status_bar_time_gravity_bottom</item>
+        <item>@string/status_bar_time_gravity_end</item>
+        <item>@string/status_bar_time_gravity_center_horizontal</item>
+        <item>@string/status_bar_time_gravity_center_vertical</item>
+        <item>@string/status_bar_time_gravity_fill</item>
+        <item>@string/status_bar_time_gravity_fill_horizontal</item>
+        <item>@string/status_bar_time_gravity_fill_vertical</item>
+    </string-array>
 </resources>
