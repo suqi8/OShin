@@ -8,17 +8,23 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.data.repository.FeatureRepository
 import com.suqi8.oshin.features.FeatureRegistry
 import com.suqi8.oshin.models.AppName
+import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.models.PlainText
 import com.suqi8.oshin.models.StringResource
 import com.suqi8.oshin.models.Title
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.text.Collator
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,16 +60,45 @@ class ModuleViewModel @Inject constructor(
 
     private fun buildSearchIndex() {
         viewModelScope.launch {
-            // 2. 直接从 Repository 获取数据，不再需要复杂的计算逻辑！
-            allSearchableItems = featureRepository.getAllSearchableItems()
+            _uiState.update { it.copy(isLoading = true) }
+
+            val sortedEntriesJob = async(Dispatchers.IO) { getSortedModuleEntries() }
+            val searchableItemsJob = async { featureRepository.getAllSearchableItems() }
 
             _uiState.update {
                 it.copy(
-                    moduleEntries = FeatureRegistry.moduleEntries, // moduleEntries 依然从 Registry 获取
+                    moduleEntries = sortedEntriesJob.await(),
                     isLoading = false
                 )
             }
+
+            // 等待搜索索引任务完成并存入缓存
+            allSearchableItems = searchableItemsJob.await()
         }
+    }
+
+    private suspend fun getSortedModuleEntries(): List<ModuleEntry> {
+        val originalEntries = FeatureRegistry.moduleEntries
+
+        // 1. 为每个 Entry 异步获取其应用名
+        val entriesWithAppName = coroutineScope {
+            originalEntries.map { entry ->
+                async(Dispatchers.IO) {
+                    getAppName(entry.packageName) to entry
+                }
+            }.awaitAll()
+        }
+
+        // 2. 根据应用名进行排序 (使用 Collator 以支持中文等复杂排序)
+        val collator = Collator.getInstance(Locale.getDefault())
+        val sortedEntries = entriesWithAppName.sortedWith(
+            compareBy(collator) { it.first }
+        ).map {
+            // 3. 排序后，只返回原始的 ModuleEntry 列表
+            it.second
+        }
+
+        return sortedEntries
     }
 
     fun onAppNotFound(packageName: String) {
@@ -80,7 +115,6 @@ class ModuleViewModel @Inject constructor(
         _uiState.update { it.copy(searchQuery = query, isSearching = isSearching) }
 
         if (isSearching) {
-            // 在预构建的索引中执行快速过滤
             val results = allSearchableItems.filter {
                 it.title.contains(query, ignoreCase = true) ||
                         it.summary.contains(query, ignoreCase = true)
