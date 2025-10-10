@@ -131,7 +131,8 @@ fun about_setting(
             FunSwitch(
                 title = stringResource(R.string.addline),
                 category = "settings",
-                key = "addline"
+                key = "addline",
+                defValue = true
             )
             addline()
             val componentName = ComponentName(context, "com.suqi8.oshin.Home")

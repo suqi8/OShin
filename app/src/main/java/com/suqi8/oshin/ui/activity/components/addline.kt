@@ -12,7 +12,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 @Composable
 fun addline() {
     val context = LocalContext.current
-    if (context.prefs("settings").getBoolean("addline", false))
+    if (context.prefs("settings").getBoolean("addline", true))
         HorizontalDivider(
             modifier = Modifier.padding(horizontal = 16.dp),
             thickness = 0.5.dp,
