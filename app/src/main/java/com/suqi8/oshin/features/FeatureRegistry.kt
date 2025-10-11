@@ -5,6 +5,8 @@ import com.suqi8.oshin.features.android.PMS
 import com.suqi8.oshin.features.android.SplitScreenMultiWindow
 import com.suqi8.oshin.features.android.android
 import com.suqi8.oshin.features.incallui.incallui
+import com.suqi8.oshin.features.launcher.RecentTask
+import com.suqi8.oshin.features.launcher.launcher
 import com.suqi8.oshin.features.mms.mms
 import com.suqi8.oshin.features.phone.phone
 import com.suqi8.oshin.features.settings.settings
@@ -28,6 +30,7 @@ object FeatureRegistry {
         ModuleEntry("com.android.settings", "settings"),
         ModuleEntry("com.android.phone", "phone"),
         ModuleEntry("com.android.mms", "mms"),
+        ModuleEntry("com.android.launcher", "launcher"),
     )
 
     /**
@@ -55,5 +58,8 @@ object FeatureRegistry {
         "phone" to phone.definition,
 
         "mms" to mms.definition,
+
+        "launcher" to launcher.definition,
+        "launcher\\recent_task" to RecentTask.definition
     )
 }

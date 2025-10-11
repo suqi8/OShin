@@ -70,7 +70,6 @@
         <item>@string/default_mode</item>
         <item>@string/upload_download</item>
     </string-array>
-
     <string-array name="icon_indicator_options">
         <item>@string/no_icon</item>
         <item>△▽▲▼</item>
@@ -78,5 +77,9 @@
         <item>☖⛉☗⛊</item>
         <item>↑↓</item>
         <item>⇧⇩</item>
+    </string-array>
+    <string-array name="fold_mode">
+        <item>@string/unfold</item>
+        <item>@string/fold</item>
     </string-array>
 </resources>
