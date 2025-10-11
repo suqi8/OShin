@@ -5,14 +5,21 @@ import com.suqi8.oshin.features.android.PMS
 import com.suqi8.oshin.features.android.SplitScreenMultiWindow
 import com.suqi8.oshin.features.android.android
 import com.suqi8.oshin.features.appdetail.appdetail
+import com.suqi8.oshin.features.battery.battery
+import com.suqi8.oshin.features.exsystemservice.exsystemservice
+import com.suqi8.oshin.features.games.games
 import com.suqi8.oshin.features.health.health
 import com.suqi8.oshin.features.incallui.incallui
 import com.suqi8.oshin.features.launcher.RecentTask
 import com.suqi8.oshin.features.launcher.launcher
 import com.suqi8.oshin.features.mihealth.mihealth
 import com.suqi8.oshin.features.mms.mms
+import com.suqi8.oshin.features.notificationmanager.notificationmanager
 import com.suqi8.oshin.features.ocrscanner.ocrscanner
+import com.suqi8.oshin.features.oplusphonemanager.oplusphonemanager
 import com.suqi8.oshin.features.oshare.oshare
+import com.suqi8.oshin.features.ota.ota
+import com.suqi8.oshin.features.padconnect.padconnect
 import com.suqi8.oshin.features.phone.phone
 import com.suqi8.oshin.features.phonemanager.phonemanager
 import com.suqi8.oshin.features.quicksearchbox.quicksearchbox
@@ -51,6 +58,13 @@ object FeatureRegistry {
         ModuleEntry("com.heytap.speechassist", "speechassist"),
         ModuleEntry("com.mi.health", "mihealth"),
         ModuleEntry("com.oplus.appdetail", "appdetail"),
+        ModuleEntry("com.oplus.battery", "battery"),
+        ModuleEntry("com.oplus.exsystemservice", "exsystemservice"),
+        ModuleEntry("com.oplus.games", "games"),
+        ModuleEntry("com.oplus.notificationmanager", "notificationmanager"),
+        ModuleEntry("com.oplus.ota", "ota"),
+        ModuleEntry("com.oplus.padconnect", "padconnect"),
+        ModuleEntry("com.oplus.phonemanager", "oplusphonemanager"),
     )
 
     /**
@@ -101,5 +115,19 @@ object FeatureRegistry {
         "mihealth" to mihealth.definition,
 
         "appdetail" to appdetail.definition,
+
+        "battery" to battery.definition,
+
+        "exsystemservice" to exsystemservice.definition,
+
+        "games" to games.definition,
+
+        "notificationmanager" to notificationmanager.definition,
+
+        "ota" to ota.definition,
+
+        "padconnect" to padconnect.definition,
+
+        "oplusphonemanager" to oplusphonemanager.definition
     )
 }
