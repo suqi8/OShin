@@ -138,7 +138,7 @@ class HardwareIndicator : YukiBaseHooker() {
                 prefix = "power_indicator",
                 resources = res
             )
-            localPrefs.getInt("power_indicator_update_interval", 1000).toLong()
+            localPrefs.getFloat("power_indicator_update_interval", 1000f).toLong()
         }.also { uiHandler.post(it) }
     }
 
@@ -153,7 +153,7 @@ class HardwareIndicator : YukiBaseHooker() {
                 prefix = "temp_indicator",
                 resources = res
             )
-            localPrefs.getInt("temp_indicator_update_interval", 1000).toLong()
+            localPrefs.getFloat("temp_indicator_update_interval", 1000f).toLong()
         }.also { uiHandler.post(it) }
     }
 
@@ -173,9 +173,9 @@ class HardwareIndicator : YukiBaseHooker() {
             val props = runCatching { readBatteryProperties() }.getOrNull()
             val currentNow = props?.getProperty("POWER_SUPPLY_CURRENT_NOW")?.toFloatOrNull() ?: 0f
             val voltageNow = props?.getProperty("POWER_SUPPLY_VOLTAGE_NOW")?.toFloatOrNull() ?: 0f
-            val cpuTempSource = localPrefs.getInt("data_temp_cpu_source", 0)
+            val cpuTempSource = localPrefs.getFloat("data_temp_cpu_source", 0f)
             val cpuTemp = readCpuTemp(cpuTempSource)
-            val cpuFreqSource = localPrefs.getInt("data_freq_cpu_source", 0)
+            val cpuFreqSource = localPrefs.getFloat("data_freq_cpu_source", 0f)
             val cpuFreq = readCpuFreq(cpuFreqSource)
             val cpuUsage = calculateCpuUsage(resources)
             val ramUsage = readRamUsage()
@@ -246,12 +246,12 @@ class HardwareIndicator : YukiBaseHooker() {
         return listOf(powerStr, currentStr, voltageStr, cpuTempStr, batteryTempStr, cpuFreqStr, cpuUsageStr, ramUsageStr)
     }
 
-    private fun readCpuTemp(source: Int) = runCatching {
-        File("/sys/class/thermal/thermal_zone$source/temp").readText().trim().toFloat() / 1000f
+    private fun readCpuTemp(source: Float) = runCatching {
+        File("/sys/class/thermal/thermal_zone${source.toInt()}/temp").readText().trim().toFloat() / 1000f
     }.getOrElse { 0f }
 
-    private fun readCpuFreq(source: Int) = runCatching {
-        File("/sys/devices/system/cpu/cpu$source/cpufreq/scaling_cur_freq").readText().trim().toInt() / 1000
+    private fun readCpuFreq(source: Float) = runCatching {
+        File("/sys/devices/system/cpu/cpu${source.toInt()}/cpufreq/scaling_cur_freq").readText().trim().toInt() / 1000
     }.getOrElse { 0 }
 
     private fun readRamUsage(): Int {
