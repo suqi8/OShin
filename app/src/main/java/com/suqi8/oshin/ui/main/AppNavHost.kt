@@ -13,10 +13,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.suqi8.oshin.ui.activity.HideAppsNotice
-import com.suqi8.oshin.ui.activity.about.about_contributors
-import com.suqi8.oshin.ui.activity.about.about_group
-import com.suqi8.oshin.ui.activity.about.about_references
-import com.suqi8.oshin.ui.activity.about.about_setting
+import com.suqi8.oshin.ui.about.about_contributors
+import com.suqi8.oshin.ui.about.about_group
+import com.suqi8.oshin.ui.about.about_references
+import com.suqi8.oshin.ui.about.about_setting
 import com.suqi8.oshin.ui.activity.feature.featureScreen
 import com.suqi8.oshin.ui.activity.func.cpu_freq
 import com.suqi8.oshin.ui.activity.func.romworkshop.RomWorkshop
