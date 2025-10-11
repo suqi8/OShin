@@ -12,7 +12,7 @@ sealed interface ScreenItem {
      * 此项的显示条件。如果为 null，则始终显示。
      * 如果不为 null，则仅在条件满足时显示。
      */
-    val condition: DisplayCondition?
+    val condition: Condition?
 }
 
 /**
@@ -27,7 +27,7 @@ data class Picture(
     override val title: Title,
     @StringRes override val summary: Int? = null,
     val targetPath: String,
-    override val condition: DisplayCondition? = null
+    override val condition: Condition? = null
 ) : TitledScreenItem
 
 /**
@@ -39,26 +39,19 @@ sealed interface TitledScreenItem : ScreenItem {
     val key: String
 }
 
-/**
- * 描述一个UI组件的显示条件。
- * @param dependencyKey 所依赖的功能项的 key。
- * @param operator 比较操作符。
- * @param requiredValue 所依赖项需要满足的值。
- */
-data class DisplayCondition(
+sealed interface Condition
+
+data class SimpleCondition(
     val dependencyKey: String,
     val operator: Operator = Operator.EQUALS,
     val requiredValue: Any
-)
+) : Condition
 
-/**
- * 定义了可用的比较操作符。
- */
-enum class Operator {
-    EQUALS,         // 等于
-    NOT_EQUALS,     // 不等于
-    // 未来扩展: GREATER_THAN, LESS_THAN, CONTAINS 等
-}
+data class AndCondition(
+    val conditions: List<Condition>
+) : Condition
+
+enum class Operator { EQUALS, NOT_EQUALS }
 
 /**
  * 描述一个开关项 (对应 FunSwitch)。
@@ -72,7 +65,7 @@ data class Switch(
     override val title: Title,
     @StringRes override val summary: Int? = null,
     val defaultValue: Boolean = false,
-    override val condition: DisplayCondition? = null
+    override val condition: Condition? = null
 ) : TitledScreenItem
 
 /**
@@ -93,7 +86,7 @@ data class Slider(
     val valueRange: ClosedFloatingPointRange<Float> = 0f..100f,
     val unit: String = "",
     val decimalPlaces: Int = 1,
-    override val condition: DisplayCondition? = null
+    override val condition: Condition? = null
 ) : TitledScreenItem
 
 /**
@@ -110,7 +103,7 @@ data class Dropdown(
     @StringRes override val summary: Int? = null,
     @ArrayRes val optionsRes: Int,
     val defaultValue: Int = 0,
-    override val condition: DisplayCondition? = null
+    override val condition: Condition? = null
 ) : TitledScreenItem
 
 /**
@@ -127,7 +120,7 @@ data class StringInput(
     @StringRes override val summary: Int? = null,
     val defaultValue: String = "",
     val nullable: Boolean = false,
-    override val condition: DisplayCondition? = null
+    override val condition: Condition? = null
 ) : TitledScreenItem
 
 /**
@@ -140,7 +133,16 @@ data class Action(
     override val title: Title,
     @StringRes override val summary: Int? = null,
     val route: String,
-    override val condition: DisplayCondition? = null
+    override val condition: Condition? = null
 ) : TitledScreenItem {
     override val key: String get() = route
+}
+
+data class UrlAction(
+    override val title: Title,
+    @StringRes override val summary: Int? = null,
+    val url: String,
+    override val condition: Condition? = null
+) : TitledScreenItem {
+    override val key: String get() = url // 使用 url 作为唯一 key
 }

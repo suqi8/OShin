@@ -7,7 +7,7 @@ import androidx.annotation.StringRes
  */
 sealed interface PageItem {
     // 将 condition 提升到顶层，所有页面元素都可以有自己的显示条件
-    val condition: DisplayCondition?
+    val condition: Condition?
 }
 /**
  * CardDefinition 现在是一个页面级别的元素。
@@ -15,7 +15,7 @@ sealed interface PageItem {
 data class CardDefinition(
     @StringRes val titleRes: Int? = null,
     val items: List<ScreenItem>,
-    override val condition: DisplayCondition? = null
+    override val condition: Condition? = null
 ) : PageItem
 
 /**
@@ -23,7 +23,7 @@ data class CardDefinition(
  */
 data class RelatedLinks(
     val links: List<Link>,
-    override val condition: DisplayCondition? = null
+    override val condition: Condition? = null
 ) : PageItem {
     data class Link(
         @StringRes val titleRes: Int,
@@ -35,5 +35,5 @@ data class RelatedLinks(
  * 代表一个“未启用”的独立提示卡片。
  */
 data class NoEnable(
-    override val condition: DisplayCondition? = null // 实现接口属性
+    override val condition: Condition? = null // 实现接口属性
 ) : PageItem

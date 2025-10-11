@@ -4,10 +4,10 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.models.Action
 import com.suqi8.oshin.models.AppName
 import com.suqi8.oshin.models.CardDefinition
-import com.suqi8.oshin.models.DisplayCondition
 import com.suqi8.oshin.models.Operator
 import com.suqi8.oshin.models.PageDefinition
 import com.suqi8.oshin.models.RelatedLinks
+import com.suqi8.oshin.models.SimpleCondition
 import com.suqi8.oshin.models.StringResource
 import com.suqi8.oshin.models.Switch
 
@@ -69,7 +69,7 @@ object systemui {
                         title = StringResource(R.string.force_trigger_ltpo),
                         key = "force_trigger_ltpo",
                         defaultValue = true,
-                        condition = DisplayCondition(
+                        condition = SimpleCondition(
                             dependencyKey = "enable_all_day_screen_off", // 它依赖的项的 key
                             operator = Operator.EQUALS,                  // 依赖项的值必须等于
                             requiredValue = true                         // true

@@ -2,10 +2,10 @@ package com.suqi8.oshin.features.systemui
 
 import com.suqi8.oshin.R
 import com.suqi8.oshin.models.CardDefinition
-import com.suqi8.oshin.models.DisplayCondition
 import com.suqi8.oshin.models.Dropdown
 import com.suqi8.oshin.models.NoEnable
 import com.suqi8.oshin.models.PageDefinition
+import com.suqi8.oshin.models.SimpleCondition
 import com.suqi8.oshin.models.Slider
 import com.suqi8.oshin.models.StringResource
 import com.suqi8.oshin.models.Switch
@@ -20,12 +20,12 @@ object HardwareIndicator {
             CardDefinition(items = listOf(
                 Switch(key = "power_indicator_enabled", title = StringResource(R.string.power_consumption_indicator))
             )),
-            NoEnable(condition = DisplayCondition("power_indicator_enabled", requiredValue = false)),
+            NoEnable(condition = SimpleCondition("power_indicator_enabled", requiredValue = false)),
 
             // --- 电量指示器设置 (显示内容) ---
             CardDefinition(
                 titleRes = R.string.display_content,
-                condition = DisplayCondition("power_indicator_enabled", requiredValue = true),
+                condition = SimpleCondition("power_indicator_enabled", requiredValue = true),
                 items = listOf(
                     Switch(key = "power_indicator_dual_row", title = StringResource(R.string.dual_row_title)),
                     Dropdown(
@@ -37,14 +37,14 @@ object HardwareIndicator {
                         key = "power_indicator_line2_content",
                         title = StringResource(R.string.second_line_content),
                         optionsRes = R.array.hardware_indicator_display_options,
-                        condition = DisplayCondition("power_indicator_dual_row", requiredValue = true)
+                        condition = SimpleCondition("power_indicator_dual_row", requiredValue = true)
                     )
                 )
             ),
             // --- 电量指示器设置 (外观和更新) ---
             CardDefinition(
                 titleRes = R.string.appearance_and_update,
-                condition = DisplayCondition("power_indicator_enabled", requiredValue = true),
+                condition = SimpleCondition("power_indicator_enabled", requiredValue = true),
                 items = listOf(
                     Switch(key = "power_indicator_bold", title = StringResource(R.string.bold_text)),
                     Dropdown(
@@ -69,12 +69,12 @@ object HardwareIndicator {
             CardDefinition(items = listOf(
                 Switch(key = "temp_indicator_enabled", title = StringResource(R.string.temperature_indicator))
             )),
-            NoEnable(condition = DisplayCondition("temp_indicator_enabled", requiredValue = false)),
+            NoEnable(condition = SimpleCondition("temp_indicator_enabled", requiredValue = false)),
 
             // --- 温度指示器设置 (显示内容) ---
             CardDefinition(
                 titleRes = R.string.display_content,
-                condition = DisplayCondition("temp_indicator_enabled", requiredValue = true),
+                condition = SimpleCondition("temp_indicator_enabled", requiredValue = true),
                 items = listOf(
                     Switch(key = "temp_indicator_dual_row", title = StringResource(R.string.dual_row_title)),
                     Dropdown(
@@ -86,14 +86,14 @@ object HardwareIndicator {
                         key = "temp_indicator_line2_content",
                         title = StringResource(R.string.second_line_content),
                         optionsRes = R.array.hardware_indicator_display_options,
-                        condition = DisplayCondition("temp_indicator_dual_row", requiredValue = true)
+                        condition = SimpleCondition("temp_indicator_dual_row", requiredValue = true)
                     )
                 )
             ),
             // --- 温度指示器设置 (外观和更新) ---
             CardDefinition(
                 titleRes = R.string.appearance_and_update,
-                condition = DisplayCondition("temp_indicator_enabled", requiredValue = true),
+                condition = SimpleCondition("temp_indicator_enabled", requiredValue = true),
                 items = listOf(
                     Switch(key = "temp_indicator_bold", title = StringResource(R.string.bold_text)),
                     Dropdown(
