@@ -99,7 +99,6 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.theme.MiuixTheme.colorScheme
 import top.yukonga.miuix.kmp.utils.G2RoundedCornerShape
 import top.yukonga.miuix.kmp.utils.overScrollVertical
-import java.lang.reflect.Method
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -481,21 +480,24 @@ fun timestampToDateTime(timestamp: Long): String {
     return formatter.format(Instant.ofEpochMilli(timestamp))
 }
 
-@SuppressLint("SoonBlockedPrivateApi")
 fun getPhysicalTotalStorage(context: Context): Long {
     val storageManager = context.getSystemService(Context.STORAGE_SERVICE) as StorageManager
-    val storageVolumes = storageManager.storageVolumes
-    if (storageVolumes.isNotEmpty()) {
-        val primaryVolume = storageVolumes.firstOrNull { it.isPrimary } ?: return getTotalStorage()
+
+    val primaryVolume = storageManager.storageVolumes.firstOrNull { it.isPrimary }
+
+    val path = primaryVolume?.directory?.path
+
+    if (path != null) {
         try {
-            val getPathMethod: Method = primaryVolume.javaClass.getDeclaredMethod("getPath")
-            val path = getPathMethod.invoke(primaryVolume) as String
             val statFs = StatFs(path)
             return statFs.blockCountLong * statFs.blockSizeLong
-        } catch (e: Exception) {
+        } catch (e: IllegalArgumentException) {
+            // StatFs 可能会因为路径无效而抛出异常
             e.printStackTrace()
         }
     }
+
+    // 如果以上方法失败，则使用备用方法
     return getTotalStorage()
 }
 
