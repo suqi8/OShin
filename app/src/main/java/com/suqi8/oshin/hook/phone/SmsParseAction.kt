@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
-import com.suqi8.oshin.hook.com.android.phone.EntityStoreManager.storeEntitiesToFile
+import com.suqi8.oshin.hook.phone.EntityStoreManager.storeEntitiesToFile
 import kotlin.math.abs
 
 /**
