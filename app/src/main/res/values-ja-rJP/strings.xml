@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">OShin</string>
-    <string name="module_not_activated">モジュールが非アクティブです</string>
     <string name="package_manager_services">パッケージ管理サービス</string>
     <string name="Color_Mode">カラーモード</string>
     <string name="Night_Mode">ナイトモード</string>
@@ -10,7 +9,6 @@
     <string name="Device_Name">デバイス名</string>
     <string name="Device_Memory">デバイスのメモリ</string>
     <string name="Search">検索</string>
-    <string name="hide_unit">単位を隠す</string>
     <string name="cancel">キャンセル</string>
     <string name="settings">設定</string>
     <string name="downgr">ダウングレードを許可</string>
@@ -36,7 +34,6 @@
     <string name="clock_size">時計のサイズ</string>
     <string name="font_size">フォントのサイズ</string>
     <string name="bold_text">太字</string>
-    <string name="alpha_setting">アルファ値</string>
     <string name="change_cpu_temp_source">CPU 温度のソースを変更</string>
     <string name="battery_temperature">バッテリーの温度</string>
     <string name="cpu_temperature">CPU の温度</string>
@@ -59,7 +56,6 @@
     <string name="Researt_app">アプリを再起動</string>
     <string name="common_settings">共通の設定</string>
     <string name="other_settings">その他の設定</string>
-    <string name="check_update">更新を確認</string>
     <string name="clock_format">時計のフォーマット</string>
     <string name="power">電源</string>
     <string name="current">現在</string>
@@ -79,13 +75,8 @@
     <string name="battery_health_not_found">ありません</string>
     <string name="exit">終了</string>
     <string name="status_bar_icon">ステータスバーアイコン</string>
-    <string name="default_">デフォルト</string>
-    <string name="hide">隠す</string>
-    <string name="wifi_icon">Wi-Fi アイコン</string>
-    <string name="wifi_arrow">Wi-Fi の矢印</string>
     <string name="hide_status_bar">ステータスバーを隠す</string>
     <string name="force_trigger_ltpo">LTPO のトリガーを強制する</string>
-    <string name="warn">警告</string>
     <string name="other">その他</string>
     <string name="thank">Thank</string>
     <string name="contributors">貢献者</string>
