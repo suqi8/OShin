@@ -1,8 +1,7 @@
 package com.suqi8.oshin.hook.phonemanager
 
+import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
-import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.type.java.UnitType
 import org.luckypray.dexkit.DexKitBridge
 import java.lang.reflect.Modifier
 
@@ -11,10 +10,9 @@ class phonemanager: YukiBaseHooker() {
         var hasani = 0
         loadApp(name = "com.coloros.phonemanager") {
             if (prefs("phonemanager").getBoolean("remove_all_popup_delays", false)) {
-                "com.oplus.phonemanager.common.DialogCrossActivity\$f".toClass().apply {
-                    method {
+                "com.oplus.phonemanager.common.DialogCrossActivity\$f".toClass().resolve().apply {
+                    firstMethod {
                         name = "onTick"
-                        returnType = UnitType
                     }.hook {
                         before {
                             args[0] = 0
@@ -32,7 +30,7 @@ class phonemanager: YukiBaseHooker() {
                         }
                     }.singleOrNull()?.also {
                         //YLog.info("methodName:"+it.methodName + " className:" + it.className)
-                        it.className.toClass().method { name = it.methodName }.hook {
+                        it.className.toClass().resolve().firstMethod { name = it.methodName }.hook {
                             before {
                                 result = prefs("phonemanager").getString("custom_prompt_content", "")
                             }
@@ -47,18 +45,18 @@ class phonemanager: YukiBaseHooker() {
                         usingStrings(" not change, skip","[setScore] ")
                     }
                 }.singleOrNull()?.also {
-                    it.className.toClass().method { name = it.methodName }.hook {
+                    it.className.toClass().resolve().firstMethod { name = it.methodName }.hook {
                         before {
-                            if (prefs("phonemanager").getInt("custom_score", -1) != -1) {
+                            if (prefs("phonemanager").getFloat("custom_score", -1f) != -1f) {
                                 if (args[1] as Boolean) {
                                     hasani += 1
                                     if (hasani == 2) {
-                                        args[0] = prefs("phonemanager").getInt("custom_score", -1)
+                                        args[0] = prefs("phonemanager").getFloat("custom_score", -1f)
                                     }
                                 }
                             }
-                            if (prefs("phonemanager").getInt("custom_animation_duration", -1) != -1) {
-                                args[2] = prefs("phonemanager").getInt("custom_animation_duration", -1).toLong()
+                            if (prefs("phonemanager").getFloat("custom_animation_duration", -1f) != -1f) {
+                                args[2] = prefs("phonemanager").getFloat("custom_animation_duration", -1f).toLong()
                             }
                         }
                     }
