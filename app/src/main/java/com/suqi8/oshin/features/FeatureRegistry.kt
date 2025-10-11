@@ -5,6 +5,7 @@ import com.suqi8.oshin.features.android.PMS
 import com.suqi8.oshin.features.android.SplitScreenMultiWindow
 import com.suqi8.oshin.features.android.android
 import com.suqi8.oshin.features.incallui.incallui
+import com.suqi8.oshin.features.settings.settings
 import com.suqi8.oshin.features.systemui.ControlCenter
 import com.suqi8.oshin.features.systemui.HardwareIndicator
 import com.suqi8.oshin.features.systemui.StatusBarClock
@@ -22,6 +23,7 @@ object FeatureRegistry {
         ModuleEntry("android", "android"),
         ModuleEntry("com.android.systemui", "systemui"),
         ModuleEntry("com.android.incallui", "incallui"),
+        ModuleEntry("com.android.settings", "settings"),
     )
 
     /**
@@ -43,5 +45,7 @@ object FeatureRegistry {
         "systemui\\status_bar_wifi" to StatusBarWifi.definition,
 
         "incallui" to incallui.definition,
+
+        "settings" to settings.definition,
     )
 }

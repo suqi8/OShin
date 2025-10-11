@@ -8,12 +8,16 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.hjq.permissions.permission.PermissionLists
 import com.kyant.capsule.ContinuousRoundedRectangle
+import com.suqi8.oshin.utils.requestPermissions
 
 @Composable
 fun funPicSele(
@@ -30,6 +34,10 @@ fun funPicSele(
             onImageSelected(uri)
         }
     )
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        requestPermissions(context, PermissionLists.getManageExternalStoragePermission()) {}
+    }
 
     BasicComponent(
         title = title,

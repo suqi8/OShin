@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.features.FeatureRegistry
 import com.suqi8.oshin.models.AndCondition
+import com.suqi8.oshin.models.AppSelection
 import com.suqi8.oshin.models.CardDefinition
 import com.suqi8.oshin.models.Condition
 import com.suqi8.oshin.models.Dropdown
@@ -92,6 +93,10 @@ class featureViewModel @Inject constructor(
                                 }
                             }
                         }
+                        is AppSelection -> {
+                            val stringSet = prefs.getString(item.key, "")
+                            initialStates[item.key] = stringSet.split(',').filter { it.isNotEmpty() }.toSet()
+                        }
                         else -> {}
                     }
                 }
@@ -147,6 +152,7 @@ class featureViewModel @Inject constructor(
                         is Float -> putFloat(key, value)
                         is Int -> putInt(key, value)
                         is String -> putString(key, value)
+                        is Set<*> -> putString(key, (value as Set<String>).joinToString(","))
                     }
                 }
             }
