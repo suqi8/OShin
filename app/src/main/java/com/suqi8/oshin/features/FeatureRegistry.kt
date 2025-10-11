@@ -8,6 +8,7 @@ import com.suqi8.oshin.features.incallui.incallui
 import com.suqi8.oshin.features.launcher.RecentTask
 import com.suqi8.oshin.features.launcher.launcher
 import com.suqi8.oshin.features.mms.mms
+import com.suqi8.oshin.features.ocrscanner.ocrscanner
 import com.suqi8.oshin.features.phone.phone
 import com.suqi8.oshin.features.settings.settings
 import com.suqi8.oshin.features.systemui.ControlCenter
@@ -31,6 +32,7 @@ object FeatureRegistry {
         ModuleEntry("com.android.phone", "phone"),
         ModuleEntry("com.android.mms", "mms"),
         ModuleEntry("com.android.launcher", "launcher"),
+        ModuleEntry("com.coloros.ocrscanner", "ocrscanner"),
     )
 
     /**
@@ -60,6 +62,8 @@ object FeatureRegistry {
         "mms" to mms.definition,
 
         "launcher" to launcher.definition,
-        "launcher\\recent_task" to RecentTask.definition
+        "launcher\\recent_task" to RecentTask.definition,
+
+        "ocrscanner" to ocrscanner.definition,
     )
 }
