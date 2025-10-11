@@ -1,5 +1,6 @@
 package com.suqi8.oshin.ui.activity.feature
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
@@ -27,6 +28,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.suqi8.oshin.models.Action
@@ -44,6 +46,7 @@ import com.suqi8.oshin.models.StringResource
 import com.suqi8.oshin.models.Switch
 import com.suqi8.oshin.models.Title
 import com.suqi8.oshin.models.TitledScreenItem
+import com.suqi8.oshin.models.UrlAction
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunNoEnable
 import com.suqi8.oshin.ui.activity.components.FunPage
@@ -323,6 +326,17 @@ private fun RenderScreenItem(
                     externalPadding = paddingValues,
                     onValueChange = { newValue -> viewModel.updateState(item.key, newValue) },
                     nullable = item.nullable
+                )
+            }
+            is UrlAction -> {
+                val context = LocalContext.current
+                funArrow(
+                    title = resolveTitle(title = item.title),
+                    summary = item.summary?.let { stringResource(it) },
+                    onClick = {
+                        val intent = Intent(Intent.ACTION_VIEW, item.url.toUri())
+                        context.startActivity(intent)
+                    }
                 )
             }
         }

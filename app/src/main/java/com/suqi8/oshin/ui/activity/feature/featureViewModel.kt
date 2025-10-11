@@ -9,12 +9,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.features.FeatureRegistry
+import com.suqi8.oshin.models.AndCondition
 import com.suqi8.oshin.models.CardDefinition
-import com.suqi8.oshin.models.DisplayCondition
+import com.suqi8.oshin.models.Condition
 import com.suqi8.oshin.models.Dropdown
 import com.suqi8.oshin.models.Operator
 import com.suqi8.oshin.models.PageDefinition
 import com.suqi8.oshin.models.Picture
+import com.suqi8.oshin.models.SimpleCondition
 import com.suqi8.oshin.models.Slider
 import com.suqi8.oshin.models.StringInput
 import com.suqi8.oshin.models.Switch
@@ -154,20 +156,22 @@ class featureViewModel @Inject constructor(
     /**
      * 计算一个项的显示条件是否满足
      */
-    fun evaluateCondition(
-        condition: DisplayCondition?,
-        allCurrentStates: Map<String, Any>
-    ): Boolean {
-        if (condition == null) {
-            return true
-        }
-
-        // 2. 从传入的参数中获取依赖项的值，而不是从 _uiState.value 中获取
-        val dependencyValue = allCurrentStates[condition.dependencyKey]
-
-        return when (condition.operator) {
-            Operator.EQUALS -> dependencyValue == condition.requiredValue
-            Operator.NOT_EQUALS -> dependencyValue != condition.requiredValue
+    fun evaluateCondition(condition: Condition?, allCurrentStates: Map<String, Any>): Boolean {
+        return when (condition) {
+            null -> true // 没有条件，始终显示
+            is SimpleCondition -> {
+                val dependencyValue = allCurrentStates[condition.dependencyKey]
+                when (condition.operator) {
+                    Operator.EQUALS -> dependencyValue == condition.requiredValue
+                    Operator.NOT_EQUALS -> dependencyValue != condition.requiredValue
+                }
+            }
+            is AndCondition -> {
+                // 对于 AND 条件，递归检查其包含的所有子条件是否都为 true
+                condition.conditions.all { evaluateCondition(it, allCurrentStates) }
+            }
+            // 未来可以添加 is OrCondition -> { ... }
+            else -> false
         }
     }
 }

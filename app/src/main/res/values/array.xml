@@ -41,7 +41,6 @@
         <item>0x30ffffff</item>
     </integer-array>
     <string-array name="hardware_indicator_display_options">
-
         <item>@string/power</item>
         <item>@string/current</item>
         <item>@string/voltage</item>
@@ -62,5 +61,22 @@
         <item>@string/status_bar_time_gravity_fill</item>
         <item>@string/status_bar_time_gravity_fill_horizontal</item>
         <item>@string/status_bar_time_gravity_fill_vertical</item>
+    </string-array>
+    <string-array name="clock_style_options">
+        <item>@string/preset</item>
+        <item>@string/geek</item>
+    </string-array>
+    <string-array name="network_speed_style_options">
+        <item>@string/default_mode</item>
+        <item>@string/upload_download</item>
+    </string-array>
+
+    <string-array name="icon_indicator_options">
+        <item>@string/no_icon</item>
+        <item>△▽▲▼</item>
+        <item>▵▿▴▾</item>
+        <item>☖⛉☗⛊</item>
+        <item>↑↓</item>
+        <item>⇧⇩</item>
     </string-array>
 </resources>

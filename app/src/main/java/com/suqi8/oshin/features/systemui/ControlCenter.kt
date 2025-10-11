@@ -1,9 +1,11 @@
 package com.suqi8.oshin.features.systemui
 
 import com.suqi8.oshin.R
+import com.suqi8.oshin.models.AndCondition
 import com.suqi8.oshin.models.CardDefinition
-import com.suqi8.oshin.models.DisplayCondition
+import com.suqi8.oshin.models.Condition
 import com.suqi8.oshin.models.PageDefinition
+import com.suqi8.oshin.models.SimpleCondition
 import com.suqi8.oshin.models.StringResource
 import com.suqi8.oshin.models.Switch
 
@@ -25,7 +27,7 @@ object ControlCenter {
                         title = StringResource(R.string.qs_media_auto_color_label),
                         key = "qs_media_auto_color_label",
                         defaultValue = true,
-                        condition = DisplayCondition(
+                        condition = SimpleCondition(
                             dependencyKey = "enlarge_media_cover",
                             requiredValue = true
                         )
