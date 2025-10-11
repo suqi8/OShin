@@ -9,7 +9,10 @@ import com.suqi8.oshin.features.launcher.RecentTask
 import com.suqi8.oshin.features.launcher.launcher
 import com.suqi8.oshin.features.mms.mms
 import com.suqi8.oshin.features.ocrscanner.ocrscanner
+import com.suqi8.oshin.features.oshare.oshare
 import com.suqi8.oshin.features.phone.phone
+import com.suqi8.oshin.features.phonemanager.phonemanager
+import com.suqi8.oshin.features.securepay.securepay
 import com.suqi8.oshin.features.settings.settings
 import com.suqi8.oshin.features.systemui.ControlCenter
 import com.suqi8.oshin.features.systemui.HardwareIndicator
@@ -17,6 +20,7 @@ import com.suqi8.oshin.features.systemui.StatusBarClock
 import com.suqi8.oshin.features.systemui.StatusBarWifi
 import com.suqi8.oshin.features.systemui.notification
 import com.suqi8.oshin.features.systemui.systemui
+import com.suqi8.oshin.features.wallet.wallet
 import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.models.PageDefinition
 
@@ -33,6 +37,10 @@ object FeatureRegistry {
         ModuleEntry("com.android.mms", "mms"),
         ModuleEntry("com.android.launcher", "launcher"),
         ModuleEntry("com.coloros.ocrscanner", "ocrscanner"),
+        ModuleEntry("com.coloros.oshare", "oshare"),
+        ModuleEntry("com.coloros.phonemanager", "phonemanager"),
+        ModuleEntry("com.coloros.securepay", "securepay"),
+        ModuleEntry("com.finshell.wallet", "wallet")
     )
 
     /**
@@ -65,5 +73,13 @@ object FeatureRegistry {
         "launcher\\recent_task" to RecentTask.definition,
 
         "ocrscanner" to ocrscanner.definition,
+
+        "oshare" to oshare.definition,
+
+        "phonemanager" to phonemanager.definition,
+
+        "securepay" to securepay.definition,
+
+        "wallet" to wallet.definition
     )
 }
