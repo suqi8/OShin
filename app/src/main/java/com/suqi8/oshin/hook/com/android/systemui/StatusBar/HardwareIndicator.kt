@@ -72,6 +72,7 @@ class HardwareIndicator : YukiBaseHooker() {
                         // 1. 创建总容器
                         val container = LinearLayout(clockTextView.context).apply {
                             orientation = LinearLayout.HORIZONTAL
+                            gravity = Gravity.CENTER_VERTICAL
                             layoutParams = LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.WRAP_CONTENT,
                                 LinearLayout.LayoutParams.WRAP_CONTENT
