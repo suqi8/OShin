@@ -177,7 +177,6 @@ class featureViewModel @Inject constructor(
                 condition.conditions.all { evaluateCondition(it, allCurrentStates) }
             }
             // 未来可以添加 is OrCondition -> { ... }
-            else -> false
         }
     }
 }

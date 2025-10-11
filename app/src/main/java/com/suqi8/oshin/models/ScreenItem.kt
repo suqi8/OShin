@@ -44,7 +44,7 @@ sealed interface Condition
 data class SimpleCondition(
     val dependencyKey: String,
     val operator: Operator = Operator.EQUALS,
-    val requiredValue: Any
+    val requiredValue: Any = true
 ) : Condition
 
 data class AndCondition(
