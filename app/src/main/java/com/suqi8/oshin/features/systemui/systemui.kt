@@ -31,10 +31,10 @@ object systemui {
                         title = StringResource(id = R.string.hardware_indicator),
                         route = "systemui\\hardware_indicator"
                     ),
-                    Action(
+                    /*Action(
                         title = StringResource(id = R.string.status_bar_icon),
                         route = "systemui\\statusbar_icon"
-                    ),
+                    ),*/
                     Action(
                         title = StringResource(id = R.string.status_bar_notification),
                         route = "systemui\\notification"

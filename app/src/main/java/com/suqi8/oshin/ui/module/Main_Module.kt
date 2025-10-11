@@ -202,7 +202,7 @@ fun AppListContent(
             if (appStyle == 0) {
                 FlowRow(
                     modifier = Modifier.fillMaxWidth().padding(8.dp),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp, Alignment.CenterHorizontally),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     installedEntries.forEach { entry ->
@@ -500,7 +500,7 @@ fun FunctionAppFlow(packageName: String, onClick: () -> Unit, onResult: (String)
 
             Column(
                 modifier = Modifier
-                    .width(80.dp)
+                    .width(65.dp)
                     .clickable(onClick = onClick),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

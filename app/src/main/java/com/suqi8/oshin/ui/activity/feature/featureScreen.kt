@@ -33,6 +33,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.suqi8.oshin.models.Action
 import com.suqi8.oshin.models.AppName
+import com.suqi8.oshin.models.AppSelection
 import com.suqi8.oshin.models.CardDefinition
 import com.suqi8.oshin.models.Dropdown
 import com.suqi8.oshin.models.NoEnable
@@ -48,6 +49,7 @@ import com.suqi8.oshin.models.Title
 import com.suqi8.oshin.models.TitledScreenItem
 import com.suqi8.oshin.models.UrlAction
 import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.FunAppSele
 import com.suqi8.oshin.ui.activity.components.FunNoEnable
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.FunSwitch
@@ -337,6 +339,15 @@ private fun RenderScreenItem(
                         val intent = Intent(Intent.ACTION_VIEW, item.url.toUri())
                         context.startActivity(intent)
                     }
+                )
+            }
+            is AppSelection -> {
+                val selectedApps = itemStates.itemStates[item.key] as? Set<String> ?: emptySet()
+                FunAppSele(
+                    title = resolveTitle(title = item.title),
+                    summary = item.summary?.let { stringResource(it) },
+                    selectedApps = selectedApps,
+                    onSelectionChanged = { newSet -> viewModel.updateState(item.key, newSet) }
                 )
             }
         }

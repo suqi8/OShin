@@ -146,3 +146,14 @@ data class UrlAction(
 ) : TitledScreenItem {
     override val key: String get() = url // 使用 url 作为唯一 key
 }
+
+/**
+ * 描述一个应用选择器项 (对应 funAppSele)。
+ * @param key 用于 SharedPreferences 的键，存储包名列表。
+ */
+data class AppSelection(
+    override val key: String,
+    override val title: Title,
+    @StringRes override val summary: Int? = null,
+    override val condition: Condition? = null
+) : TitledScreenItem
