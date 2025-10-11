@@ -5,6 +5,7 @@ import com.suqi8.oshin.features.android.PMS
 import com.suqi8.oshin.features.android.SplitScreenMultiWindow
 import com.suqi8.oshin.features.android.android
 import com.suqi8.oshin.features.incallui.incallui
+import com.suqi8.oshin.features.mms.mms
 import com.suqi8.oshin.features.phone.phone
 import com.suqi8.oshin.features.settings.settings
 import com.suqi8.oshin.features.systemui.ControlCenter
@@ -26,6 +27,7 @@ object FeatureRegistry {
         ModuleEntry("com.android.incallui", "incallui"),
         ModuleEntry("com.android.settings", "settings"),
         ModuleEntry("com.android.phone", "phone"),
+        ModuleEntry("com.android.mms", "mms"),
     )
 
     /**
@@ -50,6 +52,8 @@ object FeatureRegistry {
 
         "settings" to settings.definition,
 
-        "phone" to phone.definition
+        "phone" to phone.definition,
+
+        "mms" to mms.definition,
     )
 }
