@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.activity.about
+package com.suqi8.oshin.ui.about
 
 import android.content.Intent
 import android.net.Uri
