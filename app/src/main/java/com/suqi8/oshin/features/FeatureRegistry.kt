@@ -4,6 +4,7 @@ import com.suqi8.oshin.features.android.OplusServices
 import com.suqi8.oshin.features.android.PMS
 import com.suqi8.oshin.features.android.SplitScreenMultiWindow
 import com.suqi8.oshin.features.android.android
+import com.suqi8.oshin.features.health.health
 import com.suqi8.oshin.features.incallui.incallui
 import com.suqi8.oshin.features.launcher.RecentTask
 import com.suqi8.oshin.features.launcher.launcher
@@ -40,7 +41,8 @@ object FeatureRegistry {
         ModuleEntry("com.coloros.oshare", "oshare"),
         ModuleEntry("com.coloros.phonemanager", "phonemanager"),
         ModuleEntry("com.coloros.securepay", "securepay"),
-        ModuleEntry("com.finshell.wallet", "wallet")
+        ModuleEntry("com.finshell.wallet", "wallet"),
+        ModuleEntry("com.heytap.health", "health"),
     )
 
     /**
@@ -80,6 +82,8 @@ object FeatureRegistry {
 
         "securepay" to securepay.definition,
 
-        "wallet" to wallet.definition
+        "wallet" to wallet.definition,
+
+        "health" to health.definition,
     )
 }
