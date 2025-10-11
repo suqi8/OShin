@@ -4,17 +4,21 @@ import com.suqi8.oshin.features.android.OplusServices
 import com.suqi8.oshin.features.android.PMS
 import com.suqi8.oshin.features.android.SplitScreenMultiWindow
 import com.suqi8.oshin.features.android.android
+import com.suqi8.oshin.features.appdetail.appdetail
 import com.suqi8.oshin.features.health.health
 import com.suqi8.oshin.features.incallui.incallui
 import com.suqi8.oshin.features.launcher.RecentTask
 import com.suqi8.oshin.features.launcher.launcher
+import com.suqi8.oshin.features.mihealth.mihealth
 import com.suqi8.oshin.features.mms.mms
 import com.suqi8.oshin.features.ocrscanner.ocrscanner
 import com.suqi8.oshin.features.oshare.oshare
 import com.suqi8.oshin.features.phone.phone
 import com.suqi8.oshin.features.phonemanager.phonemanager
+import com.suqi8.oshin.features.quicksearchbox.quicksearchbox
 import com.suqi8.oshin.features.securepay.securepay
 import com.suqi8.oshin.features.settings.settings
+import com.suqi8.oshin.features.speechassist.speechassist
 import com.suqi8.oshin.features.systemui.ControlCenter
 import com.suqi8.oshin.features.systemui.HardwareIndicator
 import com.suqi8.oshin.features.systemui.StatusBarClock
@@ -43,6 +47,10 @@ object FeatureRegistry {
         ModuleEntry("com.coloros.securepay", "securepay"),
         ModuleEntry("com.finshell.wallet", "wallet"),
         ModuleEntry("com.heytap.health", "health"),
+        ModuleEntry("com.heytap.quicksearchbox", "quicksearchbox"),
+        ModuleEntry("com.heytap.speechassist", "speechassist"),
+        ModuleEntry("com.mi.health", "mihealth"),
+        ModuleEntry("com.oplus.appdetail", "appdetail"),
     )
 
     /**
@@ -85,5 +93,13 @@ object FeatureRegistry {
         "wallet" to wallet.definition,
 
         "health" to health.definition,
+
+        "quicksearchbox" to quicksearchbox.definition,
+
+        "speechassist" to speechassist.definition,
+
+        "mihealth" to mihealth.definition,
+
+        "appdetail" to appdetail.definition,
     )
 }
