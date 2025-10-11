@@ -75,9 +75,9 @@ class HardwareIndicator : YukiBaseHooker() {
                             gravity = Gravity.CENTER_VERTICAL
                             layoutParams = LinearLayout.LayoutParams(
                                 LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT
+                                LinearLayout.LayoutParams.MATCH_PARENT
                             ).apply {
-                                gravity = Gravity.CENTER_VERTICAL
+                                //gravity = Gravity.CENTER_VERTICAL
                                 marginStart = 2.dpToPx(context)
                             }
                         }
