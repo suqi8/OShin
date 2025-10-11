@@ -10,7 +10,7 @@ import android.text.TextUtils
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import com.suqi8.oshin.R
-import com.suqi8.oshin.hook.com.android.phone.CopyCodeReceiver.Companion.createIntent
+import com.suqi8.oshin.hook.phone.CopyCodeReceiver.Companion.createIntent
 
 /**
  * 一个具体的操作类，负责创建并显示“新验证码”通知。
