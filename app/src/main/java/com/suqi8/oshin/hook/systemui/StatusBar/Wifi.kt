@@ -64,18 +64,18 @@ class Wifi : YukiBaseHooker() {
     private fun getSettings(): Settings {
         return Settings(
             styleOption = prefs("systemui\\status_bar_wifi").getInt("StyleSelectedOption", 0),
-            slowThreshold = prefs("systemui\\status_bar_wifi").getInt("slow_speed_threshold", 20),
+            slowThreshold = prefs("systemui\\status_bar_wifi").getFloat("slow_speed_threshold", 20f).toInt(),
             hideOnSlow = prefs("systemui\\status_bar_wifi").getBoolean("hide_on_slow", false),
             hideWhenBothSlow = prefs("systemui\\status_bar_wifi").getBoolean("hide_when_both_slow", false),
             iconIndicator = prefs("systemui\\status_bar_wifi").getInt("icon_indicator", 0),
             hideBs = prefs("systemui\\status_bar_wifi").getBoolean("hide_bs", false),
             hideSpace = prefs("systemui\\status_bar_wifi").getBoolean("hide_space", false),
             swapUploadDownload = prefs("systemui\\status_bar_wifi").getBoolean("swap_upload_download", false),
-            uploadFontSize = prefs("systemui\\status_bar_wifi").getInt("upload_font_size", -1),
-            downloadFontSize = prefs("systemui\\status_bar_wifi").getInt("download_font_size", -1),
+            uploadFontSize = prefs("systemui\\status_bar_wifi").getFloat("upload_font_size", -1f).toInt(),
+            downloadFontSize = prefs("systemui\\status_bar_wifi").getFloat("download_font_size", -1f).toInt(),
             positionIndicatorFront = prefs("systemui\\status_bar_wifi").getBoolean("position_speed_indicator_front", false),
-            speedFontSize = prefs("systemui\\status_bar_wifi").getInt("speed_font_size", -1),
-            unitFontSize = prefs("systemui\\status_bar_wifi").getInt("unit_font_size", -1)
+            speedFontSize = prefs("systemui\\status_bar_wifi").getFloat("speed_font_size", -1f).toInt(),
+            unitFontSize = prefs("systemui\\status_bar_wifi").getFloat("unit_font_size", -1f).toInt()
         )
     }
 
