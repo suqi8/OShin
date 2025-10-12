@@ -224,6 +224,7 @@ dependencies {
     implementation(libs.gson)
     implementation(libs.drawabletoolbox)
     implementation(libs.miuix)
+    implementation(libs.mmkv)
 
     // ------------------- Hook API 相关 -------------------
     implementation(libs.ezxhelper)
