@@ -1,5 +1,6 @@
 package com.suqi8.oshin.ui.activity.components
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -8,19 +9,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.highcapable.yukihookapi.hook.factory.prefs
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import com.suqi8.oshin.ui.components.LiquidButton
+import com.suqi8.oshin.utils.hasShortcut
+import com.suqi8.oshin.utils.launchApp
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeEffectScope
 import dev.chrisbanes.haze.HazeInputScale
@@ -30,6 +34,8 @@ import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
@@ -38,6 +44,7 @@ import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
+import top.yukonga.miuix.kmp.icon.icons.useful.Play
 import top.yukonga.miuix.kmp.icon.icons.useful.Refresh
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
@@ -91,26 +98,18 @@ fun FunPage(
     appList: List<String> = emptyList(),
     navController: NavController,
     scrollBehavior: ScrollBehavior,
-    content: @Composable (padding: PaddingValues) -> Unit // <-- 带参数的 lambda
+    content: @Composable (padding: PaddingValues) -> Unit
 ) {
+    val context = LocalContext.current
     val restartAPP = remember { mutableStateOf(false) }
     val backdrop = rememberLayerBackdrop()
-    val context = LocalContext.current
     val hazeState = remember { HazeState() }
-
-    // --- 这里是恢复样式的关键代码 ---
-    val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
-    val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
-    val noiseFactor = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
-    val containerColor: Color = MiuixTheme.colorScheme.background
-    val hazeStyle = remember(containerColor, alpha, blurRadius, noiseFactor) {
-        HazeStyle(
-            backgroundColor = containerColor,
-            tint = HazeTint(containerColor.copy(alpha)),
-            blurRadius = blurRadius,
-            noiseFactor = noiseFactor
-        )
-    }
+    val hazeStyle = HazeStyle(
+        backgroundColor = MiuixTheme.colorScheme.background,
+        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.75f)),
+        blurRadius = 25.dp,
+        noiseFactor = 0f
+    )
 
     Scaffold(
         topBar = {
@@ -146,8 +145,31 @@ fun FunPage(
                     }
                 },
                 actions = {
+                    var showShortcut by remember { mutableStateOf(false) }
+
+                    LaunchedEffect(appList) {
+                        withContext(Dispatchers.IO) { // 后台线程
+                            if (appList.size == 1 && hasShortcut(context, appList.first())) showShortcut = true
+                        }
+                    }
+                    AnimatedVisibility(visible = showShortcut) {
+                        LiquidButton(
+                            onClick = { launchApp(context, appList.first()) },
+                            modifier = Modifier
+                                .padding(end = 16.dp)
+                                .size(40.dp),
+                            backdrop = backdrop
+                        ) {
+                            Icon(
+                                imageVector = MiuixIcons.Useful.Play,
+                                contentDescription = "Open Shortcut",
+                                modifier = Modifier.size(22.dp),
+                                tint = MiuixTheme.colorScheme.onBackground
+                            )
+                        }
+                    }
+
                     if (appList.isNotEmpty()) {
-                        // 4. 使用 LiquidButton
                         LiquidButton(
                             onClick = { restartAPP.value = true },
                             modifier = Modifier
