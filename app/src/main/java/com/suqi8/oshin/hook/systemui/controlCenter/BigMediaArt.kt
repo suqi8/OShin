@@ -137,7 +137,7 @@ class BigMediaArt: YukiBaseHooker() {
                                 views.background.background = fullBitmap.toDrawable(context.resources)
                                 views.background.visibility = View.VISIBLE
 
-                                if (prefs("systemui\\controlCenter").getBoolean("qs_media_auto_color_label", false)) {
+                                if (prefs("systemui\\controlCenter").getBoolean("qs_media_auto_color_label", true)) {
                                     // --- ✨ 颜色分离逻辑 ---
                                     val width = fullBitmap.width
                                     val height = fullBitmap.height
