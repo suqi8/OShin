@@ -30,18 +30,18 @@ class Clock: YukiBaseHooker() {
     private val showWeek by lazy { statusBarPrefs.getBoolean("ShowWeek", false) }
     private val showCNHour by lazy { statusBarPrefs.getBoolean("ShowCNHour", false) }
     private val showtimePeriod by lazy { statusBarPrefs.getBoolean("Showtime_period", false) }
-    private val showSeconds by lazy { statusBarPrefs.getBoolean("ShowSeconds", false) }
+    private val showSeconds by lazy { statusBarPrefs.getBoolean("ShowSeconds", true) }
     private val showMillisecond by lazy { statusBarPrefs.getBoolean("ShowMillisecond", false) }
     private val hideSpace by lazy { statusBarPrefs.getBoolean("HideSpace", false) }
     private val dualRow by lazy { statusBarPrefs.getBoolean("DualRow", false) }
     private val fontSize by lazy { statusBarPrefs.getFloat("ClockSize", 0f) }
-    private val updateSpeed by lazy { statusBarPrefs.getInt("ClockUpdateSpeed", 0) }
+    private val updateSpeed by lazy { statusBarPrefs.getFloat("ClockUpdateSpeed", 0f) }
     private val customClockStyle by lazy { statusBarPrefs.getString("CustomClockStyle", "HH:mm") }
     private val customAlignment by lazy { statusBarPrefs.getInt("alignment", 0) }
-    private val clockLeftPadding by lazy { statusBarPrefs.getInt("LeftPadding", 0) }
-    private val clockRightPadding by lazy { statusBarPrefs.getInt("RightPadding", 0) }
-    private val clockTopPadding by lazy { statusBarPrefs.getInt("TopPadding", 0) }
-    private val clockBottomPadding by lazy { statusBarPrefs.getInt("BottomPadding", 0) }
+    private val clockLeftPadding by lazy { statusBarPrefs.getFloat("LeftPadding", 0f) }
+    private val clockRightPadding by lazy { statusBarPrefs.getFloat("RightPadding", 0f) }
+    private val clockTopPadding by lazy { statusBarPrefs.getFloat("TopPadding", 0f) }
+    private val clockBottomPadding by lazy { statusBarPrefs.getFloat("BottomPadding", 0f) }
     //private val clockColor by lazy { statusBarPrefs.getString("Color", "null") }
 
     // --- 工具变量区 ---
@@ -118,11 +118,14 @@ class Clock: YukiBaseHooker() {
                 9 -> Gravity.FILL_VERTICAL
                 else -> Gravity.CENTER
             }
+            fun dp(value: Float): Int =
+                TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics).toInt()
+
             setPadding(
-                if (clockLeftPadding != 0) clockLeftPadding else paddingLeft,
-                if (clockTopPadding != 0) clockTopPadding else paddingTop,
-                if (clockRightPadding != 0) clockRightPadding else paddingRight,
-                if (clockBottomPadding != 0) clockBottomPadding else paddingBottom
+                if (clockLeftPadding != 0f) dp(clockLeftPadding) else paddingLeft,
+                if (clockTopPadding != 0f) dp(clockTopPadding) else paddingTop,
+                if (clockRightPadding != 0f) dp(clockRightPadding) else paddingRight,
+                if (clockBottomPadding != 0f) dp(clockBottomPadding) else paddingBottom
             )
             if (dualRow) {
                 val defaultSize = if (fontSize != 0f) fontSize else 8F
@@ -133,7 +136,7 @@ class Clock: YukiBaseHooker() {
             }
         }
 
-        if (updateSpeed > 0) {
+        if (updateSpeed > 0f) {
             setupHighFrequencyUpdate(clockView)
         }
     }

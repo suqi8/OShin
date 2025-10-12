@@ -61,29 +61,29 @@ object StatusBarClock {
                     Slider(
                         key = "TopPadding",
                         title = StringResource(R.string.clock_top_margin),
-                        valueRange = 0f..300f,
-                        unit = "px",
+                        valueRange = 0f..30f,
+                        unit = "dp",
                         decimalPlaces = 0
                     ),
                     Slider(
                         key = "BottomPadding",
                         title = StringResource(R.string.clock_bottom_margin),
-                        valueRange = 0f..300f,
-                        unit = "px",
+                        valueRange = 0f..30f,
+                        unit = "dp",
                         decimalPlaces = 0
                     ),
                     Slider(
                         key = "LeftPadding",
                         title = StringResource(R.string.clock_left_margin),
-                        valueRange = 0f..300f,
-                        unit = "px",
+                        valueRange = 0f..30f,
+                        unit = "dp",
                         decimalPlaces = 0
                     ),
                     Slider(
                         key = "RightPadding",
                         title = StringResource(R.string.clock_right_margin),
-                        valueRange = 0f..300f,
-                        unit = "px",
+                        valueRange = 0f..30f,
+                        unit = "dp",
                         decimalPlaces = 0
                     )
                 )
