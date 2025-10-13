@@ -58,6 +58,14 @@ fun Main_Function(
                             navController.navigate("func\\romworkshop")
                         }
                     )
+                    addline()
+
+                    funArrow(
+                        title = stringResource(id = R.string.view_controller),
+                        onClick = {
+                            navController.navigate("func/view_controller")
+                        }
+                    )
                 }
             }
         }

@@ -12,12 +12,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.suqi8.oshin.ui.activity.HideAppsNotice
 import com.suqi8.oshin.ui.about.about_contributors
 import com.suqi8.oshin.ui.about.about_group
 import com.suqi8.oshin.ui.about.about_references
 import com.suqi8.oshin.ui.about.about_setting
+import com.suqi8.oshin.ui.activity.HideAppsNotice
 import com.suqi8.oshin.ui.activity.feature.featureScreen
+import com.suqi8.oshin.ui.activity.ViewControllerScreen
 import com.suqi8.oshin.ui.activity.func.cpu_freq
 import com.suqi8.oshin.ui.activity.func.romworkshop.RomWorkshop
 import com.suqi8.oshin.utils.SpringEasing
@@ -53,6 +54,9 @@ fun AppNavHost() {
             composable("about_references") { about_references(navController) }
             composable("about_contributors") { about_contributors(navController) }
             composable("func\\cpu_freq") { cpu_freq(navController) }
+            composable("func/view_controller") {
+                ViewControllerScreen(navController)
+            }
             composable(
                 route = "hide_apps_notice/{packages}",
                 arguments = listOf(navArgument("packages") {

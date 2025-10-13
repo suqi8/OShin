@@ -332,4 +332,10 @@
     <string name="show_real_battery_summary">仅在状态栏显示真实电量，其他应用读取的电量不受影响</string>
     <string name="bypass_same_account_unlock_safety_check">移除同账号解锁安全检测</string>
     <string name="bypass_same_account_unlock_safety_check_summary">移除root/不安全状态检测，使“同账号手机解锁本设备”可用</string>
+    <string name="view_controller">视图控制器</string>
+    <string name="view_controller_load_failed">加载视图树失败，请确保模块已激活且 SystemUI 已重启。</string>
+    <string name="view_controller_mode_normal">默认</string>
+    <string name="view_controller_mode_visible">强制显示</string>
+    <string name="view_controller_mode_hidden">强制隐藏</string>
+    <string name="view_controller_mode_invisible">强制不可见</string>
 </resources>
