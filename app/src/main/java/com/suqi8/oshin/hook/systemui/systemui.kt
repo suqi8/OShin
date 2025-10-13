@@ -29,6 +29,7 @@ class systemui: YukiBaseHooker() {
         loadApp(hooker = RemoveUsbSelectionDialog())
         loadApp(hooker = ToastForceShowAppIcon())
         loadHooker(ShowRealBattery())
+        loadHooker(ViewControllerHooker())
 
         /*loadApp(name = "com.android.systemui") {
             "com.oplus.systemui.plugins.qs.OplusQSSpecialModeProvider".toClass().apply {
