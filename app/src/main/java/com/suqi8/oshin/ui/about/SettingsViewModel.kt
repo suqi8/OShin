@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.GsonBuilder
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.R
 import com.suqi8.oshin.features.FeatureRegistry
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -24,14 +25,10 @@ class SettingsViewModel @Inject constructor(
 
     private val gson = GsonBuilder().setPrettyPrinting().create()
 
-    // 获取所有在 FeatureRegistry 中定义过的 prefs 文件名
     private val allPrefsFiles = FeatureRegistry.screenMap.values
         .map { it.category.substringBefore('\\') }
-        .distinct() + "settings" // 加上 about_setting 自身的 "settings"
+        .distinct() + "settings"
 
-    /**
-     * 导出所有配置
-     */
     fun exportSettings(uri: Uri?) {
         if (uri == null) return
         viewModelScope.launch(Dispatchers.IO) {
@@ -48,19 +45,16 @@ class SettingsViewModel @Inject constructor(
                     outputStream.write(jsonString.toByteArray())
                 }
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "配置导出成功", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.export_success), Toast.LENGTH_SHORT).show()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "配置导出失败: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.export_fail, e.message), Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    /**
-     * 导入配置
-     */
     fun importSettings(uri: Uri?) {
         if (uri == null) return
         viewModelScope.launch(Dispatchers.IO) {
@@ -91,29 +85,26 @@ class SettingsViewModel @Inject constructor(
                             }
                         }
                     }
-                    editor.commit() // 使用同步提交
+                    editor.apply()
                 }
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "配置导入成功，请重启相关应用以完全生效", Toast.LENGTH_LONG).show()
+                    Toast.makeText(context, context.getString(R.string.import_success), Toast.LENGTH_LONG).show()
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "配置导入失败: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, context.getString(R.string.import_fail, e.message), Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
 
-    /**
-     * 清除所有配置
-     */
     fun clearAllSettings() {
         viewModelScope.launch(Dispatchers.IO) {
             allPrefsFiles.forEach { prefName ->
-                context.prefs(prefName).edit().clear().commit()
+                context.prefs(prefName).edit().clear().apply()
             }
             withContext(Dispatchers.Main) {
-                Toast.makeText(context, "所有配置已清除，请重启相关应用", Toast.LENGTH_LONG).show()
+                Toast.makeText(context, context.getString(R.string.clear_success), Toast.LENGTH_LONG).show()
             }
         }
     }
