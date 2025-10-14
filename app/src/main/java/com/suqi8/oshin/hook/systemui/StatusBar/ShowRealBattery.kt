@@ -1,4 +1,4 @@
-package com.suqi8.oshin.hook.systemui
+package com.suqi8.oshin.hook.systemui.StatusBar
 
 import android.content.Intent
 import com.highcapable.kavaref.KavaRef.Companion.resolve
@@ -9,7 +9,7 @@ import java.io.File
 class ShowRealBattery: YukiBaseHooker() {
     override fun onHook() {
         loadApp(name = "com.android.systemui") {
-            if (prefs("systemui").getBoolean("show_real_battery", false)) {
+            if (prefs("systemui\\status_bar").getBoolean("show_real_battery", false)) {
                 "com.android.systemui.statusbar.policy.BatteryControllerImpl".toClass().resolve().apply {
                     firstMethod {
                         modifiers(Modifiers.PUBLIC, Modifiers.FINAL)

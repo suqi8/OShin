@@ -350,4 +350,11 @@
     <string name="import_success">配置导入成功，请重启相关应用以完全生效</string>
     <string name="import_fail">配置导入失败: %1$s</string>
     <string name="clear_success">所有配置已清除，请重启相关应用</string>
+    <string name="oplus_settings_features">特性</string>
+    <string name="loading_oplus_features">正在从“设置”应用中获取特性列表，请稍候…</string>
+    <string name="feature_from">来自: %1$s</string>
+    <string name="oplus_features_not_found">未扫描到相关功能。\n请确保“设置”被激活并重启，然后可尝试重新进入此页面。</string>
+    <string name="force_on">强制开启</string>
+    <string name="force_off">强制关闭</string>
+    <string name="status_bar">状态栏</string>
 </resources>

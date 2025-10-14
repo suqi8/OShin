@@ -62,20 +62,21 @@ class Wifi : YukiBaseHooker() {
      * @return [Settings] 对象
      */
     private fun getSettings(): Settings {
+        val prefs = prefs("systemui\\status_bar\\status_bar_wifi")
         return Settings(
-            styleOption = prefs("systemui\\status_bar_wifi").getInt("StyleSelectedOption", 0),
-            slowThreshold = prefs("systemui\\status_bar_wifi").getFloat("slow_speed_threshold", 20f).toInt(),
-            hideOnSlow = prefs("systemui\\status_bar_wifi").getBoolean("hide_on_slow", false),
-            hideWhenBothSlow = prefs("systemui\\status_bar_wifi").getBoolean("hide_when_both_slow", false),
-            iconIndicator = prefs("systemui\\status_bar_wifi").getInt("icon_indicator", 0),
-            hideBs = prefs("systemui\\status_bar_wifi").getBoolean("hide_bs", false),
-            hideSpace = prefs("systemui\\status_bar_wifi").getBoolean("hide_space", false),
-            swapUploadDownload = prefs("systemui\\status_bar_wifi").getBoolean("swap_upload_download", false),
-            uploadFontSize = prefs("systemui\\status_bar_wifi").getFloat("upload_font_size", -1f).toInt(),
-            downloadFontSize = prefs("systemui\\status_bar_wifi").getFloat("download_font_size", -1f).toInt(),
-            positionIndicatorFront = prefs("systemui\\status_bar_wifi").getBoolean("position_speed_indicator_front", false),
-            speedFontSize = prefs("systemui\\status_bar_wifi").getFloat("speed_font_size", -1f).toInt(),
-            unitFontSize = prefs("systemui\\status_bar_wifi").getFloat("unit_font_size", -1f).toInt()
+            styleOption = prefs.getInt("StyleSelectedOption", 0),
+            slowThreshold = prefs.getFloat("slow_speed_threshold", 20f).toInt(),
+            hideOnSlow = prefs.getBoolean("hide_on_slow", false),
+            hideWhenBothSlow = prefs.getBoolean("hide_when_both_slow", false),
+            iconIndicator = prefs.getInt("icon_indicator", 0),
+            hideBs = prefs.getBoolean("hide_bs", false),
+            hideSpace = prefs.getBoolean("hide_space", false),
+            swapUploadDownload = prefs.getBoolean("swap_upload_download", false),
+            uploadFontSize = prefs.getFloat("upload_font_size", -1f).toInt(),
+            downloadFontSize = prefs.getFloat("download_font_size", -1f).toInt(),
+            positionIndicatorFront = prefs.getBoolean("position_speed_indicator_front", false),
+            speedFontSize = prefs.getFloat("speed_font_size", -1f).toInt(),
+            unitFontSize = prefs.getFloat("unit_font_size", -1f).toInt()
         )
     }
 
@@ -84,7 +85,7 @@ class Wifi : YukiBaseHooker() {
      */
     @SuppressLint("SetTextI18n")
     override fun onHook() {
-        if (!prefs("systemui\\status_bar_wifi").getBoolean("status_bar_wifi", false)) return
+        if (!prefs("systemui\\status_bar\\status_bar_wifi").getBoolean("status_bar_wifi", false)) return
         loadApp("com.android.systemui") {
             "com.oplus.systemui.statusbar.phone.netspeed.widget.NetworkSpeedView".toClass().apply {
                 method { name = "applyNetworkState" }.hook {

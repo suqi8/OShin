@@ -82,4 +82,9 @@
         <item>@string/unfold</item>
         <item>@string/fold</item>
     </string-array>
+    <string-array name="oplus_feature_options">
+        <item>@string/default_mode</item>
+        <item>@string/force_on</item>
+        <item>@string/force_off</item>
+    </string-array>
 </resources>

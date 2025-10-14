@@ -2,6 +2,7 @@ package com.suqi8.oshin.features.settings
 
 import android.os.Environment
 import com.suqi8.oshin.R
+import com.suqi8.oshin.models.Action
 import com.suqi8.oshin.models.AndCondition
 import com.suqi8.oshin.models.AppName
 import com.suqi8.oshin.models.AppSelection
@@ -21,7 +22,14 @@ object settings {
         category = "settings",
         appList = listOf("com.android.settings"),
         items = listOf(
-            // --- 第一个设置卡片 ---
+            CardDefinition(
+                items = listOf(
+                    Action(
+                        title = StringResource(R.string.oplus_settings_features),
+                        route = "settings\\oplus_settings"
+                    )
+                )
+            ),
             CardDefinition(
                 items = listOf(
                     StringInput(

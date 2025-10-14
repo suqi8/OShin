@@ -24,7 +24,7 @@ import kotlin.math.abs
 
 class HardwareIndicator : YukiBaseHooker() {
 
-    private val localPrefs by lazy { prefs("systemui\\hardware_indicator") }
+    private val localPrefs by lazy { prefs("systemui\\status_bar\\hardware_indicator") }
     private val backgroundExecutor = Executors.newSingleThreadExecutor()
     private val uiHandler = Handler(Looper.getMainLooper())
     private val clockResources = mutableMapOf<TextView, ClockHookResources>()

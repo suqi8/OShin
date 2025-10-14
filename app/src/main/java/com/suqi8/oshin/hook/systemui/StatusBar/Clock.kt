@@ -21,7 +21,7 @@ import java.util.TimerTask
 class Clock: YukiBaseHooker() {
 
     // --- 配置读取区 (使用 lazy 延迟初始化, 仅在首次使用时读取一次) ---
-    private val statusBarPrefs by lazy { prefs("systemui\\status_bar_clock") }
+    private val statusBarPrefs by lazy { prefs("systemui\\status_bar\\status_bar_clock") }
     private val clockEnabled by lazy { statusBarPrefs.getBoolean("status_bar_clock", false) }
     private val clockStyleSelectedOption by lazy { statusBarPrefs.getInt("ClockStyleSelectedOption", 0) }
     private val showYears by lazy { statusBarPrefs.getBoolean("ShowYears", false) }
