@@ -81,7 +81,18 @@ class featureViewModel @Inject constructor(
                 .forEach { item ->
                     when (item) {
                         is Switch -> initialStates[item.key] = prefs.getBoolean(item.key, item.defaultValue)
-                        is Slider -> initialStates[item.key] = prefs.getFloat(item.key, item.defaultValue)
+                        is Slider -> {
+                            // 兼容旧版 Int 类型的 Slider 值
+                            val value = try {
+                                // 1. 优先尝试按新版 Float 类型读取
+                                prefs.getFloat(item.key, item.defaultValue)
+                            } catch (e: ClassCastException) {
+                                // 2. 如果失败 (类型转换异常)，说明是旧版 Int 数据。
+                                //    则按 Int 类型读取，并手动转换为 Float。
+                                prefs.getInt(item.key, item.defaultValue.toInt()).toFloat()
+                            }
+                            initialStates[item.key] = value
+                        }
                         is Dropdown -> initialStates[item.key] = prefs.getInt(item.key, item.defaultValue)
                         is StringInput -> initialStates[item.key] = prefs.getString(item.key, item.defaultValue)
                         is Picture -> {
