@@ -56,6 +56,8 @@
 -dontwarn java.lang.reflect.AnnotatedType
 -dontwarn com.umeng.**
 -dontwarn org.repackage.**
+-keep class com.suqi8.oshin.models.** { *; }
+-keepattributes Signature, InnerClasses
 
 -classobfuscationdictionary proguard-dict.txt
 -obfuscationdictionary proguard-dict.txt
