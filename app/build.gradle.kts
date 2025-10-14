@@ -212,8 +212,6 @@ dependencies {
     implementation(libs.neumorphism.compose)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
-    implementation(files("../app/libs/expressa-components-release.aar"))
-    implementation(files("../app/libs/expressa-core-release.aar"))
     implementation(libs.capsule)
 
     // ------------------- 底层与工具库 -------------------
