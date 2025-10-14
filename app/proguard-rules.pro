@@ -56,7 +56,7 @@
 -dontwarn java.lang.reflect.AnnotatedType
 -dontwarn com.umeng.**
 -dontwarn org.repackage.**
--keep class com.suqi8.oshin.models.** { *; }
+-keep class com.suqi8.oshin.ui.activity.func.StatusBarLayout.** { *; }
 -keepattributes Signature, InnerClasses
 
 -classobfuscationdictionary proguard-dict.txt

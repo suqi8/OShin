@@ -138,9 +138,18 @@ class StatusBarLayoutViewModel @Inject constructor(
      * 向 Hook 端发送指令，高亮指定的视图。
      * @param viewId 要高亮的视图资源 ID，如果为空字符串则取消高亮。
      */
-    fun highlightView(viewId: String) {
-        dataChannel.put(StatusBarLayout.KEY_HIGHLIGHT_ANCHOR, viewId)
-        Log.d(TAG, "发送高亮指令, ID: $viewId")
+    fun highlightView(hashCode: Int) {
+        dataChannel.put(StatusBarLayout.KEY_HIGHLIGHT_ANCHOR, hashCode)
+        Log.d(TAG, "发送高亮指令, HashCode: $hashCode")
+    }
+
+    /**
+     * 取消高亮
+     */
+    fun clearHighlight() {
+        // 发送一个无效的 hashCode (例如 0) 来取消高亮
+        dataChannel.put(StatusBarLayout.KEY_HIGHLIGHT_ANCHOR, 0)
+        Log.d(TAG, "发送取消高亮指令")
     }
 
     /**
