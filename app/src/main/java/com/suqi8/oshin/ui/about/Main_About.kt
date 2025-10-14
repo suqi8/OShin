@@ -10,6 +10,8 @@ import android.os.StatFs
 import android.os.storage.StorageManager
 import android.provider.Settings
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -72,12 +74,14 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI_Impl
 import com.suqi8.oshin.BuildConfig
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.SuperArrow
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.activity.components.funArrow
 import com.suqi8.oshin.ui.main.LocalColorMode
@@ -111,7 +115,8 @@ fun Main_About(
     topAppBarScrollBehavior: ScrollBehavior,
     padding: PaddingValues,
     context: Context,
-    navController: NavController
+    navController: NavController,
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val showDeviceNameDialog = remember { mutableStateOf(false) }
     val deviceName: MutableState<String> = remember {
@@ -125,6 +130,18 @@ fun Main_About(
     val deviceNameCache: MutableState<String> = remember { mutableStateOf(deviceName.value) }
     val physicalTotalStorage = formatSize(getPhysicalTotalStorage(context))
     val usedStorage = formatSize(getUsedStorage())
+
+    val exportLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.CreateDocument("application/json")
+    ) { uri ->
+        viewModel.exportSettings(uri)
+    }
+
+    val importLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri ->
+        viewModel.importSettings(uri)
+    }
 
     val bgAlpha = remember { mutableFloatStateOf(1f) }
     val mainAlpha = remember { mutableFloatStateOf(1f) }
@@ -323,6 +340,41 @@ fun Main_About(
             item { CommunityCard(context) }
             item { SmallTitle(text = stringResource(R.string.thank)) }
             item { ThanksCard(navController) }
+            item {
+                SmallTitle(text = stringResource(R.string.config_management)) // <-- 需要在 strings.xml 中添加
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp)
+                        .padding(bottom = 6.dp)
+                ) {
+                    Column {
+                        SuperArrow(
+                            title = stringResource(R.string.export_config), // <-- 需要在 strings.xml 中添加
+                            summary = stringResource(R.string.export_config_summary), // <-- 需要在 strings.xml 中添加
+                            onClick = {
+                                exportLauncher.launch("OShin_Config.json")
+                            }
+                        )
+                        addline()
+                        SuperArrow(
+                            title = stringResource(R.string.import_config), // <-- 需要在 strings.xml 中添加
+                            summary = stringResource(R.string.import_config_summary), // <-- 需要在 strings.xml 中添加
+                            onClick = {
+                                importLauncher.launch("application/json")
+                            }
+                        )
+                        addline()
+                        SuperArrow(
+                            title = stringResource(R.string.clear_config), // <-- 需要在 strings.xml 中添加
+                            summary = stringResource(R.string.clear_config_summary), // <-- 需要在 strings.xml 中添加
+                            onClick = {
+                                viewModel.clearAllSettings()
+                            }
+                        )
+                    }
+                }
+            }
             item { SmallTitle(text = stringResource(R.string.other)) }
             item { AboutActionsCard(navController, context) }
             item {

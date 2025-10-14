@@ -30,7 +30,7 @@ fun AppNavHost() {
     val navController = rememberNavController()
     val windowWidth = getWindowSize().width
 
-    val easing = SpringEasing.gentle()
+    val easing = SpringEasing.stiff()
     val duration = easing.durationMillis.toInt()
     VerifyDialog()
     PrivacyDialog()
