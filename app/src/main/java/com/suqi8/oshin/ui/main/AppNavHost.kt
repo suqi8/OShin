@@ -20,6 +20,7 @@ import com.suqi8.oshin.ui.activity.HideAppsNotice
 import com.suqi8.oshin.ui.activity.feature.featureScreen
 import com.suqi8.oshin.ui.activity.func.StatusBarLayout.StatusBarLayout
 import com.suqi8.oshin.ui.activity.func.cpu_freq
+import com.suqi8.oshin.ui.activity.func.feature.OplusSettingsScreen
 import com.suqi8.oshin.ui.activity.func.romworkshop.RomWorkshop
 import com.suqi8.oshin.utils.SpringEasing
 import top.yukonga.miuix.kmp.utils.getWindowSize
@@ -55,8 +56,11 @@ fun AppNavHost() {
             composable("about_contributors") { about_contributors(navController) }
             composable("func\\cpu_freq") { cpu_freq(navController) }
             composable("func\\romworkshop") { RomWorkshop(navController) }
-            composable("feature/systemui\\StatusBarLayout") {
+            composable("feature/systemui\\status_bar\\StatusBarLayout") {
                 StatusBarLayout(navController)
+            }
+            composable("feature/settings\\oplus_settings") {
+                OplusSettingsScreen(navController)
             }
             composable(
                 route = "hide_apps_notice/{packages}",

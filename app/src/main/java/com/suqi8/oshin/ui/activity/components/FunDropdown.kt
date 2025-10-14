@@ -1,6 +1,5 @@
 package com.suqi8.oshin.ui.activity.components
 
-import android.R.attr.minHeight
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable

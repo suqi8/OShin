@@ -20,21 +20,9 @@ object systemui {
             CardDefinition(
                 items = listOf(
                     Action(
-                        title = StringResource(id = R.string.status_bar_clock),
-                        route = "systemui\\status_bar_clock"
+                        title = StringResource(id = R.string.status_bar),
+                        route = "systemui\\status_bar"
                     ),
-                    Action(
-                        title = StringResource(id = R.string.network_speed_indicator),
-                        route = "systemui\\status_bar_wifi"
-                    ),
-                    Action(
-                        title = StringResource(id = R.string.hardware_indicator),
-                        route = "systemui\\hardware_indicator"
-                    ),
-                    /*Action(
-                        title = StringResource(id = R.string.status_bar_icon),
-                        route = "systemui\\statusbar_icon"
-                    ),*/
                     Action(
                         title = StringResource(id = R.string.status_bar_notification),
                         route = "systemui\\notification"
@@ -42,24 +30,6 @@ object systemui {
                     Action(
                         title = StringResource(id = R.string.control_center),
                         route = "systemui\\controlCenter"
-                    ),
-                    Action(
-                        title = StringResource(id = R.string.status_bar_layout),
-                        route = "systemui\\StatusBarLayout"
-                    )
-                )
-            ),
-            CardDefinition(
-                items = listOf(
-                    Switch(
-                        title = StringResource(R.string.hide_status_bar),
-                        key = "hide_status_bar",
-                        defaultValue = false
-                    ),
-                    Switch(
-                        title = StringResource(R.string.show_real_battery),
-                        summary = R.string.show_real_battery_summary,
-                        key = "show_real_battery"
                     )
                 )
             ),

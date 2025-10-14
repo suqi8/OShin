@@ -6,8 +6,8 @@ import com.suqi8.oshin.hook.systemui.StatusBar.BatteryBar
 import com.suqi8.oshin.hook.systemui.StatusBar.Clock
 import com.suqi8.oshin.hook.systemui.StatusBar.Fragment
 import com.suqi8.oshin.hook.systemui.StatusBar.HardwareIndicator
-import com.suqi8.oshin.hook.systemui.StatusBar.Icon
 import com.suqi8.oshin.hook.systemui.StatusBar.Notification
+import com.suqi8.oshin.hook.systemui.StatusBar.ShowRealBattery
 import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarLayout
 import com.suqi8.oshin.hook.systemui.StatusBar.Wifi
 import com.suqi8.oshin.hook.systemui.controlCenter.BigMediaArt
@@ -19,7 +19,6 @@ class systemui: YukiBaseHooker() {
     override fun onHook() {
         loadApp(hooker = Clock())
         loadApp(hooker = HardwareIndicator())
-        loadApp(hooker = Icon())
         loadApp(hooker = Notification())
         loadApp(hooker = Fragment())
         loadApp(hooker = allday_screenoff())

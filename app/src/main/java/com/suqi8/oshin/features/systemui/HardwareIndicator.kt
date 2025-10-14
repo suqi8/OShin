@@ -13,7 +13,7 @@ import com.suqi8.oshin.models.Switch
 object HardwareIndicator {
     val definition = PageDefinition(
         title = StringResource(R.string.hardware_indicator),
-        category = "systemui\\hardware_indicator",
+        category = "systemui\\status_bar\\hardware_indicator",
         appList = listOf("com.android.systemui"),
         items = listOf(
             // --- 电量消耗指示器 ---

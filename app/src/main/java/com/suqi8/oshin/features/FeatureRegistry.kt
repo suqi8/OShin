@@ -28,6 +28,7 @@ import com.suqi8.oshin.features.settings.settings
 import com.suqi8.oshin.features.speechassist.speechassist
 import com.suqi8.oshin.features.systemui.ControlCenter
 import com.suqi8.oshin.features.systemui.HardwareIndicator
+import com.suqi8.oshin.features.systemui.StatusBar
 import com.suqi8.oshin.features.systemui.StatusBarClock
 import com.suqi8.oshin.features.systemui.StatusBarWifi
 import com.suqi8.oshin.features.systemui.notification
@@ -80,10 +81,11 @@ object FeatureRegistry {
 
         "systemui" to systemui.definition,
         "systemui\\controlCenter" to ControlCenter.definition,
-        "systemui\\hardware_indicator" to HardwareIndicator.definition,
+        "systemui\\status_bar\\hardware_indicator" to HardwareIndicator.definition,
         "systemui\\notification" to notification.definition,
-        "systemui\\status_bar_clock" to StatusBarClock.definition,
-        "systemui\\status_bar_wifi" to StatusBarWifi.definition,
+        "systemui\\status_bar\\status_bar_clock" to StatusBarClock.definition,
+        "systemui\\status_bar\\status_bar_wifi" to StatusBarWifi.definition,
+        "systemui\\status_bar" to StatusBar.definition,
 
         "incallui" to incallui.definition,
 

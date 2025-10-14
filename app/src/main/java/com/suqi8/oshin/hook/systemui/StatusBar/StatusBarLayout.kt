@@ -37,7 +37,7 @@ class StatusBarLayout : YukiBaseHooker() {
         const val KEY_UPDATE_CONFIG = "update_view_config"
         const val KEY_HIGHLIGHT_ANCHOR = "highlight_anchor_view"
 
-        const val PREFS_NAME = "systemui\\StatusBarLayout"
+        const val PREFS_NAME = "systemui\\status_bar\\StatusBarLayout"
         const val PREFS_KEY = "statusbar_layout_configs"
     }
 

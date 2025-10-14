@@ -15,7 +15,7 @@ import com.suqi8.oshin.models.Switch
 object StatusBarWifi {
     val definition = PageDefinition(
         title = StringResource(R.string.network_speed_indicator),
-        category = "systemui\\status_bar_wifi",
+        category = "systemui\\status_bar\\status_bar_wifi",
         appList = listOf("com.android.systemui"),
         items = listOf(
             // --- 主开关 ---

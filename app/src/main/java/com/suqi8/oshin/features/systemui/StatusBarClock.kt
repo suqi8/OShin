@@ -16,7 +16,7 @@ import com.suqi8.oshin.models.UrlAction
 object StatusBarClock {
     val definition = PageDefinition(
         title = StringResource(R.string.status_bar_clock),
-        category = "systemui\\status_bar_clock",
+        category = "systemui\\status_bar\\status_bar_clock",
         appList = listOf("com.android.systemui"),
         items = listOf(
             // --- 主开关 ---

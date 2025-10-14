@@ -8,7 +8,7 @@ import com.highcapable.yukihookapi.hook.type.android.ViewClass
 
 class Fragment: YukiBaseHooker() {
     override fun onHook() {
-        if (prefs("systemui").getBoolean("hide_status_bar", false)) {
+        if (prefs("systemui\\status_bar").getBoolean("hide_status_bar", false)) {
             loadApp(name = "com.android.systemui") {
                 "com.android.systemui.statusbar.phone.fragment.CollapsedStatusBarFragment".toClass().apply {
                     method {
