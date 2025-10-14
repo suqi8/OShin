@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.activity
+package com.suqi8.oshin.ui.activity.func.StatusBarLayout
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -42,8 +42,6 @@ import androidx.compose.ui.unit.times
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.suqi8.oshin.R
-import com.suqi8.oshin.models.ViewConfig
-import com.suqi8.oshin.models.ViewNode
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.SuperArrow
 import top.yukonga.miuix.kmp.basic.Icon
@@ -55,6 +53,8 @@ import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.basic.ArrowRight
 import top.yukonga.miuix.kmp.icon.icons.useful.Play
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.overScrollVertical
+import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
 private val ViewNode.expandableId: String
     get() = id.ifBlank { "group_${this.hashCode()}" }
@@ -65,9 +65,9 @@ private val ViewNode.expandableId: String
  * @param viewModel 关联的 ViewModel 实例。
  */
 @Composable
-fun ViewControllerScreen(
+fun StatusBarLayout(
     navController: NavController,
-    viewModel: ViewControllerViewModel = hiltViewModel()
+    viewModel: StatusBarLayoutViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
@@ -83,7 +83,8 @@ fun ViewControllerScreen(
     }
 
     FunPage(
-        title = stringResource(R.string.view_controller),
+        title = stringResource(R.string.status_bar_layout),
+        appList = listOf("com.android.systemui"),
         navController = navController,
         scrollBehavior = scrollBehavior
     ) { paddingValues ->
@@ -105,12 +106,13 @@ fun ViewControllerScreen(
                     state = listState,
                     modifier = Modifier
                         .fillMaxSize()
-                        .nestedScroll(scrollBehavior.nestedScrollConnection)
-                        .padding(paddingValues)
+                        .overScrollVertical()
+                        .scrollEndHaptic()
+                        .nestedScroll(scrollBehavior.nestedScrollConnection),
+                    contentPadding = paddingValues
                 ) {
                     // 列表项直接绑定到 ViewModel 中的 visibleNodes
                     items(viewModel.visibleNodes, key = { it.uniqueKey }) { itemInfo ->
-
                         // 列表项的根布局，现在是一个简单的 Column
                         Column(
                             modifier = Modifier
@@ -164,7 +166,7 @@ fun ViewControllerScreen(
 private fun RenderSubTree(
     nodes: List<ViewNode>,
     level: Int,
-    uiState: ViewTreeUiState,
+    uiState: StatusBarLayoutUiState,
     onNodeClick: (ViewNode) -> Unit,
     onToggle: (String) -> Unit
 ) {

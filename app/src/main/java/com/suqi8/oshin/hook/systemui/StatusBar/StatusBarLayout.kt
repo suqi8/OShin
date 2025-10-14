@@ -1,29 +1,30 @@
-package com.suqi8.oshin.hook.systemui
+package com.suqi8.oshin.hook.systemui.StatusBar
 
 import android.content.Context
 import android.content.res.Resources
-import android.graphics.Color
+import android.graphics.Rect
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import androidx.core.graphics.toColorInt
 import androidx.core.view.isNotEmpty
 import com.github.kyuubiran.ezxhelper.params
 import com.google.gson.Gson
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.log.YLog
-import com.suqi8.oshin.models.ViewConfig
-import com.suqi8.oshin.models.ViewNode
+import com.suqi8.oshin.ui.activity.func.StatusBarLayout.ViewConfig
+import com.suqi8.oshin.ui.activity.func.StatusBarLayout.ViewNode
 import java.util.concurrent.ConcurrentHashMap
 
 /**
  * Xposed Hook 类，用于注入到 SystemUI 进程。
  * 负责解析和修改状态栏视图、与主 App 进行数据通信。
  */
-class ViewControllerHooker : YukiBaseHooker() {
+class StatusBarLayout : YukiBaseHooker() {
 
     private val gson = Gson()
     private val statusBarViews = ConcurrentHashMap<Int, ViewGroup>()
@@ -35,10 +36,9 @@ class ViewControllerHooker : YukiBaseHooker() {
         const val KEY_RECEIVE_TREE = "receive_view_tree"
         const val KEY_UPDATE_CONFIG = "update_view_config"
         const val KEY_HIGHLIGHT_ANCHOR = "highlight_anchor_view"
-        const val KEY_REORDER_VIEWS = "reorder_views"
 
-        const val PREFS_NAME = "oshin_view_controller"
-        const val PREFS_KEY = "view_controller_configs"
+        const val PREFS_NAME = "systemui\\StatusBarLayout"
+        const val PREFS_KEY = "statusbar_layout_configs"
     }
 
     override fun onHook() {
@@ -51,7 +51,7 @@ class ViewControllerHooker : YukiBaseHooker() {
         }.hook {
             after {
                 val statusBarView = args[0] as? ViewGroup ?: return@after
-                YLog.info("!!! [新方案] 成功通过 Fragment Hook 找到 status_bar 视图: $statusBarView")
+                YLog.info("成功通过 Fragment Hook 找到 status_bar 视图: $statusBarView")
                 statusBarViews[statusBarView.hashCode()] = statusBarView
 
                 // 初始化 DataChannel 监听器
@@ -82,11 +82,6 @@ class ViewControllerHooker : YukiBaseHooker() {
                         YLog.info("🔔 [Hook] 收到高亮指令: $viewId")
                         highlightView(viewId)
                     }
-
-                    // 排序功能相关的监听器虽然保留，但由于 App 端不再发送指令，实际上不会被触发。
-                    wait<ArrayList<String>>(KEY_REORDER_VIEWS) { _ ->
-                        YLog.warn("收到一个重排序指令，但此功能已被禁用，不执行任何操作。")
-                    }
                 }
                 YLog.info("✅ YukiHookDataChannel 监听器已设置。")
                 applyAllViewConfigs()
@@ -109,10 +104,10 @@ class ViewControllerHooker : YukiBaseHooker() {
                     val targetView = rootView.findViewById<View>(resId)
                     if (targetView != null) {
                         val newVisibility = when (config.mode) {
-                            ViewConfig.MODE_ALWAYS_VISIBLE -> View.VISIBLE
-                            ViewConfig.MODE_ALWAYS_HIDDEN -> View.GONE // 不可见且不占位
-                            ViewConfig.MODE_ALWAYS_INVISIBLE -> View.INVISIBLE // 不可见但占位
-                            ViewConfig.MODE_NORMAL -> View.VISIBLE // 默认行为设为 VISIBLE
+                            ViewConfig.Companion.MODE_ALWAYS_VISIBLE -> View.VISIBLE
+                            ViewConfig.Companion.MODE_ALWAYS_HIDDEN -> View.GONE // 不可见且不占位
+                            ViewConfig.Companion.MODE_ALWAYS_INVISIBLE -> View.INVISIBLE // 不可见但占位
+                            //ViewConfig.Companion.MODE_NORMAL -> View.VISIBLE // 默认行为设为 VISIBLE
                             else -> -1 // -1 表示无效模式，不作处理
                         }
                         if (newVisibility != -1 && targetView.visibility != newVisibility) {
@@ -126,63 +121,6 @@ class ViewControllerHooker : YukiBaseHooker() {
     }
 
     /**
-     * 处理视图重排序。
-     * 注意：此功能在 App 端已被禁用，此方法理论上不会被调用。
-     * @param orderedIds 从 App 端接收到的、包含新顺序的视图资源 ID 列表。
-     */
-    private fun handleReorderViews(orderedIds: List<String>) {
-        YLog.info("📍 handleReorderViews() 被调用 (功能已停用)")
-        mainHandler.post {
-            YLog.info("📍 mainHandler 中开始处理重排序... (功能已停用)")
-            statusBarViews.values.forEachIndexed { viewIndex, statusBarView ->
-                try {
-                    val viewIdMap = mutableMapOf<String, View>()
-                    orderedIds.forEach { viewId ->
-                        val resId = findResId(statusBarView.context, viewId)
-                        if (resId != 0) {
-                            statusBarView.findViewById<View>(resId)?.let { view ->
-                                viewIdMap[viewId] = view
-                            }
-                        }
-                    }
-                    val viewsToReorder = viewIdMap.values.toList()
-                    if (viewsToReorder.isEmpty()) return@forEachIndexed
-
-                    val parentToViews = viewsToReorder.groupBy { it.parent as? ViewGroup }
-                    parentToViews.forEach { (parent, childViews) ->
-                        if (parent == null) return@forEach
-                        val allChildren = (0 until parent.childCount).map { parent.getChildAt(it) }
-                        val reorderedChildren = mutableListOf<View>()
-                        val handledViews = mutableSetOf<View>()
-
-                        orderedIds.forEach { id ->
-                            val view = viewIdMap[id]
-                            if (view != null && view.parent == parent) {
-                                reorderedChildren.add(view)
-                                handledViews.add(view)
-                            }
-                        }
-                        allChildren.forEach { child ->
-                            if (child !in handledViews) {
-                                reorderedChildren.add(child)
-                            }
-                        }
-                        val layoutParams = reorderedChildren.associate { it to it.layoutParams }
-                        parent.removeAllViews()
-                        reorderedChildren.forEach { child ->
-                            parent.addView(child, layoutParams[child])
-                        }
-                        parent.requestLayout()
-                        parent.invalidate()
-                    }
-                } catch (e: Exception) {
-                    YLog.error("❌ 重排序视图时发生异常: ${e.message}", e)
-                }
-            }
-        }
-    }
-
-    /**
      * 在指定的状态栏视图上高亮某个子视图。
      * @param viewId 要高亮的视图资源 ID。如果为空，则取消所有高亮。
      */
@@ -191,7 +129,7 @@ class ViewControllerHooker : YukiBaseHooker() {
             statusBarViews.values.forEach { statusBarView ->
                 val overlay = highlightOverlays.getOrPut(statusBarView) {
                     FrameLayout(statusBarView.context).apply {
-                        setBackgroundColor(Color.parseColor("#55FF0000"))
+                        setBackgroundColor("#55FF0000".toColorInt())
                         visibility = View.GONE
                         isClickable = false
                         isFocusable = false
@@ -257,7 +195,7 @@ class ViewControllerHooker : YukiBaseHooker() {
      */
     private fun applyAllViewConfigs() {
         val jsonConfigs = prefs(PREFS_NAME).getString(PREFS_KEY, "[]")
-        val configs = kotlin.runCatching {
+        val configs = runCatching {
             gson.fromJson(jsonConfigs, Array<ViewConfig>::class.java).toList()
         }.getOrNull() ?: emptyList()
 
@@ -294,7 +232,13 @@ class ViewControllerHooker : YukiBaseHooker() {
             View.GONE -> "Gone"
             else -> "Unknown"
         }
-        val bounds = android.graphics.Rect().apply { view.getHitRect(this) }
-        return ViewNode(id = nodeId, type = nodeType, children = children, visibility = visibilityString, bounds = bounds)
+        val bounds = Rect().apply { view.getHitRect(this) }
+        return ViewNode(
+            id = nodeId,
+            type = nodeType,
+            children = children,
+            visibility = visibilityString,
+            bounds = bounds
+        )
     }
 }
