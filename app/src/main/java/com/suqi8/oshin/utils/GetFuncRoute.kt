@@ -19,6 +19,7 @@ fun GetFuncRoute(route: String, context: Context): String {
         "recent_task" to context.getString(R.string.recent_tasks),
         "feature" to context.getString(R.string.feature),
         "controlCenter" to context.getString(R.string.control_center),
+        "status_bar" to context.getString(R.string.status_bar),
         "android" to appNameCache.getAppName("android"),
         "systemui" to appNameCache.getAppName("com.android.systemui"),
         "settings" to appNameCache.getAppName("com.android.settings"),
