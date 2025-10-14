@@ -345,4 +345,9 @@
     <string name="import_config_summary">从备份文件中恢复所有模块设置</string>
     <string name="clear_config">清除配置</string>
     <string name="clear_config_summary">将所有模块设置恢复为默认值</string>
+    <string name="export_success">配置导出成功</string>
+    <string name="export_fail">配置导出失败: %1$s</string>
+    <string name="import_success">配置导入成功，请重启相关应用以完全生效</string>
+    <string name="import_fail">配置导入失败: %1$s</string>
+    <string name="clear_success">所有配置已清除，请重启相关应用</string>
 </resources>
