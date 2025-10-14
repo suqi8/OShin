@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.activity
+package com.suqi8.oshin.ui.activity.func.StatusBarLayout
 
 import android.content.Context
 import android.util.Log
@@ -8,43 +8,16 @@ import androidx.lifecycle.viewModelScope
 import com.google.gson.Gson
 import com.highcapable.yukihookapi.hook.factory.dataChannel
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.hook.systemui.ViewControllerHooker
-import com.suqi8.oshin.models.ViewConfig
-import com.suqi8.oshin.models.ViewNode
+import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarLayout
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-/**
- * 用于在UI上展示的、包含层级信息的单个节点数据类。
- * @property node 原始的 ViewNode 数据。
- * @property level 节点在树中的层级深度。
- * @property uniqueKey 为 Compose LazyColumn 提供的唯一且稳定的键。
- */
-data class VisibleNodeInfo(
-    val node: ViewNode,
-    val level: Int,
-    val uniqueKey: String
-)
-
-/**
- * 定义 ViewControllerScreen 的整体UI状态。
- * @property isLoading 是否正在加载视图树。
- * @property viewTree 根 ViewNode，代表整个视图树结构。
- * @property configs 当前已保存的视图配置 Map (Key: viewId, Value: mode)。
- * @property expandedNodes 记录当前已展开的节点ID集合。
- */
-data class ViewTreeUiState(
-    val isLoading: Boolean = true,
-    val viewTree: ViewNode? = null,
-    val configs: Map<String, Int> = emptyMap(),
-    val expandedNodes: Set<String> = emptySet()
-)
 
 private val ViewNode.expandableId: String
     get() = id.ifBlank { "group_${this.hashCode()}" }
@@ -58,11 +31,11 @@ private val ViewNode.expandableId: String
  * 4. 处理和持久化用户对视图的显示配置。
  */
 @HiltViewModel
-class ViewControllerViewModel @Inject constructor(
+class StatusBarLayoutViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ViewTreeUiState())
+    private val _uiState = MutableStateFlow(StatusBarLayoutUiState())
     val uiState = _uiState.asStateFlow()
 
     /** 持有转换后的、用于UI展示的扁平化节点列表。 */
@@ -85,7 +58,7 @@ class ViewControllerViewModel @Inject constructor(
      * 设置 DataChannel 监听器，用于接收来自 Hook 端的数据。
      */
     private fun setupDataChannelListener() {
-        dataChannel.wait<String>(ViewControllerHooker.KEY_RECEIVE_TREE) { jsonTree ->
+        dataChannel.wait<String>(StatusBarLayout.KEY_RECEIVE_TREE) { jsonTree ->
             Log.d(TAG, "DataChannel 已收到 JSON 树")
             viewModelScope.launch {
                 val tree = runCatching { gson.fromJson(jsonTree, ViewNode::class.java) }.getOrNull()
@@ -107,7 +80,16 @@ class ViewControllerViewModel @Inject constructor(
     fun requestTree() {
         Log.d(TAG, "正在通过 DataChannel 请求视图树...")
         _uiState.update { it.copy(isLoading = true) }
-        dataChannel.put(ViewControllerHooker.KEY_REQUEST_TREE)
+        dataChannel.put(StatusBarLayout.KEY_REQUEST_TREE)
+        viewModelScope.launch {
+            delay(1000L)
+
+            // 5秒后，如果仍然处于加载状态，说明超时了
+            if (_uiState.value.isLoading) {
+                Log.w(TAG, "请求视图树超时！请检查 Hook 是否已激活。")
+                _uiState.update { it.copy(isLoading = false, viewTree = null) }
+            }
+        }
     }
 
     /**
@@ -144,11 +126,11 @@ class ViewControllerViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val configList = _uiState.value.configs.map { (id, mode) -> ViewConfig(id, mode) }
             val json = gson.toJson(configList)
-            val editor = context.prefs(ViewControllerHooker.PREFS_NAME).edit()
-            editor.putString(ViewControllerHooker.PREFS_KEY, json)
+            val editor = context.prefs(StatusBarLayout.PREFS_NAME).edit()
+            editor.putString(StatusBarLayout.PREFS_KEY, json)
             editor.commit()
             Log.d(TAG, "配置已同步保存, 正在发送更新广播...")
-            dataChannel.put(ViewControllerHooker.KEY_UPDATE_CONFIG)
+            dataChannel.put(StatusBarLayout.KEY_UPDATE_CONFIG)
         }
     }
 
@@ -157,7 +139,7 @@ class ViewControllerViewModel @Inject constructor(
      * @param viewId 要高亮的视图资源 ID，如果为空字符串则取消高亮。
      */
     fun highlightView(viewId: String) {
-        dataChannel.put(ViewControllerHooker.KEY_HIGHLIGHT_ANCHOR, viewId)
+        dataChannel.put(StatusBarLayout.KEY_HIGHLIGHT_ANCHOR, viewId)
         Log.d(TAG, "发送高亮指令, ID: $viewId")
     }
 
@@ -224,7 +206,7 @@ class ViewControllerViewModel @Inject constructor(
      * 从 SharedPreferences 加载初始的视图配置。
      */
     private fun loadInitialConfigs() {
-        val jsonConfigs = context.prefs(ViewControllerHooker.PREFS_NAME).getString(ViewControllerHooker.PREFS_KEY, "[]")
+        val jsonConfigs = context.prefs(StatusBarLayout.PREFS_NAME).getString(StatusBarLayout.PREFS_KEY, "[]")
         val configs = runCatching {
             gson.fromJson(jsonConfigs, Array<ViewConfig>::class.java)
         }.getOrNull() ?: emptyArray()

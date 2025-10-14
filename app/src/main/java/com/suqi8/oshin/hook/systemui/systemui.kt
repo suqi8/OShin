@@ -8,6 +8,7 @@ import com.suqi8.oshin.hook.systemui.StatusBar.Fragment
 import com.suqi8.oshin.hook.systemui.StatusBar.HardwareIndicator
 import com.suqi8.oshin.hook.systemui.StatusBar.Icon
 import com.suqi8.oshin.hook.systemui.StatusBar.Notification
+import com.suqi8.oshin.hook.systemui.StatusBar.StatusBarLayout
 import com.suqi8.oshin.hook.systemui.StatusBar.Wifi
 import com.suqi8.oshin.hook.systemui.controlCenter.BigMediaArt
 
@@ -30,7 +31,7 @@ class systemui: YukiBaseHooker() {
         loadApp(hooker = RemoveUsbSelectionDialog())
         loadApp(hooker = ToastForceShowAppIcon())
         loadHooker(ShowRealBattery())
-        loadHooker(ViewControllerHooker())
+        loadHooker(StatusBarLayout())
 
         /*loadApp(name = "com.android.systemui") {
             "com.oplus.systemui.plugins.qs.OplusQSSpecialModeProvider".toClass().apply {

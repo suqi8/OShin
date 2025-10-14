@@ -1,4 +1,4 @@
-package com.suqi8.oshin.models
+package com.suqi8.oshin.ui.activity.func.StatusBarLayout
 
 import com.google.gson.annotations.SerializedName
 

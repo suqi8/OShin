@@ -42,6 +42,10 @@ object systemui {
                     Action(
                         title = StringResource(id = R.string.control_center),
                         route = "systemui\\controlCenter"
+                    ),
+                    Action(
+                        title = StringResource(id = R.string.status_bar_layout),
+                        route = "systemui\\StatusBarLayout"
                     )
                 )
             ),

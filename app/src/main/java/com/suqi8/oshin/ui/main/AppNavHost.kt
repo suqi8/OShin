@@ -18,7 +18,7 @@ import com.suqi8.oshin.ui.about.about_references
 import com.suqi8.oshin.ui.about.about_setting
 import com.suqi8.oshin.ui.activity.HideAppsNotice
 import com.suqi8.oshin.ui.activity.feature.featureScreen
-import com.suqi8.oshin.ui.activity.ViewControllerScreen
+import com.suqi8.oshin.ui.activity.func.StatusBarLayout.StatusBarLayout
 import com.suqi8.oshin.ui.activity.func.cpu_freq
 import com.suqi8.oshin.ui.activity.func.romworkshop.RomWorkshop
 import com.suqi8.oshin.utils.SpringEasing
@@ -54,8 +54,9 @@ fun AppNavHost() {
             composable("about_references") { about_references(navController) }
             composable("about_contributors") { about_contributors(navController) }
             composable("func\\cpu_freq") { cpu_freq(navController) }
-            composable("func/view_controller") {
-                ViewControllerScreen(navController)
+            composable("func\\romworkshop") { RomWorkshop(navController) }
+            composable("feature/systemui\\StatusBarLayout") {
+                StatusBarLayout(navController)
             }
             composable(
                 route = "hide_apps_notice/{packages}",
@@ -69,7 +70,6 @@ fun AppNavHost() {
                     packages = backStackEntry.arguments?.getString("packages")
                 )
             }
-            composable("func\\romworkshop") { RomWorkshop(navController) }
             composable(
                 route = "feature/{categoryId}?highlightKey={highlightKey}",
                 // 定义 categoryId 参数为字符串类型

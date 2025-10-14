@@ -1,8 +1,8 @@
-package com.suqi8.oshin.models
+package com.suqi8.oshin.ui.activity.func.StatusBarLayout
 
 import android.graphics.Rect
 
-// 在你的 com.suqi8.oshin.models.ViewNode 文件中
+// 在你的 com.suqi8.oshin.ui.activity.func.StatusBarLayout.ViewNode 文件中
 data class ViewNode(
     val id: String,
     val type: String,
