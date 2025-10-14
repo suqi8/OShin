@@ -79,7 +79,9 @@ fun StatusBarLayout(
 
     // 当对话框关闭时，发送指令取消视图高亮
     LaunchedEffect(showDialog.value) {
-        if (!showDialog.value) viewModel.highlightView("")
+        if (!showDialog.value) {
+            viewModel.clearHighlight()
+        }
     }
 
     FunPage(
@@ -128,7 +130,7 @@ fun StatusBarLayout(
                                     if (clickedNode.id.isNotBlank()) {
                                         selectedNode = clickedNode
                                         showDialog.value = true
-                                        viewModel.highlightView(clickedNode.id)
+                                        viewModel.highlightView(clickedNode.hashCodeValue)
                                     }
                                 }
                             )

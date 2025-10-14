@@ -78,9 +78,9 @@ class StatusBarLayout : YukiBaseHooker() {
                         handleUpdateConfig()
                     }
 
-                    wait<String>(KEY_HIGHLIGHT_ANCHOR) { viewId ->
-                        YLog.info("🔔 [Hook] 收到高亮指令: $viewId")
-                        highlightView(viewId)
+                    wait<Int>(KEY_HIGHLIGHT_ANCHOR) { hashCode ->
+                        YLog.info("🔔 [Hook] 收到高亮指令, HashCode: $hashCode")
+                        highlightView(hashCode) // 调用新的高亮方法
                     }
                 }
                 YLog.info("✅ YukiHookDataChannel 监听器已设置。")
@@ -121,10 +121,28 @@ class StatusBarLayout : YukiBaseHooker() {
     }
 
     /**
-     * 在指定的状态栏视图上高亮某个子视图。
-     * @param viewId 要高亮的视图资源 ID。如果为空，则取消所有高亮。
+     * 一个递归函数，用于根据 hashCode 查找视图
      */
-    private fun highlightView(viewId: String) {
+    private fun findView(root: ViewGroup, hashCode: Int): View? {
+        if (root.hashCode() == hashCode) return root
+        for (i in 0 until root.childCount) {
+            val child = root.getChildAt(i)
+            if (child.hashCode() == hashCode) {
+                return child
+            }
+            if (child is ViewGroup) {
+                val found = findView(child, hashCode)
+                if (found != null) return found
+            }
+        }
+        return null
+    }
+
+    /**
+     * 在指定的状态栏视图上高亮某个子视图。
+     * @param hashCode 要高亮的视图资源 hashCode。如果为空，则取消所有高亮。
+     */
+    private fun highlightView(hashCode: Int) {
         mainHandler.post {
             statusBarViews.values.forEach { statusBarView ->
                 val overlay = highlightOverlays.getOrPut(statusBarView) {
@@ -136,13 +154,12 @@ class StatusBarLayout : YukiBaseHooker() {
                         statusBarView.addView(this, FrameLayout.LayoutParams(0, 0))
                     }
                 }
-                if (viewId.isBlank()) {
+                if (hashCode == 0) { // 使用 0 作为取消高亮的信号
                     overlay.visibility = View.GONE
                     return@forEach
                 }
                 try {
-                    val resId = findResId(statusBarView.context, viewId)
-                    val targetView = if (resId != 0) statusBarView.findViewById<View>(resId) else null
+                    val targetView = findView(statusBarView, hashCode)
                     if (targetView != null && targetView.isAttachedToWindow) {
                         val location = IntArray(2).also { targetView.getLocationInWindow(it) }
                         val statusBarLocation = IntArray(2).also { statusBarView.getLocationInWindow(it) }
@@ -238,7 +255,8 @@ class StatusBarLayout : YukiBaseHooker() {
             type = nodeType,
             children = children,
             visibility = visibilityString,
-            bounds = bounds
+            bounds = bounds,
+            hashCodeValue = view.hashCode()
         )
     }
 }
