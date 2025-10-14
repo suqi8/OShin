@@ -338,4 +338,11 @@
     <string name="view_controller_mode_visible">强制显示</string>
     <string name="view_controller_mode_hidden">强制隐藏</string>
     <string name="view_controller_mode_invisible">强制不可见</string>
+    <string name="config_management">配置管理</string>
+    <string name="export_config">导出配置</string>
+    <string name="export_config_summary">将所有模块设置备份到一个文件中</string>
+    <string name="import_config">导入配置</string>
+    <string name="import_config_summary">从备份文件中恢复所有模块设置</string>
+    <string name="clear_config">清除配置</string>
+    <string name="clear_config_summary">将所有模块设置恢复为默认值</string>
 </resources>
