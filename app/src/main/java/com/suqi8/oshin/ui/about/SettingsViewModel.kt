@@ -82,10 +82,13 @@ class SettingsViewModel @Inject constructor(
                         when (value) {
                             is String -> editor.putString(key, value)
                             is Boolean -> editor.putBoolean(key, value)
-                            is Int -> editor.putInt(key, value)
-                            is Float -> editor.putFloat(key, value)
-                            is Long -> editor.putLong(key, value)
-                            is Double -> editor.putFloat(key, value.toFloat()) // SharedPreferences 不支持 Double
+                            is Number -> {
+                                val doubleValue = value.toDouble()
+                                if (doubleValue % 1 == 0.0 && doubleValue <= Int.MAX_VALUE && doubleValue >= Int.MIN_VALUE)
+                                    editor.putInt(key, doubleValue.toInt())
+                                else
+                                    editor.putFloat(key, doubleValue.toFloat())
+                            }
                         }
                     }
                     editor.commit() // 使用同步提交
