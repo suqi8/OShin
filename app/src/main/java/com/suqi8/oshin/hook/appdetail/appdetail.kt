@@ -3,6 +3,8 @@ package com.suqi8.oshin.hook.appdetail
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
+import org.luckypray.dexkit.DexKitBridge
+import java.lang.reflect.Modifier
 
 class appdetail: YukiBaseHooker() {
     override fun onHook() {
@@ -130,17 +132,35 @@ class appdetail: YukiBaseHooker() {
                     }
                 }
             }*/
+            var remove_security_checkClassName = ""
+            var remove_security_checkMethodName = ""
+            DexKitBridge.create(this.appInfo.sourceDir).apply {
+                findClass {
+                    searchPackages("com.oplus.appdetail.common.utils")
+                    matcher {
+                        usingStrings("com.heytap.market")
+                        usingStrings("oplus.intent.action.settings.SCREEN_LOCK","oplus.intent.action.settings.BIOMETRIC_ENROLL_GUIDE")
+                    }
+                }.findMethod {
+                    matcher {
+                        modifiers = Modifier.STATIC or Modifier.PUBLIC
+                        returnType = "boolean"
+                        paramTypes("android.content.Context")
+                    }
+                }.singleOrNull()?.apply {
+                    remove_security_checkClassName = className
+                    remove_security_checkMethodName = methodName
+                }
+            }
             //移除安装前安全检测
             if (prefs("appdetail").getBoolean("remove_security_check", false)) {
-                "com.oplus.appdetail.common.utils.d".toClass().resolve().apply {
-                    firstMethod {
-                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC)
-                        name = "b"
-                        parameters("android.content.Context")
-                        returnType = Boolean::class
-                    }.hook {
-                        replaceToFalse()
-                    }
+                remove_security_checkClassName.toClass().resolve().firstMethod {
+                    modifiers(Modifiers.PUBLIC, Modifiers.STATIC)
+                    name = remove_security_checkMethodName
+                    parameters("android.content.Context")
+                    returnType = Boolean::class
+                }.hook {
+                    replaceToFalse()
                 }
             }
         }
