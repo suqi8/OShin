@@ -1,20 +1,13 @@
 package com.suqi8.oshin.hook.appdetail
 
-import androidx.lifecycle.MutableLiveData
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
-import com.highcapable.yukihookapi.hook.factory.method
-import com.highcapable.yukihookapi.hook.type.java.BooleanType
-import com.highcapable.yukihookapi.hook.type.java.IntType
-import com.highcapable.yukihookapi.hook.type.java.UnitType
-import org.luckypray.dexkit.DexKitBridge
-import java.lang.reflect.Modifier
 
 class appdetail: YukiBaseHooker() {
     override fun onHook() {
         loadApp(name = "com.oplus.appdetail") {
-            if (prefs("appdetail").getBoolean("remove_recommendations", false)) {
+            /*if (prefs("appdetail").getBoolean("remove_recommendations", false)) {
                 "com.oplus.appdetail.model.install.view.InstallPageContent\$initLiveDataObserver\$1".toClass().apply {
                     method {
                         name = "invoke"
@@ -136,36 +129,17 @@ class appdetail: YukiBaseHooker() {
                         }
                     }
                 }
-            }
+            }*/
             //移除安装前安全检测
             if (prefs("appdetail").getBoolean("remove_security_check", false)) {
-                "com.oplus.appdetail.model.guide.viewModel.GuideShareViewModel".toClass().apply {
-                    method {
-                        name = security_check_method
-                        emptyParam()
-                        returnType = BooleanType
-                    }.hook {
-                        before {
-                            result = true
-                        }
-                    }
-                }
-                "com.oplus.appdetail.modelv2.guide.viewmodel.RiskScanViewModel".toClass().resolve().apply {
+                "com.oplus.appdetail.common.utils.d".toClass().resolve().apply {
                     firstMethod {
-                        modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
-                        name = "r"
-                        parameters("com.oplus.appdetail.model.guide.repository.ExtJumpParam", "com.heytap.cdo.security.domain.safeguide.GuideResult", Long::class)
-                        returnType = Void.TYPE
+                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC)
+                        name = "b"
+                        parameters("android.content.Context")
+                        returnType = Boolean::class
                     }.hook {
-                        before {
-                            "com.oplus.appdetail.modelv2.guide.viewmodel.RiskScanViewModel".toClass().resolve().apply {
-                                firstField {
-                                    modifiers(Modifiers.PRIVATE, Modifiers.FINAL)
-                                    name = "c"
-                                    type = "androidx.lifecycle.MutableLiveData"
-                                }.of(instance).get() as MutableLiveData<Any>
-                            }
-                        }
+                        replaceToFalse()
                     }
                 }
             }
