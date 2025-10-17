@@ -30,6 +30,11 @@ object ota {
                     Switch(
                         title = StringResource(R.string.remove_unlock_and_dmverity_check),
                         key = "remove_unlock_and_dmverity_check"
+                    ),
+                    Switch(
+                        title = StringResource(R.string.bypass_preinstall_checks),
+                        summary = R.string.bypass_preinstall_checks_summary,
+                        key = "bypass_preinstall_checks"
                     )
                 )
             )

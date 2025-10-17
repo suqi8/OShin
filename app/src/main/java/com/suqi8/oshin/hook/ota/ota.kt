@@ -1,5 +1,7 @@
 package com.suqi8.oshin.hook.ota
 
+import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 import org.luckypray.dexkit.DexKitBridge
@@ -75,6 +77,24 @@ class ota: YukiBaseHooker() {
                             }
                         }.singleOrNull()?.also {
                             it.className.toClass().method { name = it.methodName }.hook { before { result = false } }
+                        }
+                    }
+                }
+            }
+            if (prefs("ota").getBoolean("bypass_preinstall_checks", false)) {
+                "s6.a".toClass().resolve().apply {
+                    firstMethod {
+                        modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
+                        name = "e"
+                        parameters("android.content.Context", String::class)
+                        returnType = Int::class
+                    }.hook {
+                        after {
+                            firstField {
+                                modifiers(Modifiers.PUBLIC)
+                                name = "d"
+                                type = Boolean::class
+                            }.of(instance).set(false)
                         }
                     }
                 }
