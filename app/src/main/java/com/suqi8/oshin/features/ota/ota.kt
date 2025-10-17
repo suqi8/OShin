@@ -35,6 +35,10 @@ object ota {
                         title = StringResource(R.string.bypass_preinstall_checks),
                         summary = R.string.bypass_preinstall_checks_summary,
                         key = "bypass_preinstall_checks"
+                    ),
+                    Switch(
+                        title = StringResource(R.string.force_show_local_install),
+                        key = "force_show_local_install"
                     )
                 )
             )
