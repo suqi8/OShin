@@ -359,4 +359,5 @@
     <string name="status_bar">状态栏</string>
     <string name="bypass_preinstall_checks">移除安装前所有校验</string>
     <string name="bypass_preinstall_checks_summary">移除了安装前的多项校验，包括：文件路径有效性、文件完整性、版本信息以及厂商“禁止更新”标记。</string>
+    <string name="force_show_local_install">强制显示“本地安装”选项</string>
 </resources>

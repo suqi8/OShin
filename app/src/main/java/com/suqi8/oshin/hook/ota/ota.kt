@@ -1,5 +1,7 @@
 package com.suqi8.oshin.hook.ota
 
+import android.content.ContentResolver
+import android.provider.Settings
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
@@ -8,6 +10,7 @@ import org.luckypray.dexkit.DexKitBridge
 
 class ota: YukiBaseHooker() {
     override fun onHook() {
+        val prefs = prefs("ota")
         loadApp(name = "com.oplus.ota") {
             DexKitBridge.create(this.appInfo.sourceDir).use {
                 it.findClass {
@@ -20,7 +23,7 @@ class ota: YukiBaseHooker() {
                         }
                     }
                 }.singleOrNull()?.also {
-                    if (prefs("ota").getBoolean("remove_system_update_dialog", false)) {
+                    if (prefs.getBoolean("remove_system_update_dialog", false)) {
                         it.findMethod {
                             matcher {
                                 usingStrings("There are no overlays right to showNotifyDownloadDialog, so return")
@@ -29,7 +32,7 @@ class ota: YukiBaseHooker() {
                             it.className.toClass().method { name = it.methodName }.hook { replaceUnit {  } }
                         }
                     }
-                    if (prefs("ota").getBoolean("remove_wlan_auto_download_dialog", false)) {
+                    if (prefs.getBoolean("remove_wlan_auto_download_dialog", false)) {
                         it.findMethod {
                             matcher {
                                 usingStrings("upgrade_show_download_dialog_time_interval","OTA_NoticeAlertDialog")
@@ -39,7 +42,7 @@ class ota: YukiBaseHooker() {
                         }
                     }
                 }
-                if (prefs("ota").getBoolean("remove_system_update_notification", false)) {
+                if (prefs.getBoolean("remove_system_update_notification", false)) {
                     it.findClass {
                         matcher {
                             addMethod {
@@ -59,7 +62,7 @@ class ota: YukiBaseHooker() {
                         }
                     }
                 }
-                if (prefs("ota").getBoolean("remove_wlan_auto_download_dialog", false)) {
+                if (prefs.getBoolean("remove_wlan_auto_download_dialog", false)) {
                     it.findClass {
                         searchPackages("com.oplus.common")
                         matcher {
@@ -81,7 +84,7 @@ class ota: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("ota").getBoolean("bypass_preinstall_checks", false)) {
+            if (prefs.getBoolean("bypass_preinstall_checks", false)) {
                 "s6.a".toClass().resolve().apply {
                     firstMethod {
                         modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
@@ -96,6 +99,16 @@ class ota: YukiBaseHooker() {
                                 type = Boolean::class
                             }.of(instance).set(false)
                         }
+                    }
+                }
+            }
+            if (prefs.getBoolean("force_show_local_install", false)) {
+                Settings.Global::class.java.resolve().firstMethod {
+                    name = "getInt"
+                    parameters(ContentResolver::class,String::class,Int::class)
+                }.hook {
+                    before {
+                        if ("development_settings_enabled" == args[1]) result = 1
                     }
                 }
             }
