@@ -111,7 +111,7 @@ class SplitScreenMultiWindow : YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("android\\split_screen_multi_window").getInt("max_simultaneous_small_windows", -1) != -1) {
+            if (prefs("android\\split_screen_multi_window").getFloat("max_simultaneous_small_windows", -1f) != -1f) {
                 "com.android.server.wm.FlexibleWindowManagerService".toClass().apply {
                     method {
                         name = "getMaxWinNum"
@@ -119,12 +119,12 @@ class SplitScreenMultiWindow : YukiBaseHooker() {
                         returnType = IntType
                     }.hook {
                         after {
-                            result = prefs("android\\split_screen_multi_window").getInt("max_simultaneous_small_windows", -1)
+                            result = prefs("android\\split_screen_multi_window").getFloat("max_simultaneous_small_windows", -1f).toInt()
                         }
                     }
                 }
             }
-            if (prefs("android\\split_screen_multi_window").getInt("small_window_corner_radius", -1) != -1) {
+            if (prefs("android\\split_screen_multi_window").getFloat("small_window_corner_radius", -1f) != -1f) {
                 "com.android.server.wm.FlexibleWindowManagerService".toClass().apply {
                     method {
                         name = "getCornerRadius"
@@ -132,12 +132,12 @@ class SplitScreenMultiWindow : YukiBaseHooker() {
                         returnType = IntType
                     }.hook {
                         after {
-                            result = prefs("android\\split_screen_multi_window").getInt("small_window_corner_radius", -1)
+                            result = prefs("android\\split_screen_multi_window").getFloat("small_window_corner_radius", -1f).toInt()
                         }
                     }
                 }
             }
-            if (prefs("android\\split_screen_multi_window").getInt("small_window_focused_shadow", -1) != -1) {
+            if (prefs("android\\split_screen_multi_window").getFloat("small_window_focused_shadow", -1f) != -1f) {
                 "com.android.server.wm.FlexibleWindowManagerService".toClass().apply {
                     method {
                         name = "getShadowRadiusFocused"
@@ -145,12 +145,12 @@ class SplitScreenMultiWindow : YukiBaseHooker() {
                         returnType = IntType
                     }.hook {
                         after {
-                            result = prefs("android\\split_screen_multi_window").getInt("small_window_focused_shadow", -1)
+                            result = prefs("android\\split_screen_multi_window").getFloat("small_window_focused_shadow", -1f).toInt()
                         }
                     }
                 }
             }
-            if (prefs("android\\split_screen_multi_window").getInt("small_window_unfocused_shadow", -1) != -1) {
+            if (prefs("android\\split_screen_multi_window").getFloat("small_window_unfocused_shadow", -1f) != -1f) {
                 "com.android.server.wm.FlexibleWindowManagerService".toClass().apply {
                     method {
                         name = "getShadowRadiusUnfocused"
@@ -158,7 +158,7 @@ class SplitScreenMultiWindow : YukiBaseHooker() {
                         returnType = IntType
                     }.hook {
                         after {
-                            result = prefs("android\\split_screen_multi_window").getInt("small_window_unfocused_shadow", -1)
+                            result = prefs("android\\split_screen_multi_window").getFloat("small_window_unfocused_shadow", -1f).toInt()
                         }
                     }
                 }
