@@ -57,7 +57,9 @@ class HardwareIndicator : YukiBaseHooker() {
                     uiHandler.post {
                         // 在 post 的代码块内部，需要重新检查 clock 是否还附着在窗口上
                         if (!clockTextView.isAttachedToWindow) return@post
-                        val parent = clockTextView.parent as? ViewGroup ?: return@post
+
+                        val clockWrapper = clockTextView.parent as? ViewGroup ?: return@post
+                        val parent = clockWrapper.parent as? ViewGroup ?: return@post
 
                         cleanupResourcesFor(clockTextView)
 
@@ -83,16 +85,14 @@ class HardwareIndicator : YukiBaseHooker() {
                         }
                         resources.indicatorContainer = container
 
-                        // 2. 添加指标到容器
                         if (powerEnabled) createConsumptionIndicator(clockTextView, container, resources)
                         if (tempEnabled) createTemperatureIndicator(clockTextView, container, resources)
 
-                        // 3. 将总容器一次性添加到时钟后面
-                        val clockIndex = parent.indexOfChild(clockTextView)
-                        if (clockIndex != -1) {
-                            parent.addView(container, clockIndex + 1)
+                        val wrapperIndex = parent.indexOfChild(clockWrapper)
+                        if (wrapperIndex != -1) {
+                            parent.addView(container, wrapperIndex + 1)
                         } else {
-                            parent.addView(container)
+                            parent.addView(container) // 作为备用方案
                         }
 
                         // 4. 启动监听
