@@ -88,7 +88,6 @@
     <string name="dual_row_summary">双排显示时间</string>
     <string name="Researt_app">重启应用</string>
     <string name="confirm_restart_applications">确认重启以下应用吗？</string>
-    <string name="common_settings">常用设置</string>
     <string name="other_settings">其他设置</string>
     <string name="by_the_way">题外话</string>
     <string name="alignment">对齐方式</string>
@@ -360,4 +359,25 @@
     <string name="bypass_preinstall_checks">移除安装前所有校验</string>
     <string name="bypass_preinstall_checks_summary">移除了安装前的多项校验，包括：文件路径有效性、文件完整性、版本信息以及厂商“禁止更新”标记。</string>
     <string name="force_show_local_install">强制显示“本地安装”选项</string>
+    <string name="common_settings">通用设置</string>
+    <string name="verification_bypass_settings">校验绕过设置</string>
+    <string name="advanced_settings">高级设置</string>
+    <string name="allow_downgrade_title">允许应用降级</string>
+    <string name="allow_downgrade_summary">开启后，可以安装旧版本的应用覆盖新版本。</string>
+    <string name="allow_signature_mismatch_on_update_title">允许覆盖安装不同签名的应用</string>
+    <string name="allow_signature_mismatch_on_update_summary">开启后，可以用不同签名的应用覆盖安装同包名的应用。</string>
+    <string name="disable_jar_verifier_title">禁用 JAR 包校验</string>
+    <string name="disable_jar_verifier_summary">绕过对 APK 文件完整性的校验，解决部分修改版应用无法安装的问题。</string>
+    <string name="disable_message_digest_title">禁用摘要验证</string>
+    <string name="disable_message_digest_summary">绕过对 APK 文件摘要的验证。</string>
+    <string name="bypass_arsc_uncompressed_check_title">绕过 resources.arsc 压缩检查</string>
+    <string name="bypass_arsc_uncompressed_check_summary">解决因 `resources.arsc` 未对齐或被压缩导致的安装失败。</string>
+    <string name="bypass_min_signature_version_check_title">绕过最小签名版本检查</string>
+    <string name="bypass_min_signature_version_check_summary">允许安装使用旧版签名方案的应用。</string>
+    <string name="disable_install_verification_title">禁用安装验证代理</string>
+    <string name="disable_install_verification_summary">禁用通过验证代理（如 Google Play Protect）进行的安装包扫描。</string>
+    <string name="allow_system_app_hidden_api_title">允许系统应用调用隐藏 API</string>
+    <string name="allow_system_app_hidden_api_summary">即使签名不符，也允许系统应用或更新后的系统应用调用隐藏 API。</string>
+    <string name="allow_nonsystem_shared_uid_title">允许非系统应用使用共享 UID</string>
+    <string name="allow_nonsystem_shared_uid_summary">允许不同签名的非系统应用使用 `android:sharedUserId`。</string>
 </resources>

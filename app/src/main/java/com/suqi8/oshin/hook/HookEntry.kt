@@ -1,14 +1,11 @@
 package com.suqi8.oshin.hook
 
-import android.os.Build
-import android.os.Build.VERSION_CODES.VANILLA_ICE_CREAM
 import com.highcapable.yukihookapi.annotation.xposed.InjectYukiHookWithXposed
 import com.highcapable.yukihookapi.hook.factory.configs
 import com.highcapable.yukihookapi.hook.factory.encase
 import com.highcapable.yukihookapi.hook.xposed.bridge.event.YukiXposedEvent
 import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import com.suqi8.oshin.hook.android.android
-import com.suqi8.oshin.hook.android.corepatch.CorePatchForV
 import com.suqi8.oshin.hook.appdetail.appdetail
 import com.suqi8.oshin.hook.battery.battery
 import com.suqi8.oshin.hook.exsystemservice.exsystemservice
@@ -76,17 +73,12 @@ class HookEntry : IYukiHookXposedInit {
         loadHooker(exsystemservice())
         loadHooker(phone())
         loadHooker(padconnect())
+        //loadHooker(weather())
     }
 
     override fun onXposedEvent() {
         YukiXposedEvent.onHandleLoadPackage { lpparam: XC_LoadPackage.LoadPackageParam ->
             run {
-                if (lpparam.packageName == "android" && lpparam.processName == "android") {
-                    if (Build.VERSION.SDK_INT == VANILLA_ICE_CREAM) {
-                        CorePatchForV()
-                            .handleLoadPackage(lpparam)
-                    }
-                }
             }
         }
         YukiXposedEvent.onInitZygote { startupParam: IXposedHookZygoteInit.StartupParam ->
