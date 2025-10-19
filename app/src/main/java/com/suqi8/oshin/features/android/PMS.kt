@@ -13,55 +13,63 @@ object PMS {
         title = StringResource(R.string.package_manager_services),
         // 2. 定义页面的卡片列表
         items = listOf(
-            // --- 第一个 Card ---
             CardDefinition(
                 titleRes = R.string.common_settings,
-                // 这个卡片前没有 SmallTitle，所以 titleRes 为 null
                 items = listOf(
                     Switch(
-                        title = StringResource(R.string.downgr),
-                        summary = R.string.downgr_summary,
-                        key = "downgrade"
+                        title = StringResource(R.string.allow_downgrade_title),
+                        summary = R.string.allow_downgrade_summary,
+                        key = "allow_downgrade"
                     ),
                     Switch(
-                        title = StringResource(R.string.authcreak),
-                        summary = R.string.authcreak_summary,
-                        key = "authcreak"
-                    ),
-                    Switch(
-                        title = StringResource(R.string.digestCreak),
-                        summary = R.string.digestCreak_summary,
-                        key = "digestCreak"
-                    ),
-                    Switch(
-                        title = StringResource(R.string.UsePreSig),
-                        summary = R.string.UsePreSig_summary,
-                        key = "UsePreSig"
-                    ),
-                    Switch(
-                        title = StringResource(R.string.enhancedMode),
-                        summary = R.string.enhancedMode_summary,
-                        key = "enhancedMode"
+                        title = StringResource(R.string.allow_signature_mismatch_on_update_title),
+                        summary = R.string.allow_signature_mismatch_on_update_summary,
+                        key = "allow_signature_mismatch_on_update"
                     )
                 )
             ),
             CardDefinition(
-                titleRes = R.string.other_settings,
+                titleRes = R.string.verification_bypass_settings,
                 items = listOf(
                     Switch(
-                        title = StringResource(R.string.bypassBlock),
-                        summary = R.string.bypassBlock_summary,
-                        key = "bypassBlock"
+                        title = StringResource(R.string.disable_jar_verifier_title),
+                        summary = R.string.disable_jar_verifier_summary,
+                        key = "disable_jar_verifier"
                     ),
                     Switch(
-                        title = StringResource(R.string.shared_user_title),
-                        summary = R.string.shared_user_summary,
-                        key = "sharedUser"
+                        title = StringResource(R.string.disable_message_digest_title),
+                        summary = R.string.disable_message_digest_summary,
+                        key = "disable_message_digest"
                     ),
                     Switch(
-                        title = StringResource(R.string.disable_verification_agent_title),
-                        summary = R.string.disable_verification_agent_summary,
-                        key = "disableVerificationAgent"
+                        title = StringResource(R.string.bypass_arsc_uncompressed_check_title),
+                        summary = R.string.bypass_arsc_uncompressed_check_summary,
+                        key = "bypass_arsc_uncompressed_check"
+                    ),
+                    Switch(
+                        title = StringResource(R.string.bypass_min_signature_version_check_title),
+                        summary = R.string.bypass_min_signature_version_check_summary,
+                        key = "bypass_min_signature_version_check"
+                    ),
+                    Switch(
+                        title = StringResource(R.string.disable_install_verification_title),
+                        summary = R.string.disable_install_verification_summary,
+                        key = "disable_install_verification"
+                    )
+                )
+            ),
+            CardDefinition(
+                titleRes = R.string.advanced_settings,
+                items = listOf(
+                    Switch(
+                        title = StringResource(R.string.allow_system_app_hidden_api_title),
+                        summary = R.string.allow_system_app_hidden_api_summary,
+                        key = "allow_system_app_hidden_api"
+                    ),
+                    Switch(
+                        title = StringResource(R.string.allow_nonsystem_shared_uid_title),
+                        summary = R.string.allow_nonsystem_shared_uid_summary,
+                        key = "allow_nonsystem_shared_uid"
                     )
                 )
             )
