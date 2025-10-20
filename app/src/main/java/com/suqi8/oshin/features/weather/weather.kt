@@ -18,6 +18,10 @@ object weather {
                     Switch(
                         title = StringResource(R.string.remove_second_page_ads),
                         key = "remove_second_page_ads"
+                    ),
+                    Switch(
+                        title = StringResource(R.string.prevent_system_browser_redirect),
+                        key = "prevent_system_browser_redirect"
                     )
                 )
             )

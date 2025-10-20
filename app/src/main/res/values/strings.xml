@@ -381,4 +381,5 @@
     <string name="allow_nonsystem_shared_uid_title">允许非系统应用使用共享 UID</string>
     <string name="allow_nonsystem_shared_uid_summary">允许不同签名的非系统应用使用 `android:sharedUserId`。</string>
     <string name="remove_second_page_ads">移除二级页面广告</string>
+    <string name="prevent_system_browser_redirect">禁止跳转系统浏览器</string>
 </resources>
