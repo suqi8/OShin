@@ -17,9 +17,11 @@ class RemoveAds: YukiBaseHooker() {
                             var originalUrl = result.toString()
                             if (originalUrl.contains("infoEnable=true")) {
                                 originalUrl = originalUrl.replace("infoEnable=true", "infoEnable=false")
-                            } else if (!originalUrl.contains("infoEnable=")) {
-                                originalUrl = "$originalUrl&infoEnable=false"
                             }
+                            originalUrl = originalUrl.replace(
+                                "&isNotificationGranted=",
+                                "&infoEnable=false&isNotificationGranted="
+                            )
                             result = originalUrl
                         }
                     }
@@ -30,8 +32,13 @@ class RemoveAds: YukiBaseHooker() {
                         name = "getH5StringBuffer"
                     }.hook {
                         before {
-                            val url = StringBuffer("${args[0].toString()}&infoEnable=false&frontCode=2.0")
-                            result = url
+                            var url = args[0].toString()
+                            url = if (url.contains("&isNotificationGranted=")) {
+                                url.replace("&isNotificationGranted=", "&infoEnable=false&isNotificationGranted=")
+                            } else {
+                                "$url&infoEnable=false"
+                            }
+                            result = StringBuffer("$url&frontCode=2.0")
                         }
                     }
                 }
