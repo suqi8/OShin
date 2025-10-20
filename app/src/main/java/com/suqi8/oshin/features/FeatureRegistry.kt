@@ -34,6 +34,7 @@ import com.suqi8.oshin.features.systemui.StatusBarWifi
 import com.suqi8.oshin.features.systemui.notification
 import com.suqi8.oshin.features.systemui.systemui
 import com.suqi8.oshin.features.wallet.wallet
+import com.suqi8.oshin.features.weather.weather
 import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.models.PageDefinition
 
@@ -66,6 +67,7 @@ object FeatureRegistry {
         ModuleEntry("com.oplus.ota", "ota"),
         ModuleEntry("com.oplus.padconnect", "padconnect"),
         ModuleEntry("com.oplus.phonemanager", "oplusphonemanager"),
+        ModuleEntry("com.coloros.weather2", "weather"),
     )
 
     /**
@@ -130,6 +132,8 @@ object FeatureRegistry {
 
         "padconnect" to padconnect.definition,
 
-        "oplusphonemanager" to oplusphonemanager.definition
+        "oplusphonemanager" to oplusphonemanager.definition,
+
+        "weather" to weather.definition,
     )
 }
