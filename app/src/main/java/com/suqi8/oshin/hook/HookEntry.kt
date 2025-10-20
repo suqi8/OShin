@@ -31,6 +31,7 @@ import com.suqi8.oshin.hook.settings.settings
 import com.suqi8.oshin.hook.speechassist.speechassist
 import com.suqi8.oshin.hook.systemui.systemui
 import com.suqi8.oshin.hook.wallet.wallet
+import com.suqi8.oshin.hook.weather.weather
 import de.robv.android.xposed.IXposedHookZygoteInit
 import de.robv.android.xposed.callbacks.XC_LoadPackage
 
@@ -43,6 +44,15 @@ class HookEntry : IYukiHookXposedInit {
             tag = "OShin"
         }
         isDebug = false
+    }
+
+    companion object {
+        private const val RECENT_APP_VIEW_HOLDER = "com.oplus.smartsidebar.panelview.edgepanel.mainpanel.holder.RecentAppViewHolder"
+        private const val COMBINED_IMAGE_VIEW = "com.oplus.smartsidebar.panelview.edgepanel.base.CombinedImageView"
+        private const val IMAGE_DATA_HANDLER = "com.oplus.smartsidebar.panelview.edgepanel.data.viewdatahandlers.ImageDataHandleImpl"
+
+        private const val TARGET_APP_COUNT = 4
+        private const val EXTRA_VIEWS_KEY = "custom_recent_views"
     }
 
     override fun onHook() = encase {
@@ -73,7 +83,7 @@ class HookEntry : IYukiHookXposedInit {
         loadHooker(exsystemservice())
         loadHooker(phone())
         loadHooker(padconnect())
-        //loadHooker(weather())
+        loadHooker(weather())
     }
 
     override fun onXposedEvent() {

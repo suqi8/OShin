@@ -380,4 +380,5 @@
     <string name="allow_system_app_hidden_api_summary">即使签名不符，也允许系统应用或更新后的系统应用调用隐藏 API。</string>
     <string name="allow_nonsystem_shared_uid_title">允许非系统应用使用共享 UID</string>
     <string name="allow_nonsystem_shared_uid_summary">允许不同签名的非系统应用使用 `android:sharedUserId`。</string>
+    <string name="remove_second_page_ads">移除二级页面广告</string>
 </resources>
