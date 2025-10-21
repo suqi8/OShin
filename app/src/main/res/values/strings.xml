@@ -390,4 +390,7 @@
 \n• su/shareduser [UID] —— 查看共享 UID 的签名信息
 \n• 其它参数 —— 显示用法提示
     </string>
+    <string name="remove_weather_injected_ads">移除天气注入广告</string>
+    <string name="remove_weather_search_box">移除天气页面搜索框</string>
+    <string name="weather_detail">天气详情</string>
 </resources>
