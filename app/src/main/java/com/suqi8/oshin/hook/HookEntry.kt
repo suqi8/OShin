@@ -8,6 +8,7 @@ import com.highcapable.yukihookapi.hook.xposed.proxy.IYukiHookXposedInit
 import com.suqi8.oshin.hook.android.android
 import com.suqi8.oshin.hook.appdetail.appdetail
 import com.suqi8.oshin.hook.battery.battery
+import com.suqi8.oshin.hook.browser.browser
 import com.suqi8.oshin.hook.exsystemservice.exsystemservice
 import com.suqi8.oshin.hook.games.games
 import com.suqi8.oshin.hook.health.health
@@ -84,6 +85,7 @@ class HookEntry : IYukiHookXposedInit {
         loadHooker(phone())
         loadHooker(padconnect())
         loadHooker(weather())
+        loadHooker(browser())
     }
 
     override fun onXposedEvent() {

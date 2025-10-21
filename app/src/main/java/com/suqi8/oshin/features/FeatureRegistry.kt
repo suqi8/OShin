@@ -6,6 +6,7 @@ import com.suqi8.oshin.features.android.SplitScreenMultiWindow
 import com.suqi8.oshin.features.android.android
 import com.suqi8.oshin.features.appdetail.appdetail
 import com.suqi8.oshin.features.battery.battery
+import com.suqi8.oshin.features.browser.browser
 import com.suqi8.oshin.features.exsystemservice.exsystemservice
 import com.suqi8.oshin.features.games.games
 import com.suqi8.oshin.features.health.health
@@ -68,6 +69,7 @@ object FeatureRegistry {
         ModuleEntry("com.oplus.padconnect", "padconnect"),
         ModuleEntry("com.oplus.phonemanager", "oplusphonemanager"),
         ModuleEntry("com.coloros.weather2", "weather"),
+        ModuleEntry("com.heytap.browser", "browser"),
     )
 
     /**
@@ -135,5 +137,7 @@ object FeatureRegistry {
         "oplusphonemanager" to oplusphonemanager.definition,
 
         "weather" to weather.definition,
+
+        "browser" to browser.definition,
     )
 }

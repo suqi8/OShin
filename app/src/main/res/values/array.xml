@@ -24,6 +24,7 @@
         <item>com.oplus.exsystemservice</item>
         <item>com.android.phone</item>
         <item>com.coloros.weather2</item>
+        <item>com.heytap.browser</item>
     </string-array>
     <string-array name="language">
         <item>@string/follow_system</item>

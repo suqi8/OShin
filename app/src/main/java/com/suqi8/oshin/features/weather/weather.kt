@@ -4,6 +4,7 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.models.AppName
 import com.suqi8.oshin.models.CardDefinition
 import com.suqi8.oshin.models.PageDefinition
+import com.suqi8.oshin.models.RelatedLinks
 import com.suqi8.oshin.models.StringResource
 import com.suqi8.oshin.models.Switch
 
@@ -22,6 +23,18 @@ object weather {
                     Switch(
                         title = StringResource(R.string.prevent_system_browser_redirect),
                         key = "prevent_system_browser_redirect"
+                    )
+                )
+            ),
+            RelatedLinks(
+                links = listOf(
+                    RelatedLinks.Link(
+                        titleRes = R.string.remove_weather_injected_ads,
+                        route = "browser"
+                    ),
+                    RelatedLinks.Link(
+                        titleRes = R.string.remove_weather_search_box,
+                        route = "browser"
                     )
                 )
             )
