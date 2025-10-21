@@ -12,8 +12,6 @@ import java.io.PrintWriter
 
 class PackageManagerServices : YukiBaseHooker() {
 
-    private var mPMS: Any? = null
-
     override fun onHook() {
         loadSystem {
             val prefs = prefs("android\\package_manager_services")
@@ -21,7 +19,7 @@ class PackageManagerServices : YukiBaseHooker() {
             hookCoreSignatureChecks(prefs)
             hookInstallationChecks(prefs)
             hookSystemApiChecks(prefs)
-            hookDebugCommands()
+            hookDebugCommands(prefs)
         }
     }
 
@@ -29,7 +27,7 @@ class PackageManagerServices : YukiBaseHooker() {
      * Hook 允许应用降级安装的功能
      */
     private fun PackageParam.hookDowngradeChecks(prefs: YukiHookPrefsBridge) {
-        if (!prefs.getBoolean("allow_downgrade", true)) return
+        if (!prefs.getBoolean("allow_downgrade", false)) return
         "com.android.server.pm.PackageManagerServiceUtils".toClass().resolve()
             .firstMethod { name = "checkDowngrade" }.hook {
                 before { result = null }
@@ -40,13 +38,13 @@ class PackageManagerServices : YukiBaseHooker() {
      * Hook 核心签名验证
      */
     private fun PackageParam.hookCoreSignatureChecks(prefs: YukiHookPrefsBridge) {
-        if (prefs.getBoolean("disable_jar_verifier", true)) {
+        if (prefs.getBoolean("disable_jar_verifier", false)) {
             "android.util.jar.StrictJarVerifier".toClass().resolve().apply {
                 method { name = "verifyMessageDigest" }.forEach { it.hook { before { result = true } } }
                 method { name = "verify" }.forEach { it.hook { before { result = true } } }
             }
         }
-        if (prefs.getBoolean("disable_message_digest", true)) {
+        if (prefs.getBoolean("disable_message_digest", false)) {
             "java.security.MessageDigest".toClass().resolve().method { name = "isEqual" }.forEach {
                 it.hook { before { result = true } }
             }
@@ -58,14 +56,14 @@ class PackageManagerServices : YukiBaseHooker() {
      */
     private fun PackageParam.hookInstallationChecks(prefs: YukiHookPrefsBridge) {
         // 绕过 resources.arsc 校验
-        if (prefs.getBoolean("bypass_arsc_uncompressed_check", true)) {
+        if (prefs.getBoolean("bypass_arsc_uncompressed_check", false)) {
             "android.content.res.AssetManager".toClass().resolve().method { name = "containsAllocatedTable" }.forEach {
                 it.hook { before { result = false } }
             }
         }
 
         // 绕过最小签名版本检查
-        if (prefs.getBoolean("bypass_min_signature_version_check", true)) {
+        if (prefs.getBoolean("bypass_min_signature_version_check", false)) {
             "android.util.apk.ApkSignatureVerifier".toClass().resolve()
                 .firstMethod {
                     name = "getMinimumSignatureSchemeVersionForTargetSdk"
@@ -76,7 +74,7 @@ class PackageManagerServices : YukiBaseHooker() {
         }
 
         // 覆盖安装签名不一致处理
-        if (prefs.getBoolean("allow_signature_mismatch_on_update", true)) {
+        if (prefs.getBoolean("allow_signature_mismatch_on_update", false)) {
             "android.content.pm.SigningDetails".toClass().resolve().apply {
                 method { name = "checkCapability" }.forEach {
                     it.hook {
@@ -90,7 +88,7 @@ class PackageManagerServices : YukiBaseHooker() {
         }
 
         // 禁用安装验证
-        if (prefs.getBoolean("disable_install_verification", true)) {
+        if (prefs.getBoolean("disable_install_verification", false)) {
             "com.android.server.pm.VerifyingSession".toClass().resolve().method { name = "isVerificationEnabled" }.forEach {
                 it.hook { before { result = false } }
             }
@@ -102,7 +100,7 @@ class PackageManagerServices : YukiBaseHooker() {
      */
     private fun PackageParam.hookSystemApiChecks(prefs: YukiHookPrefsBridge) {
         // 允许系统应用使用隐藏 API
-        if (prefs.getBoolean("allow_system_app_hidden_api", true)) {
+        if (prefs.getBoolean("allow_system_app_hidden_api", false)) {
             ApplicationInfo::class.java.resolve().firstMethod {
                 name = "isPackageWhitelistedForHiddenApis"
             }.hook {
@@ -118,7 +116,7 @@ class PackageManagerServices : YukiBaseHooker() {
         }
 
         // 共享用户ID签名逻辑
-        if (prefs.getBoolean("allow_nonsystem_shared_uid", true)) {
+        if (prefs.getBoolean("allow_nonsystem_shared_uid", false)) {
             "com.android.server.pm.ReconcilePackageUtils".toClass().resolve().firstField {
                 name = "ALLOW_NON_PRELOADS_SYSTEM_SHAREDUIDS"
             }.set(true)
@@ -128,65 +126,70 @@ class PackageManagerServices : YukiBaseHooker() {
     /**
      * Hook adb shell 调试命令
      */
-    private fun PackageParam.hookDebugCommands() {
-        // Hook PMS 的构造函数，以获取其实例
-        "com.android.server.pm.PackageManagerService".toClass().resolve().constructor { }.hookAll {
-            after {
-                mPMS = instance
-            }
-        }
+    private fun PackageParam.hookDebugCommands(prefs: YukiHookPrefsBridge) {
+        if (prefs.getBoolean("pms_command", false)) {
+            var mPMS: Any? = null
 
-        // Hook adb shell pm 命令的入口
-        "com.android.server.pm.PackageManagerShellCommand".toClass().resolve()
-            .firstMethod {
-                name = "onCommand"
-                parameters(String::class)
-            }.hook {
-                before {
-                    val cmd = args(0).string()
-                    if (cmd != "corepatch" || mPMS == null) return@before
-
-                    result = 0 // 阻止原始方法执行
-                    val shellCommandInstance = instance
-                    try {
-                        val localPms = mPMS ?: return@before
-
-                        val pw = shellCommandInstance.asResolver().firstMethod { name = "getOutPrintWriter" }.invoke() as PrintWriter
-                        val type = shellCommandInstance.asResolver().firstMethod { name = "getNextArgRequired" }.invoke() as String
-                        val settings = localPms.asResolver().firstField { name = "mSettings" }.get()
-
-                        if (settings == null) {
-                            pw.println("Error: Could not get mSettings from PMS.")
-                            return@before
-                        }
-
-                        when (type) {
-                            "p", "package" -> {
-                                val packageName = shellCommandInstance.asResolver().firstMethod { name = "getNextArgRequired" }.invoke() as String
-                                val packageSetting = settings.asResolver().firstMethod { name = "getPackageLPr"; parameters(String::class) }.invoke(packageName)
-                                if (packageSetting != null) {
-                                    dumpPackageSetting(packageSetting, pw, settings)
-                                } else {
-                                    pw.println("no package $packageName found")
-                                }
-                            }
-                            "su", "shareduser" -> {
-                                val name = shellCommandInstance.asResolver().firstMethod { name = "getNextArgRequired" }.invoke() as String
-                                val su = getSharedUser(name, settings)
-                                if (su != null) {
-                                    dumpSharedUserSetting(su, pw)
-                                } else {
-                                    pw.println("no shared user $name found")
-                                }
-                            }
-                            else -> pw.println("usage: <p|package|su|shareduser> <name>")
-                        }
-                    } catch (t: Throwable) {
-                        YLog.error("CorePatch command failed", t)
-                        instance.asResolver().firstMethod { name = "getErrPrintWriter" }.invoke<PrintWriter>()?.println(t)
-                    }
+            // Hook PMS 的构造函数，以获取其实例
+            "com.android.server.pm.PackageManagerService".toClass().resolve().constructor { }.hookAll {
+                after {
+                    mPMS = instance
                 }
             }
+
+            // Hook adb shell pm 命令的入口
+            "com.android.server.pm.PackageManagerShellCommand".toClass().resolve()
+                .firstMethod {
+                    name = "onCommand"
+                    parameters(String::class)
+                }.hook {
+                    before {
+                        val cmd = args(0).string()
+                        if (cmd != "pms" || mPMS == null) return@before
+
+                        result = 0 // 阻止原始方法执行
+                        val shellCommandInstance = instance
+                        try {
+                            val localPms = mPMS
+
+                            val pw = shellCommandInstance.asResolver().firstMethod { name = "getOutPrintWriter" }.invoke() as PrintWriter
+                            val type = shellCommandInstance.asResolver().firstMethod { name = "getNextArgRequired" }.invoke() as String
+                            val settings = localPms?.asResolver()?.firstField { name = "mSettings" }
+                                ?.get()
+
+                            if (settings == null) {
+                                pw.println("Error: Could not get mSettings from PMS.")
+                                return@before
+                            }
+
+                            when (type) {
+                                "p", "package" -> {
+                                    val packageName = shellCommandInstance.asResolver().firstMethod { name = "getNextArgRequired" }.invoke() as String
+                                    val packageSetting = settings.asResolver().firstMethod { name = "getPackageLPr"; parameters(String::class) }.invoke(packageName)
+                                    if (packageSetting != null) {
+                                        dumpPackageSetting(packageSetting, pw, settings)
+                                    } else {
+                                        pw.println("no package $packageName found")
+                                    }
+                                }
+                                "su", "shareduser" -> {
+                                    val name = shellCommandInstance.asResolver().firstMethod { name = "getNextArgRequired" }.invoke() as String
+                                    val su = getSharedUser(name, settings)
+                                    if (su != null) {
+                                        dumpSharedUserSetting(su, pw)
+                                    } else {
+                                        pw.println("no shared user $name found")
+                                    }
+                                }
+                                else -> pw.println("usage: <p|package|su|shareduser> <name>")
+                            }
+                        } catch (t: Throwable) {
+                            YLog.error("CorePatch command failed", t)
+                            instance.asResolver().firstMethod { name = "getErrPrintWriter" }.invoke<PrintWriter>()?.println(t)
+                        }
+                    }
+                }
+        }
     }
 
     /**
