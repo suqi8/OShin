@@ -70,6 +70,11 @@ object PMS {
                         title = StringResource(R.string.allow_nonsystem_shared_uid_title),
                         summary = R.string.allow_nonsystem_shared_uid_summary,
                         key = "allow_nonsystem_shared_uid"
+                    ),
+                    Switch(
+                        title = StringResource(R.string.pms_command_title),
+                        summary = R.string.pms_command_summary,
+                        key = "pms_command"
                     )
                 )
             )

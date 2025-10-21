@@ -382,4 +382,12 @@
     <string name="allow_nonsystem_shared_uid_summary">允许不同签名的非系统应用使用 `android:sharedUserId`。</string>
     <string name="remove_second_page_ads">移除二级页面广告</string>
     <string name="prevent_system_browser_redirect">禁止跳转系统浏览器</string>
+    <string name="pms_command_title">启用 PMS 调试命令</string>
+    <string name="pms_command_summary">
+可在 adb shell 中使用 “pm pms” 命令查看应用签名信息及共享 UID 签名状态。\n
+可用子命令：
+\n• p/package [包名] —— 查看指定应用签名及共享用户信息
+\n• su/shareduser [UID] —— 查看共享 UID 的签名信息
+\n• 其它参数 —— 显示用法提示
+    </string>
 </resources>
