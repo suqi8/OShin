@@ -19,6 +19,10 @@ object securitypermission {
                         title = StringResource(R.string.app_start_dialog_legacy_mode_title),
                         summary = R.string.app_start_dialog_legacy_mode_summary,
                         key = "app_start_dialog_legacy_mode"
+                    ),
+                    Switch(
+                        title = StringResource(R.string.app_start_dialog_always_allow),
+                        key = "app_start_dialog_always_allow"
                     )
                 )
             )

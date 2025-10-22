@@ -28,6 +28,24 @@ class securitypermission : YukiBaseHooker() {
                     }
                 }
             }
+            if (prefs.getBoolean("app_start_dialog_always_allow",false)) {
+                bridge.findClass {
+                    matcher {
+                        usingStrings("remove ignored activity: callerPackage=", ", targetActivity=", "ignored_activity")
+                        usingStrings("valid_time", "user set, s=")
+                    }
+                }.findMethod {
+                    matcher {
+                        paramTypes("long")
+                    }
+                }.singleOrNull()?.also {
+                    it.className.toClass().resolve().firstMethod { name = it.methodName }.hook {
+                        before {
+                            result = null
+                        }
+                    }
+                }
+            }
         }
     }
 }
