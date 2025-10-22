@@ -40,11 +40,11 @@
       </ul>
     </td>
     <td width="50%" valign="top">
-      <h3>⚙️ Supported Versions (Android 15)</h3>
+      <h3>⚙️ Supported Versions (Android 16)</h3>
       <ul>
-        <li>ColorOS 15</li>
-        <li>RealmeUI 6.0</li>
-        <li>OxygenOS 15</li>
+        <li>ColorOS 16</li>
+        <li>RealmeUI 7</li>
+        <li>OxygenOS 16</li>
       </ul>
     </td>
   </tr>
@@ -60,12 +60,23 @@
       <h3>🚀 Activation</h3>
       <ol>
         <li>Enable the module in LSPosed</li>
-        <li>Check the required scope: <code>System Framework (android)</code></li>
+        <li>Check the required scope: <code>System Framework (android)...</code></li>
         <li>Reboot your device</li>
       </ol>
     </td>
   </tr>
 </table>
+
+## 📜 Open Source Disclaimer
+
+This project is open source and contributions are welcome.
+
+However, when modifying or redistributing this application, please **do not change** the following:
+
+- "About" → **Credits** and **Author Information**
+- "About" → **Extra Notes**
+- **Umeng SDK** integration
+- **China Region Startup Verification** module
 
 ## 💬 Community & Contribution
 
