@@ -40,11 +40,11 @@
       </ul>
     </td>
     <td width="50%" valign="top">
-      <h3>⚙️ 支持版本 (Android 15)</h3>
+      <h3>⚙️ 支持版本 (Android 16)</h3>
       <ul>
-        <li>ColorOS 15</li>
-        <li>RealmeUI 6.0</li>
-        <li>OxygenOS 15</li>
+        <li>ColorOS 16</li>
+        <li>RealmeUI 7</li>
+        <li>OxygenOS 16</li>
       </ul>
     </td>
   </tr>
@@ -60,12 +60,23 @@
       <h3>🚀 激活</h3>
       <ol>
         <li>在 LSPosed 中启用模块</li>
-        <li>勾选作用域: <code>系统框架 (android)</code></li>
+        <li>勾选作用域: <code>系统框架 (android)等</code></li>
         <li>重启设备</li>
       </ol>
     </td>
   </tr>
 </table>
+
+## 📜 开源说明 (Open Source Disclaimer)
+
+本项目为开源项目，欢迎贡献。
+
+但在您修改或分发此应用时，请 **不要更改** 以下内容：
+
+- 「关于」页中的 **感谢** 与 **作者信息**
+- 「关于」页中的 **题外话**
+- **友盟 SDK** 相关代码
+- **中国地区启动验证** 模块
 
 ## 💬 社区与贡献 (Community & Contribution)
 
