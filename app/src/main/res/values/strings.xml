@@ -408,4 +408,5 @@
     <string name="alignment_right">右对齐</string>
     <string name="app_start_dialog_legacy_mode_title">使用旧版启动弹窗</string>
     <string name="app_start_dialog_legacy_mode_summary">强制启用旧版应用启动提示逻辑</string>
+    <string name="app_start_dialog_always_allow">将“允许 30 天”改为“永久允许”</string>
 </resources>
