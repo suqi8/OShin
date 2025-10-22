@@ -9,6 +9,7 @@ import java.lang.reflect.Modifier
 class appdetail: YukiBaseHooker() {
     override fun onHook() {
         loadApp(name = "com.oplus.appdetail") {
+            val prefs = prefs("appdetail")
             /*if (prefs("appdetail").getBoolean("remove_recommendations", false)) {
                 "com.oplus.appdetail.model.install.view.InstallPageContent\$initLiveDataObserver\$1".toClass().apply {
                     method {
@@ -132,9 +133,10 @@ class appdetail: YukiBaseHooker() {
                     }
                 }
             }*/
+            val bridge = DexKitBridge.create(this.appInfo.sourceDir)
             var remove_security_checkClassName = ""
             var remove_security_checkMethodName = ""
-            DexKitBridge.create(this.appInfo.sourceDir).apply {
+            bridge.apply {
                 findClass {
                     searchPackages("com.oplus.appdetail.common.utils")
                     matcher {
@@ -153,7 +155,7 @@ class appdetail: YukiBaseHooker() {
                 }
             }
             //移除安装前安全检测
-            if (prefs("appdetail").getBoolean("remove_security_check", false)) {
+            if (prefs.getBoolean("remove_security_check", false)) {
                 remove_security_checkClassName.toClass().resolve().firstMethod {
                     modifiers(Modifiers.PUBLIC, Modifiers.STATIC)
                     name = remove_security_checkMethodName
@@ -161,6 +163,21 @@ class appdetail: YukiBaseHooker() {
                     returnType = Boolean::class
                 }.hook {
                     replaceToFalse()
+                }
+            }
+            //移除版本检测
+            if (prefs.getBoolean("remove_version_check",false)) {
+                "com.nearme.common.util.AppUtil".toClass().resolve().apply {
+                    firstMethod {
+                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC, Modifiers.FINAL)
+                        name = "getAppVersionCode"
+                        parameters("android.content.Context", String::class)
+                        returnType = Int::class
+                    }.hook {
+                        before {
+                            result = -1
+                        }
+                    }
                 }
             }
         }
