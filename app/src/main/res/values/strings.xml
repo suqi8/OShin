@@ -393,4 +393,17 @@
     <string name="remove_weather_injected_ads">移除天气注入广告</string>
     <string name="remove_weather_search_box">移除天气页面搜索框</string>
     <string name="weather_detail">天气详情</string>
+    <string name="use_system_font">使用系统字体</string>
+    <string name="network_speed_alignment">网速对齐方式</string>
+    <string name="hide_per_second">隐藏 "/s"</string>
+    <string name="hide_per_second_summary">例如 "KB/s" 显示为 "KB"</string>
+    <string name="use_uppercase_b">使用 "B" (Byte)</string>
+    <string name="use_uppercase_b_summary">默认为 "b" (bit)，例如 "KB/s" vs "Kb/s"</string>
+    <string name="display_control">显示控制</string>
+    <string name="font_size_settings">字体大小设置</string>
+    <string name="basic_settings">基础设置</string>
+    <string name="alignment_default">默认</string>
+    <string name="alignment_left">左对齐</string>
+    <string name="alignment_center">居中</string>
+    <string name="alignment_right">右对齐</string>
 </resources>

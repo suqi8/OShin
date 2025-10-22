@@ -52,7 +52,6 @@
         <item>@string/cpu_usage</item>
         <item>@string/ram_usage</item>
     </string-array>
-
     <string-array name="hardware_indicator_gravity_options">
         <item>@string/status_bar_time_gravity_center</item>
         <item>@string/status_bar_time_gravity_top</item>
@@ -88,5 +87,11 @@
         <item>@string/default_mode</item>
         <item>@string/force_on</item>
         <item>@string/force_off</item>
+    </string-array>
+    <string-array name="network_speed_alignment_options">
+        <item>@string/alignment_default</item>
+        <item>@string/alignment_left</item>
+        <item>@string/alignment_center</item>
+        <item>@string/alignment_right</item>
     </string-array>
 </resources>
