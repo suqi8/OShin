@@ -41,7 +41,7 @@ android {
         versionCode = gitCommitCountProvider.map { it.toInt() }.getOrElse(1)
         versionName = gitCommitCountProvider.zip(gitCommitHashProvider) { count, hash ->
             "16.1.$count.$hash" // 版本名格式：主版本.次版本.提交总数.提交哈希
-        }.getOrElse("15.local") // 在 Git 不可用时使用的默认版本名。
+        }.getOrElse("16.local") // 在 Git 不可用时使用的默认版本名。
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" // 指定仪器测试的运行器。
         vectorDrawables {
