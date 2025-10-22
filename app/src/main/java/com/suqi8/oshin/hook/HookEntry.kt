@@ -1,5 +1,7 @@
 package com.suqi8.oshin.hook
 
+import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.annotation.xposed.InjectYukiHookWithXposed
 import com.highcapable.yukihookapi.hook.factory.configs
 import com.highcapable.yukihookapi.hook.factory.encase
@@ -28,6 +30,7 @@ import com.suqi8.oshin.hook.phonemanager.oplusphonemanager
 import com.suqi8.oshin.hook.phonemanager.phonemanager
 import com.suqi8.oshin.hook.quicksearchbox.quicksearchbox
 import com.suqi8.oshin.hook.securepay.securepay
+import com.suqi8.oshin.hook.securitypermission.securitypermission
 import com.suqi8.oshin.hook.settings.settings
 import com.suqi8.oshin.hook.speechassist.speechassist
 import com.suqi8.oshin.hook.systemui.systemui
@@ -86,6 +89,7 @@ class HookEntry : IYukiHookXposedInit {
         loadHooker(padconnect())
         loadHooker(weather())
         loadHooker(browser())
+        loadHooker(securitypermission())
     }
 
     override fun onXposedEvent() {

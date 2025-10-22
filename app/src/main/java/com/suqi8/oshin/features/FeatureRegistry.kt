@@ -25,6 +25,7 @@ import com.suqi8.oshin.features.phone.phone
 import com.suqi8.oshin.features.phonemanager.phonemanager
 import com.suqi8.oshin.features.quicksearchbox.quicksearchbox
 import com.suqi8.oshin.features.securepay.securepay
+import com.suqi8.oshin.features.securitypermission.securitypermission
 import com.suqi8.oshin.features.settings.settings
 import com.suqi8.oshin.features.speechassist.speechassist
 import com.suqi8.oshin.features.systemui.ControlCenter
@@ -70,6 +71,7 @@ object FeatureRegistry {
         ModuleEntry("com.oplus.phonemanager", "oplusphonemanager"),
         ModuleEntry("com.coloros.weather2", "weather"),
         ModuleEntry("com.heytap.browser", "browser"),
+        ModuleEntry("com.oplus.securitypermission", "securitypermission"),
     )
 
     /**
@@ -139,5 +141,7 @@ object FeatureRegistry {
         "weather" to weather.definition,
 
         "browser" to browser.definition,
+
+        "securitypermission" to securitypermission.definition,
     )
 }
