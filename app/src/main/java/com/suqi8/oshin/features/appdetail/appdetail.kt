@@ -15,7 +15,7 @@ object appdetail {
         items = listOf(
             CardDefinition(
                 items = listOf(
-                    Switch(
+                    /*Switch(
                         title = StringResource(R.string.remove_recommendations),
                         key = "remove_recommendations"
                     ),
@@ -26,7 +26,7 @@ object appdetail {
                     Switch(
                         title = StringResource(R.string.remove_attempt_installation_popup),
                         key = "remove_attempt_installation_popup"
-                    ),
+                    ),*/
                     Switch(
                         title = StringResource(R.string.remove_version_check),
                         key = "remove_version_check"
