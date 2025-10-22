@@ -406,4 +406,6 @@
     <string name="alignment_left">左对齐</string>
     <string name="alignment_center">居中</string>
     <string name="alignment_right">右对齐</string>
+    <string name="app_start_dialog_legacy_mode_title">使用旧版启动弹窗</string>
+    <string name="app_start_dialog_legacy_mode_summary">强制启用旧版应用启动提示逻辑</string>
 </resources>
