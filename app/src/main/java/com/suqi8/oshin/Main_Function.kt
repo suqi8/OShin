@@ -1,6 +1,10 @@
 package com.suqi8.oshin
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,12 +26,15 @@ import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun Main_Function(
     topAppBarScrollBehavior: ScrollBehavior,
     navController: NavController,
-    padding: PaddingValues
+    padding: PaddingValues,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     LazyColumn(
         modifier = Modifier
@@ -45,19 +53,37 @@ fun Main_Function(
                     .padding(vertical = 6.dp)
             ) {
                 Column {
-                    funArrow(
-                        title = stringResource(id = R.string.cpu_freq_main),
-                        onClick = {
-                            navController.navigate("func\\cpu_freq")
+                    with(sharedTransitionScope) {
+                        Box(
+                            modifier = Modifier
+                                .sharedBounds(
+                                    sharedContentState = rememberSharedContentState(key = "func\\cpu_freq"),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
+                                .fillMaxWidth().wrapContentHeight()
+                        ) {
+                            funArrow(
+                                title = stringResource(id = R.string.cpu_freq_main),
+                                onClick = { navController.navigate("func\\cpu_freq") }
+                            )
                         }
-                    )
+                    }
                     addline()
-                    funArrow(
-                        title = stringResource(id = R.string.rom_workshop),
-                        onClick = {
-                            navController.navigate("func\\romworkshop")
+                    with(sharedTransitionScope) {
+                        Box(
+                            modifier = Modifier
+                                .sharedBounds(
+                                    sharedContentState = rememberSharedContentState(key = "func\\romworkshop"),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
+                                .fillMaxWidth().wrapContentHeight()
+                        ) {
+                            funArrow(
+                                title = stringResource(id = R.string.rom_workshop),
+                                onClick = { navController.navigate("func\\romworkshop") }
+                            )
                         }
-                    )
+                    }
                 }
             }
         }

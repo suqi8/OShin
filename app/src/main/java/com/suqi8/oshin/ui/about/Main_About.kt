@@ -12,6 +12,9 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -35,6 +38,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -107,6 +111,7 @@ import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UseKtx", "RestrictedApi",
     "UnrememberedMutableState"
 )
@@ -116,7 +121,9 @@ fun Main_About(
     padding: PaddingValues,
     context: Context,
     navController: NavController,
-    viewModel: SettingsViewModel = hiltViewModel()
+    viewModel: SettingsViewModel = hiltViewModel(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val showDeviceNameDialog = remember { mutableStateOf(false) }
     val deviceName: MutableState<String> = remember {
@@ -339,7 +346,13 @@ fun Main_About(
             item { SmallTitle(text = stringResource(R.string.by_the_way)) }
             item { CommunityCard(context) }
             item { SmallTitle(text = stringResource(R.string.thank)) }
-            item { ThanksCard(navController) }
+            item {
+                ThanksCard(
+                    navController = navController,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
+            }
             item {
                 SmallTitle(text = stringResource(R.string.config_management)) // <-- 需要在 strings.xml 中添加
                 Card(
@@ -376,7 +389,14 @@ fun Main_About(
                 }
             }
             item { SmallTitle(text = stringResource(R.string.other)) }
-            item { AboutActionsCard(navController, context) }
+            item {
+                AboutActionsCard(
+                    navController = navController,
+                    context = context,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
+            }
             item {
                 Text(
                     modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
@@ -464,25 +484,80 @@ private fun CommunityCard(context: Context) {
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun ThanksCard(navController: NavController) {
+private fun ThanksCard(
+    navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp).padding(bottom = 6.dp)) {
         item(name = "酸奶", coolapk = "Stracha酸奶菌", coolapkid = 15225420, github = "suqi8", qq = 3383787570)
         addline()
-        funArrow(title = stringResource(R.string.contributors), onClick = { navController.navigate("about_contributors") })
+        with(sharedTransitionScope) {
+            Box(
+                modifier = Modifier
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(key = "about_contributors"),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                    .fillMaxWidth().wrapContentHeight()
+            ) {
+                funArrow(title = stringResource(R.string.contributors), onClick = { navController.navigate("about_contributors") })
+            }
+        }
         addline()
-        funArrow(title = stringResource(R.string.references), onClick = { navController.navigate("about_references") })
+        with(sharedTransitionScope) {
+            Box(
+                modifier = Modifier
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(key = "about_references"),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                    .fillMaxWidth().wrapContentHeight()
+            ) {
+                funArrow(title = stringResource(R.string.references), onClick = { navController.navigate("about_references") })
+            }
+        }
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-private fun AboutActionsCard(navController: NavController, context: Context) {
+private fun AboutActionsCard(
+    navController: NavController,
+    context: Context,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp).padding(bottom = 6.dp)) {
-        IconFunArrow(title = stringResource(R.string.settings), iconRes = R.drawable.settings, onClick = { navController.navigate("about_setting") })
+        with(sharedTransitionScope) {
+            Box(
+                modifier = Modifier
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(key = "about_setting"),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                    .fillMaxWidth().wrapContentHeight()
+            ) {
+                IconFunArrow(title = stringResource(R.string.settings), iconRes = R.drawable.settings, onClick = { navController.navigate("about_setting") })
+            }
+        }
         addline()
         IconFunArrow(title = stringResource(R.string.donors), iconRes = R.drawable.donors, onClick = { openUrl(context, "https://oshin.mikusignal.top/docs/donate.html") })
         addline()
-        IconFunArrow(title = stringResource(R.string.official_channel), iconRes = R.drawable.group, onClick = { navController.navigate("about_group") })
+        with(sharedTransitionScope) {
+            Box(
+                modifier = Modifier
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(key = "about_group"), // <-- Key
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                    .fillMaxWidth().wrapContentHeight()
+            ) {
+                IconFunArrow(title = stringResource(R.string.official_channel), iconRes = R.drawable.group, onClick = { navController.navigate("about_group") })
+            }
+        }
         addline()
         IconFunArrow(title = stringResource(R.string.official_website), iconRes = R.drawable.website, onClick = { openUrl(context, "https://oshin.mikusignal.top/") })
         addline()

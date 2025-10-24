@@ -40,7 +40,8 @@ data class featureUiState(
     val isLoading: Boolean = true,
     val pageDefinition: PageDefinition? = null,
     val itemStates: Map<String, Any> = emptyMap(),
-    val highlightKey: String? = null
+    val highlightKey: String? = null,
+    val categoryId: String = ""
 )
 
 @HiltViewModel
@@ -60,11 +61,15 @@ class featureViewModel @Inject constructor(
         if (pageDefinition != null) {
             _uiState.update { it.copy(
                 pageDefinition = pageDefinition,
-                highlightKey = highlightKey
+                highlightKey = highlightKey,
+                categoryId = this.categoryId
             )}
             loadInitialStates(pageDefinition)
         } else {
-            _uiState.update { it.copy(isLoading = false) } // 页面定义未找到
+            _uiState.update { it.copy(
+                isLoading = false,
+                categoryId = this.categoryId
+            ) } // 页面定义未找到
         }
     }
 
