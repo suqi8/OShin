@@ -1,20 +1,18 @@
 package com.kyant.backdrop.highlight
 
 import android.graphics.BlurMaskFilter
-import android.graphics.Paint
-import android.graphics.Path
 import android.os.Build
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Outline
-import androidx.compose.ui.graphics.asAndroidPath
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.PaintingStyle
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.drawOutline
 import androidx.compose.ui.graphics.drawscope.ContentDrawScope
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.translate
-import androidx.compose.ui.graphics.layer.CompositingStrategy
 import androidx.compose.ui.graphics.layer.GraphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
-import androidx.compose.ui.graphics.nativeCanvas
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.node.DrawModifierNode
 import androidx.compose.ui.node.ModifierNodeElement
 import androidx.compose.ui.node.invalidateDraw
@@ -25,6 +23,7 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.util.fastCoerceAtMost
 import com.kyant.backdrop.RuntimeShaderCacheImpl
 import com.kyant.backdrop.ShapeProvider
+import com.kyant.backdrop.clipOutline
 import kotlin.math.ceil
 
 internal class HighlightElement(
@@ -73,11 +72,10 @@ internal class HighlightNode(
     override val shouldAutoInvalidate: Boolean = false
 
     private var highlightLayer: GraphicsLayer? = null
-    private var maskLayer: GraphicsLayer? = null
 
     private val paint =
         Paint().apply {
-            style = Paint.Style.STROKE
+            style = PaintingStyle.Stroke
         }
     private var clipPath: Path? = null
 
@@ -94,8 +92,7 @@ internal class HighlightNode(
         drawContent()
 
         val highlightLayer = highlightLayer
-        val maskLayer = maskLayer
-        if (highlightLayer != null && maskLayer != null) {
+        if (highlightLayer != null) {
             val size = size
             val density: Density = this
             val layoutDirection = layoutDirection
@@ -107,35 +104,29 @@ internal class HighlightNode(
                 )
 
             val outline = shapeProvider.shape.createOutline(size, layoutDirection, density)
+            val clipPath =
+                if (outline is Outline.Rounded) {
+                    clipPath ?: Path().also { clipPath = it }
+                } else {
+                    null
+                }
 
             configurePaint(highlight)
 
-            val style = highlight.style
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (prevStyle != style) {
-                    highlightLayer.renderEffect = with(style) {
-                        createRenderEffect(
-                            shape = shapeProvider.shape,
-                            runtimeShaderCache = runtimeShaderCache
-                        )
-                    }
-                    prevStyle = style
-                }
-            }
+            highlightLayer.alpha = highlight.alpha
+            highlightLayer.blendMode = highlight.style.blendMode
             highlightLayer.record(safeSize) {
                 translate(1f, 1f) {
-                    drawHighlight(outline)
+                    val canvas = drawContext.canvas
+                    canvas.save()
+                    canvas.clipOutline(outline, clipPath)
+                    canvas.drawOutline(outline, paint)
+                    canvas.restore()
                 }
-            }
-
-            maskLayer.alpha = highlight.alpha
-            maskLayer.blendMode = style.blendMode
-            maskLayer.record(safeSize) {
-                drawLayer(highlightLayer)
             }
 
             translate(-1f, -1f) {
-                drawLayer(maskLayer)
+                drawLayer(highlightLayer)
             }
         }
     }
@@ -143,10 +134,6 @@ internal class HighlightNode(
     override fun onAttach() {
         val graphicsContext = requireGraphicsContext()
         highlightLayer = graphicsContext.createGraphicsLayer()
-        maskLayer =
-            graphicsContext.createGraphicsLayer().apply {
-                compositingStrategy = CompositingStrategy.Offscreen
-            }
     }
 
     override fun onDetach() {
@@ -155,70 +142,29 @@ internal class HighlightNode(
             graphicsContext.releaseGraphicsLayer(layer)
             highlightLayer = null
         }
-        maskLayer?.let { layer ->
-            graphicsContext.releaseGraphicsLayer(layer)
-            maskLayer = null
-        }
         clipPath = null
         runtimeShaderCache.clear()
         prevStyle = null
     }
 
     private fun DrawScope.configurePaint(highlight: Highlight) {
-        paint.color = highlight.style.color.toArgb()
+        paint.color = highlight.style.color
         paint.strokeWidth =
             ceil(highlight.width.toPx().fastCoerceAtMost(size.minDimension / 2f)) * 2f
         val blurRadius = highlight.blurRadius.toPx()
-        paint.maskFilter =
+        paint.asFrameworkPaint().maskFilter =
             if (blurRadius > 0f) {
                 BlurMaskFilter(blurRadius, BlurMaskFilter.Blur.NORMAL)
             } else {
                 null
             }
-    }
-
-    private fun DrawScope.drawHighlight(outline: Outline) {
-        val canvas = drawContext.canvas.nativeCanvas
-
-        @Suppress("UseKtx")
-        canvas.save()
-
-        when (outline) {
-            is Outline.Rectangle -> {
-                val left = outline.rect.left
-                val top = outline.rect.top
-                val right = outline.rect.right
-                val bottom = outline.rect.bottom
-                canvas.clipRect(left, top, right, bottom)
-                canvas.drawRect(left, top, right, bottom, paint)
-            }
-
-            is Outline.Rounded -> {
-                @Suppress("INVISIBLE_REFERENCE")
-                val path = outline.roundRectPath?.asAndroidPath()
-                if (path != null) {
-                    canvas.clipPath(path)
-                    canvas.drawPath(path, paint)
-                } else {
-                    val left = outline.roundRect.left
-                    val top = outline.roundRect.top
-                    val right = outline.roundRect.right
-                    val bottom = outline.roundRect.bottom
-                    val radius = outline.roundRect.topLeftCornerRadius.x
-                    val clipPath = clipPath?.apply { rewind() } ?: Path().also { clipPath = it }
-                    clipPath.addRoundRect(left, top, right, bottom, radius, radius, Path.Direction.CW)
-                    canvas.clipPath(clipPath)
-                    canvas.drawRoundRect(left, top, right, bottom, radius, radius, paint)
-                }
-            }
-
-            is Outline.Generic -> {
-                val path = outline.path.asAndroidPath()
-                canvas.clipPath(path)
-                canvas.drawPath(path, paint)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            paint.shader = with(highlight.style) {
+                createShader(
+                    shape = shapeProvider.shape,
+                    runtimeShaderCache = runtimeShaderCache
+                )
             }
         }
-
-        canvas.restore()
     }
 }
