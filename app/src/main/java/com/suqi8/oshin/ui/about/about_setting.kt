@@ -26,10 +26,10 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.FunSwitch
+import com.suqi8.oshin.ui.activity.components.SuperDropdown
+import com.suqi8.oshin.ui.activity.components.SuperSwitch
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.main.LocalColorMode
-import top.yukonga.miuix.kmp.extra.SuperDropdown
-import top.yukonga.miuix.kmp.extra.SuperSwitch
 import java.util.Locale
 
 @SuppressLint("LocalContextConfigurationRead")
