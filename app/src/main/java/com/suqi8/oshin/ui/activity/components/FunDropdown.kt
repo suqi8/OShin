@@ -2,8 +2,10 @@ package com.suqi8.oshin.ui.activity.components
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,6 +41,7 @@ import androidx.compose.ui.graphics.BlendModeColorFilter
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.TransformOrigin
+import androidx.compose.ui.graphics.compositeOver
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedback
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -71,7 +74,7 @@ import top.yukonga.miuix.kmp.utils.BackHandler
 import top.yukonga.miuix.kmp.utils.G2RoundedCornerShape
 import top.yukonga.miuix.kmp.utils.MiuixPopupUtils.Companion.PopupLayout
 import top.yukonga.miuix.kmp.utils.getWindowSize
-import kotlin.math.min
+import kotlin.math.roundToInt
 
 @Composable
 fun funDropdown(
@@ -221,6 +224,8 @@ private fun SuperDropdownPopup(
     hapticFeedback: HapticFeedback,
     onSelectedIndexChange: ((Int) -> Unit)?
 ) {
+    var hoveredIndex by remember { mutableStateOf(-1) }
+    var pressedIndex by remember { mutableStateOf(-1) }
     ListPopup(
         show = isDropdownExpanded,
         alignment = if (mode == DropDownMode.AlwaysOnRight || !alignLeft) {
@@ -230,10 +235,37 @@ private fun SuperDropdownPopup(
         },
         onDismissRequest = {
             isDropdownExpanded.value = false
+            hoveredIndex = -1
+            pressedIndex = -1
         },
         maxHeight = maxHeight
     ) {
-        ListPopupColumn {
+        ListPopupColumn(
+            onPressedIndexChange = { pressedIndex = it },
+            onDragHover = {
+                hoveredIndex = it
+            },
+            onTap = { index ->
+                hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                onSelectedIndexChange?.invoke(index)
+                isDropdownExpanded.value = false
+                pressedIndex = -1
+                hoveredIndex = -1
+            },
+            onDragEnd = {
+                if (hoveredIndex != -1) {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
+                    onSelectedIndexChange?.invoke(hoveredIndex)
+                    isDropdownExpanded.value = false
+                }
+                pressedIndex = -1
+                hoveredIndex = -1
+            },
+            onDragCancel = {
+                pressedIndex = -1
+                hoveredIndex = -1
+            }
+        ) {
             items.forEachIndexed { index, string ->
                 val dividerColor = MiuixTheme.colorScheme.dividerLine.copy(alpha = 0.5f)
                 Box(
@@ -251,17 +283,17 @@ private fun SuperDropdownPopup(
                         }
                     }
                 ) {
-                    // 3. Box 里面是我们原始的、完全没有被修改过的 DropdownImpl。
+                    val showCheckmark = (selectedIndex == index) || (hoveredIndex == index)
+
+                    val showDarkBackground = (pressedIndex == index) || (hoveredIndex == index)
+
                     DropdownImpl(
                         text = string,
                         optionSize = items.size,
-                        isSelected = selectedIndex == index,
+                        isSelected = showCheckmark,     //传递 "选中" 逻辑
+                        isPressed = showDarkBackground, //传递 "变暗" 逻辑
                         dropdownColors = dropdownColors,
-                        onSelectedIndexChange = { selectedIdx ->
-                            hapticFeedback.performHapticFeedback(HapticFeedbackType.Confirm)
-                            onSelectedIndexChange?.invoke(selectedIdx)
-                            isDropdownExpanded.value = false
-                        },
+                        onSelectedIndexChange = { }, // 父级已处理
                         index = index
                     )
                 }
@@ -315,6 +347,7 @@ fun DropdownImpl(
     text: String,
     optionSize: Int,
     isSelected: Boolean,
+    isPressed: Boolean, // ✨ "isPressed" 现在代表 "显示深色背景"
     index: Int,
     dropdownColors: DropdownColors = DropdownDefaults.dropdownColors(),
     onSelectedIndexChange: (Int) -> Unit
@@ -322,6 +355,7 @@ fun DropdownImpl(
     val additionalTopPadding = if (index == 0) 16.dp else 12.dp
     val additionalBottomPadding = if (index == optionSize - 1) 16.dp else 12.dp
 
+    // 1. 根据 "选中" 状态决定文本和检查标记的颜色
     val (textColor, backgroundColor) = if (isSelected) {
         dropdownColors.selectedContentColor to dropdownColors.containerColor
     } else {
@@ -334,13 +368,25 @@ fun DropdownImpl(
         Color.Transparent
     }
 
+    // 2. ✨ 决定最终的背景颜色
+    val finalBackgroundColor = if (isPressed) {
+        // 如果处于 "按下" 或 "悬停" 状态，应用一个深色遮罩
+        // 0.12f 是一个标准的按下不透明度
+        val overlayColor = MiuixTheme.colorScheme.onSurface.copy(alpha = 0.12f)
+        // 使用 compositeOver 将遮罩正确叠加在原始背景色上
+        overlayColor.compositeOver(backgroundColor)
+    } else {
+        // 否则，只使用原始背景色
+        backgroundColor
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .widthIn(min = 178.dp)
-            .clickable { onSelectedIndexChange(index) }
-            .background(backgroundColor)
+            // .clickable { onSelectedIndexChange(index) } // 父级已处理
+            .background(finalBackgroundColor) // ✨ 使用新的 finalBackgroundColor
             .padding(horizontal = 16.dp)
             .padding(
                 top = additionalTopPadding,
@@ -352,7 +398,7 @@ fun DropdownImpl(
             text = text,
             fontSize = 16.sp,
             fontWeight = FontWeight.Normal,
-            color = textColor,
+            color = textColor, // ✨ 文本颜色仍然跟随 "选中"
         )
 
         Image(
@@ -360,7 +406,7 @@ fun DropdownImpl(
                 .padding(start = 12.dp)
                 .size(20.dp),
             imageVector = MiuixIcons.Basic.Check,
-            colorFilter = BlendModeColorFilter(checkColor, BlendMode.SrcIn),
+            colorFilter = BlendModeColorFilter(checkColor, BlendMode.SrcIn), // ✨ 检查标记仍然跟随 "选中"
             contentDescription = null,
         )
     }
@@ -563,38 +609,119 @@ fun ListPopup(
  */
 @Composable
 fun ListPopupColumn(
+    onDragHover: (index: Int) -> Unit,
+    onDragEnd: () -> Unit,
+    onDragCancel: () -> Unit,
+    onPressedIndexChange: (index: Int) -> Unit,
+    onTap: (index: Int) -> Unit,
     content: @Composable () -> Unit
 ) {
     val scrollState = rememberScrollState()
     val currentContent by rememberUpdatedState(content)
+    val itemBoundaries = remember { mutableListOf<IntRange>() }
+    val hapticFeedback = LocalHapticFeedback.current
 
+    // ✨ 修复：1. "按下/点击" 检测器
+    // 我们使用更底层的 API 来避免长按冲突
+    val pressAndTapDetector = Modifier.pointerInput(Unit) {
+        awaitPointerEventScope {
+            while (true) {
+                // 1. 等待手指按下
+                // requireUnconsumed = false 允许我们和滚动/拖动共享"按下"事件
+                val down = awaitFirstDown(requireUnconsumed = false)
+                val index = findIndex(down.position.y, scrollState.value, itemBoundaries)
+
+                if (index == -1) continue // 按在了空白处
+
+                // 2. 立即设置 "按下" 状态（变暗）
+                onPressedIndexChange(index)
+
+                // 3. 等待手指抬起 或 手势被取消
+                //    (被滚动或长按拖动“抢走”手势)
+                val up = waitForUpOrCancellation()
+
+                if (up != null) {
+                    // 4a. 如果手指正常抬起 (up != null)，这是一次 "点击"
+                    onTap(index)
+                }
+
+                // 4b. 手指抬起(Tap) 或 手势被取消(Scroll/Long-press)
+                //     都重置 "按下" 状态
+                onPressedIndexChange(-1)
+            }
+        }
+    }
+
+    // ✨ 2. "长按并拖动" 检测器 (这个保持不变)
+    val longPressDragDetector = Modifier.pointerInput(Unit) {
+        detectDragGesturesAfterLongPress(
+            onDragStart = { offset ->
+                val index = findIndex(offset.y, scrollState.value, itemBoundaries)
+                if (index != -1) {
+                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+
+                    // ✨ 关键过渡：
+                    // "悬停" 状态接管 "按下" 状态
+                    // 必须先设置 onPressedIndexChange(-1)
+                    onPressedIndexChange(-1)
+                    onDragHover(index)
+                }
+            },
+            onDrag = { change, _ ->
+                val index = findIndex(change.position.y, scrollState.value, itemBoundaries)
+                onDragHover(index)
+            },
+            onDragEnd = { onDragEnd() },
+            onDragCancel = { onDragCancel() }
+        )
+    }
+
+    // ✨ 3. 应用修饰符
     SubcomposeLayout(
-        modifier = Modifier.verticalScroll(scrollState)
+        modifier = Modifier
+            // 顺序很重要：
+            .verticalScroll(scrollState) // 1. 滚动 (最外层)
+            .then(longPressDragDetector) // 2. 长按拖动 (中间)
+            .then(pressAndTapDetector)   // 3. 按下/点击 (最内层)
+        // 事件会从外到内传递 (1 -> 2 -> 3)
+        // 当 1 或 2 "赢得" 手势时，它们会取消 3
     ) { constraints ->
+        // ... (SubcomposeLayout 的内部测量逻辑保持不变)
         var listHeight = 0
         val tempConstraints = constraints.copy(minWidth = 178.dp.roundToPx(), maxWidth = 288.dp.roundToPx(), minHeight = 0)
 
-        // Measure pass to find the widest item
         val listWidth = subcompose("miuixPopupListFake", currentContent).map {
             it.measure(tempConstraints)
         }.maxOfOrNull { it.width }?.coerceIn(178.dp.roundToPx(), 288.dp.roundToPx()) ?: 178.dp.roundToPx()
 
         val childConstraints = constraints.copy(minWidth = listWidth, maxWidth = listWidth, minHeight = 0)
 
-        // Actual measure and layout pass
+        itemBoundaries.clear()
+        var currentY = 0
+
         val placeables = subcompose("miuixPopupListReal", currentContent).map {
             val placeable = it.measure(childConstraints)
+
+            itemBoundaries.add(currentY until (currentY + placeable.height))
+            currentY += placeable.height
+
             listHeight += placeable.height
             placeable
         }
-        layout(listWidth, min(constraints.maxHeight, listHeight)) {
-            var currentY = 0
+
+        layout(listWidth, listHeight) {
+            var yPosition = 0
             placeables.forEach {
-                it.place(0, currentY)
-                currentY += it.height
+                it.place(0, yPosition)
+                yPosition += it.height
             }
         }
     }
+}
+
+private fun findIndex(y: Float, scrollY: Int, boundaries: List<IntRange>): Int {
+    val yInList = y.roundToInt() + scrollY
+    return boundaries.indexOfFirst { yInList in it }
 }
 
 interface PopupPositionProvider {
