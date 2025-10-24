@@ -2,6 +2,9 @@ package com.suqi8.oshin.ui.main
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -19,7 +22,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -27,8 +29,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.TileMode
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
@@ -71,26 +77,20 @@ data class NavigationItem(
     val icon: Int
 )
 
-@OptIn(FlowPreview::class, ExperimentalHazeApi::class)
+@OptIn(FlowPreview::class, ExperimentalHazeApi::class, ExperimentalSharedTransitionApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun MainScreen(navController: NavController) {
+fun MainScreen(
+    navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
 
     val scope = rememberCoroutineScope()
-    val topAppBarScrollBehavior0 = MiuixScrollBehavior(rememberTopAppBarState())
-    val topAppBarScrollBehavior1 = MiuixScrollBehavior(rememberTopAppBarState())
-    val topAppBarScrollBehavior2 = MiuixScrollBehavior(rememberTopAppBarState())
-    val topAppBarScrollBehavior3 = MiuixScrollBehavior(rememberTopAppBarState())
-
-    val topAppBarScrollBehaviorList = listOf(
-        topAppBarScrollBehavior0, topAppBarScrollBehavior1, topAppBarScrollBehavior2, topAppBarScrollBehavior3
-    )
+    val topAppBarScrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
 
     val pagerState = rememberPagerState(pageCount = { 4 }, initialPage = 0)
-    val targetPage = remember { mutableIntStateOf(pagerState.currentPage) }
-    val coroutineScope = rememberCoroutineScope()
-
-    val currentScrollBehavior = topAppBarScrollBehaviorList[pagerState.currentPage]
+    val currentScrollBehavior = topAppBarScrollBehavior
 
     val items = listOf(
         NavigationItem(stringResource(R.string.home), R.drawable.home),
@@ -101,7 +101,6 @@ fun MainScreen(navController: NavController) {
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.debounce(150).collectLatest {
-            targetPage.intValue = pagerState.currentPage
         }
     }
     var isBottomBarVisible by remember { mutableStateOf(true) }
@@ -173,9 +172,11 @@ fun MainScreen(navController: NavController) {
             AppHorizontalPager(
                 modifier = Modifier.layerBackdrop(backdrop).hazeSource(state = hazeState).imePadding(),
                 pagerState = pagerState,
-                topAppBarScrollBehaviorList = topAppBarScrollBehaviorList,
+                topAppBarScrollBehavior = topAppBarScrollBehavior,
                 padding = padding,
                 navController = navController,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
             )
 
             Box(
@@ -207,13 +208,16 @@ fun MainScreen(navController: NavController) {
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AppHorizontalPager(
     modifier: Modifier = Modifier,
     pagerState: PagerState,
-    topAppBarScrollBehaviorList: List<ScrollBehavior>,
+    topAppBarScrollBehavior: ScrollBehavior,
     padding: PaddingValues,
-    navController: NavController
+    navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     HorizontalPager(
         modifier = modifier.background(MiuixTheme.colorScheme.background),
@@ -221,31 +225,69 @@ fun AppHorizontalPager(
         beyondViewportPageCount = 3,
         userScrollEnabled = true,
         pageContent = { page ->
-            when (page) {
-                0 -> MainHome(
-                    topAppBarScrollBehavior = topAppBarScrollBehaviorList[0],
-                    padding = padding,
-                    navController = navController
-                )
+            val maxBlurRadius = 16.dp
+            val maxBlurRadiusPx = with(LocalDensity.current) { maxBlurRadius.toPx() }
+            val offset = try {
+                pagerState.getOffsetDistanceInPages(page)
+            } catch (e: IndexOutOfBoundsException) {
+                0f
+            }
+            val isScrolling = pagerState.isScrollInProgress
+            val blurPx = if (isScrolling) {
+                // 如果正在滚动，就根据偏移量计算模糊度
+                abs(offset) * maxBlurRadiusPx
+            } else {
+                // 如果已经停止滚动 (即使用户停在两页之间)，则不模糊
+                0f
+            }
+            // 4. 创建一个动态的 Modifier
+            val pageModifier = Modifier.graphicsLayer {
+                // 只有在模糊值有意义时才应用效果
+                if (blurPx > 0.1f) {
+                    renderEffect = BlurEffect(
+                        blurPx,
+                        blurPx,
+                        TileMode.Decal // Decal 模式在边缘处理上最干净
+                    )
+                }
+            }
+            Box(
+                modifier = pageModifier.fillMaxSize()
+            ) {
+                when (page) {
+                    0 -> MainHome(
+                        topAppBarScrollBehavior = topAppBarScrollBehavior,
+                        padding = padding,
+                        navController = navController,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
 
-                1 -> Main_Module(
-                    topAppBarScrollBehavior = topAppBarScrollBehaviorList[1],
-                    padding = padding,
-                    navController = navController
-                )
+                    1 -> Main_Module(
+                        topAppBarScrollBehavior = topAppBarScrollBehavior,
+                        padding = padding,
+                        navController = navController,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
 
-                2 -> Main_Function(
-                    topAppBarScrollBehavior = topAppBarScrollBehaviorList[2],
-                    padding = padding,
-                    navController = navController
-                )
+                    2 -> Main_Function(
+                        topAppBarScrollBehavior = topAppBarScrollBehavior,
+                        padding = padding,
+                        navController = navController,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
 
-                else -> Main_About(
-                    topAppBarScrollBehavior = topAppBarScrollBehaviorList[3],
-                    padding = padding,
-                    context = LocalContext.current,
-                    navController = navController
-                )
+                    else -> Main_About(
+                        topAppBarScrollBehavior = topAppBarScrollBehavior,
+                        padding = padding,
+                        context = LocalContext.current,
+                        navController = navController,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                }
             }
         }
     )

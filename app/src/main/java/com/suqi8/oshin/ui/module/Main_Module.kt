@@ -2,7 +2,9 @@ package com.suqi8.oshin.ui.module
 
 import android.annotation.SuppressLint
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
@@ -23,6 +25,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -95,12 +98,15 @@ import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
 // --- 主屏幕入口 ---
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun Main_Module(
     topAppBarScrollBehavior: ScrollBehavior,
     navController: NavController,
     padding: PaddingValues,
-    viewModel: ModuleViewModel = hiltViewModel()
+    viewModel: ModuleViewModel = hiltViewModel(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -130,12 +136,14 @@ fun Main_Module(
                 }
 
                 item {
-                    Column(modifier = Modifier.animateContentSize()) {
+                    Column {
                         if (uiState.isSearching) {
                             SearchContent(
                                 features = uiState.searchResults,
                                 query = uiState.searchQuery,
-                                navController = navController
+                                navController = navController,
+                                sharedTransitionScope = sharedTransitionScope,
+                                animatedVisibilityScope = animatedVisibilityScope
                             )
                         } else {
                             AppListContent(
@@ -143,25 +151,34 @@ fun Main_Module(
                                 onStyleChange = viewModel::onAppStyleChanged,
                                 moduleEntries = uiState.moduleEntries,
                                 onAppNotFound = viewModel::onAppNotFound,
-                                navController = navController
+                                navController = navController,
+                                sharedTransitionScope = sharedTransitionScope,
+                                animatedVisibilityScope = animatedVisibilityScope
                             )
                         }
                     }
                 }
 
                 item {
-                    // 仅当 notInstalledApps 列表不为空时，才显示这个箭头
                     AnimatedVisibility(visible = uiState.notInstalledApps.isNotEmpty()) {
-                        HUDModuleContainer(modifier = Modifier.padding(horizontal = 16.dp)) {
-                            SuperArrow(
-                                title = stringResource(R.string.app_not_found_in_list),
-                                titleColor = BasicComponentDefaults.titleColor(color = MiuixTheme.colorScheme.primary),
-                                onClick = {
-                                    // 导航时，将包名列表作为参数传递过去
-                                    val packages = uiState.notInstalledApps.joinToString(",")
-                                    navController.navigate("hide_apps_notice/$packages")
-                                }
-                            )
+                        with(sharedTransitionScope) {
+                            HUDModuleContainer(
+                                modifier = Modifier
+                                    .padding(horizontal = 16.dp)
+                                    .sharedBounds(
+                                        sharedContentState = rememberSharedContentState(key = "hide_apps_notice"),
+                                        animatedVisibilityScope = animatedVisibilityScope
+                                    )
+                            ) {
+                                SuperArrow(
+                                    title = stringResource(R.string.app_not_found_in_list),
+                                    titleColor = BasicComponentDefaults.titleColor(color = MiuixTheme.colorScheme.primary),
+                                    onClick = {
+                                        val packages = uiState.notInstalledApps.joinToString(",")
+                                        navController.navigate("hide_apps_notice/$packages")
+                                    }
+                                )
+                            }
                         }
                     }
                 }
@@ -173,13 +190,16 @@ fun Main_Module(
 
 // --- 子组件 ---
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AppListContent(
     appStyle: Int,
     onStyleChange: () -> Unit,
     moduleEntries: List<ModuleEntry>,
     onAppNotFound: (String) -> Unit,
-    navController: NavController
+    navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val installedEntries = moduleEntries
 
@@ -209,7 +229,10 @@ fun AppListContent(
                         FunctionAppFlow(
                             packageName = entry.packageName,
                             onClick = { navController.navigate("feature/${entry.routeId}") },
-                            onResult = onAppNotFound
+                            onResult = onAppNotFound,
+                            entry = entry,
+                            sharedTransitionScope = sharedTransitionScope,
+                            animatedVisibilityScope = animatedVisibilityScope
                         )
                     }
                 }
@@ -219,7 +242,10 @@ fun AppListContent(
                         FunctionApp(
                             packageName = entry.packageName,
                             onClick = { navController.navigate("feature/${entry.routeId}") },
-                            onResult = onAppNotFound
+                            onResult = onAppNotFound,
+                            entry = entry,
+                            sharedTransitionScope = sharedTransitionScope,
+                            animatedVisibilityScope = animatedVisibilityScope
                         )
                         if (index < installedEntries.size - 1) {
                             addline()
@@ -231,8 +257,15 @@ fun AppListContent(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun SearchContent(features: List<SearchableItem>, query: String, navController: NavController) {
+fun SearchContent(
+    features: List<SearchableItem>,
+    query: String,
+    navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     HUDModuleContainer(modifier = Modifier.padding(horizontal = 16.dp)) {
         if (features.isEmpty()) {
             Box(Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
@@ -251,7 +284,9 @@ fun SearchContent(features: List<SearchableItem>, query: String, navController: 
                         highlightColor = MiuixTheme.colorScheme.primary,
                         onClick = {
                             navController.navigate("${item.route}?highlightKey=${item.key}")
-                        }
+                        },
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope
                     )
                     if (index < features.size - 1) {
                         addline()
@@ -262,12 +297,15 @@ fun SearchContent(features: List<SearchableItem>, query: String, navController: 
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun SearchListItem(
     item: SearchableItem,
     query: String,
     highlightColor: Color,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val context = LocalContext.current
     val titleAnnotated = highlightMatches(item.title, query, highlightColor)
@@ -279,28 +317,36 @@ fun SearchListItem(
         GetFuncRoute(routeId, context)
     }
 
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(onClick = onClick)
-            .padding(horizontal = 12.dp, vertical = 10.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column {
-            Text(text = titleAnnotated, fontSize = 16.sp, color = MiuixTheme.colorScheme.onBackground)
-            if (item.summary.isNotBlank()) {
+    with(sharedTransitionScope) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .sharedBounds(
+                    sharedContentState = rememberSharedContentState(key = item.key),
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    // placeHolderSize = animatedSize
+                )
+                .wrapContentHeight()
+                .clickable(onClick = onClick)
+                .padding(horizontal = 12.dp, vertical = 10.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(text = titleAnnotated, fontSize = 16.sp, color = MiuixTheme.colorScheme.onBackground)
+                if (item.summary.isNotBlank()) {
+                    Text(
+                        text = summaryAnnotated,
+                        fontSize = 12.sp,
+                        color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                    )
+                }
                 Text(
-                    text = summaryAnnotated,
-                    fontSize = 12.sp,
-                    color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                    text = featurePath,
+                    fontSize = 11.sp,
+                    color = MiuixTheme.colorScheme.onSurfaceVariantActions.copy(alpha = 0.6f),
+                    modifier = Modifier.padding(top = 4.dp)
                 )
             }
-            Text(
-                text = featurePath,
-                fontSize = 11.sp,
-                color = MiuixTheme.colorScheme.onSurfaceVariantActions.copy(alpha = 0.6f),
-                modifier = Modifier.padding(top = 4.dp)
-            )
         }
     }
 }
@@ -422,9 +468,17 @@ fun SectionTitle(titleResId: Int) {
 // 缓存颜色以避免重复计算
 private val colorCache = mutableMapOf<String, Color>()
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun FunctionApp(packageName: String, onClick: () -> Unit, onResult: (String) -> Unit) {
+fun FunctionApp(
+    packageName: String,
+    onClick: () -> Unit,
+    onResult: (String) -> Unit,
+    entry: ModuleEntry,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     GetAppIconAndName(packageName = packageName) { appName, icon ->
         if (appName != "noapp") {
             val defaultColor = MiuixTheme.colorScheme.surface
@@ -442,33 +496,39 @@ fun FunctionApp(packageName: String, onClick: () -> Unit, onResult: (String) -> 
                 }
             }
 
-            Row(
-                modifier = Modifier
-                    .clickable(onClick = onClick)
-                    .fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Card(
-                    colors = CardDefaults.defaultColors(color = dominantColor.value),
+            with(sharedTransitionScope) {
+                Row(
                     modifier = Modifier
-                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                        .drawColoredShadow(
-                            dominantColor.value,
-                            1f,
-                            borderRadius = 13.dp,
-                            shadowRadius = 7.dp,
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
+                            animatedVisibilityScope = animatedVisibilityScope
                         )
+                        .clickable(onClick = onClick)
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Image(bitmap = icon, contentDescription = appName, modifier = Modifier.size(45.dp))
-                }
-                Column(modifier = Modifier.padding(start = 16.dp)) {
-                    Text(text = appName)
-                    Text(
-                        text = packageName,
-                        fontSize = MiuixTheme.textStyles.subtitle.fontSize,
-                        fontWeight = FontWeight.Medium,
-                        color = MiuixTheme.colorScheme.onBackgroundVariant
-                    )
+                    Card(
+                        colors = CardDefaults.defaultColors(color = dominantColor.value),
+                        modifier = Modifier
+                            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                            .drawColoredShadow(
+                                dominantColor.value,
+                                1f,
+                                borderRadius = 13.dp,
+                                shadowRadius = 7.dp,
+                            )
+                    ) {
+                        Image(bitmap = icon, contentDescription = appName, modifier = Modifier.size(45.dp))
+                    }
+                    Column(modifier = Modifier.padding(start = 16.dp)) {
+                        Text(text = appName)
+                        Text(
+                            text = packageName,
+                            fontSize = MiuixTheme.textStyles.subtitle.fontSize,
+                            fontWeight = FontWeight.Medium,
+                            color = MiuixTheme.colorScheme.onBackgroundVariant
+                        )
+                    }
                 }
             }
         } else {
@@ -478,9 +538,17 @@ fun FunctionApp(packageName: String, onClick: () -> Unit, onResult: (String) -> 
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun FunctionAppFlow(packageName: String, onClick: () -> Unit, onResult: (String) -> Unit) {
+fun FunctionAppFlow(
+    packageName: String,
+    onClick: () -> Unit,
+    onResult: (String) -> Unit,
+    entry: ModuleEntry,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     GetAppIconAndName(packageName = packageName) { appName, icon ->
         if (appName != "noapp") {
             val defaultColor = MiuixTheme.colorScheme.surface
@@ -498,34 +566,40 @@ fun FunctionAppFlow(packageName: String, onClick: () -> Unit, onResult: (String)
                 }
             }
 
-            Column(
-                modifier = Modifier
-                    .width(65.dp)
-                    .clickable(onClick = onClick),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Card(
-                    colors = CardDefaults.defaultColors(color = dominantColor.value),
+            with(sharedTransitionScope) {
+                Column(
                     modifier = Modifier
-                        .padding(top = 10.dp)
-                        .drawColoredShadow(
-                            dominantColor.value,
-                            1f,
-                            borderRadius = 13.dp,
-                            shadowRadius = 7.dp,
+                        .width(65.dp)
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
+                            animatedVisibilityScope = animatedVisibilityScope
                         )
+                        .clickable(onClick = onClick),
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Image(bitmap = icon, contentDescription = appName, modifier = Modifier.size(50.dp))
+                    Card(
+                        colors = CardDefaults.defaultColors(color = dominantColor.value),
+                        modifier = Modifier
+                            .padding(top = 10.dp)
+                            .drawColoredShadow(
+                                dominantColor.value,
+                                1f,
+                                borderRadius = 13.dp,
+                                shadowRadius = 7.dp,
+                            )
+                    ) {
+                        Image(bitmap = icon, contentDescription = appName, modifier = Modifier.size(50.dp))
+                    }
+                    Text(
+                        text = appName,
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        softWrap = false,
+                        modifier = Modifier.padding(top = 10.dp, bottom = 6.dp)
+                    )
                 }
-                Text(
-                    text = appName,
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                    softWrap = false,
-                    modifier = Modifier.padding(top = 10.dp, bottom = 6.dp)
-                )
             }
         } else {
             onResult(packageName)

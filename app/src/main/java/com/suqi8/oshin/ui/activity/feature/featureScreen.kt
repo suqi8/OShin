@@ -4,12 +4,17 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -61,7 +66,6 @@ import com.suqi8.oshin.ui.activity.components.funSlider
 import com.suqi8.oshin.ui.activity.components.funString
 import com.suqi8.oshin.ui.activity.components.wantFind
 import kotlinx.coroutines.launch
-import top.yukonga.miuix.kmp.basic.CircularProgressIndicator
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.Text
@@ -74,9 +78,12 @@ import top.yukonga.miuix.kmp.utils.scrollEndHaptic
  * 通用的功能页面渲染器。
  * 它会根据 ViewModel 提供的 PageDefinition 动态构建整个页面。
  */
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun featureScreen(
     navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: featureViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -84,7 +91,7 @@ fun featureScreen(
     val listState = rememberLazyListState()
     val coroutineScope = rememberCoroutineScope()
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
-
+    val animationKey = uiState.highlightKey ?: "item-${uiState.categoryId}"
     // 自动滚动逻辑
     LaunchedEffect(uiState.isLoading, uiState.highlightKey) {
         if (!uiState.isLoading && uiState.highlightKey != null && pageDef != null) {
@@ -108,14 +115,6 @@ fun featureScreen(
         }
     }
 
-    // 处理加载状态
-    if (uiState.isLoading) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
-        }
-        return
-    }
-
     // 处理页面定义未找到的情况
     if (pageDef == null) {
         FunPage(title = "Error", navController = navController, scrollBehavior = topAppBarState) {
@@ -131,7 +130,10 @@ fun featureScreen(
         title = resolveTitle(title = pageDef.title),
         appList = pageDef.appList,
         navController = navController,
-        scrollBehavior = topAppBarState
+        scrollBehavior = topAppBarState,
+        sharedTransitionScope = sharedTransitionScope,
+        animatedVisibilityScope = animatedVisibilityScope,
+        animationKey = animationKey
     ) { padding ->
         val itemStates = uiState.itemStates
         LazyColumn(
@@ -157,10 +159,14 @@ fun featureScreen(
                                         val itemCount = pageItem.items.size
                                         pageItem.items.forEachIndexed { itemIndex, item ->
                                             // 可见性判断在这里，针对卡片内部的每一个 item
-                                            val isVisible = viewModel.evaluateCondition(item.condition, itemStates)
-                                            AnimatedVisibility(visible = isVisible) {
+                                            val isVisible = viewModel.evaluateCondition(
+                                                item.condition,
+                                                itemStates
+                                            )
+                                            AnimatedVisibility(visible = isVisible) itemAV@ {
                                                 Column {
-                                                    val isHighlighted = (item as? TitledScreenItem)?.key == uiState.highlightKey
+                                                    val isHighlighted =
+                                                        (item as? TitledScreenItem)?.key == uiState.highlightKey
 
                                                     val topPadding = when {
                                                         itemCount == 1 -> 4.dp
@@ -172,22 +178,23 @@ fun featureScreen(
                                                         itemIndex == itemCount - 1 -> 2.dp
                                                         else -> 0.dp
                                                     }
-                                                    val itemPadding = PaddingValues(top = topPadding, bottom = bottomPadding)
+                                                    val itemPadding = PaddingValues(
+                                                        top = topPadding,
+                                                        bottom = bottomPadding
+                                                    )
 
-                                                    AnimatedVisibility(visible = isVisible) {
-                                                        Column {
-                                                            RenderScreenItem(
-                                                                item = item,
-                                                                viewModel = viewModel,
-                                                                navController = navController,
-                                                                isHighlighted = isHighlighted,
-                                                                paddingValues = itemPadding
-                                                            )
+                                                    RenderScreenItem(
+                                                        item = item,
+                                                        viewModel = viewModel,
+                                                        navController = navController,
+                                                        isHighlighted = isHighlighted,
+                                                        paddingValues = itemPadding,
+                                                        sharedTransitionScope = sharedTransitionScope,
+                                                        animatedVisibilityScope = animatedVisibilityScope
+                                                    )
 
-                                                            if (itemIndex < pageItem.items.lastIndex) {
-                                                                addline()
-                                                            }
-                                                        }
+                                                    if (itemIndex < pageItem.items.lastIndex) {
+                                                        addline()
                                                     }
                                                 }
                                             }
@@ -200,7 +207,8 @@ fun featureScreen(
 
                     is RelatedLinks -> {
                         // RelatedLinks 作为一个整体，有自己的显示条件
-                        val isVisible = viewModel.evaluateCondition(pageItem.condition, itemStates)
+                        val isVisible =
+                            viewModel.evaluateCondition(pageItem.condition, itemStates)
                         AnimatedVisibility(visible = isVisible) {
                             wantFind(
                                 links = pageItem.links,
@@ -208,8 +216,10 @@ fun featureScreen(
                             )
                         }
                     }
+
                     is NoEnable -> {
-                        val isVisible = viewModel.evaluateCondition(pageItem.condition, itemStates)
+                        val isVisible =
+                            viewModel.evaluateCondition(pageItem.condition, itemStates)
                         AnimatedVisibility(visible = isVisible) {
                             FunNoEnable()
                         }
@@ -223,13 +233,16 @@ fun featureScreen(
 /**
  * 根据 ScreenItem 的具体类型，选择并渲染对应的 "fun" 组件。
  */
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun RenderScreenItem(
     item: ScreenItem,
     viewModel: featureViewModel,
     navController: NavController,
     isHighlighted: Boolean,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val itemStates by viewModel.uiState.collectAsState()
     val highlightColor = remember { Animatable(Color.Transparent) }
@@ -273,6 +286,7 @@ private fun RenderScreenItem(
                     onCheckedChange = { newValue -> viewModel.updateState(item.key, newValue) }
                 )
             }
+
             is Slider -> {
                 val value = itemStates.itemStates[item.key] as? Float ?: item.defaultValue
                 funSlider(
@@ -286,6 +300,7 @@ private fun RenderScreenItem(
                     externalPadding = paddingValues,
                 )
             }
+
             is Dropdown -> {
                 val selectedIndex = itemStates.itemStates[item.key] as? Int ?: item.defaultValue
                 funDropdown(
@@ -294,17 +309,36 @@ private fun RenderScreenItem(
                     selectedIndex = selectedIndex,
                     options = stringArrayResource(id = item.optionsRes).toList(),
                     externalPadding = paddingValues,
-                    onSelectedIndexChange = { newIndex -> viewModel.updateState(item.key, newIndex) }
+                    onSelectedIndexChange = { newIndex ->
+                        viewModel.updateState(
+                            item.key,
+                            newIndex
+                        )
+                    }
                 )
             }
+
             is Action -> {
-                funArrow(
-                    title = resolveTitle(title = item.title),
-                    summary = item.summary?.let { stringResource(it) },
-                    externalPadding = paddingValues,
-                    onClick = { navController.navigate("feature/${item.route}") }
-                )
+                with(sharedTransitionScope) {
+                    Box(
+                        modifier = Modifier
+                            .sharedBounds(
+                                sharedContentState = rememberSharedContentState(key = "item-${item.route}"),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
+                            .fillMaxWidth() // 确保 Box 撑满宽度
+                            .wrapContentHeight() // 高度自适应
+                    ) {
+                        funArrow(
+                            title = resolveTitle(title = item.title),
+                            summary = item.summary?.let { stringResource(it) },
+                            externalPadding = paddingValues,
+                            onClick = { navController.navigate("feature/${item.route}") }
+                        )
+                    }
+                }
             }
+
             is Picture -> {
                 // 从 itemStates 中获取当前显示的图片
                 val imageBitmap = itemStates.itemStates[item.key] as? ImageBitmap
@@ -319,6 +353,7 @@ private fun RenderScreenItem(
                     }
                 )
             }
+
             is StringInput -> {
                 val value = itemStates.itemStates[item.key] as? String ?: item.defaultValue
                 funString(
@@ -330,6 +365,7 @@ private fun RenderScreenItem(
                     nullable = item.nullable
                 )
             }
+
             is UrlAction -> {
                 val context = LocalContext.current
                 funArrow(
@@ -341,6 +377,7 @@ private fun RenderScreenItem(
                     }
                 )
             }
+
             is AppSelection -> {
                 val selectedApps = itemStates.itemStates[item.key] as? Set<String> ?: emptySet()
                 FunAppSele(

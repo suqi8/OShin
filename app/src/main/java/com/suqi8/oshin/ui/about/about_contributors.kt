@@ -5,11 +5,16 @@ import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +23,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -36,83 +42,111 @@ import com.suqi8.oshin.ui.activity.components.CardDefaults
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.activity.components.funArrow
+import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+import top.yukonga.miuix.kmp.utils.overScrollVertical
+import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun about_contributors(navController: NavController) {
+fun about_contributors(
+    navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
+    val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
+
     FunPage(
         title = stringResource(id = R.string.contributors),
-        navController = navController
-    ) {
-        Card(colors = CardDefaults.defaultColors(color = MiuixTheme.colorScheme.primaryVariant.copy(alpha = 0.1f))) {
-            BasicComponent(
-                summary = stringResource(R.string.thanks_contributors),
-                summaryColor = BasicComponentColors(
-                    color = MiuixTheme.colorScheme.primaryVariant,
-                    disabledColor = MiuixTheme.colorScheme.primaryVariant
-                )
-            )
-        }
-        Card(
+        navController = navController,
+        scrollBehavior = scrollBehavior,
+        sharedTransitionScope = sharedTransitionScope,
+        animatedVisibilityScope = animatedVisibilityScope,
+        animationKey = "about_contributors"
+    ) { padding ->
+        LazyColumn(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp)
-                .padding(bottom = 6.dp)
+                .fillMaxSize()
+                .overScrollVertical()
+                .scrollEndHaptic()
+                .nestedScroll(scrollBehavior.nestedScrollConnection),
+            contentPadding = padding
         ) {
-            item(
-                name = "YuKong_A",
-                github = "YuKongA"
-            )
-            addline()
-            item(
-                name = "天伞桜",
-                coolapk = "天伞桜",
-                coolapkid = 540690
-            )
-            addline()
-            item(
-                name = "shadow3",
-                github = "shadow3aaa"
-            )
-            addline()
-            item(
-                name = "凌逸",
-                coolapk = "网恋秀牛被骗",
-                coolapkid = 34081897
-            )
-            addline()
-            item(
-                name = "psychosispy",
-                github = "psychosispy"
-            )
-            addline()
-            item(
-                name = "咚踏取",
-                coolapk = "咚踏取",
-                coolapkid = 2035174
-            )
-            addline()
-            item(
-                name = "Mikusignal",
-                coolapk = "Mikusignal",
-                coolapkid = 12130388,
-                qq = 1809784522
-            )
-            addline()
-            item(
-                name = "hamjin",
-                github = "hamjin"
-            )
-            addline()
-            item(
-                name = "kmiit",
-                github = "kmiit"
-            )
-            addline()
-            item(
-                name = "fatal1101",
-                github = "fatal1101"
-            )
+            item {
+                Card(colors = CardDefaults.defaultColors(color = MiuixTheme.colorScheme.primaryVariant.copy(alpha = 0.1f))) {
+                    BasicComponent(
+                        summary = stringResource(R.string.thanks_contributors),
+                        summaryColor = BasicComponentColors(
+                            color = MiuixTheme.colorScheme.primaryVariant,
+                            disabledColor = MiuixTheme.colorScheme.primaryVariant
+                        )
+                    )
+                }
+            }
+            item {
+                Card(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp)
+                        .padding(bottom = 6.dp)
+                ) {
+                    item(
+                        name = "YuKong_A",
+                        github = "YuKongA"
+                    )
+                    addline()
+                    item(
+                        name = "天伞桜",
+                        coolapk = "天伞桜",
+                        coolapkid = 540690
+                    )
+                    addline()
+                    item(
+                        name = "shadow3",
+                        github = "shadow3aaa"
+                    )
+                    addline()
+                    item(
+                        name = "凌逸",
+                        coolapk = "网恋秀牛被骗",
+                        coolapkid = 34081897
+                    )
+                    addline()
+                    item(
+                        name = "psychosispy",
+                        github = "psychosispy"
+                    )
+                    addline()
+                    item(
+                        name = "咚踏取",
+                        coolapk = "咚踏取",
+                        coolapkid = 2035174
+                    )
+                    addline()
+                    item(
+                        name = "Mikusignal",
+                        coolapk = "Mikusignal",
+                        coolapkid = 12130388,
+                        qq = 1809784522
+                    )
+                    addline()
+                    item(
+                        name = "hamjin",
+                        github = "hamjin"
+                    )
+                    addline()
+                    item(
+                        name = "kmiit",
+                        github = "kmiit"
+                    )
+                    addline()
+                    item(
+                        name = "fatal1101",
+                        github = "fatal1101"
+                    )
+                }
+            }
         }
     }
 }

@@ -1,6 +1,8 @@
 package com.suqi8.oshin.ui.activity.components
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -53,7 +55,7 @@ import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 // --- 版本 1 (兼容旧页面) ---
 // 这个版本接收一个无参数的 content lambda，并为其内部创建一个 LazyColumn。
 // 所有老的页面都会自动调用这个版本。
-@OptIn(ExperimentalHazeApi::class)
+@OptIn(ExperimentalHazeApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun FunPage(
     title: String,
@@ -91,13 +93,16 @@ fun FunPage(
 // --- 版本 2 (新架构主版本) ---
 // 这个版本接收一个带 PaddingValues 参数的 content lambda。
 // 我们的 featureScreen 会自动调用这个版本。
-@OptIn(ExperimentalHazeApi::class)
+@OptIn(ExperimentalHazeApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun FunPage(
     title: String,
     appList: List<String> = emptyList(),
     navController: NavController,
     scrollBehavior: ScrollBehavior,
+    sharedTransitionScope: SharedTransitionScope? = null,
+    animatedVisibilityScope: AnimatedVisibilityScope? = null,
+    animationKey: String? = null,
     content: @Composable (padding: PaddingValues) -> Unit
 ) {
     val context = LocalContext.current
@@ -111,95 +116,208 @@ fun FunPage(
         noiseFactor = 0f
     )
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = title,
-                // 1. 使用透明背景
-                color = Color.Transparent,
-                // 2. 应用 Haze 模糊效果
-                modifier = Modifier.hazeEffect(
-                    state = hazeState,
-                    style = hazeStyle,
-                    block = fun HazeEffectScope.() {
-                        inputScale = HazeInputScale.Auto
-                        progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
-                    }
-                ),
-                scrollBehavior = scrollBehavior,
-                navigationIcon = {
-                    // 3. 使用 LiquidButton
-                    LiquidButton(
-                        onClick = { navController.popBackStack() },
-                        modifier = Modifier
-                            .padding(start = 16.dp)
-                            .size(40.dp),
-                        backdrop = backdrop
-                    ) {
-                        Icon(
-                            imageVector = MiuixIcons.Useful.Back,
-                            contentDescription = "Back",
-                            modifier = Modifier.size(22.dp),
-                            tint = MiuixTheme.colorScheme.onBackground
-                        )
-                    }
+    if (sharedTransitionScope != null && animatedVisibilityScope != null && animationKey != null) {
+        // --- 动画版本 ---
+        with(sharedTransitionScope) {
+            Scaffold(
+                topBar = {
+                    TopAppBar(
+                        title = title,
+                        // 1. 使用透明背景
+                        color = Color.Transparent,
+                        // 2. 应用 Haze 模糊效果
+                        modifier = Modifier.hazeEffect(
+                            state = hazeState,
+                            style = hazeStyle,
+                            block = fun HazeEffectScope.() {
+                                inputScale = HazeInputScale.Auto
+                                progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
+                            }
+                        ),
+                        scrollBehavior = scrollBehavior,
+                        navigationIcon = {
+                            // 3. 使用 LiquidButton
+                            LiquidButton(
+                                onClick = { navController.popBackStack() },
+                                modifier = Modifier
+                                    .padding(start = 16.dp)
+                                    .size(40.dp),
+                                backdrop = backdrop
+                            ) {
+                                Icon(
+                                    imageVector = MiuixIcons.Useful.Back,
+                                    contentDescription = "Back",
+                                    modifier = Modifier.size(22.dp),
+                                    tint = MiuixTheme.colorScheme.onBackground
+                                )
+                            }
+                        },
+                        actions = {
+                            var showShortcut by remember { mutableStateOf(false) }
+
+                            LaunchedEffect(appList) {
+                                withContext(Dispatchers.IO) {
+                                    if (appList.size == 1 && hasShortcut(context, appList.first())) {
+                                        showShortcut = true
+                                    }
+                                }
+                            }
+
+                            // 3. (核心) 检查过渡动画是否正在进行
+                            //    如果 scope 为 null (非动画情况)，isTransitionActive 会是 false，按钮会正常显示
+                            val isTransitioning = sharedTransitionScope.isTransitionActive
+
+                            // 4. 只有在动画 *未在进行时* 才显示按钮
+                            if (!isTransitioning) {
+                                if (showShortcut) {
+                                    LiquidButton(
+                                        onClick = { launchApp(context, appList.first()) },
+                                        modifier = Modifier
+                                            .padding(end = 16.dp)
+                                            .size(40.dp),
+                                        backdrop = backdrop
+                                    ) {
+                                        Icon(
+                                            imageVector = MiuixIcons.Useful.Play,
+                                            contentDescription = "Open Shortcut",
+                                            modifier = Modifier.size(22.dp),
+                                            tint = MiuixTheme.colorScheme.onBackground
+                                        )
+                                    }
+                                }
+
+                                if (appList.isNotEmpty()) {
+                                    LiquidButton(
+                                        onClick = { restartAPP.value = true },
+                                        modifier = Modifier
+                                            .padding(end = 16.dp)
+                                            .size(40.dp),
+                                        backdrop = backdrop
+                                    ) {
+                                        Icon(
+                                            imageVector = MiuixIcons.Useful.Refresh,
+                                            contentDescription = "Refresh",
+                                            modifier = Modifier.size(22.dp),
+                                            tint = MiuixTheme.colorScheme.onBackground
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    )
                 },
-                actions = {
-                    var showShortcut by remember { mutableStateOf(false) }
-
-                    LaunchedEffect(appList) {
-                        withContext(Dispatchers.IO) { // 后台线程
-                            if (appList.size == 1 && hasShortcut(context, appList.first())) showShortcut = true
-                        }
-                    }
-                    AnimatedVisibility(visible = showShortcut) {
-                        LiquidButton(
-                            onClick = { launchApp(context, appList.first()) },
-                            modifier = Modifier
-                                .padding(end = 16.dp)
-                                .size(40.dp),
-                            backdrop = backdrop
-                        ) {
-                            Icon(
-                                imageVector = MiuixIcons.Useful.Play,
-                                contentDescription = "Open Shortcut",
-                                modifier = Modifier.size(22.dp),
-                                tint = MiuixTheme.colorScheme.onBackground
-                            )
-                        }
-                    }
-
-                    if (appList.isNotEmpty()) {
-                        LiquidButton(
-                            onClick = { restartAPP.value = true },
-                            modifier = Modifier
-                                .padding(end = 16.dp)
-                                .size(40.dp),
-                            backdrop = backdrop
-                        ) {
-                            Icon(
-                                imageVector = MiuixIcons.Useful.Refresh,
-                                contentDescription = "Refresh",
-                                modifier = Modifier.size(22.dp),
-                                tint = MiuixTheme.colorScheme.onBackground
-                            )
-                        }
-                    }
+                modifier = Modifier.sharedBounds(
+                    sharedContentState = rememberSharedContentState(key = animationKey),
+                    animatedVisibilityScope = animatedVisibilityScope,
+                    // placeHolderSize = animatedSize
+                )
+            ) { padding ->
+                Box(
+                    Modifier
+                        // 5. 应用 Backdrop 和 HazeSource 以支持按钮效果和模糊
+                        .layerBackdrop(backdrop)
+                        .hazeSource(state = hazeState)
+                        .fillMaxSize()
+                        .background(MiuixTheme.colorScheme.background)
+                ) {
+                    content(padding)
                 }
-            )
+            }
         }
-    ) { padding ->
-        Box(
-            Modifier
-                // 5. 应用 Backdrop 和 HazeSource 以支持按钮效果和模糊
-                .layerBackdrop(backdrop)
-                .hazeSource(state = hazeState)
-                .fillMaxSize()
-                .background(MiuixTheme.colorScheme.background)
-        ) {
-            content(padding)
+    } else {
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = title,
+                    // 1. 使用透明背景
+                    color = Color.Transparent,
+                    // 2. 应用 Haze 模糊效果
+                    modifier = Modifier.hazeEffect(
+                        state = hazeState,
+                        style = hazeStyle,
+                        block = fun HazeEffectScope.() {
+                            inputScale = HazeInputScale.Auto
+                            progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
+                        }
+                    ),
+                    scrollBehavior = scrollBehavior,
+                    navigationIcon = {
+                        // 3. 使用 LiquidButton
+                        LiquidButton(
+                            onClick = { navController.popBackStack() },
+                            modifier = Modifier
+                                .padding(start = 16.dp)
+                                .size(40.dp),
+                            backdrop = backdrop
+                        ) {
+                            Icon(
+                                imageVector = MiuixIcons.Useful.Back,
+                                contentDescription = "Back",
+                                modifier = Modifier.size(22.dp),
+                                tint = MiuixTheme.colorScheme.onBackground
+                            )
+                        }
+                    },
+                    actions = {
+                        var showShortcut by remember { mutableStateOf(false) }
+                        LaunchedEffect(appList) {
+                            withContext(Dispatchers.IO) {
+                                if (appList.size == 1 && hasShortcut(context, appList.first())) {
+                                    showShortcut = true
+                                }
+                            }
+                        }
+
+                        if (showShortcut) {
+                            LiquidButton(
+                                onClick = { launchApp(context, appList.first()) },
+                                modifier = Modifier
+                                    .padding(end = 16.dp)
+                                    .size(40.dp),
+                                backdrop = backdrop
+                            ) {
+                                Icon(
+                                    imageVector = MiuixIcons.Useful.Play,
+                                    contentDescription = "Open Shortcut",
+                                    modifier = Modifier.size(22.dp),
+                                    tint = MiuixTheme.colorScheme.onBackground
+                                )
+                            }
+                        }
+
+                        if (appList.isNotEmpty()) {
+                            LiquidButton(
+                                onClick = { restartAPP.value = true },
+                                modifier = Modifier
+                                    .padding(end = 16.dp)
+                                    .size(40.dp),
+                                backdrop = backdrop
+                            ) {
+                                Icon(
+                                    imageVector = MiuixIcons.Useful.Refresh,
+                                    contentDescription = "Refresh",
+                                    modifier = Modifier.size(22.dp),
+                                    tint = MiuixTheme.colorScheme.onBackground
+                                )
+                            }
+                        }
+                    }
+                )
+            }
+        ) { padding ->
+            Box(
+                Modifier
+                    // 5. 应用 Backdrop 和 HazeSource 以支持按钮效果和模糊
+                    .layerBackdrop(backdrop)
+                    .hazeSource(state = hazeState)
+                    .fillMaxSize()
+                    .background(MiuixTheme.colorScheme.background)
+            ) {
+                content(padding)
+            }
         }
     }
+
 
     if (appList.isNotEmpty() && restartAPP.value) {
          AppRestartScreen(appList, restartAPP, backdrop)

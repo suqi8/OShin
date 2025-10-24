@@ -1,5 +1,8 @@
 package com.suqi8.oshin.ui.home
 
+import androidx.compose.animation.AnimatedVisibilityScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
@@ -27,6 +30,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
@@ -104,12 +108,15 @@ import kotlin.math.cos
 import kotlin.math.roundToInt
 import kotlin.math.sin
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun MainHome(
     padding: PaddingValues,
     topAppBarScrollBehavior: ScrollBehavior,
     navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -144,7 +151,11 @@ fun MainHome(
 
             // --- 最近更新/群组 (静态部分) ---
             item {
-                RecentUpdatesModule(navController = navController)
+                RecentUpdatesModule(
+                    navController = navController,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
             }
 
             // --- 设备信息 ---
@@ -158,12 +169,24 @@ fun MainHome(
                     SectionTitle(titleResId = R.string.section_title_features)
                 }
                 items(uiState.randomFeatures) { feature ->
-                    FeatureItem(
-                        feature = feature,
-                        onClick = {
-                            navController.navigate("${feature.route}?highlightKey=${feature.key}")
+                    with(sharedTransitionScope) {
+                        Box(
+                            modifier = Modifier
+                                .sharedBounds(
+                                    sharedContentState = rememberSharedContentState(key = feature.key),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                        ) {
+                            FeatureItem(
+                                feature = feature,
+                                onClick = {
+                                    navController.navigate("${feature.route}?highlightKey=${feature.key}")
+                                }
+                            )
                         }
-                    )
+                    }
                 }
             }
         }
@@ -455,38 +478,49 @@ fun HUDStatusModule(
     }
 }
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
-fun RecentUpdatesModule(navController: NavController) {
+fun RecentUpdatesModule(
+    navController: NavController,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope
+) {
     val shape = CutCornerShape(8.dp)
     val moduleBgColor = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.03f)
     val primaryColor = MiuixTheme.colorScheme.primary
 
     Column {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .clip(shape)
-                .background(moduleBgColor)
-                .border(1.dp, primaryColor.copy(alpha = 0.3f), shape)
-                .clickable { navController.navigate("about_group") }
-                .padding(horizontal = 16.dp, vertical = 12.dp)
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Image(
-                    painter = painterResource(R.drawable.group),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(primaryColor),
-                    modifier = Modifier.size(24.dp)
-                )
-                Spacer(Modifier.width(12.dp))
-                Text(
-                    text = stringResource(id = R.string.official_channel),
-                    color = MiuixTheme.colorScheme.onBackground,
-                    fontWeight = FontWeight.Bold,
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 14.sp
-                )
+        with(sharedTransitionScope) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(key = "about_group"),
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                    .clip(shape)
+                    .background(moduleBgColor)
+                    .border(1.dp, primaryColor.copy(alpha = 0.3f), shape)
+                    .clickable { navController.navigate("about_group") }
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+            ) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Image(
+                        painter = painterResource(R.drawable.group),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(primaryColor),
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(Modifier.width(12.dp))
+                    Text(
+                        text = stringResource(id = R.string.official_channel),
+                        color = MiuixTheme.colorScheme.onBackground,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = FontFamily.Monospace,
+                        fontSize = 14.sp
+                    )
+                }
             }
         }
     }

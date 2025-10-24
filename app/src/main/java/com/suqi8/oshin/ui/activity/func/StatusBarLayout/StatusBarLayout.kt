@@ -1,5 +1,6 @@
 package com.suqi8.oshin.ui.activity.func.StatusBarLayout
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -64,6 +65,7 @@ private val ViewNode.expandableId: String
  * @param navController 用于导航。
  * @param viewModel 关联的 ViewModel 实例。
  */
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun StatusBarLayout(
     navController: NavController,
