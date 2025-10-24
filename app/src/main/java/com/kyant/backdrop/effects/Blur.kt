@@ -2,31 +2,38 @@ package com.kyant.backdrop.effects
 
 import android.graphics.RenderEffect
 import android.os.Build
+import androidx.annotation.FloatRange
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.toAndroidTileMode
 import com.kyant.backdrop.BackdropEffectScope
 
 fun BackdropEffectScope.blur(
-    blurRadius: Float,
-    tileMode: TileMode = TileMode.Clamp
+    @FloatRange(from = 0.0) radius: Float,
+    edgeTreatment: TileMode = TileMode.Clamp
 ) {
     if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S) return
-    if (blurRadius <= 0f) return
+    if (radius <= 0f) return
+
+    if (edgeTreatment != TileMode.Clamp || renderEffect != null) {
+        if (radius > padding) {
+            padding = radius
+        }
+    }
 
     val currentEffect = renderEffect
     renderEffect =
         if (currentEffect != null) {
             RenderEffect.createBlurEffect(
-                blurRadius,
-                blurRadius,
+                radius,
+                radius,
                 currentEffect,
-                tileMode.toAndroidTileMode()
+                edgeTreatment.toAndroidTileMode()
             )
         } else {
             RenderEffect.createBlurEffect(
-                blurRadius,
-                blurRadius,
-                tileMode.toAndroidTileMode()
+                radius,
+                radius,
+                edgeTreatment.toAndroidTileMode()
             )
         }
 }
