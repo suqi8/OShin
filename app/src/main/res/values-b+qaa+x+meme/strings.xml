@@ -29,7 +29,7 @@
     <string name="shared_user_summary">允许杂鱼系统安装与其共享用户杂鱼签名不同的杂鱼app\n（<b>需要同时打开“禁用杂鱼APK签名验证👿不然我给你一锤子😡😡😡”</b>）</string>
     <string name="disable_verification_agent_title">给安装包验证代理一锤子干到天上去</string>
     <string name="disable_verification_agent_summary">比如超级杂鱼的 Play 商店的保护机制</string>
-    <string name="func">妙妙工具箱</string>
+    <string name="func">米奇妙妙屋</string>
     <string name="home">回家</string>
     <string name="about">神秘信息</string>
     <string name="status_bar_clock">时钟不妙器</string>
@@ -58,7 +58,7 @@
     <string name="cpu_temperature">你的CPU有多烧🥵</string>
     <string name="yuki_hook_api_version">神秘YukiHookAPI的神秘版本</string>
     <string name="compiled_timestamp">杂鱼O神的编译时间戳</string>
-    <string name="compiled_time">编译时间</string>
+    <string name="compiled_time">生下O神的时间</string>
     <string name="official_channel">官方猫娘聚集地</string>
     <string name="contribute_translation">来当黑奴翻译(bushi)</string>
     <string name="crowdin_contribute_summary">前往名为 Github 的章鱼猫娘贡献您的语言翻译</string>
@@ -86,7 +86,7 @@
     <string name="hide_space_summary">把时间里的空格都开除</string>
     <string name="dual_row_title">一行不够，整两行</string>
     <string name="dual_row_summary">时间，就要占两行！排面！</string>
-    <string name="Researt_app">重铸此应用</string>
+    <string name="Researt_app">打晕此应用</string>
     <string name="confirm_restart_applications">小杂鱼确认重启以下大杂鱼吗？😥</string>
     <string name="other_settings">其他系统不妙小工具</string>
     <string name="by_the_way">听我bb</string>
@@ -103,12 +103,12 @@
     <string name="clock_left_margin">时钟离左多远</string>
     <string name="clock_right_margin">时钟离右多远</string>
     <string name="addline">加条三八线</string>
-    <string name="dual_cell">俩电池？(秀儿)</string>
-    <string name="voltage">电压 (伏特！)</string>
+    <string name="dual_cell">薛定谔的电芯</string>
+    <string name="voltage">十万伏特(电压)</string>
     <string name="first_line_content">第一行摆啥</string>
     <string name="second_line_content">第二行摆啥</string>
     <string name="desktop_icon_and_text_size_multiplier">桌面图标和字儿放大多少倍</string>
-    <string name="icon_size_limit_note">大于1倍图标还是会系统制裁，爱咋咋地，作者懒的修了(我猜的）😞。</string>
+    <string name="icon_size_limit_note">大于1倍图标会被系统淦飞，作者懒的修了(我猜的）😞。</string>
     <string name="nvid_CN">CN 中国 China 🇨🇳</string>
     <string name="nvid_TW">TW 中国台湾省 Taiwan Province of China 🇨🇳</string>
     <string name="nvid_RU">RU 俄罗斯 Russia 🇷🇺</string>
@@ -135,16 +135,16 @@
     <string name="status_bar_icon">去状态栏整点图标</string>
     <string name="hide_status_bar">让状态栏变成棍母</string>
     <string name="enable_all_day_screen_off">全天候息屏大🐍</string>
-    <string name="force_trigger_ltpo">强制触发 LTPO</string>
+    <string name="force_trigger_ltpo">让霸道总裁来触发 LTPO</string>
     <string name="other">妙妙工具+</string>
     <string name="github_summary">欢迎各位开发者与用户与我们共同开发或提出建议！</string>
-    <string name="thank">感谢</string>
-    <string name="contributors">贡献人员</string>
+    <string name="thank">听我说谢谢你</string>
+    <string name="contributors">贡献人员的恩情还不完</string>
     <string name="donors">vivo50</string>
-    <string name="references">引用内容</string>
-    <string name="discussion_group">讨论群组</string>
+    <string name="references">我们用了啥😁</string>
+    <string name="discussion_group">加入猫娘群组变身猫娘喵</string>
     <string name="auto_build_release">自动构建发布</string>
-    <string name="official_website">官方网站</string>
+    <string name="official_website">杂鱼官网，点击变猫娘</string>
     <string name="open_source_project">开源项目</string>
     <string name="closed_source_project">闭源项目</string>
     <string name="no_license">无许可证</string>
@@ -161,14 +161,14 @@
     <string name="status_bar_notification">系统通知</string>
     <string name="remove_developer_options_notification">qnmd开发者选项通知</string>
     <string name="low_battery_fluid_cloud_off">在电量低于20%的时候让流体云给我飞起来😡</string>
-    <string name="notification_restriction_message">此功能限制该通知的后续弹出，已有的通知请自行关闭</string>
+    <string name="notification_restriction_message">此功能限制该通知的后续弹出，已有的通知请杂鱼❤️自行关闭</string>
     <string name="remove_and_do_not_disturb_notification">让通知勿扰通知飞起来</string>
     <string name="hide_launcher_icon">让桌面图标悄悄滴的打枪，干活滴不要</string>
     <string name="force_enable_xiaobu_call">霸道总裁强制小布通话干活</string>
     <string name="remove_full_screen_translation_restriction">让全屏翻译限制也给我飞起来😠</string>
     <string name="enable_ultra_combo">超神一键连招，启动😋</string>
-    <string name="enable_hok_ai_v1">AI大神辅助V1，启动</string>
-    <string name="enable_hok_ai_v2">AI大神辅助V2，启动</string>
+    <string name="enable_hok_ai_v1">AI大神辅助V1，启动🥰</string>
+    <string name="enable_hok_ai_v2">AI大神辅助V2，启动😋</string>
     <string name="enable_hok_ai_v3">还有这个: AI大神辅助V3</string>
     <string name="realme_gt7pro_feature_unlock_device_restriction">Only 真我 GT7 Pro can do，开启此功能将移除机型限制</string>
     <string name="hok">农p</string>
@@ -188,7 +188,7 @@
 - LSPosed 版本\n
 - Magisk/KernelSU版本等\n
 - 网络类型及运营商信息\n\n
-所有数据均会进行加密处理，不会关联个人身份，数据仅用于产品功能优化，不会共享给第三方
+所有数据均会进行加密处理，不会关联个人身份，数据仅用于产品功能优化，不会共享给第三方，但是《O神》是由Stracha酸奶菌自主研发的一款炒鸡模块。模块被运行在一个被称作“ColorOS”以及其衍生系统的神秘小安卓系统，在这里，被你选中的手机将被授予“O神之力”。你将扮演一位名为“用户”的神秘角色，获得独特的功能，和模块一起淦飞你的手机，找回你儿时的体验——同时，逐步发掘“O神”的真相
 </string>
     <string name="split_screen_multi_window">分屏和小窗</string>
     <string name="remove_all_small_window_restrictions">所有APP都得能小窗！</string>
@@ -198,15 +198,15 @@
     <string name="small_window_focused_shadow">小窗被点名时的阴影</string>
     <string name="small_window_unfocused_shadow">小窗被冷落时的阴影</string>
     <string name="default_value_hint_negative_one">-1 就是爷不改</string>
-    <string name="custom_display_model">装成别的手机型号 (B格)</string>
+    <string name="custom_display_model">化妆成别的手机型号</string>
     <string name="hint_empty_content_default">不填就是爷不改</string>
     <string name="prompt_search_other_settings">在找别的调教选项？</string>
-    <string name="remove_swipe_page_ads">刷卡页面的牛皮癣，滚！</string>
-    <string name="clear_wallet_data_notice">开了之后，记得去把钱包数据扬一次</string>
-    <string name="enable_ota_card_bg">OTA 卡片背景？随心换！</string>
+    <string name="remove_swipe_page_ads">让刷卡页面的牛皮癣飞起来</string>
+    <string name="clear_wallet_data_notice">开了之后，记得去给钱包数据来一锤80的</string>
+    <string name="enable_ota_card_bg">OTA 卡片背景，但是随心所意</string>
     <string name="select_background_btn">挑张壁纸</string>
     <string name="corner_radius_title">图片要多圆滑</string>
-    <string name="force_enable_fold_mode">强制折叠屏模式 (装起来！)</string>
+    <string name="force_enable_fold_mode">总裁也爱用的折叠屏模式</string>
     <string name="fold_mode">折叠屏模式</string>
     <string name="unfold">展开！</string>
     <string name="fold">折上！</string>
@@ -214,7 +214,7 @@
     <string name="adjust_dock_transparency">Dock栏透明度</string>
     <string name="force_enable_dock_blur">强制Dock毛玻璃</string>
     <string name="force_enable_dock_blur_undevice">杂鱼手机开了Dock就飞起来了</string>
-    <string name="remove_game_filter_root_detection">游戏滤镜还检测Root？给爷爬！</string>
+    <string name="remove_game_filter_root_detection">让游戏滤镜检测Root飞起来</string>
     <string name="remove_all_popup_delays">让所有弹窗延迟飞起来</string>
     <string name="remove_all_popup_delays_eg">例如：风险应用添加白名单</string>
     <string name="remove_message_ads">让信息附加广告飞起来</string>
@@ -244,10 +244,10 @@
     <string name="swap_upload_download">上传下载换换位置</string>
     <string name="position_speed_indicator_front">小图标站前面去</string>
     <string name="cpu_freq_main">CPU摸鱼调教</string>
-    <string name="cpu_group_min_freq">最少也得跑这么快</string>
-    <string name="cpu_group_max_freq">最多也就跑这么快</string>
+    <string name="cpu_group_min_freq">CPU至少被顶到什么位置🥵</string>
+    <string name="cpu_group_max_freq">CPU最多被顶到哪儿🥵❤️</string>
     <string name="app_not_found_in_list">你想找的APP离家出走了？</string>
-    <string name="hide_apps_notice">为了脸面，%1$d个没装的APP被我藏了。\n\n藏起来的有：\n</string>
+    <string name="hide_apps_notice">为了脸面，%1$d个没装的APP被我鲨了。\n\n被杀掉的有：\n</string>
     <string name="help">救命😭😭</string>
     <string name="disable_72h_verify">让每 72 小时验证锁屏密码飞起来</string>
     <string name="allow_untrusted_touch">把不受信任的触摸操作叉回来</string>
@@ -255,7 +255,7 @@
     <string name="accessibility_service_direct">无障碍插队直达</string>
     <string name="accessibility_service_authorize">无障碍直接授权</string>
     <string name="selected_app">翻牌子的应用：</string>
-    <string name="smart_accessibility_service">智能无障碍(应该大概可能是只能的）</string>
+    <string name="smart_accessibility_service">能工智人无障碍</string>
     <string name="whitelist_app_auto_authorization">杂鱼打开之后，白名单里的杂鱼APP自动授权，黑名单里的就只能手动打开喽。</string>
     <string name="accessibility_whitelist">无障碍白名单</string>
     <string name="remove_installation_frequency_popup">让安装频繁弹窗去见耶稣</string>
@@ -268,11 +268,11 @@
     <string name="remove_system_update_dialog">让系统更新弹窗给我飞起来</string>
     <string name="remove_system_update_notification">让系统更新通知给我飞起来</string>
     <string name="module">模块</string>
-    <string name="remove_wlan_auto_download_dialog">让 推荐开启 WLAN 自动下载弹窗 飞起来</string>
-    <string name="remove_unlock_and_dmverity_check">让 检测解锁状态与dm校验 飞起来</string>
-    <string name="coming_soon">新建文件夹</string>
+    <string name="remove_wlan_auto_download_dialog">让推荐开启 WLAN 自动下载弹窗飞起来</string>
+    <string name="remove_unlock_and_dmverity_check">让检测解锁状态与dm校验飞起来</string>
+    <string name="coming_soon">已新建文件夹</string>
     <string name="rom_workshop">没空做了别看了</string>
-    <string name="enable_mlbb_ai_god_assist">启用决胜巅峰AI大神辅助</string>
+    <string name="enable_mlbb_ai_god_assist">总裁也爱用的:决胜巅峰AI大神辅助</string>
     <string name="remove_oshare_auto_off">让互传自动关闭飞起来</string>
     <string name="follow_system">跟随系统</string>
     <string name="app_language">应用语言</string>
@@ -290,11 +290,11 @@
     <string name="text_info_design_capacity">理论生命值</string>
     <string name="text_info_actual_capacity">实际生命值</string>
     <string name="text_info_calculated_health">电池最大生命百分比</string>
-    <string name="chip_label_region">你哪儿的</string>
+    <string name="chip_label_region">太带派了老铁😋</string>
     <string name="chip_label_android">户晨风版本号</string>
-    <string name="chip_label_system">系统</string>
-    <string name="chip_label_status">状态</string>
-    <string name="section_title_apps">应用列表</string>
+    <string name="chip_label_system">杂鱼的系统版本号</string>
+    <string name="chip_label_status">当前杂鱼状态😋</string>
+    <string name="section_title_apps">被灌成泡芙的应用</string>
     <string name="control_center">控制中心</string>
     <string name="enlarge_media_cover">放大媒体封面</string>
     <string name="media_cover_background_description">媒体封面显示时，作为音乐卡片的背景平铺展示</string>
@@ -309,21 +309,21 @@
     <string name="remove_usb_selection_dialog">让插入🥵🥵 USB 选择弹窗</string>
     <string name="toast_force_show_app_icon">🍞提示强制显示应用图标</string>
     <string name="toast_icon_source_module">开启后🍞显示的应用图标将由O神尝了咸淡再放出来</string>
-    <string name="remove_system_tamper_warning">让 尝试破坏系统警告 飞起来</string>
+    <string name="remove_system_tamper_warning">让尝试破坏系统警告飞起来</string>
     <string name="channel_name_smscode_notification">验证码通知</string>
     <string name="code_notification_content">验证码：%s</string>
     <string name="prompt_sms_code_copied">已复制验证码: %s</string>
     <string name="sms_verification_code">短信验证码</string>
     <string name="sms_code_keyword">验证码短信关键字</string>
-    <string name="show_verification_toast">显示验证码吐司</string>
+    <string name="show_verification_toast">显示验证码🍞</string>
     <string name="show_verification_notification">显示验证码通知</string>
     <string name="copy_verification_to_clipboard">验证码复制剪切板</string>
     <string name="auto_input_verification_code">自动输入验证码</string>
     <string name="appearance_and_update">外观与更新</string>
-    <string name="data_source_settings">数据源设置</string>
-    <string name="unit_display_settings">单位隐藏</string>
-    <string name="cpu_frequency">CPU频率</string>
-    <string name="cpu_usage">CPU使用率</string>
+    <string name="data_source_settings">从哪儿获取杂鱼数据❤️</string>
+    <string name="unit_display_settings">单位跑不跑路</string>
+    <string name="cpu_frequency">杂鱼CPU的频率</string>
+    <string name="cpu_usage">杂鱼CPU的使用率</string>
     <string name="ram_usage">内存占用</string>
     <string name="change_cpu_freq_source">更改CPU频率数据源</string>
     <string name="enter_cpu_core_number">杂鱼需要输入 /sys/devices/system/cpu/ 文件夹下 cpu 后的数字以指定杂鱼源。</string>
@@ -333,13 +333,13 @@
     <string name="bypass_same_account_unlock_safety_check_summary">让 root/不安全状态检测 飞起来，并使“同账号手机解锁本设备”打赢复活赛</string>
     <string name="status_bar_layout">状态栏布局</string>
     <string name="view_controller_load_failed">视图树似了，请确保模块已激活且 SystemUI 已被打晕并重新叫醒。</string>
-    <string name="view_controller_mode_normal">默认</string>
-    <string name="view_controller_mode_visible">强制显示</string>
-    <string name="view_controller_mode_hidden">强制隐藏</string>
-    <string name="view_controller_mode_invisible">强制不可见</string>
-    <string name="config_management">配置管理</string>
-    <string name="export_config">导出配置</string>
-    <string name="export_config_summary">将所有模块的杂鱼设置备份到一个需要你好好保管的文件中哦</string>
+    <string name="view_controller_mode_normal">东贝</string>
+    <string name="view_controller_mode_visible">总裁式显示</string>
+    <string name="view_controller_mode_hidden">总裁式隐藏</string>
+    <string name="view_controller_mode_invisible">总裁式不可见</string>
+    <string name="config_management">配置管理🥵❤️</string>
+    <string name="export_config">导出🥵配置❤️</string>
+    <string name="export_config_summary">将所有模块的杂❤️鱼设置备份到一个需要你好好保管的文件中哦</string>
     <string name="import_config">导入配置</string>
     <string name="import_config_summary">从备份文件中恢复所有模块的杂鱼设置</string>
     <string name="clear_config">清除配置</string>
@@ -356,7 +356,7 @@
     <string name="force_on">霸道总裁式开启</string>
     <string name="force_off">霸道总裁式关闭</string>
     <string name="status_bar">状态栏</string>
-    <string name="bypass_preinstall_checks">让 安装前所有校验 给爷飞起来</string>
+    <string name="bypass_preinstall_checks">让安装前所有校验给爷飞起来</string>
     <string name="bypass_preinstall_checks_summary">让 安装前的多项校验，包括：文件路径有效性、文件完整性、版本信息以及厂商“禁止更新”标记 全部给我飞起来。</string>
     <string name="force_show_local_install">总裁也用的: 显示“本地安装”选项</string>
     <string name="common_settings">典型的安卓思维设置</string>
@@ -366,21 +366,21 @@
     <string name="allow_downgrade_summary">允许杂鱼应用在已经安装醛新版本的情况下直接用旧版本上市新版本</string>
     <string name="allow_signature_mismatch_on_update_title">给系统两锤子让它不敢安装应用时进行签名验证，然后你就可以安装已经变成杂鱼的应用</string>
     <string name="allow_signature_mismatch_on_update_summary">开启后，可以让不同签名的杂鱼覆盖安装同包名的杂鱼。</string>
-    <string name="disable_jar_verifier_title">让 JAR 包校验 因为装b飞起来</string>
+    <string name="disable_jar_verifier_title">让JAR 包校验因为装b飞起来</string>
     <string name="disable_jar_verifier_summary">因为我们偷偷摸摸绕过对 APK 文件完整性的校验，所以解决了部分修改版应用无法安装的问题。</string>
-    <string name="disable_message_digest_title">让 摘要验证 飞起来</string>
+    <string name="disable_message_digest_title">让摘要验证 飞起来</string>
     <string name="disable_message_digest_summary">偷偷默默地绕过对 APK 文件摘要的验证。</string>
     <string name="bypass_arsc_uncompressed_check_title">偷偷摸摸的绕过 resources.arsc 压缩检查</string>
-    <string name="bypass_arsc_uncompressed_check_summary">解决因 `resources.arsc` 未对齐或被压缩导致的安装失败。</string>
+    <string name="bypass_arsc_uncompressed_check_summary">解决因 杂❤️鱼`resources.arsc` 未对齐或被压缩导致的安装失败🥰。</string>
     <string name="bypass_min_signature_version_check_title">偷偷摸摸绕过最小签名版本检查</string>
-    <string name="bypass_min_signature_version_check_summary">让 安装使用旧版签名方案的应用 打赢复活赛。</string>
-    <string name="disable_install_verification_title">让 安装验证代理，给爷飞起来</string>
-    <string name="disable_install_verification_summary">让 通过验证代理（如 Google Play Protect）进行的安装包扫描 给爷飞起来。</string>
+    <string name="bypass_min_signature_version_check_summary">让安装使用旧版签名方案的应用打赢复活赛。</string>
+    <string name="disable_install_verification_title">让安装验证代理给爷飞起来</string>
+    <string name="disable_install_verification_summary">让通过验证代理（如 Google Play Protect）进行的安装包扫描给爷飞起来。</string>
     <string name="allow_system_app_hidden_api_title">允许系统应用调用躲起来的杂鱼 API</string>
-    <string name="allow_system_app_hidden_api_summary">就算签名对不上，系统应用或者更新后的系统应用也能调用隐藏API</string>
-    <string name="allow_nonsystem_shared_uid_title">非系统应用用共享UID？准了！</string>
-    <string name="allow_nonsystem_shared_uid_summary">签名不一样的野路子应用也能用 `android:sharedUserId` 了</string>
-    <string name="remove_second_page_ads">让 二级页面广告 飞起来</string>
+    <string name="allow_system_app_hidden_api_summary">就算签名对不上，系统应用或者更新后的系统应用也能调用跑路的zako❤️API</string>
+    <string name="allow_nonsystem_shared_uid_title">让非系统的杂❤️🥰鱼应用能..能使用🥵共享UID</string>
+    <string name="allow_nonsystem_shared_uid_summary">被灌成泡芙的🥵🐍应用也能用 `android:sharedUserId` 了</string>
+    <string name="remove_second_page_ads">让二级页面广告飞起来</string>
     <string name="prevent_system_browser_redirect">让 跳转系统浏览器 的给我飞起来</string>
     <string name="pms_command_title">启用 PMS 调试命令</string>
     <string name="pms_command_summary">
@@ -390,8 +390,8 @@
 \n• su/shareduser [UID] —— 查看共享 UID 的签名信息
 \n• 其它参数 —— 显示用法提示
     </string>
-    <string name="remove_weather_injected_ads">让 天气注入广告 飞起来</string>
-    <string name="remove_weather_search_box">让 天气页面搜索框 飞起来</string>
+    <string name="remove_weather_injected_ads">让天气注入广告飞起来</string>
+    <string name="remove_weather_search_box">让天气页面搜索框飞起来</string>
     <string name="weather_detail">天气详情</string>
     <string name="use_system_font">用系统默认字体</string>
     <string name="network_speed_alignment">网速排排坐</string>
@@ -408,5 +408,5 @@
     <string name="alignment_right">往右靠！</string>
     <string name="app_start_dialog_legacy_mode_title">I need 使用旧版启动弹窗</string>
     <string name="app_start_dialog_legacy_mode_summary">霸道总裁也爱启用旧版应用启动提示逻辑</string>
-    <string name="app_start_dialog_always_allow">让“允许 30 天”改为“永久允许”</string>
+    <string name="app_start_dialog_always_allow">酸奶把“允许 30 天”黑了，变成“永久允许”了</string>
 </resources>
