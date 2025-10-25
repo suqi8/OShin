@@ -43,7 +43,8 @@ data class DeviceInfo(
     val batteryHealthRaw: String,
     val batteryHealthPercent: Float,
     val calculatedHealth: Float,
-    val cycleCount: Int
+    val cycleCount: Int,
+    val chipSoc: Int
 )
 
 data class CarouselItem(
@@ -80,27 +81,27 @@ class HomeViewModel @Inject constructor(
 
     private fun loadAllData() {
         viewModelScope.launch {
-            // 并发获取所有数据
             coroutineScope {
-                viewModelScope.launch {
+                // 并发加载轮播数据
+                launch {
                     val items = fetchCarouselData()
                     _uiState.update { it.copy(carouselItems = items) }
                 }
 
                 // 加载模块状态
-                viewModelScope.launch {
+                launch {
                     val status = getModuleStatus()
                     _uiState.update { it.copy(moduleStatus = status) }
                 }
 
                 // 加载 Root 状态
-                viewModelScope.launch {
+                launch {
                     val status = getRootStatus()
                     _uiState.update { it.copy(rootStatus = status) }
                 }
 
                 // 加载设备信息
-                viewModelScope.launch {
+                launch {
                     val info = getDeviceInfo()
                     _uiState.update { it.copy(deviceInfo = info) }
                 }
@@ -111,6 +112,7 @@ class HomeViewModel @Inject constructor(
     private fun loadRandomFeatures() {
         viewModelScope.launch {
             val allItems = featureRepository.getAllSearchableItems()
+            // 将所有功能随机打乱，不限制数量
             val randomItems = allItems.shuffled()
             _uiState.update {
                 it.copy(randomFeatures = randomItems)
@@ -122,7 +124,6 @@ class HomeViewModel @Inject constructor(
      * 安全地从 JSONObject 获取字符串，如果键不存在或值为 null，则返回 null。
      */
     private fun JSONObject.optStringOrNull(key: String): String? {
-        // 检查键是否存在，并且值不是 JSON 的 null
         if (has(key) && !isNull(key)) {
             return getString(key)
         }
@@ -151,7 +152,15 @@ class HomeViewModel @Inject constructor(
                 }
             }
         } catch (e: Exception) {
-            emptyList()
+            // 返回默认数据以供展示
+            listOf(
+                CarouselItem(
+                    title = "Freemium",
+                    description = "A handpicked collection of stunning free wallpapers that fit your vibe perfectly.",
+                    actionUrl = null,
+                    imageUrl = null
+                )
+            )
         }
     }
 
@@ -191,11 +200,11 @@ class HomeViewModel @Inject constructor(
         echo "cc=$(cat /sys/class/oplus_chg/battery/battery_cc 2>/dev/null)"
         echo "charge_full_design=$(cat /sys/class/power_supply/battery/charge_full_design 2>/dev/null)"
         echo "health=$(cat /sys/class/power_supply/battery/health 2>/dev/null)"
+        echo "chip_soc=$(cat /sys/class/oplus_chg/battery/chip_soc 2>/dev/null)"
     """.trimIndent()
 
         val rawData = executeCommand(command)
 
-        // 2. 将 key=value 格式的输出解析到一个 Map 中
         val dataMap = rawData.lines()
             .filter { it.contains("=") }
             .associate {
@@ -203,7 +212,6 @@ class HomeViewModel @Inject constructor(
                 parts[0] to parts[1]
             }
 
-        // 3. 从 Map 中安全地按 key 取值
         val chargeFull0 = dataMap["charge_full"]?.toIntOrNull() ?: 0
         val chargeFull1 = dataMap["charge_counter"]?.toIntOrNull() ?: 0
         val currentCapacity = (if (chargeFull0 != 0) chargeFull0 else chargeFull1) / 1000
@@ -213,12 +221,12 @@ class HomeViewModel @Inject constructor(
         val cycleCount = dataMap["cc"]?.toIntOrNull() ?: 0
         val designCapacity = (dataMap["charge_full_design"]?.toIntOrNull() ?: 0) / 1000
         val healthRaw = dataMap["health"]?.trim() ?: "Unknown"
+        val chipSoc = dataMap["chip_soc"]?.toIntOrNull() ?: 0
 
         val calculatedHealth = if (designCapacity > 0 && fullCapacity > 0) {
             (fullCapacity.toFloat() / designCapacity.toFloat()) * 100f
         } else 0f
 
-        // 构造 DeviceInfo 对象
         DeviceInfo(
             country = mapNvidToCountry(getSystemProperty("ro.build.oplus_nv_id")),
             batteryHealthDisplay = mapHealthToString(healthRaw),
@@ -231,7 +239,8 @@ class HomeViewModel @Inject constructor(
             systemVersion = Build.DISPLAY,
             designCapacity = designCapacity,
             currentCapacity = currentCapacity,
-            fullCapacity = fullCapacity
+            fullCapacity = fullCapacity,
+            chipSoc = chipSoc
         )
     }
 

@@ -329,6 +329,11 @@
     <string name="enter_cpu_core_number">输入 /sys/devices/system/cpu/ 文件夹下 cpu 后的数字以指定源。</string>
     <string name="show_real_battery">显示真实电量</string>
     <string name="show_real_battery_summary">仅在状态栏显示真实电量，其他应用读取的电量不受影响</string>
+    <string name="real_battery_level">真实电量</string>
+    <string name="battery_status">电池状态</string>
+    <string name="info_region">地区</string>
+    <string name="info_android">Android</string>
+    <string name="info_system">系统</string>
     <string name="bypass_same_account_unlock_safety_check">移除同账号解锁安全检测</string>
     <string name="bypass_same_account_unlock_safety_check_summary">移除root/不安全状态检测，使“同账号手机解锁本设备”可用</string>
     <string name="status_bar_layout">状态栏布局</string>
@@ -409,4 +414,17 @@
     <string name="app_start_dialog_legacy_mode_title">使用旧版启动弹窗</string>
     <string name="app_start_dialog_legacy_mode_summary">强制启用旧版应用启动提示逻辑</string>
     <string name="app_start_dialog_always_allow">将“允许 30 天”改为“永久允许”</string>
+    <string name="section_title_featured">通知公告</string>
+    <string name="section_subtitle_featured">重要通知与更新公告</string>
+    <string name="section_title_browse">按类别浏览</string>
+    <string name="section_subtitle_browse">探索按功能分类的特性</string>
+    <string name="section_title_highlights">今日亮点</string>
+    <string name="section_subtitle_highlights">为你推荐的实用功能</string>
+    <string name="official_channel_subtitle">加入我们的社区</string>
+    <string name="category_system">系统功能</string>
+    <string name="category_display">显示设置</string>
+    <string name="category_notification">通知管理</string>
+    <string name="category_battery">电池优化</string>
+    <string name="category_security">安全隐私</string>
+    <string name="category_media">媒体控制</string>
 </resources>

@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.activity.components.funArrow
+import com.suqi8.oshin.ui.home.ModernSectionTitle
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.utils.overScrollVertical
@@ -43,7 +44,10 @@ fun Main_Function(
             .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
     ) {
         item {
-            Spacer(modifier = Modifier.size(padding.calculateTopPadding()))
+            Spacer(modifier = Modifier.height(padding.calculateTopPadding() + 104.dp))
+            ModernSectionTitle(
+                title = stringResource(id = R.string.func)
+            )
         }
         item {
             Card(
