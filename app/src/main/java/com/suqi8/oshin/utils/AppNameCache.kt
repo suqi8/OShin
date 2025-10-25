@@ -139,7 +139,6 @@ fun GetAppIconAndName(
     val context = LocalContext.current
     var result by remember(packageName) { mutableStateOf<Pair<String, ImageBitmap>?>(null) }
 
-    // 异步加载，只执行一次
     LaunchedEffect(packageName) {
         val cached = getCached(packageName)
         if (cached != null) {
@@ -151,7 +150,13 @@ fun GetAppIconAndName(
             val appInfo = context.packageManager.getApplicationInfo(packageName, 0)
             val icon = appInfo.loadIcon(context.packageManager)
             val appName = context.packageManager.getApplicationLabel(appInfo).toString()
-            val bitmap = icon.toBitmap().asImageBitmap()
+
+            // 获取安全尺寸
+            val width = icon.intrinsicWidth.takeIf { it > 0 } ?: 1
+            val height = icon.intrinsicHeight.takeIf { it > 0 } ?: 1
+            icon.setBounds(0, 0, width, height)
+
+            val bitmap = icon.toBitmap(width, height).asImageBitmap()
             updateCache(packageName, appName to bitmap)
             result = appName to bitmap
         } catch (e: PackageManager.NameNotFoundException) {
