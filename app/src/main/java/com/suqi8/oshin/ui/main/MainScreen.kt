@@ -1,6 +1,7 @@
 package com.suqi8.oshin.ui.main
 
 import android.annotation.SuppressLint
+import android.graphics.RenderEffect
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.pager.HorizontalPager
@@ -31,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
@@ -42,6 +45,9 @@ import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
+import com.kyant.backdrop.drawPlainBackdrop
+import com.kyant.backdrop.effects.blur
+import com.kyant.backdrop.effects.effect
 import com.suqi8.oshin.Main_Function
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.about.Main_About
@@ -49,13 +55,9 @@ import com.suqi8.oshin.ui.components.BottomTabs
 import com.suqi8.oshin.ui.home.MainHome
 import com.suqi8.oshin.ui.module.Main_Module
 import dev.chrisbanes.haze.ExperimentalHazeApi
-import dev.chrisbanes.haze.HazeEffectScope
-import dev.chrisbanes.haze.HazeInputScale
-import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
 import dev.chrisbanes.haze.HazeStyle
 import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
@@ -85,7 +87,6 @@ fun MainScreen(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-
     val scope = rememberCoroutineScope()
     val topAppBarScrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
 
@@ -148,27 +149,17 @@ fun MainScreen(
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            AnimatedVisibility(pagerState.currentPage != 3) {
-                TopAppBar(
-                    modifier = Modifier.hazeEffect(
-                        state = hazeState,
-                        style = hazeStyle, block = fun HazeEffectScope.() {
-                            inputScale = HazeInputScale.Auto
-                            progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
-                        }),
-                    scrollBehavior = currentScrollBehavior,
-                    color = Color.Transparent,
-                    title = when (pagerState.currentPage) {
-                        0 -> stringResource(R.string.app_name)
-                        1 -> stringResource(R.string.module)
-                        2 -> stringResource(R.string.func)
-                        else -> stringResource(R.string.about)
-                    }
-                )
-            }
+            TopAppBar(
+                scrollBehavior = currentScrollBehavior,
+                color = Color.Transparent,
+                modifier = Modifier.height(0.dp),
+                title = ""
+            )
         }
     ) { padding ->
-        Box() {
+        Box {
+            val background = MiuixTheme.colorScheme.background
+
             AppHorizontalPager(
                 modifier = Modifier.layerBackdrop(backdrop).hazeSource(state = hazeState).imePadding(),
                 pagerState = pagerState,
@@ -178,6 +169,43 @@ fun MainScreen(
                 sharedTransitionScope = sharedTransitionScope,
                 animatedVisibilityScope = animatedVisibilityScope
             )
+            Box(
+                Modifier
+                    .height(72.dp)
+                    .fillMaxWidth()
+                    .drawPlainBackdrop(
+                        backdrop = backdrop,
+                        shape = { RectangleShape },
+                        effects = {
+                            blur(4f.dp.toPx())
+                            effect(
+                                RenderEffect.createRuntimeShaderEffect(
+                                    obtainRuntimeShader(
+                                        "AlphaMask",
+                                        """
+uniform shader content;
+
+uniform float2 size;
+layout(color) uniform half4 tint;
+uniform float tintIntensity;
+
+half4 main(float2 coord) {
+float blurAlpha = smoothstep(size.y, size.y * 0.2, coord.y);
+float tintAlpha = smoothstep(size.y, size.y * 0.2, coord.y);
+return mix(content.eval(coord) * blurAlpha, tint * tintAlpha, tintIntensity);
+}"""
+                                    ).apply {
+                                        setFloatUniform("size", size.width, size.height)
+                                        setColorUniform("tint", background.value.toLong())
+                                        setFloatUniform("tintIntensity", 0.8f)
+                                    },
+                                    "content"
+                                )
+                            )
+                        }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {}
 
             Box(
                 modifier = Modifier
@@ -282,7 +310,6 @@ fun AppHorizontalPager(
                     else -> Main_About(
                         topAppBarScrollBehavior = topAppBarScrollBehavior,
                         padding = padding,
-                        context = LocalContext.current,
                         navController = navController,
                         sharedTransitionScope = sharedTransitionScope,
                         animatedVisibilityScope = animatedVisibilityScope

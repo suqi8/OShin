@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -79,6 +80,7 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.ui.activity.components.BasicComponentDefaults
 import com.suqi8.oshin.ui.activity.components.SuperArrow
+import com.suqi8.oshin.ui.home.ModernSectionTitle
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.GetFuncRoute
 import kotlinx.coroutines.Dispatchers
@@ -128,10 +130,16 @@ fun Main_Module(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item {
+                    Spacer(modifier = Modifier.height(padding.calculateTopPadding() + 104.dp))
+                    ModernSectionTitle(
+                        title = stringResource(id = R.string.module)
+                    )
+                }
+                item {
                     HUDSearchBar(
                         query = uiState.searchQuery,
                         onQueryChange = viewModel::onSearchQueryChanged,
-                        modifier = Modifier.padding(top = 8.dp, start = 16.dp, end = 16.dp)
+                        modifier = Modifier.padding(horizontal = 16.dp)
                     )
                 }
 
@@ -204,7 +212,6 @@ fun AppListContent(
     val installedEntries = moduleEntries
 
     Column(Modifier.padding(horizontal = 16.dp)) {
-        SectionTitle(titleResId = R.string.section_title_apps)
         Row(
             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
             horizontalArrangement = Arrangement.End
@@ -364,10 +371,10 @@ fun HUDSearchBar(
 
     Box(
         modifier = modifier
-            .clip(CutCornerShape(8.dp))
-            .background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.1f))
-            .border(1.dp, MiuixTheme.colorScheme.primary.copy(alpha = 0.3f), CutCornerShape(8.dp))
-            .padding(horizontal = 8.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(MiuixTheme.colorScheme.surface)
+            .border(1.dp, Color(0xFF6366F1).copy(alpha = 0.2f), RoundedCornerShape(16.dp))
+            .padding(horizontal = 16.dp)
     ) {
         BasicTextField(
             value = query,
@@ -388,9 +395,9 @@ fun HUDSearchBar(
                     Icon(
                         imageVector = MiuixIcons.Useful.Search,
                         contentDescription = "Search",
-                        tint = MiuixTheme.colorScheme.primary
+                        tint = Color(0xFF6366F1)
                     )
-                    Spacer(Modifier.width(8.dp))
+                    Spacer(Modifier.width(12.dp))
                     Box(Modifier.weight(1f)) {
                         if (query.isEmpty()) {
                             Text(
@@ -409,14 +416,27 @@ fun HUDSearchBar(
 
 @Composable
 fun HUDModuleContainer(modifier: Modifier = Modifier, content: @Composable ColumnScope.() -> Unit) {
-    val shape = CutCornerShape(8.dp)
-    Column(
+    // 使用首页风格的渐变背景
+    Box(
         modifier = modifier
-            .clip(shape)
-            .background(MiuixTheme.colorScheme.onBackground.copy(alpha = 0.03f))
-            .border(1.dp, MiuixTheme.colorScheme.primary.copy(alpha = 0.3f), shape)
-            .padding(8.dp)
-    ) { content() }
+            .clip(RoundedCornerShape(16.dp))
+            .background(
+                Brush.linearGradient(
+                    colors = listOf(
+                        Color(0xFF6366F1).copy(alpha = 0.08f),
+                        Color(0xFF8B5CF6).copy(alpha = 0.04f)
+                    )
+                )
+            )
+            .border(
+                width = 1.dp,
+                color = Color(0xFF6366F1).copy(alpha = 0.2f),
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(12.dp)
+    ) {
+        Column { content() }
+    }
 }
 
 @Composable

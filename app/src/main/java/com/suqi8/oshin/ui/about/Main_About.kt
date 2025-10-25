@@ -60,6 +60,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.integerArrayResource
 import androidx.compose.ui.res.painterResource
@@ -119,12 +120,12 @@ import java.time.format.DateTimeFormatter
 fun Main_About(
     topAppBarScrollBehavior: ScrollBehavior,
     padding: PaddingValues,
-    context: Context,
     navController: NavController,
     viewModel: SettingsViewModel = hiltViewModel(),
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
+    val context = LocalContext.current
     val showDeviceNameDialog = remember { mutableStateOf(false) }
     val deviceName: MutableState<String> = remember {
         mutableStateOf(
