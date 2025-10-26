@@ -31,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -141,9 +140,9 @@ fun FunPage(
                     .background(background)
             ) {
                 content(padding)
-                if (sharedTransitionScope?.isTransitionActive == true) {
+                /*if (sharedTransitionScope?.isTransitionActive == true) {
                     Box(Modifier.fillMaxSize().pointerInput(Unit) {})
-                }
+                }*/
             }
 
             // --- 顶部模糊栏 ---
