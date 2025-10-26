@@ -1,42 +1,51 @@
 package com.suqi8.oshin.ui.activity.components
 
+import android.graphics.RenderEffect
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.kyant.backdrop.Backdrop
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
+import com.kyant.backdrop.drawPlainBackdrop
+import com.kyant.backdrop.effects.blur
+import com.kyant.backdrop.effects.effect
 import com.suqi8.oshin.ui.components.LiquidButton
 import com.suqi8.oshin.utils.hasShortcut
 import com.suqi8.oshin.utils.launchApp
 import dev.chrisbanes.haze.ExperimentalHazeApi
-import dev.chrisbanes.haze.HazeEffectScope
-import dev.chrisbanes.haze.HazeInputScale
-import dev.chrisbanes.haze.HazeProgressive
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.HazeStyle
-import dev.chrisbanes.haze.HazeTint
-import dev.chrisbanes.haze.hazeEffect
 import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -54,28 +63,21 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
-// --- 版本 1 (兼容旧页面) ---
-// 这个版本接收一个无参数的 content lambda，并为其内部创建一个 LazyColumn。
-// 所有老的页面都会自动调用这个版本。
 @OptIn(ExperimentalHazeApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun FunPage(
     title: String,
     appList: List<String> = emptyList(),
     navController: NavController,
-    content: @Composable () -> Unit // <-- 无参数的 lambda
+    content: @Composable () -> Unit
 ) {
-    // 为旧页面创建它们自己的滚动状态
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
-
-    // 直接调用新版本的 funPage，并为其构建滚动环境
     FunPage(
         title = title,
         appList = appList,
         navController = navController,
         scrollBehavior = topAppBarState
     ) { padding ->
-        // 在内部创建一个 LazyColumn，模拟旧版本的行为
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -84,9 +86,7 @@ fun FunPage(
                 .nestedScroll(topAppBarState.nestedScrollConnection),
             contentPadding = padding
         ) {
-            item {
-                content() // 将旧页面的内容放在 item 中
-            }
+            item { content() }
         }
     }
 }
@@ -94,7 +94,7 @@ fun FunPage(
 @OptIn(ExperimentalHazeApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun FunPage(
-    title: String,
+    title: String = "",
     appList: List<String> = emptyList(),
     navController: NavController,
     scrollBehavior: ScrollBehavior,
@@ -103,227 +103,168 @@ fun FunPage(
     animationKey: String? = null,
     content: @Composable (padding: PaddingValues) -> Unit
 ) {
-    val context = LocalContext.current
     val restartAPP = remember { mutableStateOf(false) }
     val backdrop = rememberLayerBackdrop()
     val hazeState = remember { HazeState() }
-    val hazeStyle = HazeStyle(
-        backgroundColor = MiuixTheme.colorScheme.background,
-        tint = HazeTint(MiuixTheme.colorScheme.background.copy(0.75f)),
-        blurRadius = 25.dp,
-        noiseFactor = 0f
-    )
 
-    if (sharedTransitionScope != null && animatedVisibilityScope != null && animationKey != null) {
-        // --- 动画版本 ---
-        with(sharedTransitionScope) {
-            Scaffold(
-                topBar = {
-                    TopAppBar(
-                        title = title,
-                        // 1. 使用透明背景
-                        color = Color.Transparent,
-                        // 2. 应用 Haze 模糊效果
-                        modifier = Modifier.hazeEffect(
-                            state = hazeState,
-                            style = hazeStyle,
-                            block = fun HazeEffectScope.() {
-                                inputScale = HazeInputScale.Auto
-                                progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
-                            }
-                        ),
-                        scrollBehavior = scrollBehavior,
-                        navigationIcon = {
-                            //只能点击一次
-                            LiquidButton(
-                                onClick = { navController.popBackStack() },
-                                modifier = Modifier
-                                    .padding(start = 16.dp)
-                                    .size(40.dp),
-                                backdrop = backdrop
-                            ) {
-                                Icon(
-                                    imageVector = MiuixIcons.Useful.Back,
-                                    contentDescription = "Back",
-                                    modifier = Modifier.size(22.dp),
-                                    tint = MiuixTheme.colorScheme.onBackground
-                                )
-                            }
-                        },
-                        actions = {
-                            var showShortcut by remember { mutableStateOf(false) }
-
-                            LaunchedEffect(appList) {
-                                withContext(Dispatchers.IO) {
-                                    if (appList.size == 1 && hasShortcut(context, appList.first())) {
-                                        showShortcut = true
-                                    }
-                                }
-                            }
-
-                            if (showShortcut) {
-                                LiquidButton(
-                                    onClick = { launchApp(context, appList.first()) },
-                                    modifier = Modifier
-                                        .padding(end = 16.dp)
-                                        .size(40.dp),
-                                    backdrop = backdrop
-                                ) {
-                                    Icon(
-                                        imageVector = MiuixIcons.Useful.Play,
-                                        contentDescription = "Open Shortcut",
-                                        modifier = Modifier.size(22.dp),
-                                        tint = MiuixTheme.colorScheme.onBackground
-                                    )
-                                }
-                            }
-
-                            if (appList.isNotEmpty()) {
-                                LiquidButton(
-                                    onClick = { restartAPP.value = true },
-                                    modifier = Modifier
-                                        .padding(end = 16.dp)
-                                        .size(40.dp),
-                                    backdrop = backdrop
-                                ) {
-                                    Icon(
-                                        imageVector = MiuixIcons.Useful.Refresh,
-                                        contentDescription = "Refresh",
-                                        modifier = Modifier.size(22.dp),
-                                        tint = MiuixTheme.colorScheme.onBackground
-                                    )
-                                }
-                            }
-                        }
-                    )
-                },
-                modifier = Modifier.sharedBounds(
-                    sharedContentState = rememberSharedContentState(key = animationKey),
-                    animatedVisibilityScope = animatedVisibilityScope
-                )
-            ) { padding ->
-                Box(
-                    Modifier
-                        .layerBackdrop(backdrop)
-                        .hazeSource(state = hazeState)
-                        .fillMaxSize()
-                        .background(MiuixTheme.colorScheme.background)
-                ) {
-                    content(padding)
-                    if (isTransitionActive) {
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .pointerInput(Unit) {
-                                    awaitPointerEventScope {
-                                        while (true) {
-                                            awaitPointerEvent(pass = PointerEventPass.Main)
-                                                .changes
-                                                .forEach { it.consume() }
-                                        }
-                                    }
-                                }
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = title,
+                color = Color.Transparent,
+                scrollBehavior = scrollBehavior,
+                modifier = if (title == "") Modifier.height(0.dp) else Modifier
+            )
+        },
+        modifier = sharedTransitionScope?.let { scope ->
+            animationKey?.let { key ->
+                animatedVisibilityScope?.let { animScope ->
+                    with(scope) {
+                        Modifier.sharedBounds(
+                            sharedContentState = rememberSharedContentState(key = key),
+                            animatedVisibilityScope = animScope
                         )
                     }
                 }
             }
-        }
-    } else {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = title,
-                    // 1. 使用透明背景
-                    color = Color.Transparent,
-                    // 2. 应用 Haze 模糊效果
-                    modifier = Modifier.hazeEffect(
-                        state = hazeState,
-                        style = hazeStyle,
-                        block = fun HazeEffectScope.() {
-                            inputScale = HazeInputScale.Auto
-                            progressive = HazeProgressive.verticalGradient(startIntensity = 1f, endIntensity = 0f)
-                        }
-                    ),
-                    scrollBehavior = scrollBehavior,
-                    navigationIcon = {
-                        // 3. 使用 LiquidButton
-                        LiquidButton(
-                            onClick = { navController.popBackStack() },
-                            modifier = Modifier
-                                .padding(start = 16.dp)
-                                .size(40.dp),
-                            backdrop = backdrop
-                        ) {
-                            Icon(
-                                imageVector = MiuixIcons.Useful.Back,
-                                contentDescription = "Back",
-                                modifier = Modifier.size(22.dp),
-                                tint = MiuixTheme.colorScheme.onBackground
-                            )
-                        }
-                    },
-                    actions = {
-                        var showShortcut by remember { mutableStateOf(false) }
-                        LaunchedEffect(appList) {
-                            withContext(Dispatchers.IO) {
-                                if (appList.size == 1 && hasShortcut(context, appList.first())) {
-                                    showShortcut = true
-                                }
-                            }
-                        }
+        } ?: Modifier
+    ) { padding ->
+        val background = MiuixTheme.colorScheme.background
 
-                        if (showShortcut) {
-                            LiquidButton(
-                                onClick = { launchApp(context, appList.first()) },
-                                modifier = Modifier
-                                    .padding(end = 16.dp)
-                                    .size(40.dp),
-                                backdrop = backdrop
-                            ) {
-                                Icon(
-                                    imageVector = MiuixIcons.Useful.Play,
-                                    contentDescription = "Open Shortcut",
-                                    modifier = Modifier.size(22.dp),
-                                    tint = MiuixTheme.colorScheme.onBackground
-                                )
-                            }
-                        }
-
-                        if (appList.isNotEmpty()) {
-                            LiquidButton(
-                                onClick = { restartAPP.value = true },
-                                modifier = Modifier
-                                    .padding(end = 16.dp)
-                                    .size(40.dp),
-                                backdrop = backdrop
-                            ) {
-                                Icon(
-                                    imageVector = MiuixIcons.Useful.Refresh,
-                                    contentDescription = "Refresh",
-                                    modifier = Modifier.size(22.dp),
-                                    tint = MiuixTheme.colorScheme.onBackground
-                                )
-                            }
-                        }
-                    }
-                )
-            }
-        ) { padding ->
+        // --- 背景 + Haze ---
+        Box(Modifier.fillMaxSize()) {
             Box(
                 Modifier
-                    // 5. 应用 Backdrop 和 HazeSource 以支持按钮效果和模糊
                     .layerBackdrop(backdrop)
                     .hazeSource(state = hazeState)
                     .fillMaxSize()
-                    .background(MiuixTheme.colorScheme.background)
+                    .background(background)
             ) {
                 content(padding)
+                if (sharedTransitionScope?.isTransitionActive == true) {
+                    Box(Modifier.fillMaxSize().pointerInput(Unit) {})
+                }
+            }
+
+            // --- 顶部模糊栏 ---
+            Box(
+                Modifier
+                    .height(72.dp)
+                    .fillMaxWidth()
+                    .drawPlainBackdrop(
+                        backdrop = backdrop,
+                        shape = { RectangleShape },
+                        effects = {
+                            blur(4f.dp.toPx())
+                            effect(
+                                RenderEffect.createRuntimeShaderEffect(
+                                    obtainRuntimeShader(
+                                        "AlphaMask",
+                                        """
+uniform shader content;
+uniform float2 size;
+layout(color) uniform half4 tint;
+uniform float tintIntensity;
+half4 main(float2 coord) {
+    float blurAlpha = smoothstep(size.y, size.y * 0.2, coord.y);
+    float tintAlpha = smoothstep(size.y, size.y * 0.2, coord.y);
+    return mix(content.eval(coord) * blurAlpha, tint * tintAlpha, tintIntensity);
+}"""
+                                    ).apply {
+                                        setFloatUniform("size", size.width, size.height)
+                                        setColorUniform("tint", background.value.toLong())
+                                        setFloatUniform("tintIntensity", 0.8f)
+                                    },
+                                    "content"
+                                )
+                            )
+                        }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {}
+
+            // --- 顶部按钮栏 ---
+            Column(Modifier.align(Alignment.TopStart)) {
+                TopButtons(navController, appList, backdrop, restartAPP)
             }
         }
     }
 
-
     if (appList.isNotEmpty() && restartAPP.value) {
-         AppRestartScreen(appList, restartAPP, backdrop)
+        AppRestartScreen(appList, restartAPP, backdrop)
+    }
+}
+
+@Composable
+private fun TopButtons(
+    navController: NavController,
+    appList: List<String>,
+    backdrop: Backdrop,
+    restartAPP: MutableState<Boolean>
+) {
+    val context = LocalContext.current
+    var showShortcut by remember { mutableStateOf(false) }
+
+    LaunchedEffect(appList) {
+        withContext(Dispatchers.IO) {
+            if (appList.size == 1 && hasShortcut(context, appList.first())) {
+                showShortcut = true
+            }
+        }
+    }
+
+    Row(
+        Modifier
+            .displayCutoutPadding()
+            .padding(horizontal = 16.dp, vertical = 4.dp)
+            .fillMaxWidth()
+            .wrapContentHeight(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        LiquidButton(
+            onClick = { navController.popBackStack() },
+            modifier = Modifier.size(40.dp),
+            backdrop = backdrop
+        ) {
+            Icon(
+                imageVector = MiuixIcons.Useful.Back,
+                contentDescription = "Back",
+                modifier = Modifier.size(22.dp),
+                tint = MiuixTheme.colorScheme.onBackground
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        if (showShortcut) {
+            LiquidButton(
+                onClick = { launchApp(context, appList.first()) },
+                modifier = Modifier.size(40.dp),
+                backdrop = backdrop
+            ) {
+                Icon(
+                    imageVector = MiuixIcons.Useful.Play,
+                    contentDescription = "Open Shortcut",
+                    modifier = Modifier.size(22.dp),
+                    tint = MiuixTheme.colorScheme.onBackground
+                )
+            }
+            Spacer(modifier = Modifier.width(8.dp))
+        }
+
+        if (appList.isNotEmpty()) {
+            LiquidButton(
+                onClick = { restartAPP.value = true },
+                modifier = Modifier.size(40.dp),
+                backdrop = backdrop
+            ) {
+                Icon(
+                    imageVector = MiuixIcons.Useful.Refresh,
+                    contentDescription = "Refresh",
+                    modifier = Modifier.size(22.dp),
+                    tint = MiuixTheme.colorScheme.onBackground
+                )
+            }
+        }
     }
 }

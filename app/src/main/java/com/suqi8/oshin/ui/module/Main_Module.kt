@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -130,9 +131,11 @@ fun Main_Module(
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 item {
-                    Spacer(modifier = Modifier.height(padding.calculateTopPadding() + 104.dp))
                     ModernSectionTitle(
-                        title = stringResource(id = R.string.module)
+                        title = stringResource(id = R.string.module),
+                        modifier = Modifier
+                            .displayCutoutPadding()
+                            .padding(top = padding.calculateTopPadding() + 80.dp)
                     )
                 }
                 item {
@@ -541,7 +544,13 @@ fun FunctionApp(
                         Image(bitmap = icon, contentDescription = appName, modifier = Modifier.size(45.dp))
                     }
                     Column(modifier = Modifier.padding(start = 16.dp)) {
-                        Text(text = appName)
+                        Text(
+                            text = appName,
+                            modifier = Modifier.sharedElement(
+                                sharedContentState = rememberSharedContentState(key = "title-${entry.routeId}"),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
+                        )
                         Text(
                             text = packageName,
                             fontSize = MiuixTheme.textStyles.subtitle.fontSize,
@@ -613,11 +622,15 @@ fun FunctionAppFlow(
                     Text(
                         text = appName,
                         fontSize = 12.sp,
-                        fontWeight = FontWeight.SemiBold,
+                        fontWeight = FontWeight.Medium,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
                         softWrap = false,
                         modifier = Modifier.padding(top = 10.dp, bottom = 6.dp)
+                            .sharedElement(
+                                sharedContentState = rememberSharedContentState(key = "title-${entry.routeId}"),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
                     )
                 }
             }
