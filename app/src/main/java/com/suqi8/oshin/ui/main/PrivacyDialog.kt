@@ -27,10 +27,12 @@ import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperDialog
 import kotlin.system.exitProcess
 
+
+val lspVersion = mutableStateOf("")
+
 @Composable
 fun PrivacyDialog() {
     val context = LocalContext.current
-    val lspVersion = remember { mutableStateOf("") }
     val isPrivacyEnabled = remember { mutableStateOf(context.prefs("settings").getBoolean("privacy", true)) }
 
     LaunchedEffect(isPrivacyEnabled.value) {

@@ -1,7 +1,5 @@
 package com.suqi8.oshin.hook
 
-import com.highcapable.kavaref.KavaRef.Companion.resolve
-import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.annotation.xposed.InjectYukiHookWithXposed
 import com.highcapable.yukihookapi.hook.factory.configs
 import com.highcapable.yukihookapi.hook.factory.encase
@@ -48,15 +46,6 @@ class HookEntry : IYukiHookXposedInit {
             tag = "OShin"
         }
         isDebug = false
-    }
-
-    companion object {
-        private const val RECENT_APP_VIEW_HOLDER = "com.oplus.smartsidebar.panelview.edgepanel.mainpanel.holder.RecentAppViewHolder"
-        private const val COMBINED_IMAGE_VIEW = "com.oplus.smartsidebar.panelview.edgepanel.base.CombinedImageView"
-        private const val IMAGE_DATA_HANDLER = "com.oplus.smartsidebar.panelview.edgepanel.data.viewdatahandlers.ImageDataHandleImpl"
-
-        private const val TARGET_APP_COUNT = 4
-        private const val EXTRA_VIEWS_KEY = "custom_recent_views"
     }
 
     override fun onHook() = encase {

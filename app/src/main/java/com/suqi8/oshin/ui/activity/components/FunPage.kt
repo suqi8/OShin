@@ -19,6 +19,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.PointerEventPass
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -89,10 +91,6 @@ fun FunPage(
     }
 }
 
-
-// --- 版本 2 (新架构主版本) ---
-// 这个版本接收一个带 PaddingValues 参数的 content lambda。
-// 我们的 featureScreen 会自动调用这个版本。
 @OptIn(ExperimentalHazeApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun FunPage(
@@ -136,7 +134,7 @@ fun FunPage(
                         ),
                         scrollBehavior = scrollBehavior,
                         navigationIcon = {
-                            // 3. 使用 LiquidButton
+                            //只能点击一次
                             LiquidButton(
                                 onClick = { navController.popBackStack() },
                                 modifier = Modifier
@@ -163,44 +161,37 @@ fun FunPage(
                                 }
                             }
 
-                            // 3. (核心) 检查过渡动画是否正在进行
-                            //    如果 scope 为 null (非动画情况)，isTransitionActive 会是 false，按钮会正常显示
-                            val isTransitioning = sharedTransitionScope.isTransitionActive
-
-                            // 4. 只有在动画 *未在进行时* 才显示按钮
-                            if (!isTransitioning) {
-                                if (showShortcut) {
-                                    LiquidButton(
-                                        onClick = { launchApp(context, appList.first()) },
-                                        modifier = Modifier
-                                            .padding(end = 16.dp)
-                                            .size(40.dp),
-                                        backdrop = backdrop
-                                    ) {
-                                        Icon(
-                                            imageVector = MiuixIcons.Useful.Play,
-                                            contentDescription = "Open Shortcut",
-                                            modifier = Modifier.size(22.dp),
-                                            tint = MiuixTheme.colorScheme.onBackground
-                                        )
-                                    }
+                            if (showShortcut) {
+                                LiquidButton(
+                                    onClick = { launchApp(context, appList.first()) },
+                                    modifier = Modifier
+                                        .padding(end = 16.dp)
+                                        .size(40.dp),
+                                    backdrop = backdrop
+                                ) {
+                                    Icon(
+                                        imageVector = MiuixIcons.Useful.Play,
+                                        contentDescription = "Open Shortcut",
+                                        modifier = Modifier.size(22.dp),
+                                        tint = MiuixTheme.colorScheme.onBackground
+                                    )
                                 }
+                            }
 
-                                if (appList.isNotEmpty()) {
-                                    LiquidButton(
-                                        onClick = { restartAPP.value = true },
-                                        modifier = Modifier
-                                            .padding(end = 16.dp)
-                                            .size(40.dp),
-                                        backdrop = backdrop
-                                    ) {
-                                        Icon(
-                                            imageVector = MiuixIcons.Useful.Refresh,
-                                            contentDescription = "Refresh",
-                                            modifier = Modifier.size(22.dp),
-                                            tint = MiuixTheme.colorScheme.onBackground
-                                        )
-                                    }
+                            if (appList.isNotEmpty()) {
+                                LiquidButton(
+                                    onClick = { restartAPP.value = true },
+                                    modifier = Modifier
+                                        .padding(end = 16.dp)
+                                        .size(40.dp),
+                                    backdrop = backdrop
+                                ) {
+                                    Icon(
+                                        imageVector = MiuixIcons.Useful.Refresh,
+                                        contentDescription = "Refresh",
+                                        modifier = Modifier.size(22.dp),
+                                        tint = MiuixTheme.colorScheme.onBackground
+                                    )
                                 }
                             }
                         }
@@ -208,19 +199,32 @@ fun FunPage(
                 },
                 modifier = Modifier.sharedBounds(
                     sharedContentState = rememberSharedContentState(key = animationKey),
-                    animatedVisibilityScope = animatedVisibilityScope,
-                    // placeHolderSize = animatedSize
+                    animatedVisibilityScope = animatedVisibilityScope
                 )
             ) { padding ->
                 Box(
                     Modifier
-                        // 5. 应用 Backdrop 和 HazeSource 以支持按钮效果和模糊
                         .layerBackdrop(backdrop)
                         .hazeSource(state = hazeState)
                         .fillMaxSize()
                         .background(MiuixTheme.colorScheme.background)
                 ) {
                     content(padding)
+                    if (isTransitionActive) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .pointerInput(Unit) {
+                                    awaitPointerEventScope {
+                                        while (true) {
+                                            awaitPointerEvent(pass = PointerEventPass.Main)
+                                                .changes
+                                                .forEach { it.consume() }
+                                        }
+                                    }
+                                }
+                        )
+                    }
                 }
             }
         }
