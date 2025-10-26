@@ -7,14 +7,16 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
@@ -22,8 +24,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -32,7 +36,9 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -92,7 +98,6 @@ fun featureScreen(
     val coroutineScope = rememberCoroutineScope()
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
     val animationKey = uiState.highlightKey ?: "item-${uiState.categoryId}"
-    // 自动滚动逻辑
     LaunchedEffect(uiState.isLoading, uiState.highlightKey) {
         if (!uiState.isLoading && uiState.highlightKey != null && pageDef != null) {
             // 计算目标 item 所在的 PageItem (通常是 CardDefinition) 的索引
@@ -127,7 +132,6 @@ fun featureScreen(
 
     // 渲染主页面
     FunPage(
-        title = resolveTitle(title = pageDef.title),
         appList = pageDef.appList,
         navController = navController,
         scrollBehavior = topAppBarState,
@@ -145,6 +149,49 @@ fun featureScreen(
                 .nestedScroll(topAppBarState.nestedScrollConnection),
             contentPadding = padding
         ) {
+            item {
+                with(sharedTransitionScope) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 20.dp)
+                            .displayCutoutPadding()
+                            .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)
+                    ) {
+                        val isTransitionActive = sharedTransitionScope.isTransitionActive
+
+                        // 1. 检查是否从搜索页导航而来
+                        val isFromSearch = uiState.highlightKey != null
+                        val initialFontSize = if (isFromSearch) 28f else 16f
+                        var targetFontSize by remember { mutableStateOf(initialFontSize) }
+
+                        // 3. 仅在 *不是* 从搜索页来，并且动画 *结束* 时，才触发大小变化
+                        LaunchedEffect(isTransitionActive, isFromSearch) {
+                            if (!isTransitionActive && !isFromSearch) {
+                                // 动画结束，更新到最终样式
+                                targetFontSize = 28f
+                            }
+                        }
+
+                        val animatedFontSize by animateFloatAsState(
+                            targetValue = targetFontSize,
+                            label = "TitleFontSize"
+                        )
+
+                        Text(
+                            text = resolveTitle(title = pageDef.title),
+                            fontSize = animatedFontSize.sp,
+                            fontWeight = FontWeight.Medium,
+                            color = MiuixTheme.colorScheme.onBackground,
+                            modifier = Modifier
+                                .sharedElement(
+                                    sharedContentState = rememberSharedContentState(key = "title-${uiState.categoryId}"),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
+                        )
+                    }
+                }
+            }
             itemsIndexed(pageDef.items) { _, pageItem ->
                 when (pageItem) {
                     is CardDefinition -> {
@@ -320,22 +367,20 @@ private fun RenderScreenItem(
 
             is Action -> {
                 with(sharedTransitionScope) {
-                    Box(
-                        modifier = Modifier
-                            .sharedBounds(
-                                sharedContentState = rememberSharedContentState(key = "item-${item.route}"),
-                                animatedVisibilityScope = animatedVisibilityScope
-                            )
-                            .fillMaxWidth() // 确保 Box 撑满宽度
-                            .wrapContentHeight() // 高度自适应
-                    ) {
-                        funArrow(
-                            title = resolveTitle(title = item.title),
-                            summary = item.summary?.let { stringResource(it) },
-                            externalPadding = paddingValues,
-                            onClick = { navController.navigate("feature/${item.route}") }
-                        )
-                    }
+                    funArrow(
+                        title = resolveTitle(title = item.title),
+                        modifier = Modifier.sharedBounds(
+                            sharedContentState = rememberSharedContentState(key = "item-${item.route}"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        ),
+                        titleModifier = Modifier.sharedElement(
+                            sharedContentState = rememberSharedContentState(key = "title-${item.route}"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        ),
+                        summary = item.summary?.let { stringResource(it) },
+                        externalPadding = paddingValues,
+                        onClick = { navController.navigate("feature/${item.route}") }
+                    )
                 }
             }
 

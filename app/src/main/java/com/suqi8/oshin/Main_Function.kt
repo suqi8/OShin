@@ -8,9 +8,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -44,9 +44,11 @@ fun Main_Function(
             .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection)
     ) {
         item {
-            Spacer(modifier = Modifier.height(padding.calculateTopPadding() + 104.dp))
             ModernSectionTitle(
-                title = stringResource(id = R.string.func)
+                title = stringResource(id = R.string.module),
+                modifier = Modifier
+                    .displayCutoutPadding()
+                    .padding(top = padding.calculateTopPadding() + 80.dp)
             )
         }
         item {

@@ -47,6 +47,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 @Composable
 fun BasicComponent(
     title: String? = null,
+    titleModifier: Modifier = Modifier,
     titleColor: BasicComponentColors = BasicComponentDefaults.titleColor(),
     summary: String? = null,
     summaryColor: BasicComponentColors = BasicComponentDefaults.summaryColor(),
@@ -126,7 +127,8 @@ fun BasicComponent(
                         fontSize = 16.sp,
                         lineHeight = 22.sp,
                         fontWeight = FontWeight.Medium,
-                        color = titleColor.color(enabled)
+                        color = titleColor.color(enabled),
+                        modifier = titleModifier
                     )
                 }
             }.first().measure(looseConstraints.copy(maxWidth = contentMaxWidth))

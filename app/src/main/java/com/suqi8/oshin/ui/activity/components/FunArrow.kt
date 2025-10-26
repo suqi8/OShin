@@ -22,6 +22,8 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 @Composable
 fun funArrow(
     title: String,
+    modifier: Modifier = Modifier,
+    titleModifier: Modifier = Modifier,
     summary: String? = null,
     rightText: String? = null,
     leftAction: @Composable (() -> Unit)? = null,
@@ -34,6 +36,8 @@ fun funArrow(
         rightText = rightText,
         leftAction = leftAction,
         externalPadding = externalPadding,
+        modifier = modifier,
+        titleModifier = titleModifier,
         onClick = onClick
     )
 }
@@ -57,6 +61,7 @@ fun funArrow(
 @Composable
 fun SuperArrow(
     title: String,
+    titleModifier: Modifier = Modifier,
     titleColor: BasicComponentColors = BasicComponentDefaults.titleColor(),
     summary: String? = null,
     summaryColor: BasicComponentColors = BasicComponentDefaults.summaryColor(),
@@ -74,6 +79,7 @@ fun SuperArrow(
         modifier = modifier,
         insideMargin = insideMargin,
         title = title,
+        titleModifier = titleModifier,
         titleColor = titleColor,
         summary = summary,
         summaryColor = summaryColor,
