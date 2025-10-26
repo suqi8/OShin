@@ -69,6 +69,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
+import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.main.CarouselItem
 import com.suqi8.oshin.ui.main.DeviceInfo
@@ -77,6 +78,7 @@ import com.suqi8.oshin.ui.main.HomeViewModel
 import com.suqi8.oshin.ui.main.ModuleStatus
 import com.suqi8.oshin.ui.main.RootStatus
 import com.suqi8.oshin.ui.main.Status
+import com.suqi8.oshin.ui.main.lspVersion
 import com.suqi8.oshin.ui.module.SearchableItem
 import com.suqi8.oshin.utils.GetFuncRoute
 import kotlinx.coroutines.delay
@@ -408,7 +410,7 @@ fun ModernDashboardSection(
                 status = moduleStatus.status,
                 icon = Icons.Default.VerifiedUser,
                 title = stringResource(id = R.string.module_status),
-                message = moduleStatus.message,
+                message = if (moduleStatus.status == Status.ERROR) moduleStatus.message else "LSPosed ${lspVersion.value} API ${YukiHookAPI.Status.Executor.apiLevel}",
                 gradientColors = listOf(Color(0xFF6366F1), Color(0xFF8B5CF6))
             )
 
@@ -480,7 +482,6 @@ fun ModernStatusCard(
                     text = message,
                     color = Color.White.copy(alpha = 0.9f),
                     fontSize = 12.sp,
-                    maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(top = 4.dp)
                 )

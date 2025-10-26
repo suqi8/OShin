@@ -517,10 +517,6 @@ fun FunctionApp(
             with(sharedTransitionScope) {
                 Row(
                     modifier = Modifier
-                        .sharedBounds(
-                            sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        )
                         .clickable(onClick = onClick)
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
@@ -528,6 +524,10 @@ fun FunctionApp(
                     Card(
                         colors = CardDefaults.defaultColors(color = dominantColor.value),
                         modifier = Modifier
+                            .sharedBounds(
+                                sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
                             .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
                             .drawColoredShadow(
                                 dominantColor.value,
@@ -587,10 +587,6 @@ fun FunctionAppFlow(
                 Column(
                     modifier = Modifier
                         .width(65.dp)
-                        .sharedBounds(
-                            sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        )
                         .clickable(onClick = onClick),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -598,6 +594,10 @@ fun FunctionAppFlow(
                         colors = CardDefaults.defaultColors(color = dominantColor.value),
                         modifier = Modifier
                             .padding(top = 10.dp)
+                            .sharedBounds(
+                                sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
+                                animatedVisibilityScope = animatedVisibilityScope
+                            )
                             .drawColoredShadow(
                                 dominantColor.value,
                                 1f,

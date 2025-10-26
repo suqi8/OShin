@@ -166,7 +166,7 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun getModuleStatus(): ModuleStatus = withContext(Dispatchers.Default) {
         if (YukiHookAPI.Status.isModuleActive) {
-            ModuleStatus(Status.SUCCESS, "LSPosed v" + YukiHookAPI.Status.Executor.apiLevel)
+            ModuleStatus(Status.SUCCESS, "SUCCESS")
         } else {
             ModuleStatus(Status.ERROR, "未在LSPosed中激活")
         }
