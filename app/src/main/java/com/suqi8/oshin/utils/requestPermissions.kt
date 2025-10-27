@@ -19,6 +19,7 @@ fun requestPermissions(context: Context, permissions: IPermission, onGranted: ()
                     )
                 }
             }
+
             override fun onDenied(permissions: MutableList<IPermission>, doNotAskAgain: Boolean) {
                 if (doNotAskAgain) {
                     toast(context, "被永久拒绝授权，请手动授予读取和写入文件权限")
