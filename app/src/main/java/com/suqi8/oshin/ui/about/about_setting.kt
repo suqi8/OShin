@@ -169,26 +169,25 @@ fun about_setting(
                     addline()
                     val componentName = ComponentName(context, "com.suqi8.oshin.Home")
                     val pm = context.packageManager
-                    val ishide = remember {
+                    val isIconVisible = remember {
                         mutableStateOf(
                             try {
-                                val state = pm.getComponentEnabledSetting(componentName)
-                                state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
-                            } catch (e: PackageManager.NameNotFoundException) {
-                                false
+                                pm.getComponentEnabledSetting(componentName) != PackageManager.COMPONENT_ENABLED_STATE_DISABLED
+                            } catch (e: Exception) {
+                                true
                             }
                         )
                     }
                     SuperSwitch(title = stringResource(R.string.hide_launcher_icon),
-                        checked = !ishide.value,
-                        onCheckedChange = {
-                            ishide.value = !ishide.value
-                            context.packageManager.setComponentEnabledSetting(
+                        checked = !isIconVisible.value,
+                        onCheckedChange = { hide ->
+                            isIconVisible.value = !hide
+                            pm.setComponentEnabledSetting(
                                 componentName,
-                                if (ishide.value)
-                                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                                if (hide)
+                                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED
                                 else
-                                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+                                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
                                 PackageManager.DONT_KILL_APP
                             )
                         })
