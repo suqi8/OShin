@@ -72,8 +72,6 @@ jobs:
         id: artifacts
         run: |
           apk_dir="app/build/outputs/apk/release"
-          apk_file_armeabi=$(find "$apk_dir" -name 'OShin_armeabi-v7a_v*.apk')
-          apk_file_arm64=$(find "$apk_dir" -name 'OShin_arm64-v8a_v*.apk')
           apk_file_armall=$(find "$apk_dir" -name 'OShin_all_v*.apk')
           
           # 添加一个检查，如果找不到文件就让工作流失败，而不是静默地继续。
@@ -83,18 +81,12 @@ jobs:
           fi
           
           # 将文件路径导出到 GITHUB_ENV，供后续步骤（如 Telegram 通知）使用。
-          echo "APK_FILE_ARMEABI=$apk_file_armeabi" >> $GITHUB_ENV
-          echo "APK_FILE_ARM64=$apk_file_arm64" >> $GITHUB_ENV
           echo "APK_FILE_ARMALL=$apk_file_armall" >> $GITHUB_ENV
           
           # 使用可靠的本地变量计算 SHA256 哈希值。
-          sha_armeabi=$(sha256sum "$apk_file_armeabi" | awk '{print $1}')
-          sha_arm64=$(sha256sum "$apk_file_arm64" | awk '{print $1}')
           sha_armall=$(sha256sum "$apk_file_armall" | awk '{print $1}')
           
           # 将哈希值设置为此步骤的输出（GITHUB_OUTPUT），以便在其他步骤中通过 steps.artifacts.outputs.sha_... 引用。
-          echo "sha_armeabi=$sha_armeabi" >> $GITHUB_OUTPUT
-          echo "sha_arm64=$sha_arm64" >> $GITHUB_OUTPUT
           echo "sha_armall=$sha_armall" >> $GITHUB_OUTPUT
           
           # 生成将在 GitHub Actions 摘要页面显示的 Markdown 表格。
@@ -103,8 +95,6 @@ jobs:
             echo ""
             echo "| 架构 | SHA256 哈希 |"
             echo "|:---|:---|"
-            echo "| armeabi-v7a | \`$sha_armeabi\` |"
-            echo "| arm64-v8a | \`$sha_arm64\` |"
             echo "| all | \`$sha_armall\` |"
           } >> $GITHUB_STEP_SUMMARY
 

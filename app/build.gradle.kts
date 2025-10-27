@@ -53,9 +53,9 @@ android {
     // 此配置块用于指示 Gradle 为不同的 CPU 架构生成独立的 APK。
     splits {
         abi {
-            isEnable = true // 启用 ABI 拆分。
+            isEnable = false // 启用 ABI 拆分。
             reset()         // 清除默认的 ABI 列表。
-            include("arm64-v8a", "armeabi-v7a") // 指定要为其生成独立 APK 的架构。
+            //include("arm64-v8a", "armeabi-v7a") // 指定要为其生成独立 APK 的架构。
             isUniversalApk = true // 同时生成一个包含所有架构的通用 APK。
         }
     }
