@@ -1,6 +1,6 @@
 <div align="center">
 
-# O神 - ColorOS 辅助模块
+# O神 - ColorOS 辅助模块 
 
 <img src="https://github.com/suqi8/OPatch/blob/e9cb9e2af53b728e5e2d2d00429a90f10a3384dc/app/src/main/ic_launcher1-playstore.png?raw=true" width="160" height="160" style="display: block; margin: 0 auto;" alt="icon">
 
