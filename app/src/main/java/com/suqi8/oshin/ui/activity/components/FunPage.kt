@@ -4,7 +4,6 @@ import android.graphics.RenderEffect
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -45,7 +44,6 @@ import com.suqi8.oshin.utils.hasShortcut
 import com.suqi8.oshin.utils.launchApp
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Icon
@@ -100,6 +98,7 @@ fun FunPage(
     sharedTransitionScope: SharedTransitionScope? = null,
     animatedVisibilityScope: AnimatedVisibilityScope? = null,
     animationKey: String? = null,
+    action: @Composable () -> Unit = {},
     content: @Composable (padding: PaddingValues) -> Unit
 ) {
     val restartAPP = remember { mutableStateOf(false) }
@@ -112,7 +111,7 @@ fun FunPage(
                 title = title,
                 color = Color.Transparent,
                 scrollBehavior = scrollBehavior,
-                modifier = if (title == "") Modifier.height(0.dp) else Modifier
+                modifier = Modifier.height(0.dp)
             )
         },
         modifier = sharedTransitionScope?.let { scope ->
@@ -135,9 +134,7 @@ fun FunPage(
             Box(
                 Modifier
                     .layerBackdrop(backdrop)
-                    .hazeSource(state = hazeState)
                     .fillMaxSize()
-                    .background(background)
             ) {
                 content(padding)
                 /*if (sharedTransitionScope?.isTransitionActive == true) {
@@ -145,21 +142,27 @@ fun FunPage(
                 }*/
             }
 
+            // --- 顶部按钮栏 ---
+            Column(Modifier.align(Alignment.TopStart)) {
+                TopButtons(navController, appList, backdrop, restartAPP, action)
+            }
+
             // --- 顶部模糊栏 ---
-            Box(
-                Modifier
-                    .height(72.dp)
-                    .fillMaxWidth()
-                    .drawPlainBackdrop(
-                        backdrop = backdrop,
-                        shape = { RectangleShape },
-                        effects = {
-                            blur(4f.dp.toPx())
-                            effect(
-                                RenderEffect.createRuntimeShaderEffect(
-                                    obtainRuntimeShader(
-                                        "AlphaMask",
-                                        """
+            if (title == "") {
+                Box(
+                    Modifier
+                        .height(72.dp)
+                        .fillMaxWidth()
+                        .drawPlainBackdrop(
+                            backdrop = backdrop,
+                            shape = { RectangleShape },
+                            effects = {
+                                blur(4f.dp.toPx())
+                                effect(
+                                    RenderEffect.createRuntimeShaderEffect(
+                                        obtainRuntimeShader(
+                                            "AlphaMask",
+                                            """
 uniform shader content;
 uniform float2 size;
 layout(color) uniform half4 tint;
@@ -169,22 +172,18 @@ half4 main(float2 coord) {
     float tintAlpha = smoothstep(size.y, size.y * 0.2, coord.y);
     return mix(content.eval(coord) * blurAlpha, tint * tintAlpha, tintIntensity);
 }"""
-                                    ).apply {
-                                        setFloatUniform("size", size.width, size.height)
-                                        setColorUniform("tint", background.value.toLong())
-                                        setFloatUniform("tintIntensity", 0.8f)
-                                    },
-                                    "content"
+                                        ).apply {
+                                            setFloatUniform("size", size.width, size.height)
+                                            setColorUniform("tint", background.value.toLong())
+                                            setFloatUniform("tintIntensity", 0.8f)
+                                        },
+                                        "content"
+                                    )
                                 )
-                            )
-                        }
-                    ),
-                contentAlignment = Alignment.Center
-            ) {}
-
-            // --- 顶部按钮栏 ---
-            Column(Modifier.align(Alignment.TopStart)) {
-                TopButtons(navController, appList, backdrop, restartAPP)
+                            }
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {}
             }
         }
     }
@@ -199,7 +198,8 @@ private fun TopButtons(
     navController: NavController,
     appList: List<String>,
     backdrop: Backdrop,
-    restartAPP: MutableState<Boolean>
+    restartAPP: MutableState<Boolean>,
+    action: @Composable () -> Unit
 ) {
     val context = LocalContext.current
     var showShortcut by remember { mutableStateOf(false) }
@@ -234,6 +234,8 @@ private fun TopButtons(
         }
 
         Spacer(modifier = Modifier.weight(1f))
+
+        action()
 
         if (showShortcut) {
             LiquidButton(
