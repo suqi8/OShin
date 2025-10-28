@@ -1,6 +1,8 @@
 package com.suqi8.oshin.hook.launcher
 
 import android.annotation.SuppressLint
+import com.highcapable.kavaref.KavaRef.Companion.resolve
+import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
@@ -86,14 +88,20 @@ class launcher: YukiBaseHooker() {
                 }
             }
             if (prefs("launcher").getBoolean("force_enable_fold_dock", false)) {
-                "com.android.launcher3.OplusHotseat".toClass().apply {
-                    method {
-                        name = "init"
-                        param("android.content.Context")
-                        returnType = UnitType
+                "com.android.launcher3.OplusHotseat".toClass().resolve().apply {
+                    firstMethod {
+                        modifiers(Modifiers.PUBLIC)
+                        name = "onDraw"
+                        parameters("android.graphics.Canvas")
+                        returnType = Void.TYPE
                     }.hook {
-                        before {
-                            method { name = "setDockerBackground" }.get(instance).call()
+                        after {
+                            firstMethod {
+                                modifiers(Modifiers.PUBLIC)
+                                name = "setDockerBackground"
+                                emptyParameters()
+                                returnType = Void.TYPE
+                            }.of(instance).invoke()
                         }
                     }
                 }
