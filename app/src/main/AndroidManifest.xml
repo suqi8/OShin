@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:networkSecurityConfig="@xml/network_security_config">
-    <permission android:name="com.suqi8.oshin.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
-            android:protectionLevel="signature" />
-
+    <permission
+            android:name="com.suqi8.oshin.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+            android:protectionLevel="signature"
+            tools:node="remove" />
     <!-- 引用网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 访问网络状态权限 -->
