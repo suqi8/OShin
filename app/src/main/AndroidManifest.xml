@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:networkSecurityConfig="@xml/network_security_config">
+    <permission android:name="com.suqi8.oshin.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+            android:protectionLevel="signature" />
+
     <!-- 引用网络权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <!-- 访问网络状态权限 -->
@@ -67,7 +70,13 @@
         <meta-data
                 android:name="xposedminversion"
                 android:value="93" />
-
+        <provider
+                android:name="androidx.core.content.FileProvider"
+                android:authorities="${applicationId}.provider"  android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/provider_paths" /> </provider>
         <activity
                 android:name=".MainActivity"
                 android:exported="true"
