@@ -68,35 +68,47 @@ jobs:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
 
       # 第 5 步：准备构建产物信息
-      - name: Prepare Artifacts and Generate Summary
+      - name: Prepare Artifacts, Extract Version String, and Generate Summary
         id: artifacts
         run: |
-          apk_dir="app/build/outputs/apk/release"
-          apk_file_armall=$(find "$apk_dir" -name 'OShin_all_v*.apk')
+            apk_dir="app/build/outputs/apk/release"
+            apk_file_all=$(find "$apk_dir" -name 'OShin_all_v*.apk')
+            if [ -z "$apk_file_all" ]; then
+              echo "::error::Universal APK not found!"
+              exit 1
+            fi
+            echo "APK_FILE_ALL=$apk_file_all" >> $GITHUB_ENV
           
-          # 添加一个检查，如果找不到文件就让工作流失败，而不是静默地继续。
-          if [ -z "$apk_file_armall" ]; then
-            echo "::error::Universal APK not found! Build may have failed to produce artifacts."
-            exit 1
-          fi
+            # 提取完整文件名
+            apk_filename=$(basename "$apk_file_all")
+            echo "Extracted filename: $apk_filename"
           
-          # 将文件路径导出到 GITHUB_ENV，供后续步骤（如 Telegram 通知）使用。
-          echo "APK_FILE_ARMALL=$apk_file_armall" >> $GITHUB_ENV
+            # 移除前缀 "OShin_all_"
+            version_with_suffix="${apk_filename#OShin_all_}"
+            echo "Version with suffix: $version_with_suffix"
           
-          # 使用可靠的本地变量计算 SHA256 哈希值。
-          sha_armall=$(sha256sum "$apk_file_armall" | awk '{print $1}')
+            # 移除后缀 ".apk" 得到最终的版本字符串
+            version_string="${version_with_suffix%.apk}"
+            echo "Extracted version string: $version_string"
           
-          # 将哈希值设置为此步骤的输出（GITHUB_OUTPUT），以便在其他步骤中通过 steps.artifacts.outputs.sha_... 引用。
-          echo "sha_armall=$sha_armall" >> $GITHUB_OUTPUT
+            # 设置 tag_name 输出为提取的版本字符串
+            echo "tag_name=$version_string" >> $GITHUB_OUTPUT
           
-          # 生成将在 GitHub Actions 摘要页面显示的 Markdown 表格。
-          {
-            echo "### OShin 构建成功 :rocket:"
-            echo ""
-            echo "| 架构 | SHA256 哈希 |"
-            echo "|:---|:---|"
-            echo "| all | \`$sha_armall\` |"
-          } >> $GITHUB_STEP_SUMMARY
+            # 设置 name 输出也为提取的版本字符串
+            echo "release_name=$version_string" >> $GITHUB_OUTPUT
+          
+            # 计算 SHA
+            sha_all=$(sha256sum "$apk_file_all" | awk '{print $1}')
+            echo "sha_all=$sha_all" >> $GITHUB_OUTPUT
+          
+            # 生成摘要
+            {
+              echo "### OShin Build Success :rocket:"
+              echo ""
+              echo "| Architecture | SHA256 Hash |"
+              echo "|:---|:---|"
+              echo "| all | \`$sha_all\` |"
+            } >> $GITHUB_STEP_SUMMARY
 
       # 第 6 步：上传构建产物
       - name: Upload Build Artifacts
@@ -104,6 +116,21 @@ jobs:
         with:
           name: OShin-Build-${{ github.sha }} # 为产物包指定一个包含提交ID的唯一名称。
           path: app/build/outputs/apk/release/ # 上传 release 目录下的所有文件。
+
+      - name: Create Release and Upload Asset to OShin-Builds
+        uses: softprops/action-gh-release@v1
+        with:
+          repository: suqi8/OShin-Builds
+          token: ${{ secrets.PUSH_TOKEN }}
+          # 使用提取的版本字符串作为 tag_name
+          tag_name: ${{ steps.artifacts.outputs.tag_name }}
+          # 使用提取的版本字符串作为 Release 的 Name
+          name: ${{ steps.artifacts.outputs.release_name }}
+          body: |
+            Automatic CI build based on commit: ${{ github.sha }}
+            Commit message: ${{ github.event.head_commit.message }}
+          prerelease: true
+          files: ${{ env.APK_FILE_ALL }}
 
       # 第 7 步：预处理提交信息，清除 Markdown 危险字符并保留换行
       - name: Sanitize multiline commit message for Telegram
