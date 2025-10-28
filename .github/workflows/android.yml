@@ -147,7 +147,7 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }} # Telegram 接收者的 Chat ID
           token: ${{ secrets.TELEGRAM_TOKEN }} # Telegram Bot 的 Token
-          document: ${{ env.APK_FILE_ARMALL }} # 包含所有架构的 APK 文件
+          document: ${{ env.APK_FILE_ALL }} # 包含所有架构的 APK 文件
           message: |
             🚀 **OShin New CI Build！**
 
