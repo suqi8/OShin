@@ -129,7 +129,7 @@ jobs:
           body: |
             Automatic CI build based on commit: ${{ github.sha }}
             Commit message: ${{ github.event.head_commit.message }}
-          prerelease: true
+          prerelease: false
           files: ${{ env.APK_FILE_ALL }}
 
       # 第 7 步：预处理提交信息，清除 Markdown 危险字符并保留换行
