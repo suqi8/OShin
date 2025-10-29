@@ -71,6 +71,11 @@ object launcher {
                         valueRange = 0f..4f,
                         defaultValue = -1f,
                         decimalPlaces = 0
+                    ),
+                    Switch(
+                        title = StringResource(R.string.add_more_desktop_layouts),
+                        summary = R.string.add_more_desktop_layouts_desc,
+                        key = "add_more_desktop_layouts"
                     )
                 )
             )

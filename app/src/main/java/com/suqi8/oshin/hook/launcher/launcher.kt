@@ -1,6 +1,7 @@
 package com.suqi8.oshin.hook.launcher
 
 import android.annotation.SuppressLint
+import android.util.Pair
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
@@ -8,23 +9,14 @@ import com.highcapable.yukihookapi.hook.factory.method
 import com.highcapable.yukihookapi.hook.type.java.BooleanType
 import com.highcapable.yukihookapi.hook.type.java.FloatType
 import com.highcapable.yukihookapi.hook.type.java.UnitType
+import java.util.List
 
 class launcher: YukiBaseHooker() {
     @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
     override fun onHook() {
         loadApp("com.android.launcher"){
-            /*"com.coui.appcompat.uiutil.UIUtil".toClass().apply {
-                method {
-                    name = "b"
-                    param("com.coui.appcompat.uiutil.AnimLevel")
-                    returnType = BooleanType
-                }.hook {
-                    before {
-                        result = false
-                    }
-                }
-            }*/
-            val set_anim_level = prefs("launcher").getInt("set_anim_level", -1)
+            val prefs = prefs("launcher")
+            val set_anim_level = prefs.getInt("set_anim_level", -1)
             if (set_anim_level != -1) {
                 "com.android.common.util.PlatformLevelUtils\$animationLevelOS14\$2".toClass().apply {
                     method {
@@ -49,8 +41,8 @@ class launcher: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("launcher").getBoolean("force_enable_fold_mode", false)) {
-                if (prefs("launcher").getInt("fold_mode",0) == 0) {
+            if (prefs.getBoolean("force_enable_fold_mode", false)) {
+                if (prefs.getInt("fold_mode",0) == 0) {
                     "com.android.common.util.ScreenUtils".toClass().apply {
                         method {
                             name = "isFoldScreenExpanded"
@@ -87,7 +79,43 @@ class launcher: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("launcher").getBoolean("force_enable_fold_dock", false)) {
+            if (prefs.getBoolean("add_more_desktop_layouts")) {
+                var cachedLayoutList: List<Pair<Int, Pair<Int, Int>>>? = null
+                "com.android.launcher.UiConfig".toClass().resolve().apply {
+                    firstMethod {
+                        modifiers(Modifiers.PRIVATE, Modifiers.STATIC)
+                        name = "getLayoutNormal"
+                        emptyParameters()
+                        returnType = "java.util.List"
+                    }.hook {
+                        replaceAny {
+                            val cached = cachedLayoutList
+                            if (cached != null) {
+                                // 3. 如果缓存存在，直接返回它
+                                return@replaceAny cached
+                            }
+
+                            val list = java.util.ArrayList<Pair<Int, Pair<Int, Int>>>()
+
+                            for (cols in 2..20) { // 列数 (从 2 到 20)
+                                for (rows in 2..20) { // 行数 (从 2 到 20)
+
+                                    val layoutPair = Pair(
+                                        cols,
+                                        Pair(rows, rows)
+                                    )
+                                    list.add(layoutPair)
+                                }
+                            }
+
+                            cachedLayoutList = list as List<Pair<Int, Pair<Int, Int>>>?
+
+                            return@replaceAny list
+                        }
+                    }
+                }
+            }
+            if (prefs.getBoolean("force_enable_fold_dock", false)) {
                 "com.android.launcher3.OplusHotseat".toClass().resolve().apply {
                     firstMethod {
                         modifiers(Modifiers.PUBLIC)
@@ -106,7 +134,7 @@ class launcher: YukiBaseHooker() {
                     }
                 }
             }
-            if (prefs("launcher").getFloat("dock_transparency", 1f) != 1f) {
+            if (prefs.getFloat("dock_transparency", 1f) != 1f) {
                 "com.android.launcher3.OplusHotseat".toClass().apply {
                     method {
                         name = "setBackgroundAlpha"
@@ -114,12 +142,12 @@ class launcher: YukiBaseHooker() {
                         returnType = UnitType
                     }.hook {
                         before {
-                            args[0] = prefs("launcher").getFloat("dock_transparency", 1f)
+                            args[0] = prefs.getFloat("dock_transparency", 1f)
                         }
                     }
                 }
             }
-            if (prefs("launcher").getBoolean("force_enable_dock_blur", false)) {
+            if (prefs.getBoolean("force_enable_dock_blur", false)) {
                 "com.android.launcher3.uioverrides.states.blurdrawable.OplusBlurProperties".toClass().apply {
                     method {
                         name = "isSupportNewBlur"
