@@ -49,7 +49,7 @@ object StatusBarClock {
                         key = "ClockUpdateSpeed",
                         title = StringResource(R.string.clock_update_time_title),
                         summary = R.string.clock_update_time_summary,
-                        defaultValue = 1000f, valueRange = 0f..2000f, unit = "ms", decimalPlaces = 0
+                        defaultValue = -1f, valueRange = -1f..2000f, unit = "ms", decimalPlaces = 0
                     )
                 )
             ),
