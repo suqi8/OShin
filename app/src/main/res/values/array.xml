@@ -25,6 +25,7 @@
         <item>com.android.phone</item>
         <item>com.coloros.weather2</item>
         <item>com.heytap.browser</item>
+        <item>com.oplus.securitypermission</item>
     </string-array>
     <string-array name="language">
         <item>@string/follow_system</item>
