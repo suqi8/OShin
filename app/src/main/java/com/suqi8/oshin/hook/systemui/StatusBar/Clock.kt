@@ -11,7 +11,7 @@ import com.highcapable.kavaref.KavaRef
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
-import java.lang.reflect.Method
+import java.lang.ref.WeakReference
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -20,7 +20,12 @@ import java.util.TimerTask
 
 class Clock: YukiBaseHooker() {
 
-    // --- 配置读取区 (使用 lazy 延迟初始化, 仅在首次使用时读取一次) ---
+    companion object {
+        private var highFrequencyTimer: Timer? = null
+        private var mainHandler: Handler? = null
+        private var clockViewRef: WeakReference<TextView>? = null
+    }
+
     private val statusBarPrefs by lazy { prefs("systemui\\status_bar\\status_bar_clock") }
     private val clockEnabled by lazy { statusBarPrefs.getBoolean("status_bar_clock", false) }
     private val clockStyleSelectedOption by lazy { statusBarPrefs.getInt("ClockStyleSelectedOption", 0) }
@@ -42,9 +47,7 @@ class Clock: YukiBaseHooker() {
     private val clockRightPadding by lazy { statusBarPrefs.getFloat("RightPadding", 0f) }
     private val clockTopPadding by lazy { statusBarPrefs.getFloat("TopPadding", 0f) }
     private val clockBottomPadding by lazy { statusBarPrefs.getFloat("BottomPadding", 0f) }
-    //private val clockColor by lazy { statusBarPrefs.getString("Color", "null") }
 
-    // --- 工具变量区 ---
     private lateinit var hookContext: Context
     private val sdfCache = mutableMapOf<String, SimpleDateFormat>()
     private fun getFormatter(pattern: String): SimpleDateFormat =
@@ -61,7 +64,7 @@ class Clock: YukiBaseHooker() {
         }
     }
 
-    /** Hook 构造函数，用于初始化和设置视图 */
+    /** Hook 构造函数 */
     private fun hookConstructor(kavaRef: KavaRef.MemberScope<Any>) = kavaRef.apply {
         firstConstructor {
             modifiers(Modifiers.PUBLIC)
@@ -69,12 +72,19 @@ class Clock: YukiBaseHooker() {
         }.hook {
             after {
                 hookContext = args(0).cast<Context>()!!
-                setupClockView(instance())
+                val clockView = instance<TextView>()
+                if (clockView.resources.getResourceEntryName(clockView.id) != "clock") return@after
+                setupClockView(clockView)
+                clockViewRef = WeakReference(clockView)
+
+                if (updateSpeed > 0f) {
+                    setupHighFrequencyUpdate()
+                }
             }
         }
     }
 
-    /** Hook 时间文本的获取方法 */
+    /** Hook getSmallTime 方法，进行自定义格式化 */
     private fun hookGetSmallTime(kavaRef: KavaRef.MemberScope<Any>) = kavaRef.apply {
         firstMethod {
             modifiers(Modifiers.PRIVATE, Modifiers.FINAL)
@@ -83,10 +93,11 @@ class Clock: YukiBaseHooker() {
             returnType = "java.lang.CharSequence"
         }.hook {
             after {
-                val now = Calendar.getInstance().time
                 instance<TextView>().apply {
                     if (this.resources.getResourceEntryName(id) != "clock") return@after
                 }
+                val now = Calendar.getInstance().time
+
                 result = if (clockStyleSelectedOption == 0) {
                     val dateStr = getDate(now)
                     val timeStr = getTime(now)
@@ -95,15 +106,35 @@ class Clock: YukiBaseHooker() {
                 } else {
                     getCustomDate(now, customClockStyle)
                 }
+                val clockView = instance<TextView>()
+                applyClockViewStyle(clockView)
             }
         }
     }
 
-    /** 统一设置 Clock View 的外观和行为 */
+    private fun applyClockViewStyle(clockView: TextView) {
+        clockView.apply {
+            if (dualRow) {
+                val defaultSize = if (fontSize != 0f) fontSize else 8F
+                setTextSize(TypedValue.COMPLEX_UNIT_DIP, defaultSize)
+                setLineSpacing(0F, 0.8F)
+            } else {
+                if (fontSize != 0f) {
+                    setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize)
+                }
+            }
+        }
+    }
+
+    /** 设置 Clock View 的外观 */
     @SuppressLint("SetTextI18n")
     private fun setupClockView(clockView: TextView) {
         clockView.apply {
             if (this.resources.getResourceEntryName(id) != "clock") return@apply
+            if (mainHandler == null) {
+                mainHandler = Handler(context.mainLooper)
+            }
+
             isSingleLine = false
             gravity = when (customAlignment) {
                 0 -> Gravity.CENTER
@@ -118,6 +149,7 @@ class Clock: YukiBaseHooker() {
                 9 -> Gravity.FILL_VERTICAL
                 else -> Gravity.CENTER
             }
+
             fun dp(value: Float): Int =
                 TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, resources.displayMetrics).toInt()
 
@@ -127,6 +159,7 @@ class Clock: YukiBaseHooker() {
                 if (clockRightPadding != 0f) dp(clockRightPadding) else paddingRight,
                 if (clockBottomPadding != 0f) dp(clockBottomPadding) else paddingBottom
             )
+
             if (dualRow) {
                 val defaultSize = if (fontSize != 0f) fontSize else 8F
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, defaultSize)
@@ -135,27 +168,33 @@ class Clock: YukiBaseHooker() {
                 if (fontSize != 0f) setTextSize(TypedValue.COMPLEX_UNIT_DIP, fontSize)
             }
         }
-
-        if (updateSpeed > 0f) {
-            setupHighFrequencyUpdate(clockView)
-        }
     }
 
-    private fun setupHighFrequencyUpdate(clockView: TextView) {
-        val updateClockMethod: Method = clockView.javaClass.superclass.getDeclaredMethod("updateClock")
-        updateClockMethod.isAccessible = true
-        val runnable = Runnable { updateClockMethod.invoke(clockView) }
+    /** 设置高频更新 */
+    private fun setupHighFrequencyUpdate() {
+        highFrequencyTimer?.cancel()
+        highFrequencyTimer = null
 
-        class CustomTimerTask : TimerTask() {
-            private val handler = Handler(clockView.context.mainLooper)
-            override fun run() { handler.post(runnable) }
+        highFrequencyTimer = Timer("ClockUpdateTimer", true).apply {
+            schedule(object : TimerTask() {
+                override fun run() {
+                    mainHandler?.post {
+                        val clockView = clockViewRef?.get() ?: return@post
+
+                        val now = Calendar.getInstance().time
+                        val newText = if (clockStyleSelectedOption == 0) {
+                            val dateStr = getDate(now)
+                            val timeStr = getTime(now)
+                            val newline = if (dualRow) "\n" else ""
+                            dateStr + newline + timeStr
+                        } else {
+                            getCustomDate(now, customClockStyle)
+                        }
+                        clockView.text = newText
+                    }
+                }
+            }, 1000 - (System.currentTimeMillis() % 1000), updateSpeed.toLong())
         }
-
-        Timer().schedule(
-            CustomTimerTask(),
-            1000 - System.currentTimeMillis() % 1000,
-            updateSpeed.toLong()
-        )
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -247,5 +286,6 @@ class Clock: YukiBaseHooker() {
         return locale.language.endsWith("zh")
     }
 
-    private fun is24(context: Context): Boolean = Settings.System.getString(context.contentResolver, Settings.System.TIME_12_24) == "24"
+    private fun is24(context: Context): Boolean =
+        Settings.System.getString(context.contentResolver, Settings.System.TIME_12_24) == "24"
 }
