@@ -421,10 +421,7 @@
     <string name="section_title_highlights">今日亮点</string>
     <string name="section_subtitle_highlights">为你推荐的实用功能</string>
     <string name="official_channel_subtitle">加入我们的社区</string>
-    <string name="category_system">系统功能</string>
-    <string name="category_display">显示设置</string>
-    <string name="category_notification">通知管理</string>
-    <string name="category_battery">电池优化</string>
-    <string name="category_security">安全隐私</string>
-    <string name="category_media">媒体控制</string>
+    <string name="check_update">检测更新</string>
+    <string name="add_more_desktop_layouts">添加更多桌面布局</string>
+    <string name="add_more_desktop_layouts_desc">开启后将增加 2x2 至 20x20 的所有布局</string>
 </resources>
