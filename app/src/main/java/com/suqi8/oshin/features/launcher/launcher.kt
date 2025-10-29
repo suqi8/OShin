@@ -28,15 +28,6 @@ object launcher {
             CardDefinition(
                 titleRes = R.string.desktop_settings,
                 items = listOf(
-                    Slider(
-                        title = StringResource(R.string.desktop_icon_and_text_size_multiplier),
-                        summary = R.string.icon_size_limit_note,
-                        key = "icon_text",
-                        defaultValue = 1.0f,
-                        unit = "x",
-                        valueRange = 0f..2f,
-                        decimalPlaces = 1
-                    ),
                     Switch(
                         title = StringResource(R.string.force_enable_fold_mode),
                         key = "force_enable_fold_mode"

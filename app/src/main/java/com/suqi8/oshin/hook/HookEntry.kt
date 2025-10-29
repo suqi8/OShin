@@ -13,7 +13,6 @@ import com.suqi8.oshin.hook.exsystemservice.exsystemservice
 import com.suqi8.oshin.hook.games.games
 import com.suqi8.oshin.hook.health.health
 import com.suqi8.oshin.hook.incallui.incallui
-import com.suqi8.oshin.hook.launcher.LauncherIcon
 import com.suqi8.oshin.hook.launcher.launcher
 import com.suqi8.oshin.hook.launcher.recent_task
 import com.suqi8.oshin.hook.mihealth.mihealth
@@ -52,8 +51,6 @@ class HookEntry : IYukiHookXposedInit {
         try { System.loadLibrary("dexkit") } catch (t: Throwable) {}
         loadApp(hooker = android())
         loadApp(hooker = systemui())
-        loadApp(hooker = LauncherIcon())
-        loadApp(hooker = recent_task())
         loadApp(hooker = battery())
         loadApp(hooker = speechassist())
         loadApp(hooker = games())

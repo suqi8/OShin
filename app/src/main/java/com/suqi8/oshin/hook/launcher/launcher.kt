@@ -14,6 +14,7 @@ import java.util.List
 class launcher: YukiBaseHooker() {
     @SuppressLint("UseCompatLoadingForDrawables", "SetTextI18n")
     override fun onHook() {
+        loadHooker(hooker = recent_task())
         loadApp("com.android.launcher"){
             val prefs = prefs("launcher")
             val set_anim_level = prefs.getFloat("set_anim_level", -1f)
