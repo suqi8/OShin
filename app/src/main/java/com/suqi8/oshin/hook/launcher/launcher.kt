@@ -16,8 +16,8 @@ class launcher: YukiBaseHooker() {
     override fun onHook() {
         loadApp("com.android.launcher"){
             val prefs = prefs("launcher")
-            val set_anim_level = prefs.getInt("set_anim_level", -1)
-            if (set_anim_level != -1) {
+            val set_anim_level = prefs.getFloat("set_anim_level", -1f)
+            if (set_anim_level != -1f) {
                 "com.android.common.util.PlatformLevelUtils\$animationLevelOS14\$2".toClass().apply {
                     method {
                         name = "invoke"
@@ -25,18 +25,7 @@ class launcher: YukiBaseHooker() {
                         returnType = "java.lang.Integer"
                     }.hook {
                         before {
-                            result = set_anim_level
-                        }
-                    }
-                }
-                "com.android.common.util.PlatformLevelUtils\$animationLevelOS14\$2".toClass().apply {
-                    method {
-                        name = "invoke"
-                        emptyParam()
-                        returnType = "java.lang.Integer"
-                    }.hook {
-                        before {
-                            result = set_anim_level
+                            result = set_anim_level.toInt()
                         }
                     }
                 }
@@ -167,6 +156,33 @@ class launcher: YukiBaseHooker() {
                     }.hook {
                         before {
                             result = true
+                        }
+                    }
+                }
+            }
+
+            val customRadiusDp = prefs.getFloat("custom_blur_corner", -1f)
+            if (customRadiusDp != -1f) {
+                "com.android.launcher3.uioverrides.states.blurdrawable.OplusBlurProperties".toClass().resolve().apply {
+                    firstMethod {
+                        modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
+                        name = "setBlurCornerRadius"
+                        parameters(Float::class, Boolean::class, "com.android.launcher3.model.data.ItemInfo")
+                        returnType = "com.android.launcher3.uioverrides.states.blurdrawable.OplusBlurProperties"
+                    }.hook {
+                        before {
+                            val contextRef = firstField {
+                                modifiers(Modifiers.PRIVATE, Modifiers.FINAL)
+                                name = "contextRef"
+                                type = "java.lang.ref.WeakReference"
+                            }.of(instance).get() as java.lang.ref.WeakReference<android.content.Context>
+                            val displayMetrics = contextRef.get()!!.resources.displayMetrics
+                            val customRadiusPx = android.util.TypedValue.applyDimension(
+                                android.util.TypedValue.COMPLEX_UNIT_DIP,
+                                customRadiusDp,
+                                displayMetrics
+                            )
+                            args[0] = customRadiusPx
                         }
                     }
                 }

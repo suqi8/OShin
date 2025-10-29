@@ -26,6 +26,7 @@ object launcher {
                 )
             ),
             CardDefinition(
+                titleRes = R.string.desktop_settings,
                 items = listOf(
                     Slider(
                         title = StringResource(R.string.desktop_icon_and_text_size_multiplier),
@@ -47,7 +48,12 @@ object launcher {
                         condition = SimpleCondition(
                             dependencyKey = "force_enable_fold_mode"
                         )
-                    ),
+                    )
+                )
+            ),
+            CardDefinition(
+                titleRes = R.string.dock_settings,
+                items = listOf(
                     Switch(
                         title = StringResource(R.string.force_enable_fold_dock),
                         key = "force_enable_fold_dock"
@@ -64,11 +70,16 @@ object launcher {
                         title = StringResource(R.string.force_enable_dock_blur),
                         summary = R.string.force_enable_dock_blur_undevice,
                         key = "force_enable_dock_blur"
-                    ),
+                    )
+                )
+            ),
+            CardDefinition(
+                titleRes = R.string.animation_and_layout_settings,
+                items = listOf(
                     Slider(
                         title = StringResource(R.string.set_anim_level),
                         key = "set_anim_level",
-                        valueRange = 0f..4f,
+                        valueRange = -1f..4f,
                         defaultValue = -1f,
                         decimalPlaces = 0
                     ),
@@ -76,6 +87,15 @@ object launcher {
                         title = StringResource(R.string.add_more_desktop_layouts),
                         summary = R.string.add_more_desktop_layouts_desc,
                         key = "add_more_desktop_layouts"
+                    ),
+                    Slider(
+                        title = StringResource(R.string.custom_blur_corner),
+                        summary = R.string.default_value_hint_negative_one,
+                        key = "custom_blur_corner",
+                        valueRange = -1f..100f,
+                        defaultValue = -1f,
+                        unit = "dp",
+                        decimalPlaces = 1
                     )
                 )
             )
