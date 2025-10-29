@@ -424,4 +424,8 @@
     <string name="check_update">检测更新</string>
     <string name="add_more_desktop_layouts">添加更多桌面布局</string>
     <string name="add_more_desktop_layouts_desc">开启后将增加 2x2 至 20x20 的所有布局</string>
+    <string name="custom_blur_corner">自定义模糊圆角</string>
+    <string name="desktop_settings">桌面设置</string>
+    <string name="dock_settings">Dock 设置</string>
+    <string name="animation_and_layout_settings">动画和布局设置</string>
 </resources>
