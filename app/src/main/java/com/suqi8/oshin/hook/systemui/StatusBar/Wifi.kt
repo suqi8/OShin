@@ -211,8 +211,8 @@ class Wifi : YukiBaseHooker() {
                 firstMethod { name = "onFinishInflate" }.hook {
                     after {
                         // 获取数字和单位文本视图
-                        val numView = firstField { name = "mSpeedNumber" }.get() as TextView
-                        val unitView = firstField { name = "mSpeedUnit" }.get() as TextView
+                        val numView = firstField { name = "mSpeedNumber" }.of(instance).get() as TextView
+                        val unitView = firstField { name = "mSpeedUnit" }.of(instance).get() as TextView
 
                         // 保存原始字体
                         originalNumTypeface = numView.typeface
