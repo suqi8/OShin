@@ -4,6 +4,7 @@ import android.graphics.RenderEffect
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -129,11 +130,11 @@ fun FunPage(
     ) { padding ->
         val background = MiuixTheme.colorScheme.background
 
-        // --- 背景 + Haze ---
         Box(Modifier.fillMaxSize()) {
             Box(
                 Modifier
                     .layerBackdrop(backdrop)
+                    .background(background)
                     .fillMaxSize()
             ) {
                 content(padding)
