@@ -428,4 +428,8 @@
     <string name="desktop_settings">桌面设置</string>
     <string name="dock_settings">Dock 设置</string>
     <string name="animation_and_layout_settings">动画和布局设置</string>
+    <string name="bypass_v1_signature_errors_title">绕过 V1 签名错误 (-103)</string>
+    <string name="bypass_v1_signature_errors_summary">（实验性）尝试在 V1 签名验证失败（错误码-103）时伪造一个签名以继续安装。</string>
+    <string name="allow_mismatched_split_apk_signatures_title">允许 Split APK 签名不一致</string>
+    <string name="allow_mismatched_split_apk_signatures_summary">允许安装具有不同签名的 Split APK (APKS)。</string>
 </resources>
