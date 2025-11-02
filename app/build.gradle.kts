@@ -213,6 +213,9 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.capsule)
+    implementation(libs.multiplatform.markdown.renderer.android)
+    implementation(libs.multiplatform.markdown.renderer.coil3)
+    implementation(libs.multiplatform.markdown.renderer.code)
 
     // ------------------- 底层与工具库 -------------------
     implementation(libs.luckypray.dexkit)
