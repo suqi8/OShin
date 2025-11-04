@@ -432,4 +432,54 @@
     <string name="bypass_v1_signature_errors_summary">（实验性）尝试在 V1 签名验证失败（错误码-103）时伪造一个签名以继续安装。</string>
     <string name="allow_mismatched_split_apk_signatures_title">允许 Split APK 签名不一致</string>
     <string name="allow_mismatched_split_apk_signatures_summary">允许安装具有不同签名的 Split APK (APKS)。</string>
+    <string name="update_page_github_token_desc">GitHub Token</string>
+    <string name="update_page_tab_release">Release</string>
+    <string name="update_page_tab_ci">CI Build</string>
+    <string name="update_page_software_version">软件版本</string>
+    <string name="update_page_current_version" formatted="false">v%1$s(%2$s)</string>
+    <string name="update_page_show_history">查看更多更新说明 &gt;</string>
+    <string name="update_page_hide_history">收起更新说明 ↑</string>
+    <string name="update_page_release_size" formatted="false">%1$s | %2$.2f MB</string>
+    <string name="update_page_published_at">发布于 %1$s</string>
+    <string name="update_page_time_ago_wrapper">(%1$s)</string>
+    <string name="update_page_download_complete">下载完成，开始安装...</string>
+    <string name="update_page_download_failed">下载失败: %1$s</string>
+    <string name="update_page_download_and_install">下载并安装</string>
+    <string name="update_page_downloading">正在下载...</string>
+    <string name="update_page_downloading_progress">正在下载... %1$d%%</string>
+    <string name="update_page_card_title_release">OShin Release</string>
+    <string name="update_page_card_title_ci">OShin CI Build</string>
+    <string name="update_page_status_checking">正在检测更新</string>
+    <string name="update_page_status_new_version">发现新版本</string>
+    <string name="update_page_status_latest">已是最新版本</string>
+    <string name="token_dialog_title">GitHub Token</string>
+    <string name="token_dialog_summary">请在此处粘贴你的 GitHub Personal Access Token (PAT)。此 Token 将仅用于提高 API 请求速率限制，无需任何特殊权限。它将存储在此设备的本地。</string>
+    <string name="token_dialog_label">Personal Access Token</string>
+    <string name="token_dialog_clear">清除</string>
+    <string name="install_error_root_unknown">未知的 Root 操作错误</string>
+    <string name="install_error_root_output">Root 操作失败: %1$s</string>
+    <string name="install_error_root_no_output">Root 操作失败 (无输出)</string>
+    <string name="install_error_root_exception">Root 操作执行异常: %1$s</string>
+    <string name="install_error_fallback">无法启动安装程序: %1$s</string>
+    <plurals name="time_ago_days">
+        <item quantity="other">%d 天前</item>
+    </plurals>
+    <plurals name="time_ago_hours">
+        <item quantity="other">%d 小时前</item>
+    </plurals>
+    <plurals name="time_ago_minutes">
+        <item quantity="other">%d 分钟前</item>
+    </plurals>
+    <string name="time_ago_just_now">刚刚</string>
+    <string name="view_model_error_fetch_failed">获取 Release 失败，请检查网络连接</string>
+    <string name="view_model_error_api_limit">API速率限制。请尝试添加GitHub Token。</string>
+    <string name="view_model_error_not_found">未找到Release信息。</string>
+    <string name="view_model_error_fetch_failed_code">获取失败 (代码: %d)</string>
+    <string name="view_model_error_download_exception">下载失败: %1$s</string>
+    <string name="view_model_error_download_failed_code">下载失败: %d</string>
+    <string name="view_model_error_timeout">请求超时，请检查网络</string>
+    <string name="view_model_error_unknown_host">无法连接到服务器</string>
+    <string name="view_model_error_network">网络错误: %1$s</string>
+    <string name="view_model_error_general">发生错误: %1$s</string>
+    <string name="view_model_error_unknown">未知错误</string>
 </resources>

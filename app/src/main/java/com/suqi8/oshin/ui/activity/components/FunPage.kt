@@ -34,7 +34,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.kyant.backdrop.Backdrop
+import com.kyant.backdrop.backdrops.LayerBackdrop
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import com.kyant.backdrop.drawPlainBackdrop
@@ -99,7 +99,7 @@ fun FunPage(
     sharedTransitionScope: SharedTransitionScope? = null,
     animatedVisibilityScope: AnimatedVisibilityScope? = null,
     animationKey: String? = null,
-    action: @Composable () -> Unit = {},
+    action: @Composable (LayerBackdrop) -> Unit = { _ -> },
     content: @Composable (padding: PaddingValues) -> Unit
 ) {
     val restartAPP = remember { mutableStateOf(false) }
@@ -198,9 +198,9 @@ half4 main(float2 coord) {
 private fun TopButtons(
     navController: NavController,
     appList: List<String>,
-    backdrop: Backdrop,
+    backdrop: LayerBackdrop,
     restartAPP: MutableState<Boolean>,
-    action: @Composable () -> Unit
+    action: @Composable (LayerBackdrop) -> Unit
 ) {
     val context = LocalContext.current
     var showShortcut by remember { mutableStateOf(false) }
@@ -236,7 +236,7 @@ private fun TopButtons(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        action()
+        action(backdrop)
 
         if (showShortcut) {
             LiquidButton(

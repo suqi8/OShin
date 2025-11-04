@@ -190,6 +190,7 @@ dependencies {
     implementation(libs.androidx.palette.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.hilt.android)
+    implementation(libs.androidx.foundation.layout)
     ksp(libs.hilt.android.compiler)
 
     // ------------------- Jetpack Compose UI -------------------
