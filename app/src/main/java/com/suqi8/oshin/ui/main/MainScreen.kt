@@ -61,9 +61,6 @@ import com.suqi8.oshin.ui.home.MainHome
 import com.suqi8.oshin.ui.module.Main_Module
 import com.suqi8.oshin.ui.softupdate.GitHubRelease
 import com.suqi8.oshin.ui.softupdate.UpdateViewModel
-import dev.chrisbanes.haze.ExperimentalHazeApi
-import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
@@ -87,7 +84,7 @@ data class NavigationItem(
     val icon: Int
 )
 
-@OptIn(FlowPreview::class, ExperimentalHazeApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(FlowPreview::class, ExperimentalSharedTransitionApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
@@ -154,9 +151,6 @@ fun MainScreen(
 
     val backdrop = rememberLayerBackdrop()
 
-    val hazeState = remember { HazeState() }
-
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
@@ -172,7 +166,7 @@ fun MainScreen(
             val background = MiuixTheme.colorScheme.background
 
             AppHorizontalPager(
-                modifier = Modifier.layerBackdrop(backdrop).hazeSource(state = hazeState).imePadding(),
+                modifier = Modifier.layerBackdrop(backdrop).imePadding(),
                 pagerState = pagerState,
                 topAppBarScrollBehavior = topAppBarScrollBehavior,
                 padding = padding,

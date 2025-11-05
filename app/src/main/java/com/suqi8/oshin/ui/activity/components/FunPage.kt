@@ -43,8 +43,6 @@ import com.kyant.backdrop.effects.effect
 import com.suqi8.oshin.ui.components.LiquidButton
 import com.suqi8.oshin.utils.hasShortcut
 import com.suqi8.oshin.utils.launchApp
-import dev.chrisbanes.haze.ExperimentalHazeApi
-import dev.chrisbanes.haze.HazeState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Icon
@@ -61,7 +59,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
-@OptIn(ExperimentalHazeApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun FunPage(
     title: String,
@@ -89,7 +87,7 @@ fun FunPage(
     }
 }
 
-@OptIn(ExperimentalHazeApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun FunPage(
     title: String = "",
@@ -104,7 +102,6 @@ fun FunPage(
 ) {
     val restartAPP = remember { mutableStateOf(false) }
     val backdrop = rememberLayerBackdrop()
-    val hazeState = remember { HazeState() }
 
     Scaffold(
         topBar = {
