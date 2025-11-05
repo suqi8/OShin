@@ -10,6 +10,7 @@ import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -42,6 +43,7 @@ import com.suqi8.oshin.ui.activity.components.CardDefaults
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.activity.components.funArrow
+import com.suqi8.oshin.ui.home.ModernSectionTitle
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -73,6 +75,14 @@ fun about_contributors(
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = padding
         ) {
+            item {
+                ModernSectionTitle(
+                    title = stringResource(id = R.string.oplus_settings_features),
+                    modifier = Modifier
+                        .displayCutoutPadding()
+                        .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)
+                )
+            }
             item {
                 Card(colors = CardDefaults.defaultColors(color = MiuixTheme.colorScheme.primaryVariant.copy(alpha = 0.1f))) {
                     BasicComponent(
@@ -144,6 +154,18 @@ fun about_contributors(
                     item(
                         name = "fatal1101",
                         github = "fatal1101"
+                    )
+                    addline()
+                    item(
+                        name = "jjhitel",
+                        github = "jjhitel"
+                    )
+                    addline()
+                    item(
+                        name = "喷搜",
+                        coolapk = "已跑路_勿扰",
+                        coolapkid = 35139340,
+                        qq = 3267887124
                     )
                 }
             }
