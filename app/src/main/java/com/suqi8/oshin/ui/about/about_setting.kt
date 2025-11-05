@@ -59,7 +59,6 @@ fun about_setting(
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
 
     FunPage(
-        title = stringResource(id = R.string.settings),
         navController = navController,
         scrollBehavior = scrollBehavior,
         sharedTransitionScope = sharedTransitionScope,
@@ -77,7 +76,7 @@ fun about_setting(
         ) {
             item {
                 ModernSectionTitle(
-                    title = stringResource(id = R.string.oplus_settings_features),
+                    title = stringResource(id = R.string.settings),
                     modifier = Modifier
                         .displayCutoutPadding()
                         .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)

@@ -60,7 +60,6 @@ fun about_contributors(
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
 
     FunPage(
-        title = stringResource(id = R.string.contributors),
         navController = navController,
         scrollBehavior = scrollBehavior,
         sharedTransitionScope = sharedTransitionScope,
@@ -77,7 +76,7 @@ fun about_contributors(
         ) {
             item {
                 ModernSectionTitle(
-                    title = stringResource(id = R.string.oplus_settings_features),
+                    title = stringResource(id = R.string.contributors),
                     modifier = Modifier
                         .displayCutoutPadding()
                         .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)
@@ -152,20 +151,19 @@ fun about_contributors(
                     )
                     addline()
                     item(
-                        name = "fatal1101",
+                        name = "Андрей",
                         github = "fatal1101"
                     )
                     addline()
                     item(
-                        name = "jjhitel",
+                        name = "Jeong Seongpil",
                         github = "jjhitel"
                     )
                     addline()
                     item(
                         name = "喷搜",
                         coolapk = "已跑路_勿扰",
-                        coolapkid = 35139340,
-                        qq = 3267887124
+                        coolapkid = 35139340
                     )
                 }
             }

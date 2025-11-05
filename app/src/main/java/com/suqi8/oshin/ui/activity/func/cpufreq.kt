@@ -6,6 +6,7 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -28,6 +29,7 @@ import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.SuperDropdown
 import com.suqi8.oshin.ui.activity.components.addline
+import com.suqi8.oshin.ui.home.ModernSectionTitle
 import com.suqi8.oshin.utils.executeCommand
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -54,7 +56,6 @@ fun cpu_freq(
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
 
     FunPage(
-        title = stringResource(R.string.cpu_freq_main),
         navController = navController,
         scrollBehavior = topAppBarState,
         sharedTransitionScope = sharedTransitionScope,
@@ -88,6 +89,14 @@ fun cpu_freq(
                     .nestedScroll(topAppBarState.nestedScrollConnection),
                 contentPadding = padding
             ) {
+                item {
+                    ModernSectionTitle(
+                        title = stringResource(id = R.string.cpu_freq_main),
+                        modifier = Modifier
+                            .displayCutoutPadding()
+                            .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)
+                    )
+                }
                 item {
                     AnimatedVisibility(!cpuFrequencies.value.isEmpty()) {
                         Column {
