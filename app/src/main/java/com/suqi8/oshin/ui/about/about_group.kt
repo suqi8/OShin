@@ -42,7 +42,6 @@ fun about_group(
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
 
     FunPage(
-        title = stringResource(id = R.string.discussion_group),
         navController = navController,
         scrollBehavior = scrollBehavior,
         sharedTransitionScope = sharedTransitionScope,
@@ -59,7 +58,7 @@ fun about_group(
         ) {
             item {
                 ModernSectionTitle(
-                    title = stringResource(id = R.string.oplus_settings_features),
+                    title = stringResource(id = R.string.discussion_group),
                     modifier = Modifier
                         .displayCutoutPadding()
                         .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)

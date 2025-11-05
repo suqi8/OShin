@@ -44,7 +44,6 @@ fun about_references(
 
     // (5. 调用 FunPage v2)
     FunPage(
-        title = stringResource(id = R.string.references),
         navController = navController,
         scrollBehavior = scrollBehavior, // <-- 传递
         sharedTransitionScope = sharedTransitionScope, // <-- 传递
@@ -62,7 +61,7 @@ fun about_references(
         ) {
             item {
                 ModernSectionTitle(
-                    title = stringResource(id = R.string.oplus_settings_features),
+                    title = stringResource(id = R.string.references),
                     modifier = Modifier
                         .displayCutoutPadding()
                         .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)
