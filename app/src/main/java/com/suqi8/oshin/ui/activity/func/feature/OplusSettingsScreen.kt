@@ -87,7 +87,7 @@ fun OplusSettingsScreen(
                     title = stringResource(id = R.string.oplus_settings_features),
                     modifier = Modifier
                         .displayCutoutPadding()
-                        .padding(top = padding.calculateTopPadding() + 80.dp)
+                        .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)
                 )
             }
             if (uiState.isLoading && uiState.methodNames.isEmpty()) {

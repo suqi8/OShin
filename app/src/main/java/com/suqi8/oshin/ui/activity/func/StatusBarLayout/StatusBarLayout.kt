@@ -121,7 +121,7 @@ fun StatusBarLayout(
                             title = stringResource(id = R.string.status_bar_layout),
                             modifier = Modifier
                                 .displayCutoutPadding()
-                                .padding(top = 80.dp)
+                                .padding(top = 72.dp, bottom = 8.dp)
                         )
                     }
                     // 列表项直接绑定到 ViewModel 中的 visibleNodes
