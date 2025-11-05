@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -45,6 +46,7 @@ import androidx.navigation.NavController
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.SuperArrow
+import com.suqi8.oshin.ui.home.ModernSectionTitle
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Text
@@ -87,7 +89,6 @@ fun StatusBarLayout(
     }
 
     FunPage(
-        title = stringResource(R.string.status_bar_layout),
         appList = listOf("com.android.systemui"),
         navController = navController,
         scrollBehavior = scrollBehavior
@@ -115,6 +116,14 @@ fun StatusBarLayout(
                         .nestedScroll(scrollBehavior.nestedScrollConnection),
                     contentPadding = paddingValues
                 ) {
+                    item {
+                        ModernSectionTitle(
+                            title = stringResource(id = R.string.status_bar_layout),
+                            modifier = Modifier
+                                .displayCutoutPadding()
+                                .padding(top = 80.dp)
+                        )
+                    }
                     // 列表项直接绑定到 ViewModel 中的 visibleNodes
                     items(viewModel.visibleNodes, key = { it.uniqueKey }) { itemInfo ->
                         // 列表项的根布局，现在是一个简单的 Column
