@@ -168,7 +168,7 @@ class HomeViewModel @Inject constructor(
         if (YukiHookAPI.Status.isModuleActive) {
             ModuleStatus(Status.SUCCESS, "SUCCESS")
         } else {
-            ModuleStatus(Status.ERROR, "未在LSPosed中激活")
+            ModuleStatus(Status.ERROR, context.getString(R.string.status_module_error_inactive))
         }
     }
 
@@ -178,16 +178,16 @@ class HomeViewModel @Inject constructor(
             if (process.waitFor() == 0) {
                 val ksuVersion = executeCommand("/data/adb/ksud -V")
                 val version = if (ksuVersion.isNotEmpty()) {
-                    "KernelSU $ksuVersion"
+                    context.getString(R.string.status_root_version_kernelsu, ksuVersion)
                 } else {
-                    "Magisk " + executeCommand("magisk -v")
+                    context.getString(R.string.status_root_version_magisk, executeCommand("magisk -v"))
                 }
                 RootStatus(Status.SUCCESS, version.trim())
             } else {
-                RootStatus(Status.ERROR, "授权失败")
+                RootStatus(Status.ERROR, context.getString(R.string.status_root_error_denied))
             }
         } catch (e: Exception) {
-            RootStatus(Status.ERROR, "无法获取Root权限")
+            RootStatus(Status.ERROR, context.getString(R.string.status_root_error_unavailable))
         }
     }
 
