@@ -53,6 +53,15 @@ object phone {
                 condition = SimpleCondition(
                     dependencyKey = "sms_verification_code"
                 )
+            ),
+            CardDefinition(
+                items = listOf(
+                    Switch(
+                        title = StringResource(R.string.remove_sim_name_length_limit),
+                        summary = R.string.remove_sim_name_length_limit_summary,
+                        key = "remove_sim_name_length_limit"
+                    )
+                )
             )
         )
     )
