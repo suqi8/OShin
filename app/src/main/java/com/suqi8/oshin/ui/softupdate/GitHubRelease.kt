@@ -3,10 +3,13 @@ package com.suqi8.oshin.ui.softupdate
 import com.google.gson.annotations.SerializedName
 
 data class GitHubRelease(
+    @SerializedName("id")
     val id: Long,
+    @SerializedName("name")
     val name: String,
     @SerializedName("tag_name")
     val tagName: String,
+    @SerializedName("body")
     val body: String,
     @SerializedName("created_at")
     val createdAt: String,
