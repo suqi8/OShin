@@ -461,15 +461,6 @@
     <string name="install_error_root_no_output">Root 操作失败 (无输出)</string>
     <string name="install_error_root_exception">Root 操作执行异常: %1$s</string>
     <string name="install_error_fallback">无法启动安装程序: %1$s</string>
-    <plurals name="time_ago_days">
-        <item quantity="other">%d 天前</item>
-    </plurals>
-    <plurals name="time_ago_hours">
-        <item quantity="other">%d 小时前</item>
-    </plurals>
-    <plurals name="time_ago_minutes">
-        <item quantity="other">%d 分钟前</item>
-    </plurals>
     <string name="time_ago_just_now">刚刚</string>
     <string name="view_model_error_fetch_failed">获取 Release 失败，请检查网络连接</string>
     <string name="view_model_error_api_limit">API速率限制。请尝试添加GitHub Token。</string>
