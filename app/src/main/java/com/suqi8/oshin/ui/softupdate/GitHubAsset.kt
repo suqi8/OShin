@@ -3,8 +3,11 @@ package com.suqi8.oshin.ui.softupdate
 import com.google.gson.annotations.SerializedName
 
 data class GitHubAsset(
+    @SerializedName("id")
     val id: Long,
-    val name: String,
+    @SerializedName("name")
+    val name: String?,
+    @SerializedName("size")
     val size: Long,
     @SerializedName("download_count")
     val downloadCount: Int,
