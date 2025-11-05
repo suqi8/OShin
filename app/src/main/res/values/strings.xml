@@ -490,4 +490,6 @@
     <string name="battery_metric_design_capacity_value">%1$dmAh</string>
     <string name="battery_label_system_health_percent">系统健康度</string>
     <string name="section_title_system_info">系统信息</string>
+    <string name="remove_sim_name_length_limit">移除 SIM 名字数限制</string>
+    <string name="remove_sim_name_length_limit_summary">允许为 SIM 卡设置超过默认字符数的名称</string>
 </resources>
