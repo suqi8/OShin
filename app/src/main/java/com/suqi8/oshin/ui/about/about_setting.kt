@@ -129,6 +129,7 @@ fun about_setting(
                             3 -> Locale.JAPANESE
                             4 -> Locale.Builder().setLanguage("ru").build()
                             5 -> Locale.Builder().setLanguage("qaa").setExtension('x', "meme").build()
+                            6 -> Locale.KOREAN
                             else -> Locale.getDefault() // 跟随系统
                         }
 
