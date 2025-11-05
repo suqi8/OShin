@@ -53,10 +53,10 @@ android {
     // 此配置块用于指示 Gradle 为不同的 CPU 架构生成独立的 APK。
     splits {
         abi {
-            isEnable = false // 启用 ABI 拆分。
-            reset()         // 清除默认的 ABI 列表。
-            //include("arm64-v8a", "armeabi-v7a") // 指定要为其生成独立 APK 的架构。
-            isUniversalApk = true // 同时生成一个包含所有架构的通用 APK。
+            isEnable = true          // 1. 启用 ABI 拆分
+            reset()                // 2. 清除默认设置 (如 x86, mips 等)
+            include("arm64-v8a")     // 3. 只包含 64 位 v8a 架构
+            isUniversalApk = false     // 4. 不再生成通用 (universal/all) APK
         }
     }
 
@@ -155,6 +155,9 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "DebugProbesKt.bin"
+            excludes += "kotlin-tooling-metadata.json"
         }
     }
 
