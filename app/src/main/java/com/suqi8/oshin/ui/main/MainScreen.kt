@@ -2,6 +2,7 @@ package com.suqi8.oshin.ui.main
 
 import android.annotation.SuppressLint
 import android.graphics.RenderEffect
+import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -9,19 +10,24 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,10 +45,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.highcapable.yukihookapi.hook.factory.prefs
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import com.kyant.backdrop.drawPlainBackdrop
@@ -54,20 +59,23 @@ import com.suqi8.oshin.ui.about.Main_About
 import com.suqi8.oshin.ui.components.BottomTabs
 import com.suqi8.oshin.ui.home.MainHome
 import com.suqi8.oshin.ui.module.Main_Module
+import com.suqi8.oshin.ui.softupdate.GitHubRelease
+import com.suqi8.oshin.ui.softupdate.UpdateViewModel
 import dev.chrisbanes.haze.ExperimentalHazeApi
 import dev.chrisbanes.haze.HazeState
-import dev.chrisbanes.haze.HazeStyle
-import dev.chrisbanes.haze.HazeTint
 import dev.chrisbanes.haze.hazeSource
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
+import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
+import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import kotlin.math.abs
 
@@ -99,6 +107,21 @@ fun MainScreen(
         NavigationItem(stringResource(R.string.func), R.drawable.func),
         NavigationItem(stringResource(R.string.about), R.drawable.about)
     )
+    val context = LocalContext.current
+    val currentVersion = remember {
+        try {
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.0"
+        } catch (e: Exception) {
+            "0.0.0"
+        }
+    }
+    val activity = context as ComponentActivity
+    val updateViewModel: UpdateViewModel = hiltViewModel(activity)
+    LaunchedEffect(Unit) {
+        updateViewModel.autoCheckForUpdate(currentVersion)
+    }
+
+    val updateResult by updateViewModel.updateCheckResult.collectAsState()
 
     LaunchedEffect(pagerState) {
         snapshotFlow { pagerState.currentPage }.debounce(150).collectLatest {
@@ -131,20 +154,8 @@ fun MainScreen(
 
     val backdrop = rememberLayerBackdrop()
 
-    val context = LocalContext.current
-    val alpha = context.prefs("settings").getFloat("AppAlpha", 0.75f)
-    val blurRadius: Dp = context.prefs("settings").getInt("AppblurRadius", 25).dp
-    val noiseFactor = context.prefs("settings").getFloat("AppnoiseFactor", 0f)
-    val containerColor: Color = MiuixTheme.colorScheme.background
     val hazeState = remember { HazeState() }
-    val hazeStyle = remember(containerColor, alpha, blurRadius, noiseFactor) {
-        HazeStyle(
-            backgroundColor = containerColor,
-            tint = HazeTint(containerColor.copy(alpha)),
-            blurRadius = blurRadius,
-            noiseFactor = noiseFactor
-        )
-    }
+
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -231,6 +242,12 @@ return mix(content.eval(coord) * blurAlpha, tint * tintAlpha, tintIntensity);
                     )
                 }
             }
+            UpdateAvailableDialog(
+                release = updateResult,
+                navController = navController,
+                onDismiss = { updateViewModel.clearUpdateCheckResult() },
+                updateViewModel = updateViewModel
+            )
         }
     }
 }
@@ -318,4 +335,47 @@ fun AppHorizontalPager(
             }
         }
     )
+}
+
+@Composable
+private fun UpdateAvailableDialog(
+    release: GitHubRelease?,
+    navController: NavController,
+    onDismiss: () -> Unit,
+    updateViewModel: UpdateViewModel
+) {
+    val show = remember(release) { mutableStateOf(release != null) }
+
+    SuperDialog(
+        show = show,
+        title = stringResource(R.string.update_page_status_new_version),
+        summary = stringResource(R.string.update_available_dialog_summary, release?.name ?: ""),
+        onDismissRequest = onDismiss
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            TextButton(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.cancel),
+                onClick = {
+                    onDismiss()
+                    show.value = false
+                }
+            )
+            Spacer(Modifier.width(12.dp))
+            TextButton(
+                modifier = Modifier.weight(1f),
+                text = stringResource(R.string.update_available_dialog_now),
+                colors = ButtonDefaults.textButtonColorsPrimary(),
+                onClick = {
+                    onDismiss()
+                    show.value = false
+                    updateViewModel.setAutoDownloadFlag()
+                    navController.navigate("software_update")
+                }
+            )
+        }
+    }
 }

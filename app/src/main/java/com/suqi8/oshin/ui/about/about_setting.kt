@@ -154,6 +154,20 @@ fun about_setting(
                         }
                     )
                     addline()
+                    val updateChannelIndex = remember { mutableStateOf(context.prefs("settings").getInt("app_update_channel", 0)) }
+                    SuperDropdown(
+                        title = stringResource(R.string.update_channel),
+                        items = listOf(
+                            stringResource(R.string.update_page_tab_release), // "Release"
+                            stringResource(R.string.update_page_tab_ci)      // "CI Build"
+                        ),
+                        selectedIndex = updateChannelIndex.value,
+                        onSelectedIndexChange = { index ->
+                            updateChannelIndex.value = index
+                            context.prefs("settings").edit { putInt("app_update_channel", index) }
+                        }
+                    )
+                    addline()
                     FunSwitch(
                         title = "Debug",
                         category = "settings",

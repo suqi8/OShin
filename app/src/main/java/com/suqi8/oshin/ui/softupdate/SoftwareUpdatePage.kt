@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -134,12 +135,13 @@ fun SoftwareUpdatePage(
     navController: NavController,
     topAppBarScrollBehavior: ScrollBehavior,
     sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
-    viewModel: UpdateViewModel = hiltViewModel()
+    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val TAG = "SoftwareUpdatePage"
-    var releaseType by remember { mutableIntStateOf(0) }
     val context = LocalContext.current
+    val activity = context as ComponentActivity
+    val viewModel: UpdateViewModel = hiltViewModel(activity)
+    var releaseType by remember { mutableIntStateOf(viewModel.getSavedUpdateChannel()) }
     val isDebugEnabled = remember { context.prefs("settings").getBoolean("Debug", false) }
     val currentVersion = rememberCurrentVersion(context)
     val showTokenDialog = remember { mutableStateOf(false) }
@@ -163,7 +165,7 @@ fun SoftwareUpdatePage(
     // 计算实际状态
     val latestRelease = remember(viewModel.releases) { viewModel.releases.firstOrNull() }
     val latestApkAsset = remember(latestRelease) {
-        latestRelease?.assets?.firstOrNull { it.name.endsWith(".apk") }
+        latestRelease?.assets?.firstOrNull { it.name?.endsWith(".apk") == true }
     }
 
     val hasNewVersion = remember(latestRelease, currentVersion) {
@@ -175,6 +177,30 @@ fun SoftwareUpdatePage(
     }
 
     val isDownloadActionEnabled = hasNewVersion && latestApkAsset?.downloadUrl != null
+
+    LaunchedEffect(latestApkAsset, viewModel.isDownloading) {
+        Log.d(TAG, "triggerAutoDownload: ${viewModel.triggerAutoDownload} latestApkAsset: $latestApkAsset, isDownloading: ${viewModel.isDownloading}")
+        if (viewModel.triggerAutoDownload && latestApkAsset != null && !viewModel.isDownloading) {
+
+            viewModel.consumeAutoDownloadFlag()
+
+            Toast.makeText(context, context.getString(R.string.update_page_downloading), Toast.LENGTH_SHORT).show()
+
+            scope.launch(Dispatchers.IO) {
+                viewModel.error = null
+                val file = viewModel.downloadApk(latestApkAsset.downloadUrl, context)
+                withContext(Dispatchers.Main) {
+                    if (file != null) {
+                        Toast.makeText(context, context.getString(R.string.update_page_download_complete), Toast.LENGTH_SHORT).show()
+                        installApk(context, file, installLauncher, scope)
+                    } else {
+                        val errorMsg = viewModel.error ?: ""
+                        Toast.makeText(context, context.getString(R.string.update_page_download_failed, errorMsg), Toast.LENGTH_LONG).show()
+                    }
+                }
+            }
+        }
+    }
 
     with(sharedTransitionScope) {
         FunPage(

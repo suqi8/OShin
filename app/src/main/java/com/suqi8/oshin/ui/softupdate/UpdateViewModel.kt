@@ -67,10 +67,16 @@ class UpdateViewModel @Inject constructor(
     var error by mutableStateOf<String?>(null)
     var isDownloading by mutableStateOf(false)
     var currentToken by mutableStateOf<String?>(null)
+    private var hasAutoChecked = false
 
     // 下载进度状态
     private val _downloadProgress = MutableStateFlow(-1f)
     val downloadProgress = _downloadProgress.asStateFlow()
+
+    private val _updateCheckResult = MutableStateFlow<GitHubRelease?>(null)
+    val updateCheckResult = _updateCheckResult.asStateFlow()
+    var triggerAutoDownload by mutableStateOf(false)
+        private set
 
     private val _downloadedBytes = MutableStateFlow(0L)
     val downloadedBytes = _downloadedBytes.asStateFlow()
@@ -99,6 +105,41 @@ class UpdateViewModel @Inject constructor(
 
     fun checkTokenStatus() {
         loadTokenFromPrefs()
+    }
+
+    fun setAutoDownloadFlag() {
+        triggerAutoDownload = true
+    }
+
+    fun consumeAutoDownloadFlag() {
+        triggerAutoDownload = false
+    }
+
+    fun getSavedUpdateChannel(): Int {
+        return context.prefs("settings").getInt("app_update_channel", 0)
+    }
+
+    fun clearUpdateCheckResult() {
+        _updateCheckResult.value = null
+    }
+
+    fun autoCheckForUpdate(currentVersion: String) {
+        if (hasAutoChecked) return
+        viewModelScope.launch {
+            val savedChannel = getSavedUpdateChannel()
+
+            fetchReleasesInternal(savedChannel)
+
+            val latestRelease = releases.firstOrNull()
+            val isDebugEnabled = context.prefs("settings").getBoolean("Debug", false)
+            val shouldShowUpdate: Boolean = if (isDebugEnabled && releases.isNotEmpty()) true else {
+                hasNewVersion(latestRelease, currentVersion, savedChannel)
+            }
+            if (shouldShowUpdate) {
+                _updateCheckResult.value = latestRelease
+            }
+            hasAutoChecked = true
+        }
     }
 
     fun saveToken(token: String) {

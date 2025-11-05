@@ -482,4 +482,7 @@
     <string name="view_model_error_network">网络错误: %1$s</string>
     <string name="view_model_error_general">发生错误: %1$s</string>
     <string name="view_model_error_unknown">未知错误</string>
+    <string name="update_channel">更新渠道</string>
+    <string name="update_available_dialog_summary">检测到新版本: %1$s，是否前往更新？</string>
+    <string name="update_available_dialog_now">立即更新</string>
 </resources>
