@@ -485,4 +485,18 @@
     <string name="update_channel">更新渠道</string>
     <string name="update_available_dialog_summary">检测到新版本: %1$s，是否前往更新？</string>
     <string name="update_available_dialog_now">立即更新</string>
+    <string name="status_module_error_inactive">未在LSPosed中激活</string>
+    <string name="status_root_error_denied">授权失败</string>
+    <string name="status_root_error_unavailable">无法获取Root权限</string>
+    <string name="status_root_version_kernelsu">KernelSU %s</string>
+    <string name="status_root_version_magisk">Magisk %s</string>
+    <string name="status_module_success_details">LSPosed %1$s API %2$s</string>
+    <string name="common_no_description">暂无描述</string>
+    <string name="battery_metric_cycle_count">循环次数</string>
+    <string name="battery_metric_design_capacity">设计容量</string>
+    <string name="battery_metric_system_health">系统健康</string>
+    <string name="battery_metric_cycle_count_value">%1$d次</string>
+    <string name="battery_metric_design_capacity_value">%1$dmAh</string>
+    <string name="battery_label_system_health_percent">系统健康度</string>
+    <string name="section_title_system_info">系统信息</string>
 </resources>
