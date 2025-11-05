@@ -72,19 +72,19 @@ jobs:
         id: artifacts
         run: |
             apk_dir="app/build/outputs/apk/release"
-            apk_file_all=$(find "$apk_dir" -name 'OShin_all_v*.apk')
-            if [ -z "$apk_file_all" ]; then
-              echo "::error::Universal APK not found!"
+            apk_file_v8a=$(find "$apk_dir" -name 'OShin_arm64-v8a_v*.apk')
+            if [ -z "$apk_file_v8a" ]; then
+              echo "::error::arm64-v8a APK not found!"
               exit 1
             fi
-            echo "APK_FILE_ALL=$apk_file_all" >> $GITHUB_ENV
+            echo "APK_FILE_V8A=$apk_file_v8a" >> $GITHUB_ENV
           
             # 提取完整文件名
-            apk_filename=$(basename "$apk_file_all")
+            apk_filename=$(basename "apk_file_v8a")
             echo "Extracted filename: $apk_filename"
           
-            # 移除前缀 "OShin_all_"
-            version_with_suffix="${apk_filename#OShin_all_}"
+            # 移除前缀 "OShin_arm64-v8a_"
+            version_with_suffix="${apk_filename#OShin_arm64-v8a_}"
             echo "Version with suffix: $version_with_suffix"
           
             # 移除后缀 ".apk" 得到最终的版本字符串
@@ -98,8 +98,8 @@ jobs:
             echo "release_name=$version_string" >> $GITHUB_OUTPUT
           
             # 计算 SHA
-            sha_all=$(sha256sum "$apk_file_all" | awk '{print $1}')
-            echo "sha_all=$sha_all" >> $GITHUB_OUTPUT
+            sha_v8a=$(sha256sum "$apk_file_v8a" | awk '{print $1}')
+            echo "sha_v8a=$sha_v8a" >> $GITHUB_OUTPUT
           
             # 生成摘要
             {
@@ -107,7 +107,7 @@ jobs:
               echo ""
               echo "| Architecture | SHA256 Hash |"
               echo "|:---|:---|"
-              echo "| all | \`$sha_all\` |"
+              echo "| arm64-v8a | \`$sha_v8a\` |"
             } >> $GITHUB_STEP_SUMMARY
 
       # 第 6 步：上传构建产物
@@ -130,7 +130,7 @@ jobs:
             Automatic CI build based on commit: ${{ github.sha }}
             Commit message: ${{ github.event.head_commit.message }}
           prerelease: false
-          files: ${{ env.APK_FILE_ALL }}
+          files: ${{ env.APK_FILE_V8A }}
 
       # 第 7 步：预处理提交信息，清除 Markdown 危险字符并保留换行
       - name: Sanitize multiline commit message for Telegram
@@ -147,7 +147,7 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }} # Telegram 接收者的 Chat ID
           token: ${{ secrets.TELEGRAM_TOKEN }} # Telegram Bot 的 Token
-          document: ${{ env.APK_FILE_ALL }} # 包含所有架构的 APK 文件
+          document: ${{ env.APK_FILE_V8A }} # 包含所有架构的 APK 文件
           message: |
             🚀 **OShin New CI Build！**
 
