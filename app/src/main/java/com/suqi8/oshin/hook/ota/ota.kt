@@ -1,12 +1,17 @@
 package com.suqi8.oshin.hook.ota
 
 import android.content.ContentResolver
+import android.os.Handler
+import android.os.Looper
 import android.provider.Settings
+import android.widget.Toast
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 import org.luckypray.dexkit.DexKitBridge
+import java.lang.reflect.Modifier
+import java.net.HttpURLConnection
 
 class ota : YukiBaseHooker() {
     override fun onHook() {
@@ -170,7 +175,6 @@ class ota : YukiBaseHooker() {
                     }
                 }
 
-
                 className.findMethod {
                     matcher {
                         usingStrings("ro.build.version.ota")
@@ -189,6 +193,88 @@ class ota : YukiBaseHooker() {
                                 val replaced =
                                     origin.replace(Regex("_(\\d{4})_(\\d{12})")) { "_0001_197001010001" }
                                 result = replaced
+                            }
+                        }
+                    }
+                }
+
+                //hook下载地址目前会多次弹出找不到合适点位先这样
+                bridge.findClass {
+                    matcher {
+                        usingStrings(
+                            "SignVerifyUtils",
+                            "language",
+                            "androidVersion",
+                            "colorOSVersion",
+                            "otaVersion"
+                        )
+                        methods {
+                            add {
+                                usingStrings("SignVerifyUtils")
+                                modifiers = Modifier.PUBLIC
+                                returnType = "void"
+                                paramTypes(
+                                    "java.net.HttpURLConnection",
+                                    null,
+                                    "android.content.Context"
+                                )
+                                // 指定方法中使用的字符串
+                            }
+                        }
+                    }
+                }.singleOrNull()?.also { cls ->
+                    cls.findMethod {
+                        matcher {
+                            usingStrings("SignVerifyUtils")
+                            modifiers = Modifier.PUBLIC
+                            returnType = "void"
+                            paramTypes(
+                                "java.net.HttpURLConnection",
+                                null,
+                                "android.content.Context"
+                            )
+                        }
+                    }.singleOrNull()?.also {
+                        cls.name.toClass().resolve().apply {
+                            firstMethod {
+                                modifiers(Modifiers.PUBLIC, Modifiers.STATIC)
+                                name = it.methodName
+                                it.paramTypeNames
+                                returnType = Void.TYPE
+                            }.hook {
+                                after {
+                                    val connection =
+                                        args[0] as? HttpURLConnection ?: return@after
+                                    val properties = connection.requestProperties
+                                    val simpleHeaders = properties.mapNotNull { (key, values) ->
+                                        if (key != null && !values.isNullOrEmpty()) key to values[0] else null
+                                    }.toMap().toMutableMap()
+                                    simpleHeaders["RANGE"] = "bytes=0-"
+                                    val url = connection.url.toString()
+                                    val curlBuilder =
+                                        StringBuilder("curl --location --request GET \"$url\"")
+                                    for ((key, value) in simpleHeaders) {
+                                        curlBuilder.append(" ").append(" --header \"$key: $value\"")
+                                    }
+                                    curlBuilder.append(" ")
+                                        .append("--output /sdcard/Download/ota_${System.currentTimeMillis()}.zip")
+                                    appContext?.apply {
+                                        Handler(Looper.getMainLooper()).post {
+                                            val clipboard =
+                                                getSystemService(android.content.Context.CLIPBOARD_SERVICE) as android.content.ClipboardManager
+                                            val clip = android.content.ClipData.newPlainText(
+                                                "curl",
+                                                curlBuilder
+                                            )
+                                            clipboard.setPrimaryClip(clip)
+                                            Toast.makeText(
+                                                this,
+                                                "CURL下载地址已复制到剪切板，请勿随意传播",
+                                                Toast.LENGTH_LONG
+                                            ).show()
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
