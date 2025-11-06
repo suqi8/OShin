@@ -22,10 +22,9 @@ import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.kyant.capsule.ContinuousRoundedRectangle
 import top.yukonga.miuix.kmp.theme.LocalContentColor
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.CornerSmoothness
-import top.yukonga.miuix.kmp.utils.G2RoundedCornerShape
 import top.yukonga.miuix.kmp.utils.PressFeedbackType
 import top.yukonga.miuix.kmp.utils.SinkFeedback
 import top.yukonga.miuix.kmp.utils.TiltFeedback
@@ -142,14 +141,8 @@ private fun BasicCard(
     content: @Composable () -> Unit,
 ) {
     val shape = remember(cornerRadius) {
-        G2RoundedCornerShape(
+        ContinuousRoundedRectangle(
             cornerRadius
-        )
-    }
-    val clipShape = remember(cornerRadius) {
-        G2RoundedCornerShape(
-            cornerRadius,
-            CornerSmoothness.None
         )
     }
 
@@ -161,7 +154,7 @@ private fun BasicCard(
                 .semantics(mergeDescendants = false) {
                     isTraversalGroup = true
                 }
-                .clip(clipShape)  // For touch feedback, there is a problem when using G2RoundedCornerShape.
+                .clip(shape)  // For touch feedback, there is a problem when using G2RoundedCornerShape.
                 .background(color = colors.color, shape = shape),
             propagateMinConstraints = true,
         ) {

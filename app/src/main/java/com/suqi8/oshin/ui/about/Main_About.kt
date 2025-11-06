@@ -55,10 +55,17 @@ import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
@@ -191,7 +198,6 @@ fun Main_About(
     // --- 主题颜色修正 ---
     val colorModeState = LocalColorMode.current
     val systemIsDark = isSystemInDarkTheme()
-    // 修复：完全遵循用户提供的颜色模式逻辑
     val isFinalDarkMode = when (colorModeState.value) {
         1 -> false // 1 = 白天
         2 -> true  // 2 = 黑夜
@@ -425,34 +431,39 @@ fun Main_About(
         val buttonAlpha by derivedStateOf {
             if (scroll.firstVisibleItemIndex > 0) 0f else (1f - (scroll.firstVisibleItemScrollOffset.toFloat() / 300)).coerceIn(0f, 1f)
         }
-        /*Button(
-            modifier = Modifier
-                .fillMaxWidth(0.8f)
-                .wrapContentHeight()
-                // 修复：按钮位置
-                .padding(top = 430.dp)
-                .offset(y = -(scroll.firstVisibleItemScrollOffset.toFloat() / 3).dp)
-                .alpha(buttonAlpha)
-                .align(Alignment.TopCenter)
-                .scale(scale)
-                .drawBehind {
-                    val strokeWidth = 1.5.dp.toPx()
-                    val inset = strokeWidth / 2
-                    drawRoundRect(
-                        brush = Brush.linearGradient(colors = listOf(Color(borderColor[1]), Color(borderColor[0])), start = Offset(size.width / 2, 0f), end = Offset(size.width / 2, size.height)),
-                        topLeft = Offset(inset, inset),
-                        size = Size(size.width - strokeWidth, size.height - strokeWidth),
-                        cornerRadius = CornerRadius(16.dp.toPx()),
-                        style = Stroke(width = strokeWidth)
+        with(sharedTransitionScope) {
+            Button(
+                modifier = Modifier
+                    .sharedBounds(
+                        sharedContentState = rememberSharedContentState(key = "update_card_transition"),
+                        animatedVisibilityScope = animatedVisibilityScope
                     )
-                }
-                .shadow(elevation = 1.5.dp, shape = G2RoundedCornerShape(16.dp), clip = true, ambientColor = shadowColor, spotColor = shadowColor),
-            onClick = {  },
-            interactionSource = interactionSource,
-            colors = backgroundColor
-        ) {
-            Text(text = stringResource(R.string.check_update), fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = colorScheme.onSurface)
-        }*/
+                    .fillMaxWidth(0.8f)
+                    .wrapContentHeight()
+                    .padding(top = 430.dp)
+                    .offset(y = -(scroll.firstVisibleItemScrollOffset.toFloat() / 3).dp)
+                    .alpha(buttonAlpha)
+                    .align(Alignment.TopCenter)
+                    .scale(scale)
+                    .drawBehind {
+                        val strokeWidth = 1.5.dp.toPx()
+                        val inset = strokeWidth / 2
+                        drawRoundRect(
+                            brush = Brush.linearGradient(colors = listOf(Color(borderColor[1]), Color(borderColor[0])), start = Offset(size.width / 2, 0f), end = Offset(size.width / 2, size.height)),
+                            topLeft = Offset(inset, inset),
+                            size = Size(size.width - strokeWidth, size.height - strokeWidth),
+                            cornerRadius = CornerRadius(16.dp.toPx()),
+                            style = Stroke(width = strokeWidth)
+                        )
+                    }
+                    .shadow(elevation = 1.5.dp, shape = G2RoundedCornerShape(16.dp), clip = true, ambientColor = shadowColor, spotColor = shadowColor),
+                onClick = { navController.navigate("software_update") },
+                interactionSource = interactionSource,
+                colors = backgroundColor
+            ) {
+                Text(text = stringResource(R.string.check_update), fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = colorScheme.onSurface)
+            }
+        }
     }
 }
 
