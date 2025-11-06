@@ -393,4 +393,6 @@ Available subcommands:
     <string name="remove_weather_injected_ads">Remove injected ads in Weather</string>
     <string name="remove_weather_search_box">Remove search box on Weather page</string>
     <string name="weather_detail">Weather Detail</string>
+    <string name="force_download_last_update_package">Force Download Latest Update Package</string>
+    <string name="force_download_last_update_package_summary">Download the latest full package for extracting init_boot or other purposes. Download path is usually \"/data/ota_package/OTA\"</string>
 </resources>

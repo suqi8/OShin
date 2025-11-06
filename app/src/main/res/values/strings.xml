@@ -428,4 +428,6 @@
     <string name="desktop_settings">桌面设置</string>
     <string name="dock_settings">Dock 设置</string>
     <string name="animation_and_layout_settings">动画和布局设置</string>
+    <string name="force_download_last_update_package">强制下载最新升级包</string>
+    <string name="force_download_last_update_package_summary">下载最新完整包，用于提取init_boot或其他，下载路径一般在\"/data/ota_package/OTA\"</string>
 </resources>
