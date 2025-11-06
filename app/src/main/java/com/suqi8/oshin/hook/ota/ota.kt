@@ -119,19 +119,36 @@ class ota : YukiBaseHooker() {
                 }
             }
             if (prefs.getBoolean("bypass_preinstall_checks", false)) {
-                "s6.a".toClass().resolve().apply {
-                    firstMethod {
-                        modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
-                        name = "e"
-                        parameters("android.content.Context", String::class)
-                        returnType = Int::class
-                    }.hook {
-                        after {
-                            firstField {
-                                modifiers(Modifiers.PUBLIC)
-                                name = "d"
-                                type = Boolean::class
-                            }.of(instance).set(false)
+                val className = bridge.findClass {
+                    matcher {
+                        usingStrings("forbid_ota_local_update")
+                    }
+                }
+                className.findMethod {
+                    matcher {
+                        usingStrings("forbid_ota_local_update")
+                    }
+                }.forEach {
+                    it.className.toClass().resolve().apply {
+                        firstMethod {
+                            modifiers(Modifiers.PUBLIC, Modifiers.FINAL)
+                            name = it.methodName
+                            parameters("android.content.Context", String::class)
+                            returnType = Int::class
+                        }.hook {
+                            after {
+                                className.findField {
+                                    matcher {
+                                        type = "boolean"
+                                    }
+                                }.forEach {
+                                    firstField {
+                                        modifiers(Modifiers.PUBLIC)
+                                        name = it.name
+                                        type = Boolean::class
+                                    }.of(instance).set(false)
+                                }
+                            }
                         }
                     }
                 }
