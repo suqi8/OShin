@@ -12,7 +12,8 @@ class ota : YukiBaseHooker() {
     override fun onHook() {
         val prefs = prefs("ota")
         loadApp(name = "com.oplus.ota") {
-            DexKitBridge.create(this.appInfo.sourceDir).use {
+            val bridge = DexKitBridge.create(this.appInfo.sourceDir)
+            bridge.also {
                 it.findClass {
                     matcher {
                         addMethod {
@@ -142,40 +143,57 @@ class ota : YukiBaseHooker() {
             }
 
             if (prefs.getBoolean("force_download_last_update_package", false)) {
-                "s5.g".toClass().resolve().apply {
-                    firstMethod {
-                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC)
-                        name = "C"
-                        emptyParameters()
-                        returnType = String::class
-                    }.hook {
-                        after {
-                            // 匹配 PLK110_16.0.0.001(CN01) 末尾三位数字并替换为 001
-                            val origin = result as? String ?: ""
-                            val replaced = origin.replace(Regex("(\\.\\d{3}\\()"), ".001(")
-                            result = replaced
+                val className = bridge.findClass {
+                    matcher {
+                        usingStrings("ro.build.display.id.show")
+                    }
+                }
+                className.findMethod {
+                    matcher {
+                        usingStrings("ro.build.display.id.show")
+                    }
+                }.singleOrNull()?.also {
+                    it.className.toClass().resolve().apply {
+                        firstMethod {
+                            modifiers(Modifiers.PUBLIC, Modifiers.STATIC)
+                            name = it.methodName
+                            emptyParameters()
+                            returnType = String::class
+                        }.hook {
+                            after {
+                                // 匹配 PLK110_16.0.0.001(CN01) 末尾三位数字并替换为 001
+                                val origin = result as? String ?: ""
+                                val replaced = origin.replace(Regex("(\\.\\d{3}\\()"), ".001(")
+                                result = replaced
+                            }
                         }
                     }
                 }
 
-                "s5.g".toClass().resolve().apply {
-                    firstMethod {
-                        modifiers(Modifiers.PUBLIC, Modifiers.STATIC)
-                        name = "v"
-                        emptyParameters()
-                        returnType = String::class
-                    }.hook {
-                        after {
-                            // 匹配 _xxxx_yyyyyyyyyyyy 为 _0001_197001010001
-                            val origin = result as? String ?: ""
-                            val replaced =
-                                origin.replace(Regex("_(\\d{4})_(\\d{12})")) { "_0001_197001010001" }
-                            result = replaced
+
+                className.findMethod {
+                    matcher {
+                        usingStrings("ro.build.version.ota")
+                    }
+                }.singleOrNull()?.also {
+                    it.className.toClass().resolve().apply {
+                        firstMethod {
+                            modifiers(Modifiers.PUBLIC, Modifiers.STATIC)
+                            name = it.methodName
+                            emptyParameters()
+                            returnType = String::class
+                        }.hook {
+                            after {
+                                // 匹配 _xxxx_yyyyyyyyyyyy 为 _0001_197001010001
+                                val origin = result as? String ?: ""
+                                val replaced =
+                                    origin.replace(Regex("_(\\d{4})_(\\d{12})")) { "_0001_197001010001" }
+                                result = replaced
+                            }
                         }
                     }
                 }
             }
-
         }
     }
 }

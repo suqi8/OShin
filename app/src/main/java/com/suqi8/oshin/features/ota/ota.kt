@@ -45,7 +45,6 @@ object ota {
                         summary = R.string.force_download_last_update_package_summary,
                         key = "force_download_last_update_package"
                     )
-
                 )
             )
         )
