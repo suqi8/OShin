@@ -80,7 +80,7 @@ jobs:
             echo "APK_FILE_V8A=$apk_file_v8a" >> $GITHUB_ENV
           
             # 提取完整文件名
-            apk_filename=$(basename "apk_file_v8a")
+            apk_filename=$(basename "$apk_file_v8a")
             echo "Extracted filename: $apk_filename"
           
             # 移除前缀 "OShin_arm64-v8a_"
