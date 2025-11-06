@@ -393,4 +393,6 @@
     <string name="remove_weather_injected_ads">Убрать встроенную рекламу в Погоде</string>
     <string name="remove_weather_search_box">Убрать поле поиска на странице Погоды</string>
     <string name="weather_detail">Подробности о погоде</string>
+    <string name="force_download_last_update_package">Принудительная загрузка последнего пакета обновления</string>
+    <string name="force_download_last_update_package_summary">Загрузите последний полный пакет для извлечения init_boot или других целей. Путь загрузки обычно \"/data/ota_package/OTA\"</string>
 </resources>

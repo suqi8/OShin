@@ -39,6 +39,11 @@ object ota {
                     Switch(
                         title = StringResource(R.string.force_show_local_install),
                         key = "force_show_local_install"
+                    ),
+                    Switch(
+                        title = StringResource(R.string.force_download_last_update_package),
+                        summary = R.string.force_download_last_update_package_summary,
+                        key = "force_download_last_update_package"
                     )
                 )
             )
