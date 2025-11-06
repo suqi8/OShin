@@ -57,7 +57,12 @@
 -dontwarn com.umeng.**
 -dontwarn org.repackage.**
 -keep class com.suqi8.oshin.ui.activity.func.StatusBarLayout.** { *; }
--keepattributes Signature, InnerClasses
+-keep class com.suqi8.oshin.hook.** { *; }
+-keep class com.suqi8.oshin.ui.softupdate.** { *; }
+-keep class com.suqi8.oshin.ui.activity.** { *; }
+-keeppackagenames com.suqi8.oshin
+-keepattributes Signature, InnerClasses, EnclosingMethod
+-dontusemixedcaseclassnames
 
 -classobfuscationdictionary proguard-dict.txt
 -obfuscationdictionary proguard-dict.txt
