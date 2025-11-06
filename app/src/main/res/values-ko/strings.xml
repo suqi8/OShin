@@ -428,4 +428,6 @@ adb shell에서 "pm pms" 명령어를 사용하여 앱 서명 및 공유 UID 서
     <string name="desktop_settings">홈 화면 설정</string>
     <string name="dock_settings">독 설정</string>
     <string name="animation_and_layout_settings">애니메이션 및 레이아웃 설정</string>
+    <string name="force_download_last_update_package">최신 업데이트 패키지 강제 다운로드</string>
+    <string name="force_download_last_update_package_summary">init_boot 또는 기타 목적으로 최신 전체 패키지를 다운로드합니다. 다운로드 경로는 일반적으로 \"/data/ota_package/OTA\"입니다</string>
 </resources>
