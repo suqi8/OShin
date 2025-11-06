@@ -89,4 +89,6 @@
     <string name="oplus_system_services">OnePlus システムサービス</string>
     <string name="oplus_root_check">Root チェックを無効化</string>
     <string name="oplus_root_check_summary">Root チェッカーを無効化します</string>
+    <string name="force_download_last_update_package">最新アップデートパッケージの強制ダウンロード</string>
+    <string name="force_download_last_update_package_summary">init_bootなどの抽出用に最新の完全パッケージをダウンロードします。ダウンロードパスは通常「/data/ota_package/OTA」です</string>
 </resources>
