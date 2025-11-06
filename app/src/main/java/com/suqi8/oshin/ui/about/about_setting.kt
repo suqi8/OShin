@@ -7,6 +7,7 @@ import android.content.res.Configuration
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -35,6 +36,7 @@ import com.suqi8.oshin.ui.activity.components.FunSwitch
 import com.suqi8.oshin.ui.activity.components.SuperDropdown
 import com.suqi8.oshin.ui.activity.components.SuperSwitch
 import com.suqi8.oshin.ui.activity.components.addline
+import com.suqi8.oshin.ui.home.ModernSectionTitle
 import com.suqi8.oshin.ui.main.LocalColorMode
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
@@ -57,7 +59,6 @@ fun about_setting(
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
 
     FunPage(
-        title = stringResource(id = R.string.settings),
         navController = navController,
         scrollBehavior = scrollBehavior,
         sharedTransitionScope = sharedTransitionScope,
@@ -73,6 +74,14 @@ fun about_setting(
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = padding
         ) {
+            item {
+                ModernSectionTitle(
+                    title = stringResource(id = R.string.settings),
+                    modifier = Modifier
+                        .displayCutoutPadding()
+                        .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)
+                )
+            }
             item {
                 Card(
                     modifier = Modifier
@@ -129,6 +138,7 @@ fun about_setting(
                             3 -> Locale.JAPANESE
                             4 -> Locale.Builder().setLanguage("ru").build()
                             5 -> Locale.Builder().setLanguage("qaa").setExtension('x', "meme").build()
+                            6 -> Locale.KOREAN
                             else -> Locale.getDefault() // 跟随系统
                         }
 
@@ -151,6 +161,20 @@ fun about_setting(
                             selectedLanguageIndex.value = index
                             context.prefs("settings").edit { putInt("app_language", index) }
                             changeLanguage(index)
+                        }
+                    )
+                    addline()
+                    val updateChannelIndex = remember { mutableStateOf(context.prefs("settings").getInt("app_update_channel", 0)) }
+                    SuperDropdown(
+                        title = stringResource(R.string.update_channel),
+                        items = listOf(
+                            stringResource(R.string.update_page_tab_release), // "Release"
+                            stringResource(R.string.update_page_tab_ci)      // "CI Build"
+                        ),
+                        selectedIndex = updateChannelIndex.value,
+                        onSelectedIndexChange = { index ->
+                            updateChannelIndex.value = index
+                            context.prefs("settings").edit { putInt("app_update_channel", index) }
                         }
                     )
                     addline()

@@ -4,6 +4,7 @@ import android.graphics.RenderEffect
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -33,7 +34,7 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.kyant.backdrop.Backdrop
+import com.kyant.backdrop.backdrops.LayerBackdrop
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import com.kyant.backdrop.drawPlainBackdrop
@@ -42,8 +43,6 @@ import com.kyant.backdrop.effects.effect
 import com.suqi8.oshin.ui.components.LiquidButton
 import com.suqi8.oshin.utils.hasShortcut
 import com.suqi8.oshin.utils.launchApp
-import dev.chrisbanes.haze.ExperimentalHazeApi
-import dev.chrisbanes.haze.HazeState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Icon
@@ -60,7 +59,7 @@ import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 
-@OptIn(ExperimentalHazeApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun FunPage(
     title: String,
@@ -88,7 +87,7 @@ fun FunPage(
     }
 }
 
-@OptIn(ExperimentalHazeApi::class, ExperimentalSharedTransitionApi::class)
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun FunPage(
     title: String = "",
@@ -98,12 +97,11 @@ fun FunPage(
     sharedTransitionScope: SharedTransitionScope? = null,
     animatedVisibilityScope: AnimatedVisibilityScope? = null,
     animationKey: String? = null,
-    action: @Composable () -> Unit = {},
+    action: @Composable (LayerBackdrop) -> Unit = { _ -> },
     content: @Composable (padding: PaddingValues) -> Unit
 ) {
     val restartAPP = remember { mutableStateOf(false) }
     val backdrop = rememberLayerBackdrop()
-    val hazeState = remember { HazeState() }
 
     Scaffold(
         topBar = {
@@ -129,11 +127,11 @@ fun FunPage(
     ) { padding ->
         val background = MiuixTheme.colorScheme.background
 
-        // --- 背景 + Haze ---
         Box(Modifier.fillMaxSize()) {
             Box(
                 Modifier
                     .layerBackdrop(backdrop)
+                    .background(background)
                     .fillMaxSize()
             ) {
                 content(padding)
@@ -197,9 +195,9 @@ half4 main(float2 coord) {
 private fun TopButtons(
     navController: NavController,
     appList: List<String>,
-    backdrop: Backdrop,
+    backdrop: LayerBackdrop,
     restartAPP: MutableState<Boolean>,
-    action: @Composable () -> Unit
+    action: @Composable (LayerBackdrop) -> Unit
 ) {
     val context = LocalContext.current
     var showShortcut by remember { mutableStateOf(false) }
@@ -235,7 +233,7 @@ private fun TopButtons(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        action()
+        action(backdrop)
 
         if (showShortcut) {
             LiquidButton(

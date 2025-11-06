@@ -5,6 +5,7 @@ import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,6 +25,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunPage
+import com.suqi8.oshin.ui.home.ModernSectionTitle
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
@@ -41,7 +43,6 @@ fun RomWorkshop(
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
 
     FunPage(
-        title = stringResource(R.string.rom_workshop),
         navController = navController,
         scrollBehavior = scrollBehavior,
         sharedTransitionScope = sharedTransitionScope,
@@ -56,6 +57,14 @@ fun RomWorkshop(
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = padding
         ) {
+            item {
+                ModernSectionTitle(
+                    title = stringResource(id = R.string.rom_workshop),
+                    modifier = Modifier
+                        .displayCutoutPadding()
+                        .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)
+                )
+            }
             item {
                 Card(
                     modifier = Modifier

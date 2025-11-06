@@ -1,6 +1,7 @@
 package com.suqi8.oshin.ui.activity.func.feature
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -24,6 +25,7 @@ import com.suqi8.oshin.hook.settings.SettingsFeature
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.funDropdown
+import com.suqi8.oshin.ui.home.ModernSectionTitle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -68,7 +70,6 @@ fun OplusSettingsScreen(
     }
 
     FunPage(
-        title = stringResource(id = R.string.oplus_settings_features),
         appList = listOf("com.android.settings"),
         navController = navController,
         scrollBehavior = scrollBehavior
@@ -81,6 +82,14 @@ fun OplusSettingsScreen(
                 .nestedScroll(scrollBehavior.nestedScrollConnection),
             contentPadding = padding
         ) {
+            item {
+                ModernSectionTitle(
+                    title = stringResource(id = R.string.oplus_settings_features),
+                    modifier = Modifier
+                        .displayCutoutPadding()
+                        .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)
+                )
+            }
             if (uiState.isLoading && uiState.methodNames.isEmpty()) {
                 item {
                     Card(modifier = Modifier.padding(12.dp)) {

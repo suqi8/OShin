@@ -52,6 +52,16 @@ object PMS {
                         key = "bypass_min_signature_version_check"
                     ),
                     Switch(
+                        title = StringResource(R.string.bypass_v1_signature_errors_title),
+                        summary = R.string.bypass_v1_signature_errors_summary,
+                        key = "bypass_v1_signature_errors"
+                    ),
+                    Switch(
+                        title = StringResource(R.string.allow_mismatched_split_apk_signatures_title),
+                        summary = R.string.allow_mismatched_split_apk_signatures_summary,
+                        key = "allow_mismatched_split_apk_signatures"
+                    ),
+                    Switch(
                         title = StringResource(R.string.disable_install_verification_title),
                         summary = R.string.disable_install_verification_summary,
                         key = "disable_install_verification"

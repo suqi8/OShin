@@ -35,6 +35,7 @@ class MainActivity : ComponentActivity() {
             3 -> Locale.JAPANESE
             4 -> Locale.forLanguageTag("ru")
             5 -> Locale.Builder().setLanguage("qaa").setExtension('x', "meme").build()
+            6 -> Locale.KOREAN
             else -> null // 使用 null 代表系统默认
         }
 

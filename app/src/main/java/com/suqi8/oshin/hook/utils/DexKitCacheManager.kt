@@ -1,24 +1,13 @@
 package com.suqi8.oshin.hook.utils
 
-import android.annotation.SuppressLint
-import android.content.Context
-import android.content.pm.PackageInfo
-import android.content.pm.PackageManager
-import com.highcapable.yukihookapi.hook.log.YLog
-import com.highcapable.yukihookapi.hook.param.PackageParam
-import com.tencent.mmkv.MMKV
-import org.luckypray.dexkit.DexKitBridge
-import org.luckypray.dexkit.result.MethodData
-import java.lang.reflect.Method
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.CountDownLatch
 
 /**
  * [最终方案] DexKit 探索结果的持久化缓存管理器。
  *
  * 实现了与您提供的参考项目 (HyperCeiler, XAutoDaily) 完全相同的缓存策略。
  * 遵循 Xposed 生命周期，在 Application 创建后再进行扫描和缓存，并使用 CountDownLatch 解决时序问题。
- */
+ *//*
+
 object DexKitCacheManager {
 
     // 确保 MMKV 的初始化是线程安全的，并且每个进程只执行一次
@@ -35,10 +24,12 @@ object DexKitCacheManager {
     @Volatile
     private var isManagerInitialized = false
 
-    /**
+    */
+/**
      * [在 Hook 入口调用一次] 负责 Hook Application.onCreate 并准备好所有资源。
      * @param param 来自 loadApp/loadSystem 的包参数。
-     */
+     *//*
+
     fun init(param: PackageParam) {
         if (isManagerInitialized) return
         isManagerInitialized = true
@@ -62,11 +53,13 @@ object DexKitCacheManager {
         }
     }
 
-    /**
+    */
+/**
      * 获取 MMKV 实例，并在此过程中自动完成初始化。
      * @param context 必须是一个有效的 Context。
      * @return [MMKV] 实例。
-     */
+     *//*
+
     private fun getMMKV(context: Context): MMKV {
         if (!isMmkvInitialized) {
             synchronized(mmkvInitializationLock) {
@@ -79,14 +72,16 @@ object DexKitCacheManager {
         return MMKV.mmkvWithID("oshin_dex_cache", MMKV.MULTI_PROCESS_MODE)
     }
 
-    /**
+    */
+/**
      * [推荐] 查找并 Hook 方法，全自动处理缓存和时序问题。
      *
      * @param param 当前 Hook 的包参数。
      * @param queryKey 此次查询的唯一标识符。
      * @param finder 实际执行 DexKit 探索的 lambda 表达式。
      * @param hooker 对查找到的每个方法进行 Hook 的 lambda 表达式。
-     */
+     *//*
+
     fun findAndHookMethod(
         param: PackageParam,
         queryKey: String,
@@ -182,7 +177,9 @@ object DexKitCacheManager {
         }.start()
     }
 
-    /** 获取 DexKitBridge 实例（带内存缓存） */
+    */
+/** 获取 DexKitBridge 实例（带内存缓存） *//*
+
     private fun getInMemoryBridge(param: PackageParam): DexKitBridge {
         val sourceDir = param.appInfo?.sourceDir ?: error("无法获取 App 的源路径")
         return bridgeCache.getOrPut(param.packageName) {
@@ -190,8 +187,11 @@ object DexKitCacheManager {
         }
     }
 
-    /** 因为 minSdk >= 35, 我们可以安全地直接使用 longVersionCode */
+    */
+/** 因为 minSdk >= 35, 我们可以安全地直接使用 longVersionCode *//*
+
     @get:SuppressLint("NewApi")
     private val PackageInfo.longVersionCode: Long
         get() = this.longVersionCode
 }
+*/

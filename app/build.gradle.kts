@@ -40,7 +40,7 @@ android {
         // .getOrElse() 提供了一个回退值，确保在非 Git 环境下构建的健壮性。
         versionCode = gitCommitCountProvider.map { it.toInt() }.getOrElse(1)
         versionName = gitCommitCountProvider.zip(gitCommitHashProvider) { count, hash ->
-            "16.1.$count.$hash" // 版本名格式：主版本.次版本.提交总数.提交哈希
+            "16.2.$count.$hash" // 版本名格式：主版本.次版本.提交总数.提交哈希
         }.getOrElse("16.local") // 在 Git 不可用时使用的默认版本名。
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner" // 指定仪器测试的运行器。
@@ -53,10 +53,10 @@ android {
     // 此配置块用于指示 Gradle 为不同的 CPU 架构生成独立的 APK。
     splits {
         abi {
-            isEnable = false // 启用 ABI 拆分。
-            reset()         // 清除默认的 ABI 列表。
-            //include("arm64-v8a", "armeabi-v7a") // 指定要为其生成独立 APK 的架构。
-            isUniversalApk = true // 同时生成一个包含所有架构的通用 APK。
+            isEnable = true          // 1. 启用 ABI 拆分
+            reset()                // 2. 清除默认设置 (如 x86, mips 等)
+            include("arm64-v8a")     // 3. 只包含 64 位 v8a 架构
+            isUniversalApk = false     // 4. 不再生成通用 (universal/all) APK
         }
     }
 
@@ -155,6 +155,9 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes += "DebugProbesKt.bin"
+            excludes += "kotlin-tooling-metadata.json"
         }
     }
 
@@ -190,29 +193,33 @@ dependencies {
     implementation(libs.androidx.palette.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(libs.hilt.android)
+    implementation(libs.androidx.foundation.layout)
     ksp(libs.hilt.android.compiler)
 
     // ------------------- Jetpack Compose UI -------------------
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
+    debugImplementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.hilt.navigation.compose)
 
     // ------------------- Compose 生态第三方库 -------------------
-    implementation(libs.accompanist.flowlayout)
+    //implementation(libs.accompanist.flowlayout)
     implementation(libs.airbnb.lottie.compose)
     implementation(libs.coil.compose)
-    implementation(libs.haze)
-    implementation(libs.shimmer.compose)
-    implementation(libs.toolbar.compose)
-    implementation(libs.expandablebottombar)
-    implementation(libs.neumorphism.compose)
+    //implementation(libs.haze)
+    //implementation(libs.shimmer.compose)
+    //implementation(libs.toolbar.compose)
+    //implementation(libs.expandablebottombar)
+    //implementation(libs.neumorphism.compose)
     implementation(libs.coil.compose)
     implementation(libs.coil.network.okhttp)
     implementation(libs.capsule)
+    implementation(libs.multiplatform.markdown.renderer.android)
+    implementation(libs.multiplatform.markdown.renderer.coil3)
+    implementation(libs.multiplatform.markdown.renderer.code)
 
     // ------------------- 底层与工具库 -------------------
     implementation(libs.luckypray.dexkit)
@@ -220,9 +227,9 @@ dependencies {
     implementation(libs.squareup.okhttp)
     implementation(libs.coil.network.okhttp)
     implementation(libs.gson)
-    implementation(libs.drawabletoolbox)
+    //implementation(libs.drawabletoolbox)
     implementation(libs.miuix)
-    implementation(libs.mmkv)
+    //implementation(libs.mmkv)
 
     // ------------------- Hook API 相关 -------------------
     implementation(libs.ezxhelper)

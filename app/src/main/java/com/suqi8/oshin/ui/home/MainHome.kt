@@ -410,7 +410,7 @@ fun ModernDashboardSection(
                 status = moduleStatus.status,
                 icon = Icons.Default.VerifiedUser,
                 title = stringResource(id = R.string.module_status),
-                message = if (moduleStatus.status == Status.ERROR) moduleStatus.message else "LSPosed ${lspVersion.value} API ${YukiHookAPI.Status.Executor.apiLevel}",
+                message = if (moduleStatus.status == Status.ERROR) moduleStatus.message else stringResource(R.string.status_module_success_details, lspVersion.value, YukiHookAPI.Status.Executor.apiLevel),
                 gradientColors = listOf(Color(0xFF6366F1), Color(0xFF8B5CF6))
             )
 
@@ -636,7 +636,7 @@ fun ModernFeatureCard(
                     
                     // 简介信息 - 固定行数，统一高度
                     Text(
-                        text = if (feature.summary.isNotEmpty()) feature.summary else "暂无描述",
+                        text = feature.summary.ifEmpty { stringResource(R.string.common_no_description) },
                         color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                         fontSize = 11.sp,
                         lineHeight = 14.sp,
@@ -956,14 +956,14 @@ fun DeviceInfoSection(info: DeviceInfo) {
                 }
                 
                 Spacer(Modifier.height(16.dp))
-                
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
-                    BatteryMetricItem("循环次数", "${info.cycleCount}次")
-                    BatteryMetricItem("设计容量", "${info.designCapacity}mAh")
-                    BatteryMetricItem("系统健康", info.batteryHealthDisplay)
+                    BatteryMetricItem(stringResource(R.string.battery_metric_cycle_count), stringResource(R.string.battery_metric_cycle_count_value, info.cycleCount))
+                    BatteryMetricItem(stringResource(R.string.battery_metric_design_capacity), stringResource(R.string.battery_metric_design_capacity_value, info.designCapacity))
+                    BatteryMetricItem(stringResource(R.string.battery_metric_system_health), info.batteryHealthDisplay)
                 }
                 
                 Spacer(Modifier.height(12.dp))
@@ -986,7 +986,7 @@ fun DeviceInfoSection(info: DeviceInfo) {
                     )
                     Spacer(Modifier.weight(1f))
                     Text(
-                        text = "系统健康度",
+                        text = stringResource(R.string.battery_label_system_health_percent),
                         color = Color.White.copy(alpha = 0.8f),
                         fontSize = 12.sp
                     )
@@ -1041,9 +1041,9 @@ fun DeviceInfoSection(info: DeviceInfo) {
                             modifier = Modifier.size(18.dp)
                         )
                     }
-                    
+
                     Text(
-                        text = "系统信息",
+                        text = stringResource(R.string.section_title_system_info),
                         color = MiuixTheme.colorScheme.onBackground,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold

@@ -6,87 +6,87 @@
         android:viewportHeight="108"
         android:autoMirrored="true">
 
-    <path
-            android:pathData="M13.5,13.5h81v81h-81z"
-            android:strokeWidth="0">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                    android:type="linear"
-                    android:startX="13.5"
-                    android:startY="13.5"
-                    android:endX="94.5"
-                    android:endY="94.5">
-                <item android:color="#FFF1F8E9" android:offset="0"/> <item android:color="#FFE8F5E9" android:offset="1"/> </gradient>
-        </aapt:attr>
-    </path>
+    <!-- 背景渐变 (极浅的紫罗兰/薰衣草色) --><path
+        android:pathData="M13.5,13.5h81v81h-81z"
+        android:strokeWidth="0">
+    <aapt:attr name="android:fillColor">
+        <gradient
+                android:type="linear"
+                android:startX="13.5"
+                android:startY="13.5"
+                android:endX="94.5"
+                android:endY="94.5">
+            <item android:color="#FFF3E5F5" android:offset="0"/> <!-- 极浅的薰衣草紫 --><item android:color="#FFE1BEE7" android:offset="1"/> <!-- 稍深的薰衣草紫 --></gradient>
+    </aapt:attr>
+</path>
 
-    <path
-            android:pathData="M38.41,28.71L69.6,28.71A9.7,9.7 0,0 1,79.3 38.41L79.3,69.6A9.7,9.7 0,0 1,69.6 79.3L38.41,79.3A9.7,9.7 0,0 1,28.71 69.6L28.71,38.41A9.7,9.7 0,0 1,38.41 28.71z"
-            android:strokeWidth="0">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                    android:type="linear"
-                    android:startX="76.45"
-                    android:startY="31.55"
-                    android:endX="31.55"
-                    android:endY="76.45">
-                <item android:color="#FF81C784" android:offset="0"/> <item android:color="#FF66BB6A" android:offset="1"/> </gradient>
-        </aapt:attr>
-    </path>
+    <!-- 方形渐变 (中等深度的紫色) --><path
+        android:pathData="M38.41,28.71L69.6,28.71A9.7,9.7 0,0 1,79.3 38.41L79.3,69.6A9.7,9.7 0,0 1,69.6 79.3L38.41,79.3A9.7,9.7 0,0 1,28.71 69.6L28.71,38.41A9.7,9.7 0,0 1,38.41 28.71z"
+        android:strokeWidth="0">
+    <aapt:attr name="android:fillColor">
+        <gradient
+                android:type="linear"
+                android:startX="76.45"
+                android:startY="31.55"
+                android:endX="31.55"
+                android:endY="76.45">
+            <item android:color="#FFBA68C8" android:offset="0"/> <!-- 中紫色 --><item android:color="#FFAB47BC" android:offset="1"/> <!-- 稍深的中紫色 --></gradient>
+    </aapt:attr>
+</path>
 
-    <path
-            android:pathData="M27.43,43.78L43.77,27.44A14.06,14.06 90,0 1,63.66 27.44L80.55,44.33A14.06,14.06 0,0 1,80.55 64.22L64.21,80.56A14.06,14.06 90,0 1,44.32 80.56L27.43,63.67A14.06,14.06 0,0 1,27.43 43.78z"
-            android:strokeWidth="0">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                    android:type="linear"
-                    android:startX="54"
-                    android:startY="23.32"
-                    android:endX="54"
-                    android:endY="84.68">
-                <item android:color="#FFAED581" android:offset="0"/> <item android:color="#FF9CCC65" android:offset="1"/> </gradient>
-        </aapt:attr>
-    </path>
+    <!-- 菱形渐变 (略浅一点的紫色/品红色) --><path
+        android:pathData="M27.43,43.78L43.77,27.44A14.06,14.06 90,0 1,63.66 27.44L80.55,44.33A14.06,14.06 0,0 1,80.55 64.22L64.21,80.56A14.06,14.06 90,0 1,44.32 80.56L27.43,63.67A14.06,14.06 0,0 1,27.43 43.78z"
+        android:strokeWidth="0">
+    <aapt:attr name="android:fillColor">
+        <gradient
+                android:type="linear"
+                android:startX="54"
+                android:startY="23.32"
+                android:endX="54"
+                android:endY="84.68">
+            <item android:color="#FFE0B0FF" android:offset="0"/> <!-- 浅紫色 (接近粉色) --><item android:color="#FFD1A6FF" android:offset="1"/> <!-- 稍深的浅紫色 --></gradient>
+    </aapt:attr>
+</path>
 
-    <path
-            android:pathData="M41.99,53.93c0,6.64 5.37,11.87 11.87,12.01 6.78,0 12.15,-5.51 12.15,-12.01s-5.37,-11.87 -12.01,-11.87 -12.15,5.37 -12.01,12.01h0v-0.14Z"
-            android:strokeWidth="0">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                    android:type="linear"
-                    android:startX="42"
-                    android:startY="54"
-                    android:endX="66"
-                    android:endY="54">
-                <item android:color="#FFFFD54F" android:offset="0" /> <item android:color="#FFFFB300" android:offset="1" /> </gradient>
-        </aapt:attr>
-    </path>
-    <path
-            android:pathData="M54.84,61.56c2.18,0 4.24,-1.11 5.39,-2.96 4.44,-7.16 -2.45,-15.13 -10.21,-11.56 -1.35,0.62 -2.42,1.74 -2.99,3.11 -2.58,6.15 1.44,11.41 6.83,11.41h0.98Z"
-            android:strokeWidth="0">
-        <aapt:attr name="android:fillColor">
-            <gradient
-                    android:type="linear"
-                    android:startX="54.2"
-                    android:startY="50"
-                    android:endX="54.2"
-                    android:endY="61.5">
-                <item android:color="#FFFFFDE7" android:offset="0" /> <item android:color="#FFFFF9C4" android:offset="1" /> </gradient>
-        </aapt:attr>
-    </path>
+    <!-- 中心圆形 (浅灰紫色) --><path
+        android:pathData="M41.99,53.93c0,6.64 5.37,11.87 11.87,12.01 6.78,0 12.15,-5.51 12.15,-12.01s-5.37,-11.87 -12.01,-11.87 -12.15,5.37 -12.01,12.01h0v-0.14Z"
+        android:strokeWidth="0">
+    <aapt:attr name="android:fillColor">
+        <gradient
+                android:type="linear"
+                android:startX="42"
+                android:startY="54"
+                android:endX="66"
+                android:endY="54">
+            <item android:color="#FFEFEFFD" android:offset="0" /> <!-- 极浅的灰紫色 --><item android:color="#FFE2E2F1" android:offset="1" /> <!-- 稍深的极浅灰紫色 --></gradient>
+    </aapt:attr>
+</path>
+    <!-- 中心圆形高光 (更浅的灰紫色，几乎白色) --><path
+        android:pathData="M54.84,61.56c2.18,0 4.24,-1.11 5.39,-2.96 4.44,-7.16 -2.45,-15.13 -10.21,-11.56 -1.35,0.62 -2.42,1.74 -2.99,3.11 -2.58,6.15 1.44,11.41 6.83,11.41h0.98Z"
+        android:strokeWidth="0">
+    <aapt:attr name="android:fillColor">
+        <gradient
+                android:type="linear"
+                android:startX="54.2"
+                android:startY="50"
+                android:endX="54.2"
+                android:endY="61.5">
+            <item android:color="#FFFFFFFF" android:offset="0" /> <!-- 纯白或极浅的颜色 --><item android:color="#FFF8F8FF" android:offset="1" /> <!-- 极浅的蓝白色 --></gradient>
+    </aapt:attr>
+</path>
 
-    <path
-            android:fillColor="#45d299"
-            android:pathData="M54,56.76h5.79c0.28,0 0.42,-0.14 0.42,-0.42 -0.28,-1.84 -1.27,-3.25 -2.83,-4.24 -0.28,-0.19 -0.28,-0.42 0,-0.71 0.28,-0.42 0.57,-0.85 0.71,-1.27h0v-0.28h-0.28c0,0.28 -0.28,0.57 -0.42,0.71 0,0.28 -0.28,0.42 -0.42,0.71 0,0.28 -0.28,0.28 -0.42,0 -0.57,-0.28 -1.13,-0.42 -1.84,-0.42s-1.98,0 -2.97,0.42h-0.42c-0.28,-0.42 -0.57,-0.99 -0.85,-1.41h-0.28v0.71c0.28,0.42 0.42,0.71 0.71,1.13v0.42c-0.71,0.42 -1.27,0.99 -1.84,1.7 -0.57,0.85 -0.99,1.7 -1.13,2.68 0,0.19 0.09,0.28 0.28,0.28h5.93,-0.14Z"
-            android:strokeWidth="0"/>
+    <!-- 笑脸 (保持原始绿色不变) --><path
+        android:fillColor="#45d299"
+        android:pathData="M54,56.76h5.79c0.28,0 0.42,-0.14 0.42,-0.42 -0.28,-1.84 -1.27,-3.25 -2.83,-4.24 -0.28,-0.19 -0.28,-0.42 0,-0.71 0.28,-0.42 0.57,-0.85 0.71,-1.27h0v-0.28h-0.28c0,0.28 -0.28,0.57 -0.42,0.71 0,0.28 -0.28,0.42 -0.42,0.71 0,0.28 -0.28,0.28 -0.42,0 -0.57,-0.28 -1.13,-0.42 -1.84,-0.42s-1.98,0 -2.97,0.42h-0.42c-0.28,-0.42 -0.57,-0.99 -0.85,-1.41h-0.28v0.71c0.28,0.42 0.42,0.71 0.71,1.13v0.42c-0.71,0.42 -1.27,0.99 -1.84,1.7 -0.57,0.85 -0.99,1.7 -1.13,2.68 0,0.19 0.09,0.28 0.28,0.28h5.93,-0.14Z"
+        android:strokeWidth="0"/>
     <path
             android:fillColor="#02dc7f"
             android:pathData="M54,56.61h5.93v-0.28c0,-0.42 0,-0.85 -0.28,-1.27 0,-0.28 -0.28,-0.57 -0.42,-0.85 -0.42,-0.85 -1.13,-1.55 -1.98,-2.12 0,0 -0.28,0 -0.28,-0.42h-0.42c-0.71,-0.28 -1.41,-0.42 -2.26,-0.42s-1.84,0 -2.68,0.42h-0.42q0,0.28 -0.28,0.42c-0.71,0.42 -1.27,0.99 -1.84,1.84 -0.31,0.46 -0.61,1.08 -0.74,1.69v0.06c0.1,0.94 -0.11,0.94 0.31,0.94h5.65,-0.28Z"
             android:strokeWidth="0"/>
-    <path
-            android:fillColor="#000"
-            android:pathData="M51.6,54.49c0,-0.28 -0.28,-0.57 -0.57,-0.57s-0.57,0.28 -0.57,0.57 0.28,0.57 0.57,0.57 0.57,-0.28 0.57,-0.57h0Z"
-            android:strokeWidth="0"/>
+    <!-- 眼睛 (保持黑色不变) --><path
+        android:fillColor="#000"
+        android:pathData="M51.6,54.49c0,-0.28 -0.28,-0.57 -0.57,-0.57s-0.57,0.28 -0.57,0.57 0.28,0.57 0.57,0.57 0.57,-0.28 0.57,-0.57h0Z"
+        android:strokeWidth="0"/>
     <path
             android:fillColor="#000"
             android:pathData="M56.83,53.93c-0.28,0 -0.57,0.28 -0.57,0.57s0.28,0.57 0.57,0.57 0.57,0 0.57,-0.57 0,-0.57 -0.57,-0.57h0Z"
