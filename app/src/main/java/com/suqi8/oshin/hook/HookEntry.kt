@@ -31,6 +31,7 @@ import com.suqi8.oshin.hook.securitypermission.securitypermission
 import com.suqi8.oshin.hook.settings.settings
 import com.suqi8.oshin.hook.speechassist.speechassist
 import com.suqi8.oshin.hook.systemui.systemui
+import com.suqi8.oshin.hook.themestore.themestore
 import com.suqi8.oshin.hook.wallet.wallet
 import com.suqi8.oshin.hook.weather.weather
 import de.robv.android.xposed.IXposedHookZygoteInit
@@ -70,6 +71,7 @@ class HookEntry : IYukiHookXposedInit {
         loadApp(hooker = oshare())
         loadApp(hooker = incallui())
         loadApp(hooker = NotificationManager())
+        loadApp(hooker = themestore())
         loadHooker(exsystemservice())
         loadHooker(phone())
         loadHooker(padconnect())

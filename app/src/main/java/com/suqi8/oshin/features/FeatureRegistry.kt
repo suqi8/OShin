@@ -35,6 +35,7 @@ import com.suqi8.oshin.features.systemui.StatusBarClock
 import com.suqi8.oshin.features.systemui.StatusBarWifi
 import com.suqi8.oshin.features.systemui.notification
 import com.suqi8.oshin.features.systemui.systemui
+import com.suqi8.oshin.features.themestore.themestore
 import com.suqi8.oshin.features.wallet.wallet
 import com.suqi8.oshin.features.weather.weather
 import com.suqi8.oshin.models.ModuleEntry
@@ -72,6 +73,7 @@ object FeatureRegistry {
         ModuleEntry("com.coloros.weather2", "weather"),
         ModuleEntry("com.heytap.browser", "browser"),
         ModuleEntry("com.oplus.securitypermission", "securitypermission"),
+        ModuleEntry("com.heytap.themestore", "themestore"),
     )
 
     /**
@@ -143,5 +145,7 @@ object FeatureRegistry {
         "browser" to browser.definition,
 
         "securitypermission" to securitypermission.definition,
+
+        "themestore" to themestore.definition,
     )
 }
