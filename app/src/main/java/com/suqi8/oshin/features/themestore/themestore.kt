@@ -21,6 +21,22 @@ object themestore {
                     )
                 )
             ),
+            CardDefinition(
+                items = listOf(
+                    Switch(
+                        title = StringResource(R.string.remove_themestore_splash_ads),
+                        key = "remove_themestore_splash_ads"
+                    )
+                )
+            ),
+            CardDefinition(
+                items = listOf(
+                    Switch(
+                        title = StringResource(R.string.remove_themestore_upgrade),
+                        key = "remove_themestore_upgrade"
+                    )
+                )
+            ),
         )
     )
 }
