@@ -43,6 +43,7 @@ fun GetFuncRoute(route: String, context: Context): String {
         "exsystemservice" to appNameCache.getAppName("com.oplus.exsystemservice"),
         "phone" to appNameCache.getAppName("com.android.phone"),
         "padconnect" to appNameCache.getAppName("com.oplus.padconnect"),
+        "themestore" to appNameCache.getAppName("com.heytap.themestore"),
     )
 
     // 使用正则表达式和替换映射表进行替换

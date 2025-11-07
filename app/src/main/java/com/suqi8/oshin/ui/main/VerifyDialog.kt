@@ -44,7 +44,7 @@ fun VerifyDialog() {
         show.value = false
     }
 
-    if (show.value) {
+    if (show.value && !BuildConfig.DEBUG) {
         SuperDialog(
             show = show,
             summary = "为了尊重开发者的劳动成果，请输入模块下载地址进行验证。模块仅在 GitHub 发布，如在第三方赚钱网盘（如 123 网盘、迅雷等）下载，请举报发布者，谢谢。"
