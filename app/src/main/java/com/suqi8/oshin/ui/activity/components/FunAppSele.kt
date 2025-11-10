@@ -79,7 +79,7 @@ fun FunAppSele(
 
     val summaryText = summary ?: "${stringResource(R.string.selected_app)}: ${selectedApps.size}"
 
-    funArrow(
+    FunArrow(
         title = title,
         summary = summaryText,
         onClick = {

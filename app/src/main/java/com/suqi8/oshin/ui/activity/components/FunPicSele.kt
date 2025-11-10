@@ -5,7 +5,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,21 +19,22 @@ import com.kyant.capsule.ContinuousRoundedRectangle
 import com.suqi8.oshin.utils.requestPermissions
 
 @Composable
-fun funPicSele(
+fun FunPicSele(
     title: String,
     summary: String?,
     imageBitmap: ImageBitmap?,
-    externalPadding: PaddingValues = PaddingValues(0.dp),
+    // [修改] 替换 externalPadding 为 position
+    position: CouiListItemPosition = CouiListItemPosition.Middle,
     onImageSelected: (Uri?) -> Unit
 ) {
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.PickVisualMedia(),
         onResult = { uri ->
-            // 当用户选择图片后，通过回调将 Uri 通知给 ViewModel
             onImageSelected(uri)
         }
     )
     val context = LocalContext.current
+    // 权限请求逻辑保持不变 (注意：requestPermissions 需要确保存在)
     LaunchedEffect(Unit) {
         requestPermissions(context, PermissionLists.getManageExternalStoragePermission()) {}
     }
@@ -42,7 +42,8 @@ fun funPicSele(
     BasicComponent(
         title = title,
         summary = summary,
-        externalPadding = externalPadding,
+        // [修改] 传递 position
+        position = position,
         rightActions = {
             imageBitmap?.let { bitmap ->
                 Image(
@@ -50,6 +51,7 @@ fun funPicSele(
                     contentDescription = title,
                     modifier = Modifier
                         .size(48.dp)
+                        // 使用平滑圆角，更符合 ColorOS 风格 (如果 ContinuousRoundedRectangle 不可用，可用 RoundedCornerShape(8.dp) 代替)
                         .clip(ContinuousRoundedRectangle(8.dp))
                 )
             }

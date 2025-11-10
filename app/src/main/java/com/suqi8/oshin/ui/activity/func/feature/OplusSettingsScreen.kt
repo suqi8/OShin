@@ -23,8 +23,8 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.hook.settings.SettingsFeature
 import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.FunDropdown
 import com.suqi8.oshin.ui.activity.components.FunPage
-import com.suqi8.oshin.ui.activity.components.funDropdown
 import com.suqi8.oshin.ui.home.ModernSectionTitle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -110,7 +110,7 @@ fun OplusSettingsScreen(
                     val currentValue = uiState.itemStates[uniqueKey] ?: 0
 
                     Card(modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)) {
-                        funDropdown(
+                        FunDropdown(
                             title = title,
                             summary = stringResource(id = R.string.feature_from, summary),
                             selectedIndex = currentValue,

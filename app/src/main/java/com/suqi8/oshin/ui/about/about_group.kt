@@ -20,9 +20,9 @@ import androidx.core.net.toUri
 import androidx.navigation.NavController
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.addline
-import com.suqi8.oshin.ui.activity.components.funArrow
 import com.suqi8.oshin.ui.home.ModernSectionTitle
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -72,7 +72,7 @@ fun about_group(
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp)
                 ) {
-                    funArrow(title = stringResource(id = R.string.official_channel),
+                    FunArrow(title = stringResource(id = R.string.official_channel),
                         onClick = {
                             val telegramIntent = Intent(Intent.ACTION_VIEW)
                             telegramIntent.data = "tg://resolve?domain=OPatchA".toUri()
@@ -87,7 +87,7 @@ fun about_group(
                             }
                         })
                     addline()
-                    funArrow(title = stringResource(id = R.string.discussion_group),
+                    FunArrow(title = stringResource(id = R.string.discussion_group),
                         onClick = {
                             val telegramIntent = Intent(Intent.ACTION_VIEW)
                             telegramIntent.data = "tg://resolve?domain=OPatchB".toUri()
@@ -102,7 +102,7 @@ fun about_group(
                             }
                         })
                     addline()
-                    funArrow(title = stringResource(id = R.string.auto_build_release),
+                    FunArrow(title = stringResource(id = R.string.auto_build_release),
                         onClick = {
                             val telegramIntent = Intent(Intent.ACTION_VIEW)
                             telegramIntent.data = "tg://resolve?domain=OPatchC".toUri()
@@ -126,7 +126,7 @@ fun about_group(
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 6.dp)
                 ) {
-                    funArrow(title = stringResource(id = R.string.discussion_group),
+                    FunArrow(title = stringResource(id = R.string.discussion_group),
                         onClick = {
                             val qqIntent = Intent(Intent.ACTION_VIEW)
                             // 使用 mqqwpa 协议来打开 QQ 群

@@ -22,9 +22,9 @@ import com.suqi8.oshin.ui.activity.components.BasicComponent
 import com.suqi8.oshin.ui.activity.components.BasicComponentColors
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.CardDefaults
+import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.addline
-import com.suqi8.oshin.ui.activity.components.funArrow
 import com.suqi8.oshin.ui.home.ModernSectionTitle
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -72,7 +72,7 @@ fun about_references(
                     BasicComponent(
                         summary = stringResource(R.string.thanks_open_source_projects),
                         summaryColor = BasicComponentColors(
-                            color = MiuixTheme.colorScheme.primaryVariant,
+                            enabledColor = MiuixTheme.colorScheme.primaryVariant,
                             disabledColor = MiuixTheme.colorScheme.primaryVariant
                         )
                     )
@@ -247,7 +247,7 @@ fun about_references_item(
     license: String? = null
 ) {
     val context = LocalContext.current
-    funArrow(title = name,
+    FunArrow(title = name,
         summary = username + if (license != null) " | $license" else " | " + stringResource(R.string.no_license),
         onClick = {
             if (url != null) {

@@ -40,9 +40,9 @@ import com.suqi8.oshin.ui.activity.components.BasicComponent
 import com.suqi8.oshin.ui.activity.components.BasicComponentColors
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.CardDefaults
+import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.addline
-import com.suqi8.oshin.ui.activity.components.funArrow
 import com.suqi8.oshin.ui.home.ModernSectionTitle
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
@@ -87,7 +87,7 @@ fun about_contributors(
                     BasicComponent(
                         summary = stringResource(R.string.thanks_contributors),
                         summaryColor = BasicComponentColors(
-                            color = MiuixTheme.colorScheme.primaryVariant,
+                            enabledColor = MiuixTheme.colorScheme.primaryVariant,
                             disabledColor = MiuixTheme.colorScheme.primaryVariant
                         )
                     )
@@ -198,7 +198,7 @@ internal fun item(
         github?.let { append("Github@$it ") }
         qq?.let { append("QQ@$it ") }
     }
-    funArrow(
+    FunArrow(
         title = name,
         leftAction = {
             qq?.let {
@@ -242,7 +242,7 @@ internal fun item(
         ) {
             Column {
                 coolapk?.let {
-                    funArrow(
+                    FunArrow(
                         title = stringResource(R.string.coolapk),
                         leftAction = {
                             Image(
@@ -263,7 +263,7 @@ internal fun item(
                     addline()
                 }
                 github?.let {
-                    funArrow(
+                    FunArrow(
                         title = "Github",
                         leftAction = {
                             Image(
@@ -282,7 +282,7 @@ internal fun item(
                     addline()
                 }
                 qq?.let {
-                    funArrow(
+                    FunArrow(
                         title = "QQ",
                         leftAction = {
                             Image(

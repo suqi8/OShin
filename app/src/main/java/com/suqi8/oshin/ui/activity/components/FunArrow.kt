@@ -19,15 +19,28 @@ import com.suqi8.oshin.R
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
+/**
+ * 一个带有标题、摘要（可选）、右侧文本（可选）和右向箭头的列表项组件。
+ * 通常用于导航到下一个页面。
+ *
+ * @param title 列表项的主标题。
+ * @param modifier 应用于组件的修饰符。
+ * @param summary 可选的副标题或摘要信息。
+ * @param rightText 显示在箭头左侧的可选文本。
+ * @param leftAction 在标题左侧显示的可选组件（如图标）。
+ * @param position 列表项在卡片组中的位置，用于自动调整高度和圆角边距。
+ * @param onClick 点击时的回调。
+ */
 @Composable
-fun funArrow(
+fun FunArrow(
     title: String,
     modifier: Modifier = Modifier,
     titleModifier: Modifier = Modifier,
     summary: String? = null,
     rightText: String? = null,
     leftAction: @Composable (() -> Unit)? = null,
-    externalPadding: PaddingValues = PaddingValues(0.dp),
+    // [新增] 引入位置参数，默认 Middle
+    position: CouiListItemPosition = CouiListItemPosition.Middle,
     onClick: () -> Unit
 ) {
     SuperArrow(
@@ -35,7 +48,8 @@ fun funArrow(
         summary = summary,
         rightText = rightText,
         leftAction = leftAction,
-        externalPadding = externalPadding,
+        // [修改] 传递 position，移除了 externalPadding
+        position = position,
         modifier = modifier,
         titleModifier = titleModifier,
         onClick = onClick
@@ -43,20 +57,7 @@ fun funArrow(
 }
 
 /**
- * A arrow with a title and a summary.
- *
- * @param title The title of the [SuperArrow].
- * @param titleColor The color of the title.
- * @param summary The summary of the [SuperArrow].
- * @param summaryColor The color of the summary.
- * @param leftAction The [Composable] content that on the left side of the [SuperArrow].
- * @param rightText The text on the right side of the [SuperArrow].
- * @param rightActionColor The color of the right action.
- * @param modifier The modifier to be applied to the [SuperArrow].
- * @param insideMargin The margin inside the [SuperArrow].
- * @param onClick The callback when the [SuperArrow] is clicked.
- * @param holdDownState Used to determine whether it is in the pressed state.
- * @param enabled Whether the [SuperArrow] is clickable.
+ * FunArrow 的高级版本，提供更多的自定义选项。
  */
 @Composable
 fun SuperArrow(
@@ -71,8 +72,8 @@ fun SuperArrow(
     modifier: Modifier = Modifier,
     insideMargin: PaddingValues = BasicComponentDefaults.InsideMargin,
     onClick: (() -> Unit)? = null,
+    position: CouiListItemPosition = CouiListItemPosition.Middle,
     holdDownState: Boolean = false,
-    externalPadding: PaddingValues = PaddingValues(0.dp),
     enabled: Boolean = true
 ) {
     BasicComponent(
@@ -84,6 +85,8 @@ fun SuperArrow(
         summary = summary,
         summaryColor = summaryColor,
         leftAction = leftAction,
+        // [修改] 传递 position 给 BasicComponent
+        position = position,
         rightActions = {
             SuperArrowRightActions(
                 rightText = rightText,
@@ -93,7 +96,6 @@ fun SuperArrow(
         },
         onClick = onClick?.takeIf { enabled },
         holdDownState = holdDownState,
-        externalPadding = externalPadding,
         enabled = enabled
     )
 }

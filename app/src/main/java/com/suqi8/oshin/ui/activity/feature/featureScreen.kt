@@ -12,7 +12,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -60,16 +59,17 @@ import com.suqi8.oshin.models.Title
 import com.suqi8.oshin.models.TitledScreenItem
 import com.suqi8.oshin.models.UrlAction
 import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.CouiListItemPosition
 import com.suqi8.oshin.ui.activity.components.FunAppSele
+import com.suqi8.oshin.ui.activity.components.FunArrow
+import com.suqi8.oshin.ui.activity.components.FunDropdown
 import com.suqi8.oshin.ui.activity.components.FunNoEnable
 import com.suqi8.oshin.ui.activity.components.FunPage
+import com.suqi8.oshin.ui.activity.components.FunPicSele
+import com.suqi8.oshin.ui.activity.components.FunSlider
+import com.suqi8.oshin.ui.activity.components.FunString
 import com.suqi8.oshin.ui.activity.components.FunSwitch
 import com.suqi8.oshin.ui.activity.components.addline
-import com.suqi8.oshin.ui.activity.components.funArrow
-import com.suqi8.oshin.ui.activity.components.funDropdown
-import com.suqi8.oshin.ui.activity.components.funPicSele
-import com.suqi8.oshin.ui.activity.components.funSlider
-import com.suqi8.oshin.ui.activity.components.funString
 import com.suqi8.oshin.ui.activity.components.wantFind
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
@@ -215,27 +215,19 @@ fun featureScreen(
                                                     val isHighlighted =
                                                         (item as? TitledScreenItem)?.key == uiState.highlightKey
 
-                                                    val topPadding = when {
-                                                        itemCount == 1 -> 4.dp
-                                                        itemIndex == 0 -> 2.dp
-                                                        else -> 0.dp
+                                                    val position = when {
+                                                        itemCount == 1 -> CouiListItemPosition.Single
+                                                        itemIndex == 0 -> CouiListItemPosition.Top
+                                                        itemIndex == itemCount - 1 -> CouiListItemPosition.Bottom
+                                                        else -> CouiListItemPosition.Middle
                                                     }
-                                                    val bottomPadding = when {
-                                                        itemCount == 1 -> 4.dp
-                                                        itemIndex == itemCount - 1 -> 2.dp
-                                                        else -> 0.dp
-                                                    }
-                                                    val itemPadding = PaddingValues(
-                                                        top = topPadding,
-                                                        bottom = bottomPadding
-                                                    )
 
                                                     RenderScreenItem(
                                                         item = item,
                                                         viewModel = viewModel,
                                                         navController = navController,
                                                         isHighlighted = isHighlighted,
-                                                        paddingValues = itemPadding,
+                                                        position = position,
                                                         sharedTransitionScope = sharedTransitionScope,
                                                         animatedVisibilityScope = animatedVisibilityScope
                                                     )
@@ -287,7 +279,7 @@ private fun RenderScreenItem(
     viewModel: featureViewModel,
     navController: NavController,
     isHighlighted: Boolean,
-    paddingValues: PaddingValues,
+    position: CouiListItemPosition,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
@@ -329,14 +321,14 @@ private fun RenderScreenItem(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
                     checked = checked,
-                    externalPadding = paddingValues,
+                    position = position,
                     onCheckedChange = { newValue -> viewModel.updateState(item.key, newValue) }
                 )
             }
 
             is Slider -> {
                 val value = itemStates.itemStates[item.key] as? Float ?: item.defaultValue
-                funSlider(
+                FunSlider(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
                     value = value,
@@ -344,18 +336,18 @@ private fun RenderScreenItem(
                     onValueChange = { newValue -> viewModel.updateState(item.key, newValue) },
                     unit = item.unit,
                     decimalPlaces = item.decimalPlaces,
-                    externalPadding = paddingValues,
+                    position = position,
                 )
             }
 
             is Dropdown -> {
                 val selectedIndex = itemStates.itemStates[item.key] as? Int ?: item.defaultValue
-                funDropdown(
+                FunDropdown(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
                     selectedIndex = selectedIndex,
                     options = stringArrayResource(id = item.optionsRes).toList(),
-                    externalPadding = paddingValues,
+                    position = position,
                     onSelectedIndexChange = { newIndex ->
                         viewModel.updateState(
                             item.key,
@@ -367,7 +359,7 @@ private fun RenderScreenItem(
 
             is Action -> {
                 with(sharedTransitionScope) {
-                    funArrow(
+                    FunArrow(
                         title = resolveTitle(title = item.title),
                         modifier = Modifier.sharedBounds(
                             sharedContentState = rememberSharedContentState(key = "item-${item.route}"),
@@ -378,7 +370,7 @@ private fun RenderScreenItem(
                             animatedVisibilityScope = animatedVisibilityScope
                         ),
                         summary = item.summary?.let { stringResource(it) },
-                        externalPadding = paddingValues,
+                        position = position,
                         onClick = { navController.navigate("feature/${item.route}") }
                     )
                 }
@@ -387,11 +379,11 @@ private fun RenderScreenItem(
             is Picture -> {
                 // 从 itemStates 中获取当前显示的图片
                 val imageBitmap = itemStates.itemStates[item.key] as? ImageBitmap
-                funPicSele(
+                FunPicSele(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
                     imageBitmap = imageBitmap,
-                    externalPadding = paddingValues,
+                    position = position,
                     onImageSelected = { uri ->
                         // 当用户选择了新图片，通知 ViewModel 处理
                         viewModel.saveImageFromUri(item.key, item.targetPath, uri)
@@ -401,11 +393,11 @@ private fun RenderScreenItem(
 
             is StringInput -> {
                 val value = itemStates.itemStates[item.key] as? String ?: item.defaultValue
-                funString(
+                FunString(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
                     value = value,
-                    externalPadding = paddingValues,
+                    position = position,
                     onValueChange = { newValue -> viewModel.updateState(item.key, newValue) },
                     nullable = item.nullable
                 )
@@ -413,9 +405,10 @@ private fun RenderScreenItem(
 
             is UrlAction -> {
                 val context = LocalContext.current
-                funArrow(
+                FunArrow(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
+                    position = position, // 确保 URL Action 也传递位置
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW, item.url.toUri())
                         context.startActivity(intent)
