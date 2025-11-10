@@ -497,4 +497,5 @@
     <string name="unlock_themestore_vip_features">解锁部分VIP功能</string>
     <string name="remove_themestore_splash_ads">移除开屏广告</string>
     <string name="remove_themestore_upgrade">禁止升级</string>
+    <string name="disable_bottom_bar_glass">底部栏禁用玻璃效果</string>
 </resources>

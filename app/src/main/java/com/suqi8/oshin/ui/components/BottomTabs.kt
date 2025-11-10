@@ -41,7 +41,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.LayoutDirection
@@ -63,11 +62,11 @@ import com.kyant.backdrop.shadow.InnerShadow
 import com.kyant.backdrop.shadow.Shadow
 import com.kyant.capsule.ContinuousCapsule
 import com.suqi8.oshin.ui.main.LocalColorMode
-import com.suqi8.oshin.ui.main.NavigationItem
 import com.suqi8.oshin.utils.DampedDragAnimation
 import com.suqi8.oshin.utils.InteractiveHighlight
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import top.yukonga.miuix.kmp.basic.NavigationItem
 import kotlin.math.abs
 import kotlin.math.sign
 
@@ -212,7 +211,7 @@ fun BottomTabs(
                     // --- MIGRATION: 调用 lambda 获取 scale ---
                     val contentScale = LocalLiquidBottomTabScale.current()
                     Image(
-                        painter = painterResource(screen.icon),
+                        imageVector = screen.icon,
                         contentDescription = screen.label,
                         modifier = Modifier
                             .size(28.dp)

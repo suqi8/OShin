@@ -1,7 +1,6 @@
 package com.suqi8.oshin.ui.main
 
 import android.annotation.SuppressLint
-import android.graphics.RenderEffect
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
@@ -10,17 +9,12 @@ import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -39,50 +33,43 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlurEffect
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.highcapable.yukihookapi.hook.factory.prefs
+import com.kyant.backdrop.Backdrop
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
-import com.kyant.backdrop.drawPlainBackdrop
-import com.kyant.backdrop.effects.blur
-import com.kyant.backdrop.effects.effect
 import com.suqi8.oshin.Main_Function
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.about.Main_About
+import com.suqi8.oshin.ui.activity.components.BlurredTopBarBackground
 import com.suqi8.oshin.ui.components.BottomTabs
 import com.suqi8.oshin.ui.home.MainHome
 import com.suqi8.oshin.ui.module.Main_Module
-import com.suqi8.oshin.ui.softupdate.GitHubRelease
 import com.suqi8.oshin.ui.softupdate.UpdateViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
-import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
+import top.yukonga.miuix.kmp.basic.NavigationBar
+import top.yukonga.miuix.kmp.basic.NavigationItem
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
-import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.TopAppBar
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
-import top.yukonga.miuix.kmp.extra.SuperDialog
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import kotlin.math.abs
 
 // 将 LocalColorMode 定义在与使用它的地方更近的文件中
 val LocalColorMode = compositionLocalOf<MutableState<Int>> { error("No ColorMode provided") }
-
-data class NavigationItem(
-    val label: String,
-    val icon: Int
-)
 
 @OptIn(FlowPreview::class, ExperimentalSharedTransitionApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -94,68 +81,52 @@ fun MainScreen(
 ) {
     val scope = rememberCoroutineScope()
     val topAppBarScrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
-
     val pagerState = rememberPagerState(pageCount = { 4 }, initialPage = 0)
-    val currentScrollBehavior = topAppBarScrollBehavior
-
-    val items = listOf(
-        NavigationItem(stringResource(R.string.home), R.drawable.home),
-        NavigationItem(stringResource(R.string.module), R.drawable.module),
-        NavigationItem(stringResource(R.string.func), R.drawable.func),
-        NavigationItem(stringResource(R.string.about), R.drawable.about)
-    )
     val context = LocalContext.current
-    val currentVersion = remember {
-        try {
-            context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.0"
-        } catch (e: Exception) {
-            "0.0.0"
-        }
+    val backdrop = rememberLayerBackdrop()
+
+    // 底部导航栏项目
+    val bottomNavItems = listOf(
+        NavigationItem(stringResource(R.string.home), ImageVector.vectorResource(R.drawable.home)),
+        NavigationItem(stringResource(R.string.module), ImageVector.vectorResource(R.drawable.module)),
+        NavigationItem(stringResource(R.string.func), ImageVector.vectorResource(R.drawable.func)),
+        NavigationItem(stringResource(R.string.about), ImageVector.vectorResource(R.drawable.about))
+    )
+
+    // 底部栏可见性状态
+    var isBottomBarVisible by remember { mutableStateOf(true) }
+
+    // 监听滚动行为控制底部栏显示/隐藏
+    BottomBarVisibilityEffect(
+        scrollBehavior = topAppBarScrollBehavior,
+        onVisibilityChange = { isBottomBarVisible = it }
+    )
+
+    // 监听页面切换重置底部栏显示
+    LaunchedEffect(pagerState.currentPage) {
+        isBottomBarVisible = true
     }
+
+    // 版本更新检查
     val activity = context as ComponentActivity
     val updateViewModel: UpdateViewModel = hiltViewModel(activity)
+    val currentVersion = remember {
+        runCatching {
+            context.packageManager.getPackageInfo(context.packageName, 0).versionName ?: "0.0.0"
+        }.getOrDefault("0.0.0")
+    }
+
     LaunchedEffect(Unit) {
         updateViewModel.autoCheckForUpdate(currentVersion)
     }
 
     val updateResult by updateViewModel.updateCheckResult.collectAsState()
 
-    LaunchedEffect(pagerState) {
-        snapshotFlow { pagerState.currentPage }.debounce(150).collectLatest {
-        }
-    }
-    var isBottomBarVisible by remember { mutableStateOf(true) }
-    LaunchedEffect(currentScrollBehavior) {
-        var previousOffset = 0
-        val threshold = 50
-
-        snapshotFlow { currentScrollBehavior.state.contentOffset.toInt() }
-            .collect { currentOffset ->
-                if (currentOffset >= -5) {
-                    isBottomBarVisible = true
-                    previousOffset = currentOffset
-                    return@collect
-                }
-
-                val delta = currentOffset - previousOffset
-
-                if (abs(delta) > threshold) {
-                    isBottomBarVisible = delta >= 0
-                    previousOffset = currentOffset
-                }
-            }
-    }
-    LaunchedEffect(pagerState.currentPage) {
-        isBottomBarVisible = true
-    }
-
-    val backdrop = rememberLayerBackdrop()
-
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
             TopAppBar(
-                scrollBehavior = currentScrollBehavior,
+                scrollBehavior = topAppBarScrollBehavior,
                 color = Color.Transparent,
                 modifier = Modifier.height(0.dp),
                 title = ""
@@ -163,10 +134,10 @@ fun MainScreen(
         }
     ) { padding ->
         Box {
-            val background = MiuixTheme.colorScheme.background
-
             AppHorizontalPager(
-                modifier = Modifier.layerBackdrop(backdrop).imePadding(),
+                modifier = Modifier
+                    .layerBackdrop(backdrop)
+                    .imePadding(),
                 pagerState = pagerState,
                 topAppBarScrollBehavior = topAppBarScrollBehavior,
                 padding = padding,
@@ -174,68 +145,22 @@ fun MainScreen(
                 sharedTransitionScope = sharedTransitionScope,
                 animatedVisibilityScope = animatedVisibilityScope
             )
-            Box(
-                Modifier
-                    .height(72.dp)
-                    .fillMaxWidth()
-                    .drawPlainBackdrop(
-                        backdrop = backdrop,
-                        shape = { RectangleShape },
-                        effects = {
-                            blur(4f.dp.toPx())
-                            effect(
-                                RenderEffect.createRuntimeShaderEffect(
-                                    obtainRuntimeShader(
-                                        "AlphaMask",
-                                        """
-uniform shader content;
 
-uniform float2 size;
-layout(color) uniform half4 tint;
-uniform float tintIntensity;
-
-half4 main(float2 coord) {
-float blurAlpha = smoothstep(size.y, size.y * 0.2, coord.y);
-float tintAlpha = smoothstep(size.y, size.y * 0.2, coord.y);
-return mix(content.eval(coord) * blurAlpha, tint * tintAlpha, tintIntensity);
-}"""
-                                    ).apply {
-                                        setFloatUniform("size", size.width, size.height)
-                                        setColorUniform("tint", background.value.toLong())
-                                        setFloatUniform("tintIntensity", 0.8f)
-                                    },
-                                    "content"
-                                )
-                            )
-                        }
-                    ),
-                contentAlignment = Alignment.Center
-            ) {}
+            BlurredTopBarBackground(backdrop)
 
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .safeDrawingPadding()
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.BottomCenter // 直接把所有子元素默认对齐到底部
             ) {
-                AnimatedVisibility(
-                    visible = isBottomBarVisible,
-                    enter = slideInVertically(initialOffsetY = { it }),
-                    exit = slideOutVertically(targetOffsetY = { it })
-                ) {
-                    BottomTabs(
-                        modifier = Modifier.align(Alignment.BottomStart),
-                        tabs = items,
-                        pagerState = pagerState,
-                        onTabSelected = { screen ->
-                            scope.launch {
-                                pagerState.animateScrollToPage(screen)
-                            }
-                        },
-                        backdrop = backdrop
-                    )
-                }
+                AnimatedBottomBar(
+                    isVisible = isBottomBarVisible,
+                    items = bottomNavItems,
+                    pagerState = pagerState,
+                    scope = scope,
+                    backdrop = backdrop
+                )
             }
+
             UpdateAvailableDialog(
                 release = updateResult,
                 navController = navController,
@@ -246,6 +171,88 @@ return mix(content.eval(coord) * blurAlpha, tint * tintAlpha, tintIntensity);
     }
 }
 
+/**
+ * 底部栏可见性控制效果
+ */
+@Composable
+private fun BottomBarVisibilityEffect(
+    scrollBehavior: ScrollBehavior,
+    onVisibilityChange: (Boolean) -> Unit
+) {
+    LaunchedEffect(scrollBehavior) {
+        var previousOffset = 0
+        val threshold = 50
+
+        snapshotFlow { scrollBehavior.state.contentOffset.toInt() }
+            .collect { currentOffset ->
+                // 接近顶部时始终显示
+                if (currentOffset >= -5) {
+                    onVisibilityChange(true)
+                    previousOffset = currentOffset
+                    return@collect
+                }
+
+                val delta = currentOffset - previousOffset
+
+                // 滚动超过阈值时切换显示状态
+                if (abs(delta) > threshold) {
+                    onVisibilityChange(delta >= 0)
+                    previousOffset = currentOffset
+                }
+            }
+    }
+}
+
+/**
+ * 带动画的底部导航栏
+ */
+@Composable
+private fun AnimatedBottomBar(
+    isVisible: Boolean,
+    items: List<NavigationItem>,
+    pagerState: PagerState,
+    scope: CoroutineScope,
+    backdrop: Backdrop
+) {
+    val context = LocalContext.current
+    val bottomTabMode = remember { context.prefs("settings").getBoolean("bottomtab") }
+
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+    ) {
+        AnimatedVisibility(
+            visible = isVisible,
+            enter = slideInVertically(initialOffsetY = { it }),
+            exit = slideOutVertically(targetOffsetY = { it })
+        ) {
+            if (!bottomTabMode) {
+                BottomTabs(
+                    modifier = Modifier,
+                    tabs = items,
+                    pagerState = pagerState,
+                    onTabSelected = { screen ->
+                        scope.launch {
+                            pagerState.animateScrollToPage(screen)
+                        }
+                    },
+                    backdrop = backdrop
+                )
+            } else {
+                NavigationBar(
+                    items = items,
+                    selected = pagerState.currentPage,
+                    onClick = { screen ->
+                        scope.launch {
+                            pagerState.animateScrollToPage(screen)
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
+        }
+    }
+}
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
@@ -264,35 +271,9 @@ fun AppHorizontalPager(
         beyondViewportPageCount = 3,
         userScrollEnabled = true,
         pageContent = { page ->
-            val maxBlurRadius = 16.dp
-            val maxBlurRadiusPx = with(LocalDensity.current) { maxBlurRadius.toPx() }
-            val offset = try {
-                pagerState.getOffsetDistanceInPages(page)
-            } catch (e: IndexOutOfBoundsException) {
-                0f
-            }
-            val isScrolling = pagerState.isScrollInProgress
-            val blurPx = if (isScrolling) {
-                // 如果正在滚动，就根据偏移量计算模糊度
-                abs(offset) * maxBlurRadiusPx
-            } else {
-                // 如果已经停止滚动 (即使用户停在两页之间)，则不模糊
-                0f
-            }
-            // 4. 创建一个动态的 Modifier
-            val pageModifier = Modifier.graphicsLayer {
-                // 只有在模糊值有意义时才应用效果
-                if (blurPx > 0.1f) {
-                    renderEffect = BlurEffect(
-                        blurPx,
-                        blurPx,
-                        TileMode.Decal // Decal 模式在边缘处理上最干净
-                    )
-                }
-            }
-            Box(
-                modifier = pageModifier.fillMaxSize()
-            ) {
+            Box(modifier = Modifier
+                .rememberPageBlurModifier(pagerState, page)
+                .fillMaxSize()) {
                 when (page) {
                     0 -> MainHome(
                         topAppBarScrollBehavior = topAppBarScrollBehavior,
@@ -331,45 +312,23 @@ fun AppHorizontalPager(
     )
 }
 
+/**
+ * 记住页面模糊效果的 Modifier
+ */
 @Composable
-private fun UpdateAvailableDialog(
-    release: GitHubRelease?,
-    navController: NavController,
-    onDismiss: () -> Unit,
-    updateViewModel: UpdateViewModel
-) {
-    val show = remember(release) { mutableStateOf(release != null) }
+private fun Modifier.rememberPageBlurModifier(pagerState: PagerState, page: Int): Modifier {
+    val maxBlurRadius = 16.dp
+    val maxBlurRadiusPx = with(LocalDensity.current) { maxBlurRadius.toPx() }
 
-    SuperDialog(
-        show = show,
-        title = stringResource(R.string.update_page_status_new_version),
-        summary = stringResource(R.string.update_available_dialog_summary, release?.name ?: ""),
-        onDismissRequest = onDismiss
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            TextButton(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.cancel),
-                onClick = {
-                    onDismiss()
-                    show.value = false
-                }
-            )
-            Spacer(Modifier.width(12.dp))
-            TextButton(
-                modifier = Modifier.weight(1f),
-                text = stringResource(R.string.update_available_dialog_now),
-                colors = ButtonDefaults.textButtonColorsPrimary(),
-                onClick = {
-                    onDismiss()
-                    show.value = false
-                    updateViewModel.setAutoDownloadFlag()
-                    navController.navigate("software_update")
-                }
-            )
+    return remember(pagerState.currentPage, pagerState.currentPageOffsetFraction) {
+        // 页面偏移量（正负表示左右偏移）
+        val offset = runCatching { pagerState.getOffsetDistanceInPages(page) }.getOrDefault(0f)
+        val blurPx = abs(offset) * maxBlurRadiusPx
+
+        Modifier.graphicsLayer {
+            if (blurPx > 0.1f) {
+                renderEffect = BlurEffect(blurPx, blurPx, TileMode.Decal)
+            }
         }
     }
 }

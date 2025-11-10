@@ -215,13 +215,12 @@ fun about_setting(
                                 PackageManager.DONT_KILL_APP
                             )
                         })
-                    /*addline()
-                    FunSwich(
-                        title = stringResource(R.string.enable_blur),
+                    addline()
+                    FunSwitch(
+                        title = stringResource(R.string.disable_bottom_bar_glass),
                         category = "settings",
-                        key = "enable_blur",
-                        defValue = true
-                    )*/
+                        key = "bottomtab"
+                    )
                 }
             }
         }
