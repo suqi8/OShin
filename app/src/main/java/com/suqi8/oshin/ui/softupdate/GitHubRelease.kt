@@ -13,6 +13,8 @@ data class GitHubRelease(
     val body: String,
     @SerializedName("created_at")
     val createdAt: String,
+    @SerializedName("published_at")
+    val publishedAt: String?,
     @SerializedName("assets")
     val assets: List<GitHubAsset>
 )
