@@ -416,19 +416,22 @@ private fun UpdateInfoSection(
             }
         }
 
-        release?.createdAt?.let { createdAt ->
+        val dateToShow = release?.publishedAt ?: release?.createdAt
+
+        dateToShow?.let { date ->
             Row(
                 modifier = Modifier.padding(top = 4.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(R.string.update_page_published_at, formatDate(createdAt)),
+                    text = stringResource(R.string.update_page_published_at, formatDate(date)),
                     fontSize = 11.sp,
                     color = MiuixTheme.colorScheme.onSurfaceVariantActions
                 )
                 Spacer(Modifier.width(8.dp))
                 Text(
-                    text = stringResource(R.string.update_page_time_ago_wrapper, formatTimeAgo(createdAt, context)), // 传入 context
+                    // 传入 context
+                    text = stringResource(R.string.update_page_time_ago_wrapper, formatTimeAgo(date, context)),
                     fontSize = 11.sp,
                     color = MiuixTheme.colorScheme.onSurfaceVariantActions
                 )
