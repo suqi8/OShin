@@ -118,7 +118,7 @@ fun MainHome(
             verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             item {
-                Spacer(modifier = Modifier.height(88.dp))
+                Spacer(modifier = Modifier.height(16.dp))
             }
             // 轮播图
             item {
@@ -136,18 +136,6 @@ fun MainHome(
                 )
             }
 
-            // 今日亮点（推荐功能）
-            if (uiState.randomFeatures.isNotEmpty()) {
-                item {
-                    TodayHighlightsSection(
-                        features = uiState.randomFeatures,
-                        navController = navController,
-                        sharedTransitionScope = sharedTransitionScope,
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                }
-            }
-
             // 设备信息
             item {
                 uiState.deviceInfo?.let { DeviceInfoSection(info = it) }
@@ -160,6 +148,18 @@ fun MainHome(
                     sharedTransitionScope = sharedTransitionScope,
                     animatedVisibilityScope = animatedVisibilityScope
                 )
+            }
+
+            // 今日亮点（推荐功能）
+            if (uiState.randomFeatures.isNotEmpty()) {
+                item {
+                    TodayHighlightsSection(
+                        features = uiState.randomFeatures,
+                        navController = navController,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                }
             }
         }
     }
