@@ -183,7 +183,7 @@ fun Main_Module(
                             ) {
                                 SuperArrow(
                                     title = stringResource(R.string.app_not_found_in_list),
-                                    titleColor = BasicComponentDefaults.titleColor(color = MiuixTheme.colorScheme.primary),
+                                    titleColor = BasicComponentDefaults.titleColor(enabledColor = MiuixTheme.colorScheme.primary),
                                     onClick = {
                                         val packages = uiState.notInstalledApps.joinToString(",")
                                         navController.navigate("hide_apps_notice/$packages")

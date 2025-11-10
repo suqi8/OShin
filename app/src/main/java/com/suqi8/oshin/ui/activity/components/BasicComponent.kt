@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -21,12 +23,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.SubcomposeLayout
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.interfaces.HoldDownInteraction
 import top.yukonga.miuix.kmp.theme.MiuixTheme
+
+
+/**
+ * 列表项在卡片组中的位置。
+ */
+enum class CouiListItemPosition {
+    Top, Middle, Bottom, Single
+}
+
+private enum class SlotsEnum { Start, Center, End }
 
 /**
  * A basic component with Miuix style. Widely used in other extension components.
@@ -56,7 +70,7 @@ fun BasicComponent(
     modifier: Modifier = Modifier,
     insideMargin: PaddingValues = BasicComponentDefaults.InsideMargin,
     onClick: (() -> Unit)? = null,
-    externalPadding: PaddingValues = PaddingValues(0.dp),
+    position: CouiListItemPosition = CouiListItemPosition.Middle,
     holdDownState: Boolean = false,
     enabled: Boolean = true,
     interactionSource: MutableInteractionSource? = null,
@@ -64,6 +78,11 @@ fun BasicComponent(
     @Suppress("NAME_SHADOWING")
     val interactionSource = interactionSource ?: remember { MutableInteractionSource() }
     val indication = LocalIndication.current
+    val extraTopDp = if (position == CouiListItemPosition.Top || position == CouiListItemPosition.Single) 2.dp else 0.dp
+    val extraBottomDp = if (position == CouiListItemPosition.Bottom || position == CouiListItemPosition.Single) 2.dp else 0.dp
+    val minHeight = 48.dp
+    val density = LocalDensity.current
+    val horizontalGapPx = with(density) { 16.dp.roundToPx() }
 
     val holdDown = remember { mutableStateOf<HoldDownInteraction.HoldDown?>(null) }
     LaunchedEffect(holdDownState) {
@@ -89,13 +108,19 @@ fun BasicComponent(
         } else Modifier
     }
 
+    val layoutDirection = androidx.compose.ui.platform.LocalLayoutDirection.current
+
     SubcomposeLayout(
         modifier = modifier
-            .heightIn(min = 48.dp)
+            .heightIn(min = minHeight + extraTopDp + extraBottomDp)
             .fillMaxWidth()
             .then(clickableModifier)
-            .padding(externalPadding)
-            .padding(insideMargin)
+            .padding(
+                start = insideMargin.calculateStartPadding(layoutDirection),
+                end = insideMargin.calculateEndPadding(layoutDirection),
+                top = insideMargin.calculateTopPadding() + extraTopDp,
+                bottom = insideMargin.calculateBottomPadding() + extraBottomDp
+            )
     ) { constraints ->
         val looseConstraints = constraints.copy(minWidth = 0, minHeight = 0)
         // 1. leftAction
@@ -115,17 +140,20 @@ fun BasicComponent(
         val rightWidth = rightPlaceables.maxOfOrNull { it.width } ?: 0
         val rightHeight = rightPlaceables.maxOfOrNull { it.height } ?: 0
         // 3. content
-        val contentMaxWidth = maxOf(0, constraints.maxWidth - leftWidth - rightWidth - 16.dp.roundToPx())
+        val leftGap = if (leftWidth > 0) horizontalGapPx else 0
+        val rightGap = if (rightWidth > 0) horizontalGapPx else 0
+
+        val contentMaxWidth = maxOf(0, constraints.maxWidth - leftWidth - leftGap - rightWidth - rightGap)
         val titlePlaceable = title?.let {
             subcompose("title") {
                 Box(
-                    modifier = Modifier.heightIn(min = 21.14.dp),
+                    modifier = Modifier.heightIn(min = 21.dp),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = it,
                         fontSize = 16.sp,
-                        lineHeight = 22.sp,
+                        lineHeight = 1.2.em,
                         fontWeight = FontWeight.Medium,
                         color = titleColor.color(enabled),
                         modifier = titleModifier
@@ -135,32 +163,29 @@ fun BasicComponent(
         }
         val summaryPlaceable = summary?.let {
             subcompose("summary") {
-                Box(
-                    modifier = Modifier.heightIn(min = 18.57.dp),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = it,
-                        fontSize = 14.sp,
-                        lineHeight = 20.sp,
-                        color = summaryColor.color(enabled)
-                    )
-                }
+                Text(
+                    text = it,
+                    fontSize = 14.sp,
+                    lineHeight = 1.3.em,
+                    fontWeight = FontWeight.Normal,
+                    color = summaryColor.color(enabled)
+                )
             }.first().measure(looseConstraints.copy(maxWidth = contentMaxWidth))
         }
-        val gap = 4.dp.roundToPx()
+        val gap = 2.dp.roundToPx()
         val contentHeight = (titlePlaceable?.height ?: 0) +
                 (if (titlePlaceable != null && summaryPlaceable != null) gap else 0) +
                 (summaryPlaceable?.height ?: 0)
-        val layoutHeight = maxOf(leftHeight, rightHeight, contentHeight)
+        val layoutHeight = maxOf(leftHeight, rightHeight, contentHeight).coerceAtLeast(constraints.minHeight)
         layout(constraints.maxWidth, layoutHeight) {
             var x = 0
-            // leftAction
-            leftPlaceables.forEach {
-                it.placeRelative(x, (layoutHeight - it.height) / 2)
-                x += it.width
+            if (leftWidth > 0) {
+                leftPlaceables.forEach {
+                    it.placeRelative(x, (layoutHeight - it.height) / 2)
+                }
+                x += leftWidth + leftGap
             }
-            // content
+
             var contentY = (layoutHeight - contentHeight) / 2
             titlePlaceable?.let {
                 it.placeRelative(x, contentY)
@@ -168,7 +193,7 @@ fun BasicComponent(
                 if (summaryPlaceable != null) contentY += gap
             }
             summaryPlaceable?.placeRelative(x, contentY)
-            // rightActions
+
             val rightX = constraints.maxWidth - rightWidth
             rightPlaceables.forEach {
                 it.placeRelative(rightX, (layoutHeight - it.height) / 2)
@@ -189,11 +214,11 @@ object BasicComponentDefaults {
      */
     @Composable
     fun titleColor(
-        color: Color = MiuixTheme.colorScheme.onSurface,
+        enabledColor: Color = MiuixTheme.colorScheme.onSurface,
         disabledColor: Color = MiuixTheme.colorScheme.disabledOnSecondaryVariant
     ): BasicComponentColors {
         return BasicComponentColors(
-            color = color,
+            enabledColor = enabledColor,
             disabledColor = disabledColor
         )
     }
@@ -203,19 +228,19 @@ object BasicComponentDefaults {
      */
     @Composable
     fun summaryColor(
-        color: Color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
+        enabledColor: Color = MiuixTheme.colorScheme.onSurfaceVariantSummary,
         disabledColor: Color = MiuixTheme.colorScheme.disabledOnSecondaryVariant
     ): BasicComponentColors = BasicComponentColors(
-        color = color,
+        enabledColor = enabledColor,
         disabledColor = disabledColor
     )
 }
 
 @Immutable
 class BasicComponentColors(
-    private val color: Color,
+    private val enabledColor: Color,
     private val disabledColor: Color
 ) {
     @Stable
-    internal fun color(enabled: Boolean): Color = if (enabled) color else disabledColor
+    internal fun color(enabled: Boolean): Color = if (enabled) enabledColor else disabledColor
 }

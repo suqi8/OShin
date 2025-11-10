@@ -1,7 +1,6 @@
 package com.suqi8.oshin.ui.activity.components
 
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -23,13 +22,14 @@ import top.yukonga.miuix.kmp.basic.TextField
 import top.yukonga.miuix.kmp.extra.SuperDialog
 
 @Composable
-fun funString(
+fun FunString(
     title: String,
     summary: String?,
     value: String,
     onValueChange: (String) -> Unit,
     nullable: Boolean = false,
-    externalPadding: PaddingValues = PaddingValues(0.dp)
+    // [修改] 替换 externalPadding 为 position，默认值为 Middle
+    position: CouiListItemPosition = CouiListItemPosition.Middle
 ) {
     val showDialog = remember { mutableStateOf(false) }
     val cacheValue = remember { mutableStateOf(value) }
@@ -41,11 +41,12 @@ fun funString(
         }
     }
 
-    funArrow(
+    // [修改] 使用 FunArrow 并传递 position 参数
+    FunArrow(
         title = title,
         summary = summary,
         rightText = value,
-        externalPadding = externalPadding,
+        position = position, // 传递位置信息
         onClick = { showDialog.value = true }
     )
 

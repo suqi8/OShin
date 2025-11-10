@@ -64,7 +64,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.graphics.PaintingStyle.Companion.Stroke
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
@@ -93,9 +92,10 @@ import com.highcapable.yukihookapi.YukiHookAPI_Impl
 import com.suqi8.oshin.BuildConfig
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.CouiListItemPosition
+import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.SuperArrow
 import com.suqi8.oshin.ui.activity.components.addline
-import com.suqi8.oshin.ui.activity.components.funArrow
 import com.suqi8.oshin.ui.main.LocalColorMode
 import com.suqi8.oshin.ui.theme.BgEffectView
 import com.suqi8.oshin.utils.executeCommand
@@ -275,8 +275,9 @@ fun Main_About(
                         .alpha(cardAlpha)
                 ) {
                     val coroutineScope = rememberCoroutineScope()
-                    funArrow(
+                    FunArrow(
                         title = stringResource(R.string.Device_Name),
+                        position = CouiListItemPosition.Top,
                         rightText = deviceName.value,
                         onClick = {
                             showDeviceNameDialog.value = true
@@ -323,8 +324,9 @@ fun Main_About(
                         }
                     }
                     addline()
-                    funArrow(title = stringResource(R.string.Device_Memory),
+                    FunArrow(title = stringResource(R.string.Device_Memory),
                         rightText = "$usedStorage / $physicalTotalStorage",
+                        position = CouiListItemPosition.Bottom,
                         onClick = { openStorageSettings(context) }
                     )
                 }
@@ -361,7 +363,7 @@ fun Main_About(
                 )
             }
             item {
-                SmallTitle(text = stringResource(R.string.config_management)) // <-- 需要在 strings.xml 中添加
+                SmallTitle(text = stringResource(R.string.config_management))
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -370,24 +372,26 @@ fun Main_About(
                 ) {
                     Column {
                         SuperArrow(
-                            title = stringResource(R.string.export_config), // <-- 需要在 strings.xml 中添加
-                            summary = stringResource(R.string.export_config_summary), // <-- 需要在 strings.xml 中添加
+                            title = stringResource(R.string.export_config),
+                            summary = stringResource(R.string.export_config_summary),
+                            position = CouiListItemPosition.Top,
                             onClick = {
                                 exportLauncher.launch("OShin_Config.json")
                             }
                         )
                         addline()
                         SuperArrow(
-                            title = stringResource(R.string.import_config), // <-- 需要在 strings.xml 中添加
-                            summary = stringResource(R.string.import_config_summary), // <-- 需要在 strings.xml 中添加
+                            title = stringResource(R.string.import_config),
+                            summary = stringResource(R.string.import_config_summary),
                             onClick = {
                                 importLauncher.launch("application/json")
                             }
                         )
                         addline()
                         SuperArrow(
-                            title = stringResource(R.string.clear_config), // <-- 需要在 strings.xml 中添加
-                            summary = stringResource(R.string.clear_config_summary), // <-- 需要在 strings.xml 中添加
+                            title = stringResource(R.string.clear_config),
+                            summary = stringResource(R.string.clear_config_summary),
+                            position = CouiListItemPosition.Bottom,
                             onClick = {
                                 viewModel.clearAllSettings()
                             }
@@ -406,7 +410,9 @@ fun Main_About(
             }
             item {
                 Text(
-                    modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 20.dp),
                     text = "Powered By SYCTeam & 酸奶",
                     fontSize = MiuixTheme.textStyles.subtitle.fontSize,
                     fontWeight = FontWeight.Medium,
@@ -449,14 +455,27 @@ fun Main_About(
                         val strokeWidth = 1.5.dp.toPx()
                         val inset = strokeWidth / 2
                         drawRoundRect(
-                            brush = Brush.linearGradient(colors = listOf(Color(borderColor[1]), Color(borderColor[0])), start = Offset(size.width / 2, 0f), end = Offset(size.width / 2, size.height)),
+                            brush = Brush.linearGradient(
+                                colors = listOf(
+                                    Color(borderColor[1]),
+                                    Color(borderColor[0])
+                                ),
+                                start = Offset(size.width / 2, 0f),
+                                end = Offset(size.width / 2, size.height)
+                            ),
                             topLeft = Offset(inset, inset),
                             size = Size(size.width - strokeWidth, size.height - strokeWidth),
                             cornerRadius = CornerRadius(16.dp.toPx()),
                             style = Stroke(width = strokeWidth)
                         )
                     }
-                    .shadow(elevation = 1.5.dp, shape = G2RoundedCornerShape(16.dp), clip = true, ambientColor = shadowColor, spotColor = shadowColor),
+                    .shadow(
+                        elevation = 1.5.dp,
+                        shape = G2RoundedCornerShape(16.dp),
+                        clip = true,
+                        ambientColor = shadowColor,
+                        spotColor = shadowColor
+                    ),
                 onClick = { navController.navigate("software_update") },
                 interactionSource = interactionSource,
                 colors = backgroundColor
@@ -479,12 +498,17 @@ private fun InfoItem(label: String, value: String) {
 
 @Composable
 private fun CommunityCard(context: Context) {
-    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp).padding(bottom = 6.dp)) {
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 12.dp)
+        .padding(bottom = 6.dp)) {
         Card(Modifier.padding(10.dp)) {
             Image(painter = painterResource(R.drawable.qq_pic_merged_1727926207595), contentDescription = null, modifier = Modifier.fillMaxWidth())
         }
         val toastMessage = stringResource(R.string.please_install_cool_apk)
-        funArrow(title = stringResource(R.string.go_to_his_homepage), onClick = {
+        FunArrow(title = stringResource(R.string.go_to_his_homepage),
+            position = CouiListItemPosition.Bottom,
+            onClick = {
             val coolApkUri = Uri.parse("coolmarket://u/894238")
             val intent = Intent(Intent.ACTION_VIEW, coolApkUri)
             try {
@@ -503,8 +527,17 @@ private fun ThanksCard(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp).padding(bottom = 6.dp)) {
-        item(name = "酸奶", coolapk = "Stracha酸奶菌", coolapkid = 15225420, github = "suqi8", qq = 3383787570)
+    Card(modifier = Modifier
+        .fillMaxWidth()
+        .padding(horizontal = 12.dp)
+        .padding(bottom = 6.dp)) {
+        item(
+            name = "酸奶",
+            coolapk = "Stracha酸奶菌",
+            coolapkid = 15225420,
+            github = "suqi8",
+            qq = 3383787570
+        )
         addline()
         with(sharedTransitionScope) {
             Box(
@@ -513,9 +546,10 @@ private fun ThanksCard(
                         sharedContentState = rememberSharedContentState(key = "about_contributors"),
                         animatedVisibilityScope = animatedVisibilityScope
                     )
-                    .fillMaxWidth().wrapContentHeight()
+                    .fillMaxWidth()
+                    .wrapContentHeight()
             ) {
-                funArrow(title = stringResource(R.string.contributors), onClick = { navController.navigate("about_contributors") })
+                FunArrow(title = stringResource(R.string.contributors), onClick = { navController.navigate("about_contributors") })
             }
         }
         addline()
@@ -526,9 +560,14 @@ private fun ThanksCard(
                         sharedContentState = rememberSharedContentState(key = "about_references"),
                         animatedVisibilityScope = animatedVisibilityScope
                     )
-                    .fillMaxWidth().wrapContentHeight()
+                    .fillMaxWidth()
+                    .wrapContentHeight()
             ) {
-                funArrow(title = stringResource(R.string.references), onClick = { navController.navigate("about_references") })
+                FunArrow(
+                    title = stringResource(R.string.references),
+                    position = CouiListItemPosition.Bottom,
+                    onClick = { navController.navigate("about_references") }
+                )
             }
         }
     }
@@ -542,7 +581,12 @@ private fun AboutActionsCard(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    Card(modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp).padding(bottom = 6.dp)) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 12.dp)
+            .padding(bottom = 6.dp)
+    ) {
         with(sharedTransitionScope) {
             Box(
                 modifier = Modifier
@@ -550,13 +594,21 @@ private fun AboutActionsCard(
                         sharedContentState = rememberSharedContentState(key = "about_setting"),
                         animatedVisibilityScope = animatedVisibilityScope
                     )
-                    .fillMaxWidth().wrapContentHeight()
+                    .fillMaxWidth()
+                    .wrapContentHeight()
             ) {
-                IconFunArrow(title = stringResource(R.string.settings), iconRes = R.drawable.settings, onClick = { navController.navigate("about_setting") })
+                IconFunArrow(
+                    title = stringResource(R.string.settings),
+                    iconRes = R.drawable.settings,
+                    position = CouiListItemPosition.Top,
+                    onClick = { navController.navigate("about_setting") })
             }
         }
         addline()
-        IconFunArrow(title = stringResource(R.string.donors), iconRes = R.drawable.donors, onClick = { openUrl(context, "https://oshin.mikusignal.top/docs/donate.html") })
+        IconFunArrow(
+            title = stringResource(R.string.donors),
+            iconRes = R.drawable.donors,
+            onClick = { openUrl(context, "https://oshin.mikusignal.top/docs/donate.html") })
         addline()
         with(sharedTransitionScope) {
             Box(
@@ -565,27 +617,60 @@ private fun AboutActionsCard(
                         sharedContentState = rememberSharedContentState(key = "about_group"), // <-- Key
                         animatedVisibilityScope = animatedVisibilityScope
                     )
-                    .fillMaxWidth().wrapContentHeight()
+                    .fillMaxWidth()
+                    .wrapContentHeight()
             ) {
-                IconFunArrow(title = stringResource(R.string.official_channel), iconRes = R.drawable.group, onClick = { navController.navigate("about_group") })
+                IconFunArrow(
+                    title = stringResource(R.string.official_channel),
+                    iconRes = R.drawable.group,
+                    onClick = { navController.navigate("about_group") })
             }
         }
         addline()
-        IconFunArrow(title = stringResource(R.string.official_website), iconRes = R.drawable.website, onClick = { openUrl(context, "https://oshin.mikusignal.top/") })
+        IconFunArrow(
+            title = stringResource(R.string.official_website),
+            iconRes = R.drawable.website,
+            onClick = { openUrl(context, "https://oshin.mikusignal.top/") })
         addline()
-        IconFunArrow(title = "GitHub", summary = stringResource(R.string.github_summary), iconRes = R.drawable.github, onClick = { openUrl(context, "https://github.com/suqi8/OShin") })
+        IconFunArrow(
+            title = "GitHub",
+            summary = stringResource(R.string.github_summary),
+            iconRes = R.drawable.github,
+            onClick = { openUrl(context, "https://github.com/suqi8/OShin") })
         addline()
-        IconFunArrow(title = stringResource(R.string.contribute_translation), summary = stringResource(R.string.crowdin_contribute_summary), iconRes = R.drawable.translators, onClick = { openUrl(context, "https://github.com/suqi8/OShin/tree/master/app/src/main/res") })
+        IconFunArrow(
+            title = stringResource(R.string.contribute_translation),
+            summary = stringResource(R.string.crowdin_contribute_summary),
+            iconRes = R.drawable.translators,
+            position = CouiListItemPosition.Bottom,
+            onClick = {
+                openUrl(
+                    context,
+                    "https://github.com/suqi8/OShin/tree/master/app/src/main/res"
+                )
+            })
     }
 }
 
 @Composable
-fun IconFunArrow(title: String, summary: String? = null, iconRes: Int, onClick: () -> Unit) {
-    funArrow(
+fun IconFunArrow(
+    title: String,
+    summary: String? = null,
+    iconRes: Int,
+    position: CouiListItemPosition = CouiListItemPosition.Single,
+    onClick: () -> Unit
+) {
+    FunArrow(
         title = title,
         summary = summary,
+        position = position,
         leftAction = {
-            Image(painter = painterResource(iconRes), contentDescription = null, modifier = Modifier.size(32.dp).padding(end = 8.dp), colorFilter = ColorFilter.tint(colorScheme.onSurface))
+            Image(
+                painter = painterResource(iconRes),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                colorFilter = ColorFilter.tint(colorScheme.onSurface)
+            )
         },
         onClick = onClick
     )
@@ -593,8 +678,17 @@ fun IconFunArrow(title: String, summary: String? = null, iconRes: Int, onClick: 
 
 @Composable
 fun Button(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean = true, cornerRadius: Dp = ButtonDefaults.CornerRadius, minWidth: Dp = ButtonDefaults.MinWidth, minHeight: Dp = ButtonDefaults.MinHeight, colors: Color = colorScheme.secondaryVariant, insideMargin: PaddingValues = ButtonDefaults.InsideMargin, interactionSource: MutableInteractionSource = remember { MutableInteractionSource() }, content: @Composable RowScope.() -> Unit) {
-    Surface(modifier = modifier.semantics { role = Role.Button }.clickable(interactionSource = interactionSource, indication = null, enabled = enabled, onClick = onClick), shape = G2RoundedCornerShape(cornerRadius), color = colors) {
-        Row(Modifier.defaultMinSize(minWidth = minWidth, minHeight = minHeight).padding(insideMargin), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically, content = content)
+    Surface(modifier = modifier
+        .semantics { role = Role.Button }
+        .clickable(
+            interactionSource = interactionSource,
+            indication = null,
+            enabled = enabled,
+            onClick = onClick
+        ), shape = G2RoundedCornerShape(cornerRadius), color = colors) {
+        Row(Modifier
+            .defaultMinSize(minWidth = minWidth, minHeight = minHeight)
+            .padding(insideMargin), horizontalArrangement = Arrangement.Center, verticalAlignment = Alignment.CenterVertically, content = content)
     }
 }
 

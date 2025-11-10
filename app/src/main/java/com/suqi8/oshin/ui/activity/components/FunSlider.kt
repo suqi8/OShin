@@ -2,7 +2,6 @@ package com.suqi8.oshin.ui.activity.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -26,7 +25,7 @@ import top.yukonga.miuix.kmp.extra.SuperDialog
 import java.util.Locale
 
 @Composable
-fun funSlider(
+fun FunSlider(
     title: String,
     summary: String?,
     value: Float,
@@ -34,9 +33,10 @@ fun funSlider(
     onValueChange: (Float) -> Unit,
     unit: String,
     decimalPlaces: Int,
-    externalPadding: PaddingValues = PaddingValues(0.dp)
+    // [修改] 替换 externalPadding 为 position，默认值为 Middle
+    position: CouiListItemPosition = CouiListItemPosition.Middle
 ) {
-    // 1. 弹窗的显示状态，这是临时的UI状态，可以保留在组件内部
+    // 1. 弹窗的显示状态
     val showDialog = remember { mutableStateOf(false) }
 
     // 2. 用于在弹窗中临时编辑的值
@@ -62,11 +62,12 @@ fun funSlider(
     }
 
     // 主页面上的显示项，点击后打开弹窗
-    funArrow(
+    // [修改] 使用 FunArrow 并传递 position 参数
+    FunArrow(
         title = title,
         summary = summary,
         rightText = "$formattedDisplayValue$unit",
-        externalPadding = externalPadding,
+        position = position, // 传递位置信息，由 FunArrow -> SuperArrow -> BasicComponent 处理
         onClick = { showDialog.value = true }
     )
 
@@ -102,6 +103,7 @@ fun funSlider(
                 enabled = cacheValue.value.toFloatOrNull() != null,
                 onClick = {
                     cacheValue.value.toFloatOrNull()?.let {
+                        // 只有在点击确定时才提交值
                         onValueChange(it)
                     }
                     showDialog.value = false
