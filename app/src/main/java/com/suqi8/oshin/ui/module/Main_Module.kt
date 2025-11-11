@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -39,6 +40,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -80,15 +82,14 @@ import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.ui.activity.components.BasicComponentDefaults
+import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.CardDefaults
 import com.suqi8.oshin.ui.activity.components.SuperArrow
 import com.suqi8.oshin.ui.home.ModernSectionTitle
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.GetFuncRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import top.yukonga.miuix.kmp.basic.Card
-import top.yukonga.miuix.kmp.basic.CardDefaults
-import top.yukonga.miuix.kmp.basic.CircularProgressIndicator
 import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -113,84 +114,92 @@ fun Main_Module(
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Box(
+    // ===== 使用 ViewModel 中保存的滚动位置 =====
+    val listState = rememberLazyListState(
+        initialFirstVisibleItemIndex = viewModel.scrollIndex,
+        initialFirstVisibleItemScrollOffset = viewModel.scrollOffset
+    )
+
+    // ===== 监听滚动变化并保存到 ViewModel =====
+    LaunchedEffect(listState) {
+        snapshotFlow {
+            listState.firstVisibleItemIndex to listState.firstVisibleItemScrollOffset
+        }.collect { (index, offset) ->
+            viewModel.saveScrollPosition(index, offset)
+        }
+    }
+
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .background(MiuixTheme.colorScheme.background)
+            .overScrollVertical()
+            .scrollEndHaptic()
+            .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+        contentPadding = padding,
+        state = listState,
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        if (uiState.isLoading) {
-            CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
-        } else {
-            LazyColumn(
+        item {
+            ModernSectionTitle(
+                title = stringResource(id = R.string.module),
                 modifier = Modifier
-                    .fillMaxSize()
-                    .overScrollVertical()
-                    .scrollEndHaptic()
-                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                contentPadding = padding,
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                item {
-                    ModernSectionTitle(
-                        title = stringResource(id = R.string.module),
-                        modifier = Modifier
-                            .displayCutoutPadding()
-                            .padding(top = padding.calculateTopPadding() + 80.dp)
-                    )
-                }
-                item {
-                    HUDSearchBar(
+                    .displayCutoutPadding()
+                    .padding(top = padding.calculateTopPadding() + 80.dp)
+            )
+        }
+        item {
+            HUDSearchBar(
+                query = uiState.searchQuery,
+                onQueryChange = viewModel::onSearchQueryChanged,
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+        }
+
+        item {
+            Column {
+                if (uiState.isSearching) {
+                    SearchContent(
+                        features = uiState.searchResults,
                         query = uiState.searchQuery,
-                        onQueryChange = viewModel::onSearchQueryChanged,
-                        modifier = Modifier.padding(horizontal = 16.dp)
+                        navController = navController,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope
+                    )
+                } else {
+                    AppListContent(
+                        appStyle = uiState.appStyle,
+                        onStyleChange = viewModel::onAppStyleChanged,
+                        moduleEntries = uiState.moduleEntries,
+                        onAppNotFound = viewModel::onAppNotFound,
+                        navController = navController,
+                        sharedTransitionScope = sharedTransitionScope,
+                        animatedVisibilityScope = animatedVisibilityScope,
+                        viewModel = viewModel // ===== 传递 viewModel =====
                     )
                 }
+            }
+        }
 
-                item {
-                    Column {
-                        if (uiState.isSearching) {
-                            SearchContent(
-                                features = uiState.searchResults,
-                                query = uiState.searchQuery,
-                                navController = navController,
-                                sharedTransitionScope = sharedTransitionScope,
+        item {
+            AnimatedVisibility(visible = uiState.notInstalledApps.isNotEmpty()) {
+                with(sharedTransitionScope) {
+                    Card(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .sharedBounds(
+                                sharedContentState = rememberSharedContentState(key = "hide_apps_notice"),
                                 animatedVisibilityScope = animatedVisibilityScope
                             )
-                        } else {
-                            AppListContent(
-                                appStyle = uiState.appStyle,
-                                onStyleChange = viewModel::onAppStyleChanged,
-                                moduleEntries = uiState.moduleEntries,
-                                onAppNotFound = viewModel::onAppNotFound,
-                                navController = navController,
-                                sharedTransitionScope = sharedTransitionScope,
-                                animatedVisibilityScope = animatedVisibilityScope
-                            )
-                        }
-                    }
-                }
-
-                item {
-                    AnimatedVisibility(visible = uiState.notInstalledApps.isNotEmpty()) {
-                        with(sharedTransitionScope) {
-                            HUDModuleContainer(
-                                modifier = Modifier
-                                    .padding(horizontal = 16.dp)
-                                    .sharedBounds(
-                                        sharedContentState = rememberSharedContentState(key = "hide_apps_notice"),
-                                        animatedVisibilityScope = animatedVisibilityScope
-                                    )
-                            ) {
-                                SuperArrow(
-                                    title = stringResource(R.string.app_not_found_in_list),
-                                    titleColor = BasicComponentDefaults.titleColor(enabledColor = MiuixTheme.colorScheme.primary),
-                                    onClick = {
-                                        val packages = uiState.notInstalledApps.joinToString(",")
-                                        navController.navigate("hide_apps_notice/$packages")
-                                    }
-                                )
+                    ) {
+                        SuperArrow(
+                            title = stringResource(R.string.app_not_found_in_list),
+                            titleColor = BasicComponentDefaults.titleColor(enabledColor = MiuixTheme.colorScheme.primary),
+                            onClick = {
+                                val packages = uiState.notInstalledApps.joinToString(",")
+                                navController.navigate("hide_apps_notice/$packages")
                             }
-                        }
+                        )
                     }
                 }
             }
@@ -210,7 +219,8 @@ fun AppListContent(
     onAppNotFound: (String) -> Unit,
     navController: NavController,
     sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    viewModel: ModuleViewModel = hiltViewModel()
 ) {
     val installedEntries = moduleEntries
 
@@ -228,7 +238,7 @@ fun AppListContent(
             )
         }
 
-        HUDModuleContainer {
+        Card(modifier = Modifier.padding(horizontal = 0.dp)) {
             if (appStyle == 0) {
                 FlowRow(
                     modifier = Modifier.fillMaxWidth().padding(8.dp),
@@ -242,7 +252,8 @@ fun AppListContent(
                             onResult = onAppNotFound,
                             entry = entry,
                             sharedTransitionScope = sharedTransitionScope,
-                            animatedVisibilityScope = animatedVisibilityScope
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            viewModel = viewModel // ===== 传递 viewModel =====
                         )
                     }
                 }
@@ -255,7 +266,8 @@ fun AppListContent(
                             onResult = onAppNotFound,
                             entry = entry,
                             sharedTransitionScope = sharedTransitionScope,
-                            animatedVisibilityScope = animatedVisibilityScope
+                            animatedVisibilityScope = animatedVisibilityScope,
+                            viewModel = viewModel // ===== 传递 viewModel =====
                         )
                         if (index < installedEntries.size - 1) {
                             addline()
@@ -276,7 +288,7 @@ fun SearchContent(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    HUDModuleContainer(modifier = Modifier.padding(horizontal = 16.dp)) {
+    Card(modifier = Modifier.padding(horizontal = 16.dp)) {
         if (features.isEmpty()) {
             Box(Modifier.fillMaxWidth().height(200.dp), contentAlignment = Alignment.Center) {
                 Text(
@@ -372,18 +384,15 @@ fun HUDSearchBar(
 ) {
     val focusManager = LocalFocusManager.current
 
-    Box(
+    Card(
         modifier = modifier
-            .clip(RoundedCornerShape(16.dp))
-            .background(MiuixTheme.colorScheme.surface)
-            .border(1.dp, Color(0xFF6366F1).copy(alpha = 0.2f), RoundedCornerShape(16.dp))
-            .padding(horizontal = 16.dp)
     ) {
         BasicTextField(
             value = query,
             onValueChange = onQueryChange,
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(horizontal = 12.dp)
                 .height(48.dp),
             textStyle = MiuixTheme.textStyles.main.copy(
                 color = MiuixTheme.colorScheme.onBackground,
@@ -397,8 +406,7 @@ fun HUDSearchBar(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Icon(
                         imageVector = MiuixIcons.Useful.Search,
-                        contentDescription = "Search",
-                        tint = Color(0xFF6366F1)
+                        contentDescription = "Search"
                     )
                     Spacer(Modifier.width(12.dp))
                     Box(Modifier.weight(1f)) {
@@ -500,68 +508,128 @@ fun FunctionApp(
     onResult: (String) -> Unit,
     entry: ModuleEntry,
     sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    viewModel: ModuleViewModel = hiltViewModel() // 添加 ViewModel 参数
 ) {
-    GetAppIconAndName(packageName = packageName) { appName, icon ->
-        if (appName != "noapp") {
-            val defaultColor = MiuixTheme.colorScheme.surface
-            val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
-            val isLoading = remember { mutableStateOf(dominantColor.value == defaultColor) }
+    // 先检查缓存
+    val cachedInfo = remember(packageName) { viewModel.getAppInfo(packageName) }
 
-            LaunchedEffect(icon) {
-                if (isLoading.value) {
-                    val newColor = withContext(Dispatchers.IO) {
-                        if (YukiHookAPI.Status.isModuleActive) getAutoColor(icon) else Color.Red
-                    }
-                    dominantColor.value = newColor
-                    colorCache[packageName] = newColor
-                    isLoading.value = false
-                }
-            }
-
-            with(sharedTransitionScope) {
-                Row(
+    if (cachedInfo != null) {
+        // 直接使用缓存数据渲染，无需加载
+        with(sharedTransitionScope) {
+            Row(
+                modifier = Modifier
+                    .clickable(onClick = onClick)
+                    .fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Card(
+                    colors = CardDefaults.defaultColors(color = cachedInfo.dominantColor),
                     modifier = Modifier
-                        .clickable(onClick = onClick)
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Card(
-                        colors = CardDefaults.defaultColors(color = dominantColor.value),
-                        modifier = Modifier
-                            .sharedBounds(
-                                sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
-                                animatedVisibilityScope = animatedVisibilityScope
-                            )
-                            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                            .drawColoredShadow(
-                                dominantColor.value,
-                                1f,
-                                borderRadius = 13.dp,
-                                shadowRadius = 7.dp,
-                            )
-                    ) {
-                        Image(bitmap = icon, contentDescription = appName, modifier = Modifier.size(45.dp))
-                    }
-                    Column(modifier = Modifier.padding(start = 16.dp)) {
-                        Text(
-                            text = appName,
-                            modifier = Modifier.sharedElement(
-                                sharedContentState = rememberSharedContentState(key = "title-${entry.routeId}"),
-                                animatedVisibilityScope = animatedVisibilityScope
-                            )
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
+                            animatedVisibilityScope = animatedVisibilityScope
                         )
-                        Text(
-                            text = packageName,
-                            fontSize = MiuixTheme.textStyles.subtitle.fontSize,
-                            fontWeight = FontWeight.Medium,
-                            color = MiuixTheme.colorScheme.onBackgroundVariant
+                        .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                        .drawColoredShadow(
+                            cachedInfo.dominantColor,
+                            1f,
+                            borderRadius = 13.dp,
+                            shadowRadius = 7.dp,
+                        )
+                ) {
+                    Image(
+                        bitmap = cachedInfo.icon,
+                        contentDescription = cachedInfo.name,
+                        modifier = Modifier.size(45.dp)
+                    )
+                }
+                Column(modifier = Modifier.padding(start = 16.dp)) {
+                    Text(
+                        text = cachedInfo.name,
+                        modifier = Modifier.sharedElement(
+                            sharedContentState = rememberSharedContentState(key = "title-${entry.routeId}"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
+                    )
+                    Text(
+                        text = packageName,
+                        fontSize = MiuixTheme.textStyles.subtitle.fontSize,
+                        fontWeight = FontWeight.Medium,
+                        color = MiuixTheme.colorScheme.onBackgroundVariant
+                    )
+                }
+            }
+        }
+    } else {
+        // 缓存中没有，需要加载
+        GetAppIconAndName(packageName = packageName) { appName, icon ->
+            if (appName != "noapp") {
+                val defaultColor = MiuixTheme.colorScheme.surface
+                val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
+                val isLoading = remember { mutableStateOf(dominantColor.value == defaultColor) }
+
+                LaunchedEffect(icon) {
+                    if (isLoading.value) {
+                        val newColor = withContext(Dispatchers.IO) {
+                            if (YukiHookAPI.Status.isModuleActive) getAutoColor(icon) else Color.Red
+                        }
+                        dominantColor.value = newColor
+                        colorCache[packageName] = newColor
+                        isLoading.value = false
+
+                        // ===== 关键：保存到 ViewModel 缓存 =====
+                        viewModel.cacheAppInfo(
+                            packageName,
+                            AppInfo(appName, icon, newColor)
                         )
                     }
                 }
+
+                with(sharedTransitionScope) {
+                    Row(
+                        modifier = Modifier
+                            .clickable(onClick = onClick)
+                            .fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Card(
+                            colors = CardDefaults.defaultColors(color = dominantColor.value),
+                            modifier = Modifier
+                                .sharedBounds(
+                                    sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
+                                .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                                .drawColoredShadow(
+                                    dominantColor.value,
+                                    1f,
+                                    borderRadius = 13.dp,
+                                    shadowRadius = 7.dp,
+                                )
+                        ) {
+                            Image(bitmap = icon, contentDescription = appName, modifier = Modifier.size(45.dp))
+                        }
+                        Column(modifier = Modifier.padding(start = 16.dp)) {
+                            Text(
+                                text = appName,
+                                modifier = Modifier.sharedElement(
+                                    sharedContentState = rememberSharedContentState(key = "title-${entry.routeId}"),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
+                            )
+                            Text(
+                                text = packageName,
+                                fontSize = MiuixTheme.textStyles.subtitle.fontSize,
+                                fontWeight = FontWeight.Medium,
+                                color = MiuixTheme.colorScheme.onBackgroundVariant
+                            )
+                        }
+                    }
+                }
+            } else {
+                onResult(packageName)
             }
-        } else {
-            onResult(packageName)
         }
     }
 }
@@ -576,70 +644,127 @@ fun FunctionAppFlow(
     onResult: (String) -> Unit,
     entry: ModuleEntry,
     sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    viewModel: ModuleViewModel = hiltViewModel() // 添加 ViewModel 参数
 ) {
-    GetAppIconAndName(packageName = packageName) { appName, icon ->
-        if (appName != "noapp") {
-            val defaultColor = MiuixTheme.colorScheme.surface
-            val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
-            val isLoading = remember { mutableStateOf(dominantColor.value == defaultColor) }
+    // 先检查缓存
+    val cachedInfo = remember(packageName) { viewModel.getAppInfo(packageName) }
 
-            LaunchedEffect(icon) {
-                if (isLoading.value) {
-                    val newColor = withContext(Dispatchers.IO) {
-                        if (YukiHookAPI.Status.isModuleActive) getAutoColor(icon) else Color.Red
-                    }
-                    dominantColor.value = newColor
-                    colorCache[packageName] = newColor
-                    isLoading.value = false
-                }
-            }
-
-            with(sharedTransitionScope) {
-                Column(
+    if (cachedInfo != null) {
+        // 直接使用缓存数据渲染
+        with(sharedTransitionScope) {
+            Column(
+                modifier = Modifier
+                    .width(65.dp)
+                    .clickable(onClick = onClick),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Card(
+                    colors = CardDefaults.defaultColors(color = cachedInfo.dominantColor),
                     modifier = Modifier
-                        .width(65.dp)
-                        .clickable(onClick = onClick),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .padding(top = 10.dp)
+                        .sharedBounds(
+                            sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
+                        .drawColoredShadow(
+                            cachedInfo.dominantColor,
+                            1f,
+                            borderRadius = 13.dp,
+                            shadowRadius = 7.dp,
+                        )
                 ) {
-                    Card(
-                        colors = CardDefaults.defaultColors(color = dominantColor.value),
-                        modifier = Modifier
-                            .padding(top = 10.dp)
-                            .sharedBounds(
-                                sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
-                                animatedVisibilityScope = animatedVisibilityScope
-                            )
-                            .drawColoredShadow(
-                                dominantColor.value,
-                                1f,
-                                borderRadius = 13.dp,
-                                shadowRadius = 7.dp,
-                            )
-                    ) {
-                        Image(bitmap = icon, contentDescription = appName, modifier = Modifier.size(50.dp))
-                    }
-                    Text(
-                        text = appName,
-                        fontSize = 12.sp,
-                        fontWeight = FontWeight.Medium,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
-                        softWrap = false,
-                        modifier = Modifier.padding(top = 10.dp, bottom = 6.dp)
-                            .sharedElement(
-                                sharedContentState = rememberSharedContentState(key = "title-${entry.routeId}"),
-                                animatedVisibilityScope = animatedVisibilityScope
-                            )
+                    Image(
+                        bitmap = cachedInfo.icon,
+                        contentDescription = cachedInfo.name,
+                        modifier = Modifier.size(50.dp)
                     )
                 }
+                Text(
+                    text = cachedInfo.name,
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Medium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    softWrap = false,
+                    modifier = Modifier.padding(top = 10.dp, bottom = 6.dp)
+                        .sharedElement(
+                            sharedContentState = rememberSharedContentState(key = "title-${entry.routeId}"),
+                            animatedVisibilityScope = animatedVisibilityScope
+                        )
+                )
             }
-        } else {
-            onResult(packageName)
+        }
+    } else {
+        // 缓存中没有，需要加载
+        GetAppIconAndName(packageName = packageName) { appName, icon ->
+            if (appName != "noapp") {
+                val defaultColor = MiuixTheme.colorScheme.surface
+                val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
+                val isLoading = remember { mutableStateOf(dominantColor.value == defaultColor) }
+
+                LaunchedEffect(icon) {
+                    if (isLoading.value) {
+                        val newColor = withContext(Dispatchers.IO) {
+                            if (YukiHookAPI.Status.isModuleActive) getAutoColor(icon) else Color.Red
+                        }
+                        dominantColor.value = newColor
+                        colorCache[packageName] = newColor
+                        isLoading.value = false
+
+                        // ===== 关键：保存到 ViewModel 缓存 =====
+                        viewModel.cacheAppInfo(
+                            packageName,
+                            AppInfo(appName, icon, newColor)
+                        )
+                    }
+                }
+
+                with(sharedTransitionScope) {
+                    Column(
+                        modifier = Modifier
+                            .width(65.dp)
+                            .clickable(onClick = onClick),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Card(
+                            colors = CardDefaults.defaultColors(color = dominantColor.value),
+                            modifier = Modifier
+                                .padding(top = 10.dp)
+                                .sharedBounds(
+                                    sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
+                                .drawColoredShadow(
+                                    dominantColor.value,
+                                    1f,
+                                    borderRadius = 13.dp,
+                                    shadowRadius = 7.dp,
+                                )
+                        ) {
+                            Image(bitmap = icon, contentDescription = appName, modifier = Modifier.size(50.dp))
+                        }
+                        Text(
+                            text = appName,
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Medium,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis,
+                            softWrap = false,
+                            modifier = Modifier.padding(top = 10.dp, bottom = 6.dp)
+                                .sharedElement(
+                                    sharedContentState = rememberSharedContentState(key = "title-${entry.routeId}"),
+                                    animatedVisibilityScope = animatedVisibilityScope
+                                )
+                        )
+                    }
+                }
+            } else {
+                onResult(packageName)
+            }
         }
     }
 }
-
 
 // --- 工具函数和类 ---
 
