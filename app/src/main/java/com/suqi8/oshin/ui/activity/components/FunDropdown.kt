@@ -6,6 +6,7 @@ import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -81,7 +82,6 @@ fun FunDropdown(
     summary: String? = null,
     selectedIndex: Int,
     options: List<String>,
-    // [修改] 替换 externalPadding 为 position
     position: CouiListItemPosition = CouiListItemPosition.Middle,
     onSelectedIndexChange: (Int) -> Unit
 ) {
@@ -90,12 +90,30 @@ fun FunDropdown(
         summary = summary,
         items = options,
         selectedIndex = selectedIndex,
-        // [修改] 传递 position
         position = position,
         onSelectedIndexChange = onSelectedIndexChange
     )
 }
 
+/**
+ * A dropdown with a title and a summary.
+ *
+ * @param items The options of the [SuperDropdown].
+ * @param selectedIndex The index of the selected option.
+ * @param title The title of the [SuperDropdown].
+ * @param titleColor The color of the title.
+ * @param summary The summary of the [SuperDropdown].
+ * @param summaryColor The color of the summary.
+ * @param dropdownColors The [DropdownColors] of the [SuperDropdown].
+ * @param mode The dropdown show mode of the [SuperDropdown].
+ * @param modifier The modifier to be applied to the [SuperDropdown].
+ * @param insideMargin The margin inside the [SuperDropdown].
+ * @param maxHeight The maximum height of the [ListPopup].
+ * @param enabled Whether the [SuperDropdown] is enabled.
+ * @param showValue Whether to show the selected value of the [SuperDropdown].
+ * @param onClick The callback when the [SuperDropdown] is clicked.
+ * @param onSelectedIndexChange The callback when the selected index of the [SuperDropdown] is changed.
+ */
 @Composable
 fun SuperDropdown(
     items: List<String>,
@@ -111,19 +129,17 @@ fun SuperDropdown(
     maxHeight: Dp? = null,
     enabled: Boolean = true,
     showValue: Boolean = true,
-    // [修改] 替换 externalPadding 为 position
     position: CouiListItemPosition = CouiListItemPosition.Middle,
     onClick: (() -> Unit)? = null,
     onSelectedIndexChange: ((Int) -> Unit)?,
 ) {
-    // 使用 remember 保存状态，无需 MutableInteractionSource (BasicComponent 内部已处理)
+    val interactionSource = remember { MutableInteractionSource() }
     val isDropdownExpanded = remember { mutableStateOf(false) }
     val hapticFeedback = LocalHapticFeedback.current
 
     val itemsNotEmpty = items.isNotEmpty()
     val actualEnabled = enabled && itemsNotEmpty
 
-    // ColorOS 风格的操作色 (通常是灰色)
     val actionColor = if (actualEnabled) {
         MiuixTheme.colorScheme.onSurfaceVariantActions
     } else {
@@ -132,7 +148,6 @@ fun SuperDropdown(
 
     var alignLeft by rememberSaveable { mutableStateOf(true) }
 
-    // 用于检测点击位置以决定弹出菜单对齐方式的修饰符
     val componentModifier = modifier.pointerInput(actualEnabled) {
         if (!actualEnabled) return@pointerInput
         awaitPointerEventScope {
@@ -160,16 +175,15 @@ fun SuperDropdown(
 
     BasicComponent(
         modifier = componentModifier,
+        interactionSource = interactionSource,
         insideMargin = insideMargin,
         title = title,
         titleColor = titleColor,
         summary = summary,
         summaryColor = summaryColor,
-        // [修改] 传递 position 给 BasicComponent
         position = position,
         leftAction = if (itemsNotEmpty) {
             {
-                // 弹出菜单逻辑保持不变，假设 SuperDropdownPopup 已适配
                 SuperDropdownPopup(
                     items = items,
                     selectedIndex = selectedIndex,

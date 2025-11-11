@@ -70,7 +70,7 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.addline
-import com.suqi8.oshin.ui.components.LiquidButton
+import com.suqi8.oshin.ui.activity.components.LiquidButton
 import com.suqi8.oshin.utils.BaseMarkdown
 import com.suqi8.oshin.utils.formatDate
 import com.suqi8.oshin.utils.formatTimeAgo

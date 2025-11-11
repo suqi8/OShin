@@ -27,6 +27,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
@@ -51,7 +52,7 @@ import com.suqi8.oshin.Main_Function
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.about.Main_About
 import com.suqi8.oshin.ui.activity.components.BlurredTopBarBackground
-import com.suqi8.oshin.ui.components.BottomTabs
+import com.suqi8.oshin.ui.activity.components.BottomTabs
 import com.suqi8.oshin.ui.home.MainHome
 import com.suqi8.oshin.ui.module.Main_Module
 import com.suqi8.oshin.ui.softupdate.UpdateViewModel
@@ -94,7 +95,7 @@ fun MainScreen(
     )
 
     // 底部栏可见性状态
-    var isBottomBarVisible by remember { mutableStateOf(true) }
+    var isBottomBarVisible by rememberSaveable { mutableStateOf(true) }
 
     // 监听滚动行为控制底部栏显示/隐藏
     BottomBarVisibilityEffect(

@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.components
+package com.suqi8.oshin.ui.activity.components
 
 import androidx.compose.foundation.LocalIndication
 import androidx.compose.foundation.clickable
