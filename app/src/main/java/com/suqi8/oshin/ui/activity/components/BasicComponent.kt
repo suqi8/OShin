@@ -179,13 +179,11 @@ fun BasicComponent(
         val layoutHeight = maxOf(leftHeight, rightHeight, contentHeight).coerceAtLeast(constraints.minHeight)
         layout(constraints.maxWidth, layoutHeight) {
             var x = 0
-            if (leftWidth > 0) {
-                leftPlaceables.forEach {
-                    it.placeRelative(x, (layoutHeight - it.height) / 2)
-                }
-                x += leftWidth + leftGap
+            leftPlaceables.forEach {
+                it.placeRelative(x, (layoutHeight - it.height) / 2)
             }
-
+            x += leftWidth + leftGap
+            // content
             var contentY = (layoutHeight - contentHeight) / 2
             titlePlaceable?.let {
                 it.placeRelative(x, contentY)
@@ -193,7 +191,7 @@ fun BasicComponent(
                 if (summaryPlaceable != null) contentY += gap
             }
             summaryPlaceable?.placeRelative(x, contentY)
-
+            // rightActions
             val rightX = constraints.maxWidth - rightWidth
             rightPlaceables.forEach {
                 it.placeRelative(rightX, (layoutHeight - it.height) / 2)

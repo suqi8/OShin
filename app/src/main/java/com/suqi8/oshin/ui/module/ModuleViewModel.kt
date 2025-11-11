@@ -2,6 +2,12 @@ package com.suqi8.oshin.ui.module
 
 import android.content.Context
 import android.content.pm.PackageManager
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.highcapable.yukihookapi.hook.factory.prefs
@@ -27,6 +33,15 @@ import java.text.Collator
 import java.util.Locale
 import javax.inject.Inject
 
+/**
+ * 应用信息缓存数据类
+ */
+data class AppInfo(
+    val name: String,
+    val icon: ImageBitmap,
+    val dominantColor: Color
+)
+
 @HiltViewModel
 class ModuleViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -38,6 +53,38 @@ class ModuleViewModel @Inject constructor(
 
     // 缓存所有可搜索项的列表，避免重复构建
     private var allSearchableItems: List<SearchableItem> = emptyList()
+
+    // 滚动位置状态
+    var scrollIndex by mutableStateOf(0)
+        private set
+    var scrollOffset by mutableStateOf(0)
+        private set
+
+    // ===== 新增：应用信息缓存 =====
+    private val _appInfoCache = mutableStateMapOf<String, AppInfo>()
+    val appInfoCache: Map<String, AppInfo> = _appInfoCache
+
+    /**
+     * 保存滚动位置
+     */
+    fun saveScrollPosition(index: Int, offset: Int) {
+        scrollIndex = index
+        scrollOffset = offset
+    }
+
+    /**
+     * 缓存应用信息
+     */
+    fun cacheAppInfo(packageName: String, appInfo: AppInfo) {
+        _appInfoCache[packageName] = appInfo
+    }
+
+    /**
+     * 获取缓存的应用信息
+     */
+    fun getAppInfo(packageName: String): AppInfo? {
+        return _appInfoCache[packageName]
+    }
 
     init {
         viewModelScope.launch {
