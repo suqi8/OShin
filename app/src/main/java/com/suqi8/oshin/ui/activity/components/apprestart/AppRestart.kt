@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.activity.components
+package com.suqi8.oshin.ui.activity.components.apprestart
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
@@ -16,12 +16,11 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +33,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.highcapable.yukihookapi.YukiHookAPI
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import com.kyant.backdrop.Backdrop
 import com.kyant.backdrop.drawBackdrop
 import com.kyant.backdrop.effects.blur
@@ -44,23 +43,34 @@ import com.kyant.backdrop.highlight.Highlight
 import com.kyant.capsule.ContinuousCapsule
 import com.kyant.capsule.ContinuousRoundedRectangle
 import com.suqi8.oshin.R
-import com.suqi8.oshin.utils.GetAppIconAndName
+import com.suqi8.oshin.ui.activity.components.Card
+import com.suqi8.oshin.ui.activity.components.CardDefaults
+import com.suqi8.oshin.ui.module.AppUiInfo
 import com.suqi8.oshin.utils.drawColoredShadow
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 
 @Composable
-fun AppRestartScreen(appList: List<String>, showresetAppDialog: MutableState<Boolean>, backdrop: Backdrop) {
+fun AppRestartScreen(
+    appList: List<String>,
+    showresetAppDialog: MutableState<Boolean>,
+    backdrop: Backdrop,
+    viewModel: AppRestartViewModel = hiltViewModel()
+) {
+    val defaultColor = MiuixTheme.colorScheme.primary
+
+    // 2. 在 LaunchedEffect 中触发 ViewModel 加载数据
+    LaunchedEffect(appList, defaultColor) {
+        viewModel.loadAppsInfo(appList, defaultColor)
+    }
+
     ConfirmationDialog(
-        appPackage = appList,
+        appPackageList = appList, // 传递原始列表
+        appInfoMap = viewModel.appInfoCache, // 传递从 VM 拿到的缓存
+        defaultColor = defaultColor,
         onConfirm = {
-            appList.forEach {
-                restartApp(it)
-            }
+            // 3. 将确认事件委托给 ViewModel
+            viewModel.restartApps(appList)
             showresetAppDialog.value = false
         },
         show = showresetAppDialog,
@@ -74,7 +84,9 @@ fun AppRestartScreen(appList: List<String>, showresetAppDialog: MutableState<Boo
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun ConfirmationDialog(
-    appPackage: List<String>,
+    appPackageList: List<String>,
+    appInfoMap: Map<String, AppUiInfo?>,
+    defaultColor: Color,
     show: MutableState<Boolean>,
     onConfirm: () -> Unit,
     onDismiss: () -> Unit,
@@ -150,10 +162,17 @@ fun ConfirmationDialog(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(0.dp)
             ) {
-                itemsIndexed(appPackage) { index, pkg ->
-                    ResetAppList(pkg)
-                    if (index < appPackage.lastIndex) {
-                        addline()
+                // 4. LazyColumn 现在从 appInfoMap 中读取数据
+                items(appPackageList, key = { it }) { pkg ->
+                    val appInfo = appInfoMap[pkg] // 从 VM 的 Map 中获取状态
+                    ResetAppList(
+                        appInfo = appInfo,
+                        packageName = pkg,
+                        defaultColor = defaultColor
+                    )
+                    if (appPackageList.indexOf(pkg) < appPackageList.lastIndex) {
+                        // 假设 addline() 是一个 @Composable 函数
+                        // addline()
                     }
                 }
             }
@@ -201,6 +220,7 @@ fun ConfirmationDialog(
         }
     }
 
+    // --- 保留 SuperDialog 注释 ---
     /*SuperDialog(
         title = stringResource(R.string.Researt_app),
         show = show,
@@ -269,83 +289,50 @@ fun ConfirmationDialog(
             )
         }
     }*/
+    // --- 注释结束 ---
 }
 
-private fun restartApp(packageName: String) {
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            if (packageName == "android") {
-                val process = Runtime.getRuntime().exec(arrayOf("su", "-c", "reboot"))
-                process.waitFor()
-            } else {
-                val command = "pkill -f " + packageName
-                val process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
-                process.waitFor()
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
-}
-
-@SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun ResetAppList(packageName: String) {
-    GetAppIconAndName(packageName = packageName) { appName, icon ->
-        if (appName != "noapp") {
-            val defaultColor = MiuixTheme.colorScheme.primary
-            val dominantColor = remember { mutableStateOf(colorCache[packageName] ?: defaultColor) }
-            val isLoading = remember { mutableStateOf(dominantColor.value == defaultColor) }
+fun ResetAppList(
+    appInfo: AppUiInfo?, // 接收来自 ViewModel 的状态
+    packageName: String,  // 仍然需要包名作为兜底
+    defaultColor: Color   // 接收默认颜色用于比较
+) {
+    if (appInfo != null)  {
+        val info = appInfo
+        val isLoadingColor = info.dominantColor == defaultColor // 检查是否仍在等待主色
 
-            LaunchedEffect(icon, dominantColor.value) {
-                if (isLoading.value) {
-                    val newColor = withContext(Dispatchers.Default) {
-                        if (!YukiHookAPI.Status.isModuleActive) defaultColor else getAutoColor(icon)
-                    }
-                    dominantColor.value = newColor
-                    colorCache[packageName] = newColor
-                    isLoading.value = false
-                }
-            }
-
-            Row(
-                modifier = Modifier,
-                verticalAlignment = Alignment.CenterVertically
+        Row(
+            modifier = Modifier,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Card(
+                colors = CardDefaults.defaultColors(info.dominantColor),
+                modifier = Modifier
+                    .padding(top = 16.dp, bottom = 16.dp)
+                    .drawColoredShadow(
+                        color = info.dominantColor,
+                        alpha = if (isLoadingColor) 0f else 1f, // 颜色加载完成前不显示阴影
+                        borderRadius = 13.dp,
+                        shadowRadius = 7.dp,
+                        roundedRect = false
+                    )
             ) {
-                if (!isLoading.value) {
-                    Card(
-                        colors = CardDefaults.defaultColors(dominantColor.value),
-                        modifier = Modifier
-                            .padding(top = 16.dp, bottom = 16.dp)
-                            .drawColoredShadow(
-                                dominantColor.value,
-                                1f,
-                                borderRadius = 13.dp,
-                                shadowRadius = 7.dp,
-                                offsetX = 0.dp,
-                                offsetY = 0.dp,
-                                roundedRect = false
-                            )
-                    ) {
-                        Image(
-                            bitmap = icon,
-                            contentDescription = "App Icon",
-                            modifier = Modifier.size(45.dp)
-                        )
-                    }
-                    Column(modifier = Modifier.padding(start = 16.dp)) {
-                        Text(text = appName)
-                        Text(
-                            text = packageName,
-                            fontSize = MiuixTheme.textStyles.subtitle.fontSize,
-                            fontWeight = FontWeight.Medium,
-                            color = MiuixTheme.colorScheme.onBackgroundVariant
-                        )
-                    }
-                }
+                Image(
+                    bitmap = info.icon,
+                    contentDescription = "App Icon",
+                    modifier = Modifier.size(45.dp)
+                )
             }
-        } else {
-            Text(text = "$packageName 没有安装", modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 4.dp))
+            Column(modifier = Modifier.padding(start = 16.dp)) {
+                Text(text = info.name)
+                Text(
+                    text = packageName,
+                    fontSize = MiuixTheme.textStyles.subtitle.fontSize,
+                    fontWeight = FontWeight.Medium,
+                    color = MiuixTheme.colorScheme.onBackgroundVariant
+                )
+            }
         }
     }
 }

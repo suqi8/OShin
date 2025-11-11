@@ -9,6 +9,6 @@ data class ModuleUiState(
     val isLoading: Boolean = true, // 用于初次加载索引时的加载状态
     val appStyle: Int = 0,
     val moduleEntries: List<ModuleEntry> = emptyList(),
-    val searchResults: List<SearchableItem> = emptyList(),
+    val searchResults: List<SearchResultUiItem> = emptyList(),
     val notInstalledApps: Set<String> = emptySet()
 )

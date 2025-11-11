@@ -8,6 +8,7 @@ import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.R
 import com.suqi8.oshin.data.repository.FeatureRepository
 import com.suqi8.oshin.ui.module.SearchableItem
+import com.suqi8.oshin.utils.RouteFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -60,7 +61,12 @@ data class HomeUiState(
     val rootStatus: RootStatus = RootStatus(Status.LOADING),
     val fridaStatus: FridaStatus = FridaStatus(Status.ERROR, "未连接"),
     val deviceInfo: DeviceInfo? = null,
-    val randomFeatures: List<SearchableItem> = emptyList()
+    val randomFeatures: List<HighlightFeature> = emptyList()
+)
+
+data class HighlightFeature(
+    val searchableItem: SearchableItem, // 原始数据
+    val formattedRoute: String          // 预先格式化好的路由
 )
 
 // --- ViewModel ---
@@ -68,7 +74,8 @@ data class HomeUiState(
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val featureRepository: FeatureRepository
+    private val featureRepository: FeatureRepository,
+    private val routeFormatter: RouteFormatter
 ) : androidx.lifecycle.ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -112,10 +119,19 @@ class HomeViewModel @Inject constructor(
     private fun loadRandomFeatures() {
         viewModelScope.launch {
             val allItems = featureRepository.getAllSearchableItems()
-            // 将所有功能随机打乱，不限制数量
-            val randomItems = allItems.shuffled()
+
+            val highlightFeatures = allItems.shuffled().map { item ->
+                val routeId = item.route.substringAfter("feature/")
+                val formattedRoute = routeFormatter.formatRouteAsBreadcrumb(routeId)
+
+                HighlightFeature(
+                    searchableItem = item,
+                    formattedRoute = formattedRoute
+                )
+            }
+
             _uiState.update {
-                it.copy(randomFeatures = randomItems)
+                it.copy(randomFeatures = highlightFeatures)
             }
         }
     }

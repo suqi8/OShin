@@ -60,7 +60,7 @@ import com.suqi8.oshin.models.TitledScreenItem
 import com.suqi8.oshin.models.UrlAction
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.CouiListItemPosition
-import com.suqi8.oshin.ui.activity.components.FunAppSele
+import com.suqi8.oshin.ui.activity.components.appselection.FunAppSele
 import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.FunDropdown
 import com.suqi8.oshin.ui.activity.components.FunNoEnable

@@ -1,7 +1,6 @@
 package com.suqi8.oshin.ui.module
 
 import android.content.Context
-import android.content.pm.PackageManager
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableStateOf
@@ -10,14 +9,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.hook.factory.prefs
+import com.suqi8.oshin.data.repository.AppInfoProvider
 import com.suqi8.oshin.data.repository.FeatureRepository
 import com.suqi8.oshin.features.FeatureRegistry
-import com.suqi8.oshin.models.AppName
 import com.suqi8.oshin.models.ModuleEntry
-import com.suqi8.oshin.models.PlainText
-import com.suqi8.oshin.models.StringResource
-import com.suqi8.oshin.models.Title
+import com.suqi8.oshin.utils.RouteFormatter
+import com.suqi8.oshin.utils.getAutoColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -36,16 +35,23 @@ import javax.inject.Inject
 /**
  * 应用信息缓存数据类
  */
-data class AppInfo(
+data class AppUiInfo(
     val name: String,
     val icon: ImageBitmap,
     val dominantColor: Color
 )
 
+data class SearchResultUiItem(
+    val item: SearchableItem,
+    val formattedRoute: String
+)
+
 @HiltViewModel
 class ModuleViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val featureRepository: FeatureRepository
+    private val featureRepository: FeatureRepository,
+    private val appInfoProvider: AppInfoProvider,
+    private val routeFormatter: RouteFormatter
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ModuleUiState())
@@ -60,9 +66,8 @@ class ModuleViewModel @Inject constructor(
     var scrollOffset by mutableStateOf(0)
         private set
 
-    // ===== 新增：应用信息缓存 =====
-    private val _appInfoCache = mutableStateMapOf<String, AppInfo>()
-    val appInfoCache: Map<String, AppInfo> = _appInfoCache
+    private val _appInfoCache = mutableStateMapOf<String, AppUiInfo>()
+    val appInfoCache: Map<String, AppUiInfo> = _appInfoCache
 
     /**
      * 保存滚动位置
@@ -75,14 +80,14 @@ class ModuleViewModel @Inject constructor(
     /**
      * 缓存应用信息
      */
-    fun cacheAppInfo(packageName: String, appInfo: AppInfo) {
+    fun cacheAppInfo(packageName: String, appInfo: AppUiInfo) {
         _appInfoCache[packageName] = appInfo
     }
 
     /**
      * 获取缓存的应用信息
      */
-    fun getAppInfo(packageName: String): AppInfo? {
+    fun getAppInfo(packageName: String): AppUiInfo? {
         return _appInfoCache[packageName]
     }
 
@@ -131,7 +136,7 @@ class ModuleViewModel @Inject constructor(
         val entriesWithAppName = coroutineScope {
             originalEntries.map { entry ->
                 async(Dispatchers.IO) {
-                    getAppName(entry.packageName) to entry
+                    appInfoProvider.getAppName(entry.packageName) to entry
                 }
             }.awaitAll()
         }
@@ -162,35 +167,71 @@ class ModuleViewModel @Inject constructor(
         _uiState.update { it.copy(searchQuery = query, isSearching = isSearching) }
 
         if (isSearching) {
-            val results = allSearchableItems.filter {
-                it.title.contains(query, ignoreCase = true) ||
-                        it.summary.contains(query, ignoreCase = true)
+            viewModelScope.launch {
+                val results = allSearchableItems.filter {
+                    it.title.contains(query, ignoreCase = true) ||
+                            it.summary.contains(query, ignoreCase = true)
+                }
+                val uiResults = results.map { item ->
+                    val routeId = item.route.substringAfter("feature/")
+                    val formattedRoute = routeFormatter.formatRouteAsBreadcrumb(routeId)
+                    SearchResultUiItem(item, formattedRoute)
+                }
+
+                _uiState.update { it.copy(searchResults = uiResults) }
             }
-            _uiState.update { it.copy(searchResults = results) }
         }
     }
 
     /**
-     * 辅助函数，用于将 Title 模型解析为最终的 String。
+     * 统一加载应用信息和主色
+     * 1. 调用 AppInfoProvider 获取名称和图标
+     * 2. 异步提取主色
+     * 3. 将最终的 AppUiInfo 存入 _appInfoCache
+     *
+     * @param packageName 要加载的应用
+     * @param defaultColor UI层传入的默认颜色，用于加载时显示
      */
-    private suspend fun resolveTitle(title: Title): String {
-        return when (title) {
-            is StringResource -> context.getString(title.id)
-            is PlainText -> title.text
-            is AppName -> getAppName(title.packageName)
+    fun loadAppInfoWithColor(
+        packageName: String,
+        defaultColor: Color
+    ) {
+        if (getAppInfo(packageName) != null || uiState.value.notInstalledApps.contains(packageName)) {
+            return
         }
-    }
 
-    /**
-     * 安全地获取应用名称。
-     */
-    private suspend fun getAppName(packageName: String): String = withContext(Dispatchers.IO) {
-        try {
-            val pm = context.packageManager
-            val appInfo = pm.getApplicationInfo(packageName, 0)
-            pm.getApplicationLabel(appInfo).toString()
-        } catch (e: PackageManager.NameNotFoundException) {
-            packageName // 如果找不到，返回包名作为兜底
+        viewModelScope.launch {
+            val appInfo = appInfoProvider.getInfo(packageName)
+
+            if (appInfo == null) {
+                // 2a. 应用未找到，更新 UiState
+                onAppNotFound(packageName)
+            } else {
+                // 2b. 应用已找到，立即缓存部分信息（带默认颜色）
+                // 这会让UI立即从 "null" 变为 "加载中"
+                val partialInfo = AppUiInfo(appInfo.name, appInfo.icon, defaultColor)
+                cacheAppInfo(packageName, partialInfo) // 使用 ViewModel 已有的 cacheAppInfo
+
+                // 3. 异步提取主色
+                val newColor = withContext(Dispatchers.Default) {
+                    try {
+                        if (!YukiHookAPI.Status.isModuleActive) {
+                            defaultColor
+                        } else {
+                            // 调用我们放在 ColorUtils.kt 中的全局工具函数
+                            getAutoColor(appInfo.icon, defaultColor)
+                        }
+                    } catch (e: Exception) {
+                        // 颜色提取失败，使用默认值
+                        defaultColor
+                    }
+                }
+
+                // 4. 更新缓存，提供包含最终颜色的完整信息
+                if (newColor != defaultColor) {
+                    cacheAppInfo(packageName, AppUiInfo(appInfo.name, appInfo.icon, newColor))
+                }
+            }
         }
     }
 }
