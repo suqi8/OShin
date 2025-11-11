@@ -136,8 +136,7 @@ fun about_contributors(
                     item(
                         name = "Mikusignal",
                         coolapk = "Mikusignal",
-                        coolapkid = 12130388,
-                        qq = 1809784522
+                        coolapkid = 12130388
                     )
                     addline()
                     item(
@@ -161,9 +160,14 @@ fun about_contributors(
                     )
                     addline()
                     item(
-                        name = "喷搜",
+                        name = "Pencil",
                         coolapk = "已跑路_勿扰",
                         coolapkid = 35139340
+                    )
+                    addline()
+                    item(
+                        name = "Liberation",
+                        github = "Liberations"
                     )
                 }
             }
