@@ -45,14 +45,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.graphics.Path
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
@@ -69,28 +65,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.text.withStyle
-import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
-import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.ui.activity.components.BasicComponentDefaults
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.CardDefaults
 import com.suqi8.oshin.ui.activity.components.SuperArrow
+import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.home.ModernSectionTitle
 import com.suqi8.oshin.utils.GetAppIconAndName
 import com.suqi8.oshin.utils.GetFuncRoute
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.Text
@@ -768,24 +761,6 @@ fun FunctionAppFlow(
 
 // --- 工具函数和类 ---
 
-class CutCornerShape(private val cut: Dp) : Shape {
-    override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
-        val cutPx = with(density) { cut.toPx() }
-        val path = Path().apply {
-            moveTo(cutPx, 0f)
-            lineTo(size.width - cutPx, 0f)
-            lineTo(size.width, cutPx)
-            lineTo(size.width, size.height - cutPx)
-            lineTo(size.width - cutPx, size.height)
-            lineTo(cutPx, size.height)
-            lineTo(0f, size.height - cutPx)
-            lineTo(0f, cutPx)
-            close()
-        }
-        return Outline.Generic(path)
-    }
-}
-
 @Composable
 fun highlightMatches(text: String, query: String, highlightColor: Color): AnnotatedString {
     return buildAnnotatedString {
@@ -812,17 +787,6 @@ suspend fun getAutoColor(icon: ImageBitmap): Color {
     return withContext(Dispatchers.IO) {
         Palette.from(icon.asAndroidBitmap()).generate().dominantSwatch?.rgb?.let { Color(it) } ?: Color.White
     }
-}
-
-@Composable
-fun addline() {
-    val context = LocalContext.current
-    if (context.prefs("settings").getBoolean("addline", false))
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            thickness = 0.5.dp,
-            color = MiuixTheme.colorScheme.dividerLine
-        )
 }
 
 @SuppressLint("UseKtx")
