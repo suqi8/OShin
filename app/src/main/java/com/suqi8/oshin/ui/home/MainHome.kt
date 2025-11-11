@@ -57,7 +57,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -74,13 +73,12 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.main.CarouselItem
 import com.suqi8.oshin.ui.main.DeviceInfo
 import com.suqi8.oshin.ui.main.FridaStatus
+import com.suqi8.oshin.ui.main.HighlightFeature
 import com.suqi8.oshin.ui.main.HomeViewModel
 import com.suqi8.oshin.ui.main.ModuleStatus
 import com.suqi8.oshin.ui.main.RootStatus
 import com.suqi8.oshin.ui.main.Status
 import com.suqi8.oshin.ui.main.lspVersion
-import com.suqi8.oshin.ui.module.SearchableItem
-import com.suqi8.oshin.utils.GetFuncRoute
 import kotlinx.coroutines.delay
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -516,7 +514,7 @@ fun ModernStatusIndicator(status: Status, color: Color) {
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun TodayHighlightsSection(
-    features: List<SearchableItem>,
+    features: List<HighlightFeature>,
     navController: NavController,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
@@ -541,7 +539,7 @@ fun TodayHighlightsSection(
                     AppleStyleFeatureCard(
                         feature = feature,
                         onClick = {
-                            navController.navigate("${feature.route}?highlightKey=${feature.key}")
+                            navController.navigate("${feature.searchableItem.route}?highlightKey=${feature.searchableItem.key}")
                         },
                         sharedTransitionScope = this,
                         animatedVisibilityScope = animatedVisibilityScope
@@ -555,17 +553,16 @@ fun TodayHighlightsSection(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun ModernFeatureCard(
-    feature: SearchableItem,
+    feature: HighlightFeature,
     onClick: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    val context = LocalContext.current
-    val routeId = feature.route.substringAfter("feature/")
-    val route = remember(routeId, context) { GetFuncRoute(routeId, context) }
-    
-    // 为不同的功能分配不同的主题色
-    val themeColor = remember(feature.key) {
+
+    val route = feature.formattedRoute
+    val searchableItem = feature.searchableItem
+
+    val themeColor = remember(searchableItem.key) {
         val colors = listOf(
             Color(0xFF6366F1), // 靛蓝
             Color(0xFFEC4899), // 粉红
@@ -574,7 +571,7 @@ fun ModernFeatureCard(
             Color(0xFF8B5CF6), // 紫色
             Color(0xFF14B8A6), // 青色
         )
-        colors[kotlin.math.abs(feature.key.hashCode()) % colors.size]
+        colors[abs(searchableItem.key.hashCode()) % colors.size]
     }
     
     with(sharedTransitionScope) {
@@ -583,7 +580,7 @@ fun ModernFeatureCard(
                 .width(180.dp)
                 .height(160.dp)
                 .sharedBounds(
-                    sharedContentState = rememberSharedContentState(key = feature.key),
+                    sharedContentState = rememberSharedContentState(key = searchableItem.key),
                     animatedVisibilityScope = animatedVisibilityScope
                 )
                 .clip(RoundedCornerShape(16.dp))
@@ -616,7 +613,7 @@ fun ModernFeatureCard(
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = feature.title.first().toString(),
+                                text = searchableItem.title.first().toString(),
                                 color = themeColor,
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold
@@ -624,7 +621,7 @@ fun ModernFeatureCard(
                         }
                         
                         Text(
-                            text = feature.title,
+                            text = searchableItem.title,
                             color = MiuixTheme.colorScheme.onBackground,
                             fontSize = 14.sp,
                             fontWeight = FontWeight.SemiBold,
@@ -636,7 +633,7 @@ fun ModernFeatureCard(
                     
                     // 简介信息 - 固定行数，统一高度
                     Text(
-                        text = feature.summary.ifEmpty { stringResource(R.string.common_no_description) },
+                        text = searchableItem.summary.ifEmpty { stringResource(R.string.common_no_description) },
                         color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                         fontSize = 11.sp,
                         lineHeight = 14.sp,
@@ -680,7 +677,7 @@ fun ModernFeatureCard(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun AppleStyleFeatureCard(
-    feature: SearchableItem,
+    feature: HighlightFeature,
     onClick: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
@@ -691,17 +688,16 @@ fun AppleStyleFeatureCard(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CompactFeatureCard(
-    feature: SearchableItem,
+    feature: HighlightFeature,
     onClick: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    val context = LocalContext.current
-    val routeId = feature.route.substringAfter("feature/")
-    val route = remember(routeId, context) { GetFuncRoute(routeId, context) }
-    
+    val searchableItem = feature.searchableItem
+    val route = feature.formattedRoute
+
     // 为不同的功能分配不同的主题色
-    val themeColor = remember(feature.key) {
+    val themeColor = remember(searchableItem.key) {
         val colors = listOf(
             Color(0xFF6366F1), // 靛蓝
             Color(0xFFEC4899), // 粉红
@@ -710,7 +706,7 @@ fun CompactFeatureCard(
             Color(0xFF8B5CF6), // 紫色
             Color(0xFF14B8A6), // 青色
         )
-        colors[kotlin.math.abs(feature.key.hashCode()) % colors.size]
+        colors[abs(searchableItem.key.hashCode()) % colors.size]
     }
     
     with(sharedTransitionScope) {
@@ -719,7 +715,7 @@ fun CompactFeatureCard(
                 .width(140.dp)
                 .height(100.dp)
                 .sharedBounds(
-                    sharedContentState = rememberSharedContentState(key = feature.key),
+                    sharedContentState = rememberSharedContentState(key = searchableItem.key),
                     animatedVisibilityScope = animatedVisibilityScope
                 )
                 .clip(RoundedCornerShape(12.dp))
@@ -748,7 +744,7 @@ fun CompactFeatureCard(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = feature.title.first().toString(),
+                            text = searchableItem.title.first().toString(),
                             color = themeColor,
                             fontSize = 12.sp,
                             fontWeight = FontWeight.Bold
@@ -756,7 +752,7 @@ fun CompactFeatureCard(
                     }
                     
                     Text(
-                        text = feature.title,
+                        text = searchableItem.title,
                         color = MiuixTheme.colorScheme.onBackground,
                         fontSize = 12.sp,
                         fontWeight = FontWeight.SemiBold,
@@ -766,9 +762,9 @@ fun CompactFeatureCard(
                     )
                 }
                 
-                if (feature.summary.isNotEmpty()) {
+                if (searchableItem.summary.isNotEmpty()) {
                     Text(
-                        text = feature.summary,
+                        text = searchableItem.summary,
                         color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                         fontSize = 10.sp,
                         maxLines = 1,
@@ -812,16 +808,15 @@ fun CompactFeatureCard(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun HighlightFeatureCard(
-    feature: SearchableItem,
+    feature: HighlightFeature,
     onClick: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    val context = LocalContext.current
-    val routeId = feature.route.substringAfter("feature/")
-    val summaryWithRoute = remember(feature.summary, routeId) {
-        val route = GetFuncRoute(routeId, context)
-        (feature.summary) + if (route.isNotEmpty() && feature.summary.isNotEmpty()) "\n$route" else route
+    val searchableItem = feature.searchableItem
+    val route = feature.formattedRoute
+    val summaryWithRoute = remember(searchableItem.summary, route) {
+        (searchableItem.summary) + if (route.isNotEmpty() && searchableItem.summary.isNotEmpty()) "\n$route" else route
     }
 
     with(sharedTransitionScope) {
@@ -829,7 +824,7 @@ fun HighlightFeatureCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .sharedBounds(
-                    sharedContentState = rememberSharedContentState(key = feature.key),
+                    sharedContentState = rememberSharedContentState(key = searchableItem.key),
                     animatedVisibilityScope = animatedVisibilityScope
                 )
                 .clip(RoundedCornerShape(16.dp))
@@ -844,7 +839,7 @@ fun HighlightFeatureCard(
             ) {
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
-                        text = feature.title,
+                        text = searchableItem.title,
                         color = MiuixTheme.colorScheme.onBackground,
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Bold

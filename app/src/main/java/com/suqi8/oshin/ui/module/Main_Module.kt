@@ -27,6 +27,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -36,9 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -52,23 +51,15 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
-import androidx.palette.graphics.Palette
-import com.highcapable.yukihookapi.YukiHookAPI
-import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.ui.activity.components.BasicComponentDefaults
 import com.suqi8.oshin.ui.activity.components.SuperArrow
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.home.ModernSectionTitle
-import com.suqi8.oshin.utils.GetAppIconAndName
-import com.suqi8.oshin.utils.GetFuncRoute
 import com.suqi8.oshin.utils.drawColoredShadow
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.CardDefaults
-import top.yukonga.miuix.kmp.basic.HorizontalDivider
 import top.yukonga.miuix.kmp.basic.InputField
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SearchBar
@@ -158,7 +149,6 @@ fun Main_Module(
                     appStyle = uiState.appStyle,
                     onStyleChange = viewModel::onAppStyleChanged,
                     moduleEntries = uiState.moduleEntries,
-                    onAppNotFound = viewModel::onAppNotFound,
                     navController = navController,
                     sharedTransitionScope = sharedTransitionScope,
                     animatedVisibilityScope = animatedVisibilityScope,
@@ -204,7 +194,7 @@ fun Main_Module(
 private fun ModuleSearchBar(
     query: String,
     expanded: Boolean,
-    searchResults: List<SearchableItem>,
+    searchResults: List<SearchResultUiItem>,
     onQueryChange: (String) -> Unit,
     onExpandedChange: (Boolean) -> Unit,
     navController: NavController,
@@ -264,7 +254,6 @@ private fun AppList(
     appStyle: Int,
     onStyleChange: () -> Unit,
     moduleEntries: List<ModuleEntry>,
-    onAppNotFound: (String) -> Unit,
     navController: NavController,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
@@ -296,7 +285,6 @@ private fun AppList(
                         AppItemFlow(
                             entry = entry,
                             onClick = { navController.navigate("feature/${entry.routeId}") },
-                            onNotFound = onAppNotFound,
                             sharedTransitionScope = sharedTransitionScope,
                             animatedVisibilityScope = animatedVisibilityScope,
                             viewModel = viewModel
@@ -310,13 +298,12 @@ private fun AppList(
                         AppItemList(
                             entry = entry,
                             onClick = { navController.navigate("feature/${entry.routeId}") },
-                            onNotFound = onAppNotFound,
                             sharedTransitionScope = sharedTransitionScope,
                             animatedVisibilityScope = animatedVisibilityScope,
                             viewModel = viewModel
                         )
                         if (index < moduleEntries.size - 1) {
-                            Divider()
+                            addline()
                         }
                     }
                 }
@@ -332,7 +319,7 @@ private fun AppList(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun SearchResultsList(
-    results: List<SearchableItem>,
+    results: List<SearchResultUiItem>,
     query: String,
     navController: NavController,
     onItemClick: () -> Unit,
@@ -360,7 +347,7 @@ private fun SearchResultsList(
                         item = item,
                         query = query,
                         onClick = {
-                            navController.navigate("${item.route}?highlightKey=${item.key}")
+                            navController.navigate("${item.item.route}?highlightKey=${item.item.key}")
                             onItemClick()
                         },
                         sharedTransitionScope = sharedTransitionScope,
@@ -378,30 +365,26 @@ private fun SearchResultsList(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun SearchResultItem(
-    item: SearchableItem,
+    item: SearchResultUiItem,
     query: String,
     onClick: () -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    val context = LocalContext.current
     val highlightColor = MiuixTheme.colorScheme.primary
-    val titleAnnotated = highlightText(item.title, query, highlightColor)
-    val summaryAnnotated = highlightText(item.summary, query, highlightColor)
 
-    val routeId = remember(item.route) {
-        item.route.substringAfter("feature/")
-    }
-    val featurePath = remember(routeId) {
-        GetFuncRoute(routeId, context)
-    }
+    val searchableItem = item.item
+    val featurePath = item.formattedRoute // <-- 直接使用
+
+    val titleAnnotated = highlightText(searchableItem.title, query, highlightColor)
+    val summaryAnnotated = highlightText(searchableItem.summary, query, highlightColor)
 
     with(sharedTransitionScope) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .sharedBounds(
-                    sharedContentState = rememberSharedContentState(key = item.key),
+                    sharedContentState = rememberSharedContentState(key = searchableItem.key),
                     animatedVisibilityScope = animatedVisibilityScope
                 )
                 .wrapContentHeight()
@@ -415,7 +398,7 @@ private fun SearchResultItem(
                     fontSize = 16.sp,
                     color = MiuixTheme.colorScheme.onBackground
                 )
-                if (item.summary.isNotBlank()) {
+                if (searchableItem.summary.isNotBlank()) {
                     Text(
                         text = summaryAnnotated,
                         fontSize = 12.sp,
@@ -442,65 +425,42 @@ private fun SearchResultItem(
 private fun AppItemList(
     entry: ModuleEntry,
     onClick: () -> Unit,
-    onNotFound: (String) -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: ModuleViewModel
 ) {
-    val cachedInfo = remember(entry.packageName) {
-        viewModel.getAppInfo(entry.packageName)
+    val defaultColor = MiuixTheme.colorScheme.primary
+
+    val appUiInfo by remember(entry.packageName) {
+        derivedStateOf { viewModel.getAppInfo(entry.packageName) }
     }
 
-    if (cachedInfo != null) {
-        // 使用缓存
-        AppItemListContent(
-            appName = cachedInfo.name,
-            icon = cachedInfo.icon,
-            dominantColor = cachedInfo.dominantColor,
-            packageName = entry.packageName,
-            entry = entry,
-            onClick = onClick,
-            sharedTransitionScope = sharedTransitionScope,
-            animatedVisibilityScope = animatedVisibilityScope
-        )
-    } else {
-        // 加载并缓存
-        GetAppIconAndName(packageName = entry.packageName) { appName, icon ->
-            if (appName != "noapp") {
-                var dominantColor by remember { mutableStateOf<Color?>(null) }
+    LaunchedEffect(entry.packageName, defaultColor) {
+        if (appUiInfo == null) {
+            viewModel.loadAppInfoWithColor(entry.packageName, defaultColor)
+        }
+    }
 
-                LaunchedEffect(icon) {
-                    dominantColor = withContext(Dispatchers.IO) {
-                        if (YukiHookAPI.Status.isModuleActive) {
-                            extractDominantColor(icon)
-                        } else {
-                            Color.Red
-                        }
-                    }
+    // 3. 观察 "not found" 状态
+    val isNotInstalled by viewModel.uiState.collectAsState().let { state ->
+        remember(entry.packageName) {
+            derivedStateOf { state.value.notInstalledApps.contains(entry.packageName) }
+        }
+    }
 
-                    dominantColor?.let { color ->
-                        viewModel.cacheAppInfo(
-                            entry.packageName,
-                            AppInfo(appName, icon, color)
-                        )
-                    }
-                }
-
-                dominantColor?.let { color ->
-                    AppItemListContent(
-                        appName = appName,
-                        icon = icon,
-                        dominantColor = color,
-                        packageName = entry.packageName,
-                        entry = entry,
-                        onClick = onClick,
-                        sharedTransitionScope = sharedTransitionScope,
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                }
-            } else {
-                onNotFound(entry.packageName)
-            }
+    if (!isNotInstalled) {
+        if (appUiInfo != null) {
+            // 状态 1: 已加载
+            AppItemListContent(
+                appName = appUiInfo!!.name,
+                icon = appUiInfo!!.icon,
+                dominantColor = appUiInfo!!.dominantColor,
+                packageName = entry.packageName,
+                entry = entry,
+                onClick = onClick,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
         }
     }
 }
@@ -536,7 +496,8 @@ private fun AppItemListContent(
                         dominantColor,
                         alpha = 1f,
                         borderRadius = 13.dp,
-                        shadowRadius = 7.dp
+                        shadowRadius = 7.dp,
+                        roundedRect = false
                     )
             ) {
                 Image(
@@ -573,63 +534,44 @@ private fun AppItemListContent(
 private fun AppItemFlow(
     entry: ModuleEntry,
     onClick: () -> Unit,
-    onNotFound: (String) -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: ModuleViewModel
 ) {
-    val cachedInfo = remember(entry.packageName) {
-        viewModel.getAppInfo(entry.packageName)
+    val defaultColor = MiuixTheme.colorScheme.primary
+
+    // 1. 从 ViewModel 的缓存中观察状态
+    val appUiInfo by remember(entry.packageName) {
+        derivedStateOf { viewModel.getAppInfo(entry.packageName) }
     }
 
-    if (cachedInfo != null) {
-        // 使用缓存
-        AppItemFlowContent(
-            appName = cachedInfo.name,
-            icon = cachedInfo.icon,
-            dominantColor = cachedInfo.dominantColor,
-            entry = entry,
-            onClick = onClick,
-            sharedTransitionScope = sharedTransitionScope,
-            animatedVisibilityScope = animatedVisibilityScope
-        )
-    } else {
-        // 加载并缓存
-        GetAppIconAndName(packageName = entry.packageName) { appName, icon ->
-            if (appName != "noapp") {
-                var dominantColor by remember { mutableStateOf<Color?>(null) }
+    // 2. 触发 ViewModel 加载数据
+    LaunchedEffect(entry.packageName, defaultColor) {
+        if (appUiInfo == null) {
+            viewModel.loadAppInfoWithColor(entry.packageName, defaultColor)
+        }
+    }
 
-                LaunchedEffect(icon) {
-                    dominantColor = withContext(Dispatchers.IO) {
-                        if (YukiHookAPI.Status.isModuleActive) {
-                            extractDominantColor(icon)
-                        } else {
-                            Color.Red
-                        }
-                    }
+    // 3. 观察 "not found" 状态
+    val isNotInstalled by viewModel.uiState.collectAsState().let { state ->
+        remember(entry.packageName) {
+            derivedStateOf { state.value.notInstalledApps.contains(entry.packageName) }
+        }
+    }
 
-                    dominantColor?.let { color ->
-                        viewModel.cacheAppInfo(
-                            entry.packageName,
-                            AppInfo(appName, icon, color)
-                        )
-                    }
-                }
-
-                dominantColor?.let { color ->
-                    AppItemFlowContent(
-                        appName = appName,
-                        icon = icon,
-                        dominantColor = color,
-                        entry = entry,
-                        onClick = onClick,
-                        sharedTransitionScope = sharedTransitionScope,
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                }
-            } else {
-                onNotFound(entry.packageName)
-            }
+    // 4. 渲染 UI
+    if (!isNotInstalled) {
+        if (appUiInfo != null) {
+            // 状态 1: 已加载
+            AppItemFlowContent(
+                appName = appUiInfo!!.name,
+                icon = appUiInfo!!.icon,
+                dominantColor = appUiInfo!!.dominantColor,
+                entry = entry,
+                onClick = onClick,
+                sharedTransitionScope = sharedTransitionScope,
+                animatedVisibilityScope = animatedVisibilityScope
+            )
         }
     }
 }
@@ -664,7 +606,8 @@ private fun AppItemFlowContent(
                         dominantColor,
                         alpha = 1f,
                         borderRadius = 13.dp,
-                        shadowRadius = 7.dp
+                        shadowRadius = 7.dp,
+                        roundedRect = false
                     )
             ) {
                 Image(
@@ -706,18 +649,6 @@ private fun ModuleCard(
     )
 }
 
-@Composable
-private fun Divider() {
-    val context = LocalContext.current
-    if (context.prefs("settings").getBoolean("addline", false)) {
-        HorizontalDivider(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            thickness = 0.5.dp,
-            color = MiuixTheme.colorScheme.dividerLine
-        )
-    }
-}
-
 // ========================================
 // 工具函数
 // ========================================
@@ -756,19 +687,5 @@ private fun highlightText(
         if (lastIndex < text.length) {
             append(text.substring(lastIndex))
         }
-    }
-}
-
-/**
- * 提取图片主色调
- */
-private suspend fun extractDominantColor(icon: ImageBitmap): Color {
-    return withContext(Dispatchers.IO) {
-        Palette.from(icon.asAndroidBitmap())
-            .generate()
-            .dominantSwatch
-            ?.rgb
-            ?.let { Color(it) }
-            ?: Color.White
     }
 }
