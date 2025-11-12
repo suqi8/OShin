@@ -13,9 +13,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.suqi8.oshin.R
 import com.suqi8.oshin.models.RelatedLinks
+import com.suqi8.oshin.ui.nav.path.NavPath
+import com.suqi8.oshin.ui.nav.transition.NavTransitionType
+import com.suqi8.oshin.ui.nav.ui.NavStackScope
 import top.yukonga.miuix.kmp.basic.Surface
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme
@@ -27,7 +29,8 @@ data class WantFind(
 @Composable
 fun wantFind(
     links: List<RelatedLinks.Link>,
-    navController: NavController
+    navPath: NavPath,
+    navStackScope: NavStackScope,
 ) {
     Card(colors = CardDefaults.defaultColors(MiuixTheme.colorScheme.surfaceContainerHigh.copy(alpha = 0.75f)),
         modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp, horizontal = 12.dp)) {
@@ -38,7 +41,7 @@ fun wantFind(
                 links.forEach { link ->
                     Text(stringResource(link.titleRes), color = MiuixTheme.colorScheme.primary, modifier = Modifier.padding(top = 6.dp, bottom = 6.dp)
                         .clickable {
-                            navController.navigate("feature/${link.route}")
+                            navPath.push(item = "feature/${link.route}", navTransitionType = NavTransitionType.Zoom)
                         },fontWeight = FontWeight.Medium)
                 }
             }

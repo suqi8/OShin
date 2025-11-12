@@ -1,9 +1,7 @@
 package com.suqi8.oshin.ui.module
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -50,13 +48,16 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
+import com.kyant.capsule.ContinuousRoundedRectangle
 import com.suqi8.oshin.R
 import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.ui.activity.components.BasicComponentDefaults
 import com.suqi8.oshin.ui.activity.components.SuperArrow
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.home.ModernSectionTitle
+import com.suqi8.oshin.ui.nav.path.NavPath
+import com.suqi8.oshin.ui.nav.transition.NavTransitionType
+import com.suqi8.oshin.ui.nav.ui.NavStackScope
 import com.suqi8.oshin.utils.drawColoredShadow
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.CardDefaults
@@ -64,6 +65,7 @@ import top.yukonga.miuix.kmp.basic.InputField
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.SearchBar
 import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.extra.SuperBottomSheetDefaults.cornerRadius
 import top.yukonga.miuix.kmp.theme.MiuixTheme
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
@@ -76,11 +78,10 @@ import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 @Composable
 fun Main_Module(
     topAppBarScrollBehavior: ScrollBehavior,
-    navController: NavController,
+    navPath: NavPath,
+    navStackScope: NavStackScope,
     padding: PaddingValues,
-    viewModel: ModuleViewModel = hiltViewModel(),
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    viewModel: ModuleViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
     var searchExpanded by remember { mutableStateOf(false) }
@@ -137,9 +138,8 @@ fun Main_Module(
                         viewModel.onSearchQueryChanged("")
                     }
                 },
-                navController = navController,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope
+                navPath = navPath,
+                navStackScope = navStackScope
             )
         }
 
@@ -149,35 +149,28 @@ fun Main_Module(
                     appStyle = uiState.appStyle,
                     onStyleChange = viewModel::onAppStyleChanged,
                     moduleEntries = uiState.moduleEntries,
-                    navController = navController,
-                    sharedTransitionScope = sharedTransitionScope,
-                    animatedVisibilityScope = animatedVisibilityScope,
+                    navPath = navPath,
+                    navStackScope = navStackScope,
                     viewModel = viewModel
                 )
             }
 
             item {
                 AnimatedVisibility(visible = uiState.notInstalledApps.isNotEmpty()) {
-                    with(sharedTransitionScope) {
-                        Card(
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp)
-                                .sharedBounds(
-                                    sharedContentState = rememberSharedContentState(key = "hide_apps_notice"),
-                                    animatedVisibilityScope = animatedVisibilityScope
-                                )
-                        ) {
-                            SuperArrow(
-                                title = stringResource(R.string.app_not_found_in_list),
-                                titleColor = BasicComponentDefaults.titleColor(
-                                    enabledColor = MiuixTheme.colorScheme.primary
-                                ),
-                                onClick = {
-                                    val packages = uiState.notInstalledApps.joinToString(",")
-                                    navController.navigate("hide_apps_notice/$packages")
-                                }
-                            )
-                        }
+                    Card(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                    ) {
+                        SuperArrow(
+                            title = stringResource(R.string.app_not_found_in_list),
+                            titleColor = BasicComponentDefaults.titleColor(
+                                enabledColor = MiuixTheme.colorScheme.primary
+                            ),
+                            onClick = {
+                                val packages = uiState.notInstalledApps.joinToString(",")
+                                //navController.navigate("hide_apps_notice/$packages")
+                            }
+                        )
                     }
                 }
             }
@@ -197,9 +190,8 @@ private fun ModuleSearchBar(
     searchResults: List<SearchResultUiItem>,
     onQueryChange: (String) -> Unit,
     onExpandedChange: (Boolean) -> Unit,
-    navController: NavController,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    navPath: NavPath,
+    navStackScope: NavStackScope,
     modifier: Modifier = Modifier
 ) {
     SearchBar(
@@ -235,10 +227,9 @@ private fun ModuleSearchBar(
             SearchResultsList(
                 results = searchResults,
                 query = query,
-                navController = navController,
-                onItemClick = { onExpandedChange(false) },
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope
+                navPath = navPath,
+                navStackScope = navStackScope,
+                onItemClick = { onExpandedChange(false) }
             )
         }
     )
@@ -254,9 +245,8 @@ private fun AppList(
     appStyle: Int,
     onStyleChange: () -> Unit,
     moduleEntries: List<ModuleEntry>,
-    navController: NavController,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    navPath: NavPath,
+    navStackScope: NavStackScope,
     viewModel: ModuleViewModel
 ) {
     Column(Modifier.padding(horizontal = 16.dp)) {
@@ -284,9 +274,12 @@ private fun AppList(
                     moduleEntries.forEach { entry ->
                         AppItemFlow(
                             entry = entry,
-                            onClick = { navController.navigate("feature/${entry.routeId}") },
-                            sharedTransitionScope = sharedTransitionScope,
-                            animatedVisibilityScope = animatedVisibilityScope,
+                            navStackScope = navStackScope,
+                            onClick = {
+                                navPath.push(
+                                    item = "feature/${entry.routeId}",
+                                    navTransitionType = NavTransitionType.Zoom // 或者你想要的任何动画
+                                ) },
                             viewModel = viewModel
                         )
                     }
@@ -297,9 +290,11 @@ private fun AppList(
                     moduleEntries.forEachIndexed { index, entry ->
                         AppItemList(
                             entry = entry,
-                            onClick = { navController.navigate("feature/${entry.routeId}") },
-                            sharedTransitionScope = sharedTransitionScope,
-                            animatedVisibilityScope = animatedVisibilityScope,
+                            navStackScope = navStackScope,
+                            onClick = {
+                                navPath.push(
+                                    item = "feature/${entry.routeId}",
+                                    navTransitionType = NavTransitionType.Zoom) },
                             viewModel = viewModel
                         )
                         if (index < moduleEntries.size - 1) {
@@ -321,10 +316,9 @@ private fun AppList(
 private fun SearchResultsList(
     results: List<SearchResultUiItem>,
     query: String,
-    navController: NavController,
-    onItemClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navPath: NavPath,
+    navStackScope: NavStackScope,
+    onItemClick: () -> Unit
 ) {
     com.suqi8.oshin.ui.activity.components.Card {
         if (results.isEmpty()) {
@@ -347,11 +341,15 @@ private fun SearchResultsList(
                         item = item,
                         query = query,
                         onClick = {
-                            navController.navigate("${item.item.route}?highlightKey=${item.item.key}")
+                            val routeWithParams = "${item.item.route}?highlightKey=${item.item.key}"
+
+                            // 2. 将整个字符串作为 item push 到 NavPath
+                            navPath.push(
+                                item = routeWithParams,
+                                navTransitionType = NavTransitionType.Zoom // 或者你想要的任何动画
+                            )
                             onItemClick()
-                        },
-                        sharedTransitionScope = sharedTransitionScope,
-                        animatedVisibilityScope = animatedVisibilityScope
+                        }
                     )
                     if (index < results.size - 1) {
                         addline()
@@ -367,9 +365,7 @@ private fun SearchResultsList(
 private fun SearchResultItem(
     item: SearchResultUiItem,
     query: String,
-    onClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    onClick: () -> Unit
 ) {
     val highlightColor = MiuixTheme.colorScheme.primary
 
@@ -379,39 +375,33 @@ private fun SearchResultItem(
     val titleAnnotated = highlightText(searchableItem.title, query, highlightColor)
     val summaryAnnotated = highlightText(searchableItem.summary, query, highlightColor)
 
-    with(sharedTransitionScope) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .sharedBounds(
-                    sharedContentState = rememberSharedContentState(key = searchableItem.key),
-                    animatedVisibilityScope = animatedVisibilityScope
-                )
-                .wrapContentHeight()
-                .clickable(onClick = onClick)
-                .padding(horizontal = 12.dp, vertical = 10.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Column {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 12.dp, vertical = 10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column {
+            Text(
+                text = titleAnnotated,
+                fontSize = 16.sp,
+                color = MiuixTheme.colorScheme.onBackground
+            )
+            if (searchableItem.summary.isNotBlank()) {
                 Text(
-                    text = titleAnnotated,
-                    fontSize = 16.sp,
-                    color = MiuixTheme.colorScheme.onBackground
-                )
-                if (searchableItem.summary.isNotBlank()) {
-                    Text(
-                        text = summaryAnnotated,
-                        fontSize = 12.sp,
-                        color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-                    )
-                }
-                Text(
-                    text = featurePath,
-                    fontSize = 11.sp,
-                    color = MiuixTheme.colorScheme.onSurfaceVariantActions.copy(alpha = 0.6f),
-                    modifier = Modifier.padding(top = 4.dp)
+                    text = summaryAnnotated,
+                    fontSize = 12.sp,
+                    color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                 )
             }
+            Text(
+                text = featurePath,
+                fontSize = 11.sp,
+                color = MiuixTheme.colorScheme.onSurfaceVariantActions.copy(alpha = 0.6f),
+                modifier = Modifier.padding(top = 4.dp)
+            )
         }
     }
 }
@@ -424,9 +414,8 @@ private fun SearchResultItem(
 @Composable
 private fun AppItemList(
     entry: ModuleEntry,
+    navStackScope: NavStackScope,
     onClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: ModuleViewModel
 ) {
     val defaultColor = MiuixTheme.colorScheme.primary
@@ -457,9 +446,8 @@ private fun AppItemList(
                 dominantColor = appUiInfo!!.dominantColor,
                 packageName = entry.packageName,
                 entry = entry,
-                onClick = onClick,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope
+                navStackScope = navStackScope,
+                onClick = onClick
             )
         }
     }
@@ -473,54 +461,49 @@ private fun AppItemListContent(
     dominantColor: Color,
     packageName: String,
     entry: ModuleEntry,
-    onClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navStackScope: NavStackScope,
+    onClick: () -> Unit
 ) {
-    with(sharedTransitionScope) {
-        Row(
+    val targetPath = "feature/${entry.routeId}"
+    Row(
+        modifier = navStackScope.zoomTransitionSource(
+            modifier = Modifier.fillMaxWidth(), // 1. 将原有的 Modifier 传入
+            path = targetPath,                  // 2. 提供目标路径
+            color = dominantColor,              // 3. 提供背景颜色
+            shape = ContinuousRoundedRectangle(cornerRadius)          // 4. 提供形状 (假设 Miuix Card 有这个属性)
+        )
+            .clickable(onClick = onClick)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Card(
+            colors = CardDefaults.defaultColors(color = dominantColor),
             modifier = Modifier
-                .clickable(onClick = onClick)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+                .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+                .drawColoredShadow(
+                    dominantColor,
+                    alpha = 1f,
+                    borderRadius = 13.dp,
+                    shadowRadius = 7.dp,
+                    roundedRect = false
+                )
         ) {
-            Card(
-                colors = CardDefaults.defaultColors(color = dominantColor),
-                modifier = Modifier
-                    .sharedBounds(
-                        sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                    .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
-                    .drawColoredShadow(
-                        dominantColor,
-                        alpha = 1f,
-                        borderRadius = 13.dp,
-                        shadowRadius = 7.dp,
-                        roundedRect = false
-                    )
-            ) {
-                Image(
-                    bitmap = icon,
-                    contentDescription = appName,
-                    modifier = Modifier.size(45.dp)
-                )
-            }
-            Column(modifier = Modifier.padding(start = 16.dp)) {
-                Text(
-                    text = appName,
-                    modifier = Modifier.sharedElement(
-                        sharedContentState = rememberSharedContentState(key = "title-${entry.routeId}"),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                )
-                Text(
-                    text = packageName,
-                    fontSize = MiuixTheme.textStyles.subtitle.fontSize,
-                    fontWeight = FontWeight.Medium,
-                    color = MiuixTheme.colorScheme.onBackgroundVariant
-                )
-            }
+            Image(
+                bitmap = icon,
+                contentDescription = appName,
+                modifier = Modifier.size(45.dp)
+            )
+        }
+        Column(modifier = Modifier.padding(start = 16.dp)) {
+            Text(
+                text = appName
+            )
+            Text(
+                text = packageName,
+                fontSize = MiuixTheme.textStyles.subtitle.fontSize,
+                fontWeight = FontWeight.Medium,
+                color = MiuixTheme.colorScheme.onBackgroundVariant
+            )
         }
     }
 }
@@ -533,9 +516,8 @@ private fun AppItemListContent(
 @Composable
 private fun AppItemFlow(
     entry: ModuleEntry,
+    navStackScope: NavStackScope,
     onClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
     viewModel: ModuleViewModel
 ) {
     val defaultColor = MiuixTheme.colorScheme.primary
@@ -568,9 +550,8 @@ private fun AppItemFlow(
                 icon = appUiInfo!!.icon,
                 dominantColor = appUiInfo!!.dominantColor,
                 entry = entry,
-                onClick = onClick,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope
+                navStackScope = navStackScope,
+                onClick = onClick
             )
         }
     }
@@ -583,54 +564,49 @@ private fun AppItemFlowContent(
     icon: ImageBitmap,
     dominantColor: Color,
     entry: ModuleEntry,
-    onClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navStackScope: NavStackScope,
+    onClick: () -> Unit
 ) {
-    with(sharedTransitionScope) {
-        Column(
-            modifier = Modifier
-                .width(65.dp)
-                .clickable(onClick = onClick),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Card(
-                colors = CardDefaults.defaultColors(color = dominantColor),
-                modifier = Modifier
-                    .padding(top = 10.dp)
-                    .sharedBounds(
-                        sharedContentState = rememberSharedContentState(key = "item-${entry.routeId}"),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                    .drawColoredShadow(
-                        dominantColor,
-                        alpha = 1f,
-                        borderRadius = 13.dp,
-                        shadowRadius = 7.dp,
-                        roundedRect = false
-                    )
-            ) {
-                Image(
-                    bitmap = icon,
-                    contentDescription = appName,
-                    modifier = Modifier.size(50.dp)
+    Column(
+        modifier = Modifier
+            .width(65.dp)
+            .clickable(onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        val targetPath = "feature/${entry.routeId}"
+        Card(
+            colors = CardDefaults.defaultColors(color = dominantColor),
+            modifier = navStackScope.zoomTransitionSource(
+                modifier = Modifier.width(65.dp),
+                path = targetPath,
+                color = dominantColor,
+                shape = ContinuousRoundedRectangle(cornerRadius) // 同样，如果不存在就用 RoundedCornerShape 替代
+            )
+                .padding(top = 10.dp)
+                .drawColoredShadow(
+                    dominantColor,
+                    alpha = 1f,
+                    borderRadius = 13.dp,
+                    shadowRadius = 7.dp,
+                    roundedRect = false
                 )
-            }
-            Text(
-                text = appName,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Medium,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                softWrap = false,
-                modifier = Modifier
-                    .padding(top = 10.dp, bottom = 6.dp)
-                    .sharedElement(
-                        sharedContentState = rememberSharedContentState(key = "title-${entry.routeId}"),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
+        ) {
+            Image(
+                bitmap = icon,
+                contentDescription = appName,
+                modifier = Modifier.size(50.dp)
             )
         }
+        Text(
+            text = appName,
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            softWrap = false,
+            modifier = Modifier
+                .padding(top = 10.dp, bottom = 6.dp)
+        )
     }
 }
 

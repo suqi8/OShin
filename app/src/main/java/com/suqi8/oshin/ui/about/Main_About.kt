@@ -12,9 +12,7 @@ import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -86,7 +84,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.highcapable.yukihookapi.YukiHookAPI_Impl
 import com.suqi8.oshin.BuildConfig
@@ -97,6 +94,9 @@ import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.SuperArrow
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.main.LocalColorMode
+import com.suqi8.oshin.ui.nav.path.NavPath
+import com.suqi8.oshin.ui.nav.transition.NavTransitionType
+import com.suqi8.oshin.ui.nav.ui.NavStackScope
 import com.suqi8.oshin.ui.theme.BgEffectView
 import com.suqi8.oshin.utils.executeCommand
 import kotlinx.coroutines.Dispatchers
@@ -127,10 +127,9 @@ import java.time.format.DateTimeFormatter
 fun Main_About(
     topAppBarScrollBehavior: ScrollBehavior,
     padding: PaddingValues,
-    navController: NavController,
-    viewModel: SettingsViewModel = hiltViewModel(),
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navPath: NavPath,
+    navStackScope: NavStackScope,
+    viewModel: SettingsViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val showDeviceNameDialog = remember { mutableStateOf(false) }
@@ -357,9 +356,8 @@ fun Main_About(
             item { SmallTitle(text = stringResource(R.string.thank)) }
             item {
                 ThanksCard(
-                    navController = navController,
-                    sharedTransitionScope = sharedTransitionScope,
-                    animatedVisibilityScope = animatedVisibilityScope
+                    navPath = navPath,
+                    navStackScope = navStackScope
                 )
             }
             item {
@@ -402,10 +400,9 @@ fun Main_About(
             item { SmallTitle(text = stringResource(R.string.other)) }
             item {
                 AboutActionsCard(
-                    navController = navController,
-                    context = context,
-                    sharedTransitionScope = sharedTransitionScope,
-                    animatedVisibilityScope = animatedVisibilityScope
+                    navPath = navPath,
+                    navStackScope = navStackScope,
+                    context = context
                 )
             }
             item {
@@ -437,51 +434,45 @@ fun Main_About(
         val buttonAlpha by derivedStateOf {
             if (scroll.firstVisibleItemIndex > 0) 0f else (1f - (scroll.firstVisibleItemScrollOffset.toFloat() / 300)).coerceIn(0f, 1f)
         }
-        with(sharedTransitionScope) {
-            Button(
-                modifier = Modifier
-                    .sharedBounds(
-                        sharedContentState = rememberSharedContentState(key = "update_card_transition"),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                    .fillMaxWidth(0.8f)
-                    .wrapContentHeight()
-                    .padding(top = 430.dp)
-                    .offset(y = -(scroll.firstVisibleItemScrollOffset.toFloat() / 3).dp)
-                    .alpha(buttonAlpha)
-                    .align(Alignment.TopCenter)
-                    .scale(scale)
-                    .drawBehind {
-                        val strokeWidth = 1.5.dp.toPx()
-                        val inset = strokeWidth / 2
-                        drawRoundRect(
-                            brush = Brush.linearGradient(
-                                colors = listOf(
-                                    Color(borderColor[1]),
-                                    Color(borderColor[0])
-                                ),
-                                start = Offset(size.width / 2, 0f),
-                                end = Offset(size.width / 2, size.height)
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(0.8f)
+                .wrapContentHeight()
+                .padding(top = 430.dp)
+                .offset(y = -(scroll.firstVisibleItemScrollOffset.toFloat() / 3).dp)
+                .alpha(buttonAlpha)
+                .align(Alignment.TopCenter)
+                .scale(scale)
+                .drawBehind {
+                    val strokeWidth = 1.5.dp.toPx()
+                    val inset = strokeWidth / 2
+                    drawRoundRect(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                Color(borderColor[1]),
+                                Color(borderColor[0])
                             ),
-                            topLeft = Offset(inset, inset),
-                            size = Size(size.width - strokeWidth, size.height - strokeWidth),
-                            cornerRadius = CornerRadius(16.dp.toPx()),
-                            style = Stroke(width = strokeWidth)
-                        )
-                    }
-                    .shadow(
-                        elevation = 1.5.dp,
-                        shape = G2RoundedCornerShape(16.dp),
-                        clip = true,
-                        ambientColor = shadowColor,
-                        spotColor = shadowColor
-                    ),
-                onClick = { navController.navigate("software_update") },
-                interactionSource = interactionSource,
-                colors = backgroundColor
-            ) {
-                Text(text = stringResource(R.string.check_update), fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = colorScheme.onSurface)
-            }
+                            start = Offset(size.width / 2, 0f),
+                            end = Offset(size.width / 2, size.height)
+                        ),
+                        topLeft = Offset(inset, inset),
+                        size = Size(size.width - strokeWidth, size.height - strokeWidth),
+                        cornerRadius = CornerRadius(16.dp.toPx()),
+                        style = Stroke(width = strokeWidth)
+                    )
+                }
+                .shadow(
+                    elevation = 1.5.dp,
+                    shape = G2RoundedCornerShape(16.dp),
+                    clip = true,
+                    ambientColor = shadowColor,
+                    spotColor = shadowColor
+                ),
+            onClick = { navPath.push(item = "software_update", navTransitionType = NavTransitionType.Zoom) },
+            interactionSource = interactionSource,
+            colors = backgroundColor
+        ) {
+            Text(text = stringResource(R.string.check_update), fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = colorScheme.onSurface)
         }
     }
 }
@@ -523,9 +514,8 @@ private fun CommunityCard(context: Context) {
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun ThanksCard(
-    navController: NavController,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navPath: NavPath,
+    navStackScope: NavStackScope,
 ) {
     Card(modifier = Modifier
         .fillMaxWidth()
@@ -539,36 +529,24 @@ private fun ThanksCard(
             qq = 3383787570
         )
         addline()
-        with(sharedTransitionScope) {
-            Box(
-                modifier = Modifier
-                    .sharedBounds(
-                        sharedContentState = rememberSharedContentState(key = "about_contributors"),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            ) {
-                FunArrow(title = stringResource(R.string.contributors), onClick = { navController.navigate("about_contributors") })
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            FunArrow(title = stringResource(R.string.contributors), onClick = { navPath.push(item = "about_contributors", navTransitionType = NavTransitionType.Zoom) })
         }
         addline()
-        with(sharedTransitionScope) {
-            Box(
-                modifier = Modifier
-                    .sharedBounds(
-                        sharedContentState = rememberSharedContentState(key = "about_references"),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            ) {
-                FunArrow(
-                    title = stringResource(R.string.references),
-                    position = CouiListItemPosition.Bottom,
-                    onClick = { navController.navigate("about_references") }
-                )
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            FunArrow(
+                title = stringResource(R.string.references),
+                position = CouiListItemPosition.Bottom,
+                onClick = { navPath.push(item = "about_references", navTransitionType = NavTransitionType.Zoom) }
+            )
         }
     }
 }
@@ -576,10 +554,9 @@ private fun ThanksCard(
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 private fun AboutActionsCard(
-    navController: NavController,
-    context: Context,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navPath: NavPath,
+    navStackScope: NavStackScope,
+    context: Context
 ) {
     Card(
         modifier = Modifier
@@ -587,22 +564,16 @@ private fun AboutActionsCard(
             .padding(horizontal = 12.dp)
             .padding(bottom = 6.dp)
     ) {
-        with(sharedTransitionScope) {
-            Box(
-                modifier = Modifier
-                    .sharedBounds(
-                        sharedContentState = rememberSharedContentState(key = "about_setting"),
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            ) {
-                IconFunArrow(
-                    title = stringResource(R.string.settings),
-                    iconRes = R.drawable.settings,
-                    position = CouiListItemPosition.Top,
-                    onClick = { navController.navigate("about_setting") })
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            IconFunArrow(
+                title = stringResource(R.string.settings),
+                iconRes = R.drawable.settings,
+                position = CouiListItemPosition.Top,
+                onClick = { navPath.push(item = "about_setting", navTransitionType = NavTransitionType.Zoom) })
         }
         addline()
         IconFunArrow(
@@ -610,21 +581,15 @@ private fun AboutActionsCard(
             iconRes = R.drawable.donors,
             onClick = { openUrl(context, "https://oshin.mikusignal.top/docs/donate.html") })
         addline()
-        with(sharedTransitionScope) {
-            Box(
-                modifier = Modifier
-                    .sharedBounds(
-                        sharedContentState = rememberSharedContentState(key = "about_group"), // <-- Key
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-            ) {
-                IconFunArrow(
-                    title = stringResource(R.string.official_channel),
-                    iconRes = R.drawable.group,
-                    onClick = { navController.navigate("about_group") })
-            }
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+        ) {
+            IconFunArrow(
+                title = stringResource(R.string.official_channel),
+                iconRes = R.drawable.group,
+                onClick = { navPath.push(item = "about_group", navTransitionType = NavTransitionType.Zoom) })
         }
         addline()
         IconFunArrow(

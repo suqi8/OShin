@@ -42,11 +42,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.times
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.SuperArrow
 import com.suqi8.oshin.ui.home.ModernSectionTitle
+import com.suqi8.oshin.ui.nav.path.NavPath
+import com.suqi8.oshin.ui.nav.ui.NavStackScope
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Text
@@ -70,7 +71,8 @@ private val ViewNode.expandableId: String
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun StatusBarLayout(
-    navController: NavController,
+    navPath: NavPath,
+    navStackScope: NavStackScope,
     viewModel: StatusBarLayoutViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
@@ -90,7 +92,8 @@ fun StatusBarLayout(
 
     FunPage(
         appList = listOf("com.android.systemui"),
-        navController = navController,
+        navPath = navPath,
+        navStackScope = navStackScope,
         scrollBehavior = scrollBehavior
     ) { paddingValues ->
         when {

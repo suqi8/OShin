@@ -4,10 +4,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.compose.animation.Animatable
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -23,10 +20,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -40,7 +35,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.suqi8.oshin.models.Action
 import com.suqi8.oshin.models.AppName
 import com.suqi8.oshin.models.AppSelection
@@ -60,7 +54,6 @@ import com.suqi8.oshin.models.TitledScreenItem
 import com.suqi8.oshin.models.UrlAction
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.CouiListItemPosition
-import com.suqi8.oshin.ui.activity.components.appselection.FunAppSele
 import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.FunDropdown
 import com.suqi8.oshin.ui.activity.components.FunNoEnable
@@ -70,7 +63,11 @@ import com.suqi8.oshin.ui.activity.components.FunSlider
 import com.suqi8.oshin.ui.activity.components.FunString
 import com.suqi8.oshin.ui.activity.components.FunSwitch
 import com.suqi8.oshin.ui.activity.components.addline
+import com.suqi8.oshin.ui.activity.components.appselection.FunAppSele
 import com.suqi8.oshin.ui.activity.components.wantFind
+import com.suqi8.oshin.ui.nav.path.NavPath
+import com.suqi8.oshin.ui.nav.transition.NavTransitionType
+import com.suqi8.oshin.ui.nav.ui.NavStackScope
 import kotlinx.coroutines.launch
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
@@ -84,14 +81,17 @@ import top.yukonga.miuix.kmp.utils.scrollEndHaptic
  * 通用的功能页面渲染器。
  * 它会根据 ViewModel 提供的 PageDefinition 动态构建整个页面。
  */
-@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun featureScreen(
-    navController: NavController,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope,
+    navPath: NavPath,
+    navStackScope: NavStackScope,
+    categoryId: String,
+    highlightKey: String?,
     viewModel: featureViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(categoryId, highlightKey) {
+        viewModel.loadPageFor(categoryId, highlightKey)
+    }
     val uiState by viewModel.uiState.collectAsState()
     val pageDef = uiState.pageDefinition
     val listState = rememberLazyListState()
@@ -122,7 +122,10 @@ fun featureScreen(
 
     // 处理页面定义未找到的情况
     if (pageDef == null) {
-        FunPage(title = "Error", navController = navController, scrollBehavior = topAppBarState) {
+        FunPage(title = "Error",
+            navPath = navPath,
+            navStackScope = navStackScope,
+            scrollBehavior = topAppBarState) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 Text(text = "Page definition not found.")
             }
@@ -133,11 +136,9 @@ fun featureScreen(
     // 渲染主页面
     FunPage(
         appList = pageDef.appList,
-        navController = navController,
-        scrollBehavior = topAppBarState,
-        sharedTransitionScope = sharedTransitionScope,
-        animatedVisibilityScope = animatedVisibilityScope,
-        animationKey = animationKey
+        navPath = navPath,
+        navStackScope = navStackScope,
+        scrollBehavior = topAppBarState
     ) { padding ->
         val itemStates = uiState.itemStates
         LazyColumn(
@@ -150,46 +151,20 @@ fun featureScreen(
             contentPadding = padding
         ) {
             item {
-                with(sharedTransitionScope) {
-                    Column(
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp)
+                        .displayCutoutPadding()
+                        .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)
+                ) {
+                    Text(
+                        text = resolveTitle(title = pageDef.title),
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Medium,
+                        color = MiuixTheme.colorScheme.onBackground,
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 20.dp)
-                            .displayCutoutPadding()
-                            .padding(top = padding.calculateTopPadding() + 72.dp, bottom = 8.dp)
-                    ) {
-                        val isTransitionActive = sharedTransitionScope.isTransitionActive
-
-                        // 1. 检查是否从搜索页导航而来
-                        val isFromSearch = uiState.highlightKey != null
-                        val initialFontSize = if (isFromSearch) 28f else 16f
-                        var targetFontSize by remember { mutableStateOf(initialFontSize) }
-
-                        // 3. 仅在 *不是* 从搜索页来，并且动画 *结束* 时，才触发大小变化
-                        LaunchedEffect(isTransitionActive, isFromSearch) {
-                            if (!isTransitionActive && !isFromSearch) {
-                                // 动画结束，更新到最终样式
-                                targetFontSize = 28f
-                            }
-                        }
-
-                        val animatedFontSize by animateFloatAsState(
-                            targetValue = targetFontSize,
-                            label = "TitleFontSize"
-                        )
-
-                        Text(
-                            text = resolveTitle(title = pageDef.title),
-                            fontSize = animatedFontSize.sp,
-                            fontWeight = FontWeight.Medium,
-                            color = MiuixTheme.colorScheme.onBackground,
-                            modifier = Modifier
-                                .sharedElement(
-                                    sharedContentState = rememberSharedContentState(key = "title-${uiState.categoryId}"),
-                                    animatedVisibilityScope = animatedVisibilityScope
-                                )
-                        )
-                    }
+                    )
                 }
             }
             itemsIndexed(pageDef.items) { _, pageItem ->
@@ -225,11 +200,10 @@ fun featureScreen(
                                                     RenderScreenItem(
                                                         item = item,
                                                         viewModel = viewModel,
-                                                        navController = navController,
+                                                        navPath = navPath,
+                                                        navStackScope = navStackScope,
                                                         isHighlighted = isHighlighted,
-                                                        position = position,
-                                                        sharedTransitionScope = sharedTransitionScope,
-                                                        animatedVisibilityScope = animatedVisibilityScope
+                                                        position = position
                                                     )
 
                                                     if (itemIndex < pageItem.items.lastIndex) {
@@ -251,7 +225,8 @@ fun featureScreen(
                         AnimatedVisibility(visible = isVisible) {
                             wantFind(
                                 links = pageItem.links,
-                                navController = navController
+                                navPath = navPath,
+                                navStackScope = navStackScope,
                             )
                         }
                     }
@@ -277,11 +252,10 @@ fun featureScreen(
 private fun RenderScreenItem(
     item: ScreenItem,
     viewModel: featureViewModel,
-    navController: NavController,
+    navPath: NavPath,
+    navStackScope: NavStackScope,
     isHighlighted: Boolean,
     position: CouiListItemPosition,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val itemStates by viewModel.uiState.collectAsState()
     val highlightColor = remember { Animatable(Color.Transparent) }
@@ -358,22 +332,12 @@ private fun RenderScreenItem(
             }
 
             is Action -> {
-                with(sharedTransitionScope) {
-                    FunArrow(
-                        title = resolveTitle(title = item.title),
-                        modifier = Modifier.sharedBounds(
-                            sharedContentState = rememberSharedContentState(key = "item-${item.route}"),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        ),
-                        titleModifier = Modifier.sharedElement(
-                            sharedContentState = rememberSharedContentState(key = "title-${item.route}"),
-                            animatedVisibilityScope = animatedVisibilityScope
-                        ),
-                        summary = item.summary?.let { stringResource(it) },
-                        position = position,
-                        onClick = { navController.navigate("feature/${item.route}") }
-                    )
-                }
+                FunArrow(
+                    title = resolveTitle(title = item.title),
+                    summary = item.summary?.let { stringResource(it) },
+                    position = position,
+                    onClick = { navPath.push(item = "feature/${item.route}", navTransitionType = NavTransitionType.Zoom) }
+                )
             }
 
             is Picture -> {

@@ -11,8 +11,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.suqi8.oshin.R
+import com.suqi8.oshin.ui.nav.path.NavPath
+import com.suqi8.oshin.ui.nav.transition.NavTransitionType
+import com.suqi8.oshin.ui.nav.ui.NavStackScope
 import com.suqi8.oshin.ui.softupdate.GitHubRelease
 import com.suqi8.oshin.ui.softupdate.UpdateViewModel
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
@@ -22,7 +24,8 @@ import top.yukonga.miuix.kmp.extra.SuperDialog
 @Composable
 fun UpdateAvailableDialog(
     release: GitHubRelease?,
-    navController: NavController,
+    navPath: NavPath,
+    navStackScope: NavStackScope,
     onDismiss: () -> Unit,
     updateViewModel: UpdateViewModel
 ) {
@@ -55,7 +58,7 @@ fun UpdateAvailableDialog(
                     onDismiss()
                     show.value = false
                     updateViewModel.setAutoDownloadFlag()
-                    navController.navigate("software_update")
+                    navPath.push(item = "software_update", navTransitionType = NavTransitionType.Zoom)
                 }
             )
         }

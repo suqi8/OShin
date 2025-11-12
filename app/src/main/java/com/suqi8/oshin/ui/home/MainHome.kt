@@ -66,7 +66,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.R
@@ -79,6 +78,9 @@ import com.suqi8.oshin.ui.main.ModuleStatus
 import com.suqi8.oshin.ui.main.RootStatus
 import com.suqi8.oshin.ui.main.Status
 import com.suqi8.oshin.ui.main.lspVersion
+import com.suqi8.oshin.ui.nav.path.NavPath
+import com.suqi8.oshin.ui.nav.transition.NavTransitionType
+import com.suqi8.oshin.ui.nav.ui.NavStackScope
 import kotlinx.coroutines.delay
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -93,10 +95,9 @@ import kotlin.math.abs
 fun MainHome(
     padding: PaddingValues,
     topAppBarScrollBehavior: ScrollBehavior,
-    navController: NavController,
-    viewModel: HomeViewModel = hiltViewModel(),
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navPath: NavPath,
+    navStackScope: NavStackScope,
+    viewModel: HomeViewModel = hiltViewModel()
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -142,9 +143,8 @@ fun MainHome(
             // 官方频道
             item {
                 OfficialChannelCard(
-                    navController = navController,
-                    sharedTransitionScope = sharedTransitionScope,
-                    animatedVisibilityScope = animatedVisibilityScope
+                    navPath = navPath,
+                    navStackScope = navStackScope
                 )
             }
 
@@ -153,9 +153,8 @@ fun MainHome(
                 item {
                     TodayHighlightsSection(
                         features = uiState.randomFeatures,
-                        navController = navController,
-                        sharedTransitionScope = sharedTransitionScope,
-                        animatedVisibilityScope = animatedVisibilityScope
+                        navPath = navPath,
+                        navStackScope = navStackScope
                     )
                 }
             }
@@ -515,9 +514,8 @@ fun ModernStatusIndicator(status: Status, color: Color) {
 @Composable
 fun TodayHighlightsSection(
     features: List<HighlightFeature>,
-    navController: NavController,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navPath: NavPath,
+    navStackScope: NavStackScope,
 ) {
     Column(modifier = Modifier.fillMaxWidth()) {
         ModernSectionTitle(
@@ -535,16 +533,12 @@ fun TodayHighlightsSection(
             contentPadding = PaddingValues(vertical = 4.dp)
         ) {
             items(features) { feature ->
-                with(sharedTransitionScope) {
-                    AppleStyleFeatureCard(
-                        feature = feature,
-                        onClick = {
-                            navController.navigate("${feature.searchableItem.route}?highlightKey=${feature.searchableItem.key}")
-                        },
-                        sharedTransitionScope = this,
-                        animatedVisibilityScope = animatedVisibilityScope
-                    )
-                }
+                ModernFeatureCard(
+                    feature = feature,
+                    onClick = {
+                        navPath.push(item = "${feature.searchableItem.route}?highlightKey=${feature.searchableItem.key}", navTransitionType = NavTransitionType.Zoom)
+                    }
+                )
             }
         }
     }
@@ -554,9 +548,7 @@ fun TodayHighlightsSection(
 @Composable
 fun ModernFeatureCard(
     feature: HighlightFeature,
-    onClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    onClick: () -> Unit
 ) {
 
     val route = feature.formattedRoute
@@ -573,116 +565,99 @@ fun ModernFeatureCard(
         )
         colors[abs(searchableItem.key.hashCode()) % colors.size]
     }
-    
-    with(sharedTransitionScope) {
-        Box(
-            modifier = Modifier
-                .width(180.dp)
-                .height(160.dp)
-                .sharedBounds(
-                    sharedContentState = rememberSharedContentState(key = searchableItem.key),
-                    animatedVisibilityScope = animatedVisibilityScope
-                )
-                .clip(RoundedCornerShape(16.dp))
-                .background(MiuixTheme.colorScheme.surface)
-                .border(
-                    width = 1.dp,
-                    color = themeColor.copy(alpha = 0.3f),
-                    shape = RoundedCornerShape(16.dp)
-                )
-                .clickable(onClick = onClick)
-                .padding(16.dp)
+
+    Box(
+        modifier = Modifier
+            .width(180.dp)
+            .height(160.dp)
+            .clip(RoundedCornerShape(16.dp))
+            .background(MiuixTheme.colorScheme.surface)
+            .border(
+                width = 1.dp,
+                color = themeColor.copy(alpha = 0.3f),
+                shape = RoundedCornerShape(16.dp)
+            )
+            .clickable(onClick = onClick)
+            .padding(16.dp)
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                // 标题和图标
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // 标题和图标
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    Box(
+                        modifier = Modifier
+                            .size(36.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .background(themeColor.copy(alpha = 0.1f)),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(36.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(themeColor.copy(alpha = 0.1f)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = searchableItem.title.first().toString(),
-                                color = themeColor,
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                        
                         Text(
-                            text = searchableItem.title,
-                            color = MiuixTheme.colorScheme.onBackground,
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f)
+                            text = searchableItem.title.first().toString(),
+                            color = themeColor,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold
                         )
                     }
-                    
-                    // 简介信息 - 固定行数，统一高度
+
                     Text(
-                        text = searchableItem.summary.ifEmpty { stringResource(R.string.common_no_description) },
-                        color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-                        fontSize = 11.sp,
-                        lineHeight = 14.sp,
-                        maxLines = 2,
-                        minLines = 2,
-                        overflow = TextOverflow.Ellipsis
+                        text = searchableItem.title,
+                        color = MiuixTheme.colorScheme.onBackground,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
                     )
                 }
-                
-                // 底部路由信息
-                if (route.isNotEmpty()) {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(6.dp)
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(4.dp)
-                                .clip(CircleShape)
-                                .background(themeColor)
-                        )
-                        Text(
-                            text = route,
-                            color = themeColor,
-                            fontSize = 9.sp,
-                            fontFamily = FontFamily.Monospace,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f)
-                        )
-                    }
-                } else {
-                    // 即使没有路由信息也保持占位高度
-                    Spacer(modifier = Modifier.height(16.dp))
+
+                // 简介信息 - 固定行数，统一高度
+                Text(
+                    text = searchableItem.summary.ifEmpty { stringResource(R.string.common_no_description) },
+                    color = MiuixTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                    fontSize = 11.sp,
+                    lineHeight = 14.sp,
+                    maxLines = 2,
+                    minLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
+
+            // 底部路由信息
+            if (route.isNotEmpty()) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .size(4.dp)
+                            .clip(CircleShape)
+                            .background(themeColor)
+                    )
+                    Text(
+                        text = route,
+                        color = themeColor,
+                        fontSize = 9.sp,
+                        fontFamily = FontFamily.Monospace,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f)
+                    )
                 }
+            } else {
+                // 即使没有路由信息也保持占位高度
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
-}
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Composable
-fun AppleStyleFeatureCard(
-    feature: HighlightFeature,
-    onClick: () -> Unit,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
-) {
-    ModernFeatureCard(feature, onClick, sharedTransitionScope, animatedVisibilityScope)
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class)
@@ -1429,69 +1404,64 @@ fun InfoChip(icon: ImageVector, label: String, value: String) {
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun OfficialChannelCard(
-    navController: NavController,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navPath: NavPath,
+    navStackScope: NavStackScope,
 ) {
-    with(sharedTransitionScope) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 20.dp)
-                .sharedBounds(
-                    sharedContentState = rememberSharedContentState(key = "about_group"),
-                    animatedVisibilityScope = animatedVisibilityScope
-                )
-                .clip(RoundedCornerShape(20.dp))
-                .background(
-                    Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFF667EEA),
-                            Color(0xFF764BA2)
-                        )
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 20.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .background(
+                Brush.linearGradient(
+                    colors = listOf(
+                        Color(0xFF667EEA),
+                        Color(0xFF764BA2)
                     )
                 )
-                .clickable { navController.navigate("about_group") }
-                .padding(20.dp)
+            )
+            .clickable {
+                navPath.push(item = "about_group", navTransitionType = NavTransitionType.Zoom)
+            }
+            .padding(20.dp)
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
             ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    Image(
-                        painter = painterResource(R.drawable.group),
-                        contentDescription = null,
-                        colorFilter = ColorFilter.tint(Color.White),
-                        modifier = Modifier.size(32.dp)
-                    )
-
-                    Column {
-                        Text(
-                            text = stringResource(id = R.string.official_channel),
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp
-                        )
-                        Text(
-                            text = stringResource(id = R.string.official_channel_subtitle),
-                            color = Color.White.copy(alpha = 0.8f),
-                            fontSize = 12.sp
-                        )
-                    }
-                }
-
-                Icon(
-                    imageVector = Icons.Default.ChevronRight,
+                Image(
+                    painter = painterResource(R.drawable.group),
                     contentDescription = null,
-                    tint = Color.White,
-                    modifier = Modifier.size(24.dp)
+                    colorFilter = ColorFilter.tint(Color.White),
+                    modifier = Modifier.size(32.dp)
                 )
+
+                Column {
+                    Text(
+                        text = stringResource(id = R.string.official_channel),
+                        color = Color.White,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = stringResource(id = R.string.official_channel_subtitle),
+                        color = Color.White.copy(alpha = 0.8f),
+                        fontSize = 12.sp
+                    )
+                }
             }
+
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = Color.White,
+                modifier = Modifier.size(24.dp)
+            )
         }
     }
 }

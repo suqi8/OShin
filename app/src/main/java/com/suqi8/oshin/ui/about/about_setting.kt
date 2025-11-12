@@ -4,9 +4,7 @@ import android.annotation.SuppressLint
 import android.content.ComponentName
 import android.content.pm.PackageManager
 import android.content.res.Configuration
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +20,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec
 import com.airbnb.lottie.compose.LottieConstants
@@ -38,6 +35,8 @@ import com.suqi8.oshin.ui.activity.components.SuperSwitch
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.home.ModernSectionTitle
 import com.suqi8.oshin.ui.main.LocalColorMode
+import com.suqi8.oshin.ui.nav.path.NavPath
+import com.suqi8.oshin.ui.nav.ui.NavStackScope
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.utils.overScrollVertical
@@ -48,9 +47,8 @@ import java.util.Locale
 @SuppressLint("LocalContextConfigurationRead")
 @Composable
 fun about_setting(
-    navController: NavController,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navPath: NavPath,
+    navStackScope: NavStackScope,
 ) {
     val context = LocalContext.current
     val colorModeState = LocalColorMode.current
@@ -59,13 +57,10 @@ fun about_setting(
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
 
     FunPage(
-        navController = navController,
+        navPath = navPath,
+        navStackScope = navStackScope,
         scrollBehavior = scrollBehavior,
-        sharedTransitionScope = sharedTransitionScope,
-        animatedVisibilityScope = animatedVisibilityScope,
-        animationKey = "about_setting"
     ) { padding ->
-        // (7. 添加 LazyColumn)
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()

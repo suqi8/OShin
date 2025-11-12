@@ -1,9 +1,7 @@
 package com.suqi8.oshin
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,10 +17,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.home.ModernSectionTitle
+import com.suqi8.oshin.ui.nav.path.NavPath
+import com.suqi8.oshin.ui.nav.transition.NavTransitionType
+import com.suqi8.oshin.ui.nav.ui.NavStackScope
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.utils.overScrollVertical
@@ -32,10 +32,9 @@ import top.yukonga.miuix.kmp.utils.overScrollVertical
 @Composable
 fun Main_Function(
     topAppBarScrollBehavior: ScrollBehavior,
-    navController: NavController,
-    padding: PaddingValues,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navPath: NavPath,
+    navStackScope: NavStackScope,
+    padding: PaddingValues
 ) {
     LazyColumn(
         modifier = Modifier
@@ -59,36 +58,24 @@ fun Main_Function(
                     .padding(vertical = 6.dp)
             ) {
                 Column {
-                    with(sharedTransitionScope) {
-                        Box(
-                            modifier = Modifier
-                                .sharedBounds(
-                                    sharedContentState = rememberSharedContentState(key = "func\\cpu_freq"),
-                                    animatedVisibilityScope = animatedVisibilityScope
-                                )
-                                .fillMaxWidth().wrapContentHeight()
-                        ) {
-                            FunArrow(
-                                title = stringResource(id = R.string.cpu_freq_main),
-                                onClick = { navController.navigate("func\\cpu_freq") }
-                            )
-                        }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth().wrapContentHeight()
+                    ) {
+                        FunArrow(
+                            title = stringResource(id = R.string.cpu_freq_main),
+                            onClick = { navPath.push(item = "func\\cpu_freq", navTransitionType = NavTransitionType.Zoom) }
+                        )
                     }
                     addline()
-                    with(sharedTransitionScope) {
-                        Box(
-                            modifier = Modifier
-                                .sharedBounds(
-                                    sharedContentState = rememberSharedContentState(key = "func\\romworkshop"),
-                                    animatedVisibilityScope = animatedVisibilityScope
-                                )
-                                .fillMaxWidth().wrapContentHeight()
-                        ) {
-                            FunArrow(
-                                title = stringResource(id = R.string.rom_workshop),
-                                onClick = { navController.navigate("func\\romworkshop") }
-                            )
-                        }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth().wrapContentHeight()
+                    ) {
+                        FunArrow(
+                            title = stringResource(id = R.string.rom_workshop),
+                            onClick = { navPath.push(item = "func\\romworkshop", navTransitionType = NavTransitionType.Zoom) }
+                        )
                     }
                 }
             }

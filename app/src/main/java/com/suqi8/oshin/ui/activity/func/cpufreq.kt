@@ -2,9 +2,7 @@ package com.suqi8.oshin.ui.activity.func
 
 import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.displayCutoutPadding
 import androidx.compose.foundation.layout.fillMaxSize
@@ -23,13 +21,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.SuperDropdown
 import com.suqi8.oshin.ui.activity.components.addline
 import com.suqi8.oshin.ui.home.ModernSectionTitle
+import com.suqi8.oshin.ui.nav.path.NavPath
+import com.suqi8.oshin.ui.nav.ui.NavStackScope
 import com.suqi8.oshin.utils.executeCommand
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -49,18 +48,15 @@ import top.yukonga.miuix.kmp.utils.scrollEndHaptic
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun cpu_freq(
-    navController: NavController,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navPath: NavPath,
+    navStackScope: NavStackScope,
 ) {
     val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
 
     FunPage(
-        navController = navController,
+        navPath = navPath,
+        navStackScope = navStackScope,
         scrollBehavior = topAppBarState,
-        sharedTransitionScope = sharedTransitionScope,
-        animatedVisibilityScope = animatedVisibilityScope,
-        animationKey = "func\\cpu_freq"
     ) { padding ->
         val pullToRefreshState = rememberPullToRefreshState()
         var isRefreshing by rememberSaveable { mutableStateOf(false) }

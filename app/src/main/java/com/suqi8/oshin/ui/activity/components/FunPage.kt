@@ -1,9 +1,7 @@
 package com.suqi8.oshin.ui.activity.components
 
 import android.graphics.RenderEffect
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -18,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
@@ -30,10 +27,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import com.kyant.backdrop.backdrops.LayerBackdrop
 import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
@@ -41,62 +36,30 @@ import com.kyant.backdrop.drawPlainBackdrop
 import com.kyant.backdrop.effects.blur
 import com.kyant.backdrop.effects.effect
 import com.suqi8.oshin.ui.activity.components.apprestart.AppRestartScreen
+import com.suqi8.oshin.ui.nav.path.NavPath
+import com.suqi8.oshin.ui.nav.ui.NavStackScope
 import com.suqi8.oshin.utils.hasShortcut
 import com.suqi8.oshin.utils.launchApp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.Icon
-import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Scaffold
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.basic.TopAppBar
-import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.icon.MiuixIcons
 import top.yukonga.miuix.kmp.icon.icons.useful.Back
 import top.yukonga.miuix.kmp.icon.icons.useful.Play
 import top.yukonga.miuix.kmp.icon.icons.useful.Refresh
 import top.yukonga.miuix.kmp.theme.MiuixTheme
-import top.yukonga.miuix.kmp.utils.overScrollVertical
-import top.yukonga.miuix.kmp.utils.scrollEndHaptic
-
-@OptIn(ExperimentalSharedTransitionApi::class)
-@Composable
-fun FunPage(
-    title: String,
-    appList: List<String> = emptyList(),
-    navController: NavController,
-    content: @Composable () -> Unit
-) {
-    val topAppBarState = MiuixScrollBehavior(rememberTopAppBarState())
-    FunPage(
-        title = title,
-        appList = appList,
-        navController = navController,
-        scrollBehavior = topAppBarState
-    ) { padding ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .overScrollVertical()
-                .scrollEndHaptic()
-                .nestedScroll(topAppBarState.nestedScrollConnection),
-            contentPadding = padding
-        ) {
-            item { content() }
-        }
-    }
-}
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun FunPage(
     title: String = "",
     appList: List<String> = emptyList(),
-    navController: NavController,
+    navPath: NavPath,
+    navStackScope: NavStackScope,
     scrollBehavior: ScrollBehavior,
-    sharedTransitionScope: SharedTransitionScope? = null,
-    animatedVisibilityScope: AnimatedVisibilityScope? = null,
-    animationKey: String? = null,
     action: @Composable (LayerBackdrop) -> Unit = { _ -> },
     content: @Composable (padding: PaddingValues) -> Unit
 ) {
@@ -112,18 +75,7 @@ fun FunPage(
                 modifier = Modifier.height(0.dp)
             )
         },
-        modifier = sharedTransitionScope?.let { scope ->
-            animationKey?.let { key ->
-                animatedVisibilityScope?.let { animScope ->
-                    with(scope) {
-                        Modifier.sharedBounds(
-                            sharedContentState = rememberSharedContentState(key = key),
-                            animatedVisibilityScope = animScope
-                        )
-                    }
-                }
-            }
-        } ?: Modifier
+        modifier = Modifier
     ) { padding ->
         val background = MiuixTheme.colorScheme.background
 
@@ -142,7 +94,8 @@ fun FunPage(
 
             // --- 顶部按钮栏 ---
             Column(Modifier.align(Alignment.TopStart)) {
-                TopButtons(navController, appList, backdrop, restartAPP, action)
+                TopButtons(navPath = navPath,
+                    navStackScope = navStackScope, appList, backdrop, restartAPP, action)
             }
 
             // --- 顶部模糊栏 ---
@@ -193,7 +146,8 @@ half4 main(float2 coord) {
 
 @Composable
 private fun TopButtons(
-    navController: NavController,
+    navPath: NavPath,
+    navStackScope: NavStackScope,
     appList: List<String>,
     backdrop: LayerBackdrop,
     restartAPP: MutableState<Boolean>,
@@ -219,7 +173,7 @@ private fun TopButtons(
         verticalAlignment = Alignment.CenterVertically
     ) {
         LiquidButton(
-            onClick = { navController.popBackStack() },
+            onClick = { navPath.pop() },
             modifier = Modifier.size(40.dp),
             backdrop = backdrop
         ) {

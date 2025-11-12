@@ -53,25 +53,43 @@ class featureViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(featureUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val categoryId: String = savedStateHandle.get<String>("categoryId")!!
-    private val highlightKey: String? = savedStateHandle.get<String>("highlightKey")
-    private val pageDefinition: PageDefinition? = FeatureRegistry.screenMap[categoryId]
-
     init {
+
+    }
+
+    fun loadPageFor(categoryId: String, highlightKey: String?) {
+        // 如果页面已经加载过了，就不要重复加载
+        if (_uiState.value.pageDefinition != null && _uiState.value.categoryId == categoryId) {
+            // 如果只是 highlightKey 变了，可以只更新 highlightKey
+            if (_uiState.value.highlightKey != highlightKey) {
+                _uiState.update { it.copy(highlightKey = highlightKey) }
+            }
+            return
+        }
+
+        val pageDefinition = FeatureRegistry.screenMap[categoryId]
+
         if (pageDefinition != null) {
-            _uiState.update { it.copy(
-                pageDefinition = pageDefinition,
-                highlightKey = highlightKey,
-                categoryId = this.categoryId
-            )}
+            _uiState.update {
+                it.copy(
+                    pageDefinition = pageDefinition,
+                    highlightKey = highlightKey,
+                    categoryId = categoryId,
+                    isLoading = true // 开始加载初始状态
+                )
+            }
             loadInitialStates(pageDefinition)
         } else {
-            _uiState.update { it.copy(
-                isLoading = false,
-                categoryId = this.categoryId
-            ) } // 页面定义未找到
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    pageDefinition = null, // 确保清空旧的页面定义
+                    categoryId = categoryId
+                )
+            }
         }
     }
+
 
     /**
      * 加载页面所有功能项的初始值
@@ -84,16 +102,13 @@ class featureViewModel @Inject constructor(
             pageDef.items.filterIsInstance<CardDefinition>()
                 .flatMap { it.items }
                 .forEach { item ->
+                    // ... (这个方法的内部逻辑完全保持不变)
                     when (item) {
                         is Switch -> initialStates[item.key] = prefs.getBoolean(item.key, item.defaultValue)
                         is Slider -> {
-                            // 兼容旧版 Int 类型的 Slider 值
                             val value = try {
-                                // 1. 优先尝试按新版 Float 类型读取
                                 prefs.getFloat(item.key, item.defaultValue)
                             } catch (e: ClassCastException) {
-                                // 2. 如果失败 (类型转换异常)，说明是旧版 Int 数据。
-                                //    则按 Int 类型读取，并手动转换为 Float。
                                 prefs.getInt(item.key, item.defaultValue.toInt()).toFloat()
                             }
                             initialStates[item.key] = value
@@ -161,7 +176,7 @@ class featureViewModel @Inject constructor(
         }
         // 在后台线程将新值写入 SharedPreferences
         viewModelScope.launch(Dispatchers.IO) {
-            pageDefinition?.let { pageDef ->
+            _uiState.value.pageDefinition?.let { pageDef -> // 使用 StateFlow 中的 pageDefinition
                 context.prefs(pageDef.category).edit {
                     when (value) {
                         is Boolean -> putBoolean(key, value)

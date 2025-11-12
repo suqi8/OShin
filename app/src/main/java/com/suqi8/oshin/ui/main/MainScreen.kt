@@ -3,9 +3,7 @@ package com.suqi8.oshin.ui.main
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
-import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
@@ -43,7 +41,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.kyant.backdrop.Backdrop
 import com.kyant.backdrop.backdrops.layerBackdrop
@@ -55,6 +52,8 @@ import com.suqi8.oshin.ui.activity.components.BlurredTopBarBackground
 import com.suqi8.oshin.ui.activity.components.BottomTabs
 import com.suqi8.oshin.ui.home.MainHome
 import com.suqi8.oshin.ui.module.Main_Module
+import com.suqi8.oshin.ui.nav.path.NavPath
+import com.suqi8.oshin.ui.nav.ui.NavStackScope
 import com.suqi8.oshin.ui.softupdate.UpdateViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
@@ -76,9 +75,8 @@ val LocalColorMode = compositionLocalOf<MutableState<Int>> { error("No ColorMode
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun MainScreen(
-    navController: NavController,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navPath: NavPath,
+    navStackScope: NavStackScope
 ) {
     val scope = rememberCoroutineScope()
     val topAppBarScrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
@@ -142,9 +140,8 @@ fun MainScreen(
                 pagerState = pagerState,
                 topAppBarScrollBehavior = topAppBarScrollBehavior,
                 padding = padding,
-                navController = navController,
-                sharedTransitionScope = sharedTransitionScope,
-                animatedVisibilityScope = animatedVisibilityScope
+                navPath = navPath,
+                navStackScope = navStackScope
             )
 
             BlurredTopBarBackground(backdrop)
@@ -164,7 +161,8 @@ fun MainScreen(
 
             UpdateAvailableDialog(
                 release = updateResult,
-                navController = navController,
+                navPath = navPath,
+                navStackScope = navStackScope,
                 onDismiss = { updateViewModel.clearUpdateCheckResult() },
                 updateViewModel = updateViewModel
             )
@@ -262,9 +260,8 @@ fun AppHorizontalPager(
     pagerState: PagerState,
     topAppBarScrollBehavior: ScrollBehavior,
     padding: PaddingValues,
-    navController: NavController,
-    sharedTransitionScope: SharedTransitionScope,
-    animatedVisibilityScope: AnimatedVisibilityScope
+    navPath: NavPath,
+    navStackScope: NavStackScope
 ) {
     HorizontalPager(
         modifier = modifier.background(MiuixTheme.colorScheme.background),
@@ -279,33 +276,29 @@ fun AppHorizontalPager(
                     0 -> MainHome(
                         topAppBarScrollBehavior = topAppBarScrollBehavior,
                         padding = padding,
-                        navController = navController,
-                        sharedTransitionScope = sharedTransitionScope,
-                        animatedVisibilityScope = animatedVisibilityScope
+                        navPath = navPath,
+                        navStackScope = navStackScope
                     )
 
                     1 -> Main_Module(
                         topAppBarScrollBehavior = topAppBarScrollBehavior,
                         padding = padding,
-                        navController = navController,
-                        sharedTransitionScope = sharedTransitionScope,
-                        animatedVisibilityScope = animatedVisibilityScope
+                        navPath = navPath,
+                        navStackScope = navStackScope
                     )
 
                     2 -> Main_Function(
                         topAppBarScrollBehavior = topAppBarScrollBehavior,
                         padding = padding,
-                        navController = navController,
-                        sharedTransitionScope = sharedTransitionScope,
-                        animatedVisibilityScope = animatedVisibilityScope
+                        navPath = navPath,
+                        navStackScope = navStackScope
                     )
 
                     else -> Main_About(
                         topAppBarScrollBehavior = topAppBarScrollBehavior,
                         padding = padding,
-                        navController = navController,
-                        sharedTransitionScope = sharedTransitionScope,
-                        animatedVisibilityScope = animatedVisibilityScope
+                        navPath = navPath,
+                        navStackScope = navStackScope
                     )
                 }
             }
