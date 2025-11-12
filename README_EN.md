@@ -67,6 +67,14 @@
   </tr>
 </table>
 
+> ⚠️ As of November 12, 2025, the main repository has been made private, and this mirror is retained for reference only.
+>
+> - Source code and feature updates for future versions will no longer be publicly available.
+> - To participate in OShin development, please contact: 3383787570@qq.com.
+> - For the latest updates, please refer to the "Community & Contribution" section below.
+> - Issues remain available for use.
+> - The code retained in this repository is still governed by the open-source license and the open-source notice below.
+
 ## 📜 Open Source Disclaimer
 
 This project is open source and contributions are welcome.
@@ -74,7 +82,6 @@ This project is open source and contributions are welcome.
 However, when modifying or redistributing this application, please **do not change** the following:
 
 - "About" → **Credits** and **Author Information**
-- "About" → **Extra Notes**
 - **Umeng SDK** integration
 - **China Region Startup Verification** module
 
