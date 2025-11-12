@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.data.repository.AppInfoProvider
-import com.suqi8.oshin.ui.module.AppUiInfo
+import com.suqi8.oshin.ui.mainscreen.module.AppUiInfo
 import com.suqi8.oshin.utils.getAutoColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

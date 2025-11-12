@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.softupdate
+package com.suqi8.oshin.ui.mainscreen.softupdate
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit

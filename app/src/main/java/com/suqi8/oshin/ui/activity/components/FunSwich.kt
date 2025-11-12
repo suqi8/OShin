@@ -43,7 +43,7 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.ui.main.LocalColorMode
+import com.suqi8.oshin.ui.mainscreen.LocalColorMode
 
 /**
  * 一个带有数据持久化和触感反馈功能的 Switch 开关组件。

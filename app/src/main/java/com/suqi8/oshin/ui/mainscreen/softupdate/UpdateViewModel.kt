@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.softupdate
+package com.suqi8.oshin.ui.mainscreen.softupdate
 
 import android.content.Context
 import android.util.Log

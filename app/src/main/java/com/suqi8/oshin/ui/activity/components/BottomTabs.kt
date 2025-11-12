@@ -61,7 +61,7 @@ import com.kyant.backdrop.highlight.Highlight
 import com.kyant.backdrop.shadow.InnerShadow
 import com.kyant.backdrop.shadow.Shadow
 import com.kyant.capsule.ContinuousCapsule
-import com.suqi8.oshin.ui.main.LocalColorMode
+import com.suqi8.oshin.ui.mainscreen.LocalColorMode
 import com.suqi8.oshin.utils.DampedDragAnimation
 import com.suqi8.oshin.utils.InteractiveHighlight
 import kotlinx.coroutines.flow.collectLatest

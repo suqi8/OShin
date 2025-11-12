@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.module
+package com.suqi8.oshin.ui.mainscreen.module
 
 /**
  * 搜索结果列表项的数据模型。

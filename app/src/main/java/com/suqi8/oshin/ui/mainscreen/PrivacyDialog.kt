@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.main
+package com.suqi8.oshin.ui.mainscreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row

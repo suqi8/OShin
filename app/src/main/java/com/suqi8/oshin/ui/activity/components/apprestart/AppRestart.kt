@@ -45,7 +45,7 @@ import com.kyant.capsule.ContinuousRoundedRectangle
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.CardDefaults
-import com.suqi8.oshin.ui.module.AppUiInfo
+import com.suqi8.oshin.ui.mainscreen.module.AppUiInfo
 import com.suqi8.oshin.utils.drawColoredShadow
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.theme.MiuixTheme

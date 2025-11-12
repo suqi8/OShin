@@ -46,7 +46,7 @@ import androidx.navigation.NavController
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.SuperArrow
-import com.suqi8.oshin.ui.home.ModernSectionTitle
+import com.suqi8.oshin.ui.mainscreen.home.ModernSectionTitle
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Text

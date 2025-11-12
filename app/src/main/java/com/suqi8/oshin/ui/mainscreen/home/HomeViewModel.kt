@@ -1,13 +1,14 @@
-package com.suqi8.oshin.ui.main
+package com.suqi8.oshin.ui.mainscreen
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.R
 import com.suqi8.oshin.data.repository.FeatureRepository
-import com.suqi8.oshin.ui.module.SearchableItem
+import com.suqi8.oshin.ui.mainscreen.module.SearchableItem
 import com.suqi8.oshin.utils.RouteFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -18,6 +19,8 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.OkHttpClient
+import okhttp3.Request
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -76,7 +79,7 @@ class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val featureRepository: FeatureRepository,
     private val routeFormatter: RouteFormatter
-) : androidx.lifecycle.ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
@@ -148,8 +151,8 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun fetchCarouselData(): List<CarouselItem> = withContext(Dispatchers.IO) {
         try {
-            val client = okhttp3.OkHttpClient.Builder().cache(null).build()
-            val request = okhttp3.Request.Builder()
+            val client = OkHttpClient.Builder().cache(null).build()
+            val request = Request.Builder()
                 .url("https://gitee.com/yo-gurt/OShin/raw/master/lunbo.json")
                 .header("Cache-Control", "no-cache")
                 .build()

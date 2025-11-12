@@ -9,7 +9,7 @@ import com.suqi8.oshin.models.PlainText
 import com.suqi8.oshin.models.StringResource
 import com.suqi8.oshin.models.Title
 import com.suqi8.oshin.models.TitledScreenItem
-import com.suqi8.oshin.ui.module.SearchableItem
+import com.suqi8.oshin.ui.mainscreen.module.SearchableItem
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async

@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.home
+package com.suqi8.oshin.ui.mainscreen.home
 
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -62,6 +62,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,15 +71,15 @@ import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.main.CarouselItem
-import com.suqi8.oshin.ui.main.DeviceInfo
-import com.suqi8.oshin.ui.main.FridaStatus
-import com.suqi8.oshin.ui.main.HighlightFeature
-import com.suqi8.oshin.ui.main.HomeViewModel
-import com.suqi8.oshin.ui.main.ModuleStatus
-import com.suqi8.oshin.ui.main.RootStatus
-import com.suqi8.oshin.ui.main.Status
-import com.suqi8.oshin.ui.main.lspVersion
+import com.suqi8.oshin.ui.mainscreen.CarouselItem
+import com.suqi8.oshin.ui.mainscreen.DeviceInfo
+import com.suqi8.oshin.ui.mainscreen.FridaStatus
+import com.suqi8.oshin.ui.mainscreen.HighlightFeature
+import com.suqi8.oshin.ui.mainscreen.HomeViewModel
+import com.suqi8.oshin.ui.mainscreen.ModuleStatus
+import com.suqi8.oshin.ui.mainscreen.RootStatus
+import com.suqi8.oshin.ui.mainscreen.Status
+import com.suqi8.oshin.ui.mainscreen.lspVersion
 import kotlinx.coroutines.delay
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -1104,7 +1105,7 @@ fun SystemInfoRow(
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
             modifier = Modifier.fillMaxWidth(),
-            textAlign = androidx.compose.ui.text.style.TextAlign.End
+            textAlign = TextAlign.End
         )
     }
 }
@@ -1160,7 +1161,7 @@ fun SystemInfoCard(
                 fontWeight = FontWeight.Bold,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
-                textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                textAlign = TextAlign.Center
             )
         }
     }
@@ -1332,7 +1333,7 @@ fun GradientInfoRow(
             color = Color.White,
             fontSize = 14.sp,
             fontWeight = FontWeight.Medium,
-            textAlign = androidx.compose.ui.text.style.TextAlign.End
+            textAlign = TextAlign.End
         )
     }
 }

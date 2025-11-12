@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.main
+package com.suqi8.oshin.ui.mainscreen
 
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -11,12 +11,12 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.suqi8.oshin.ui.softupdate.SoftwareUpdatePage
-import com.suqi8.oshin.ui.about.about_contributors
-import com.suqi8.oshin.ui.about.about_group
-import com.suqi8.oshin.ui.about.about_references
-import com.suqi8.oshin.ui.about.about_setting
-import com.suqi8.oshin.ui.activity.HideAppsNotice
+import com.suqi8.oshin.ui.mainscreen.softupdate.SoftwareUpdatePage
+import com.suqi8.oshin.ui.mainscreen.about.about_contributors
+import com.suqi8.oshin.ui.mainscreen.about.about_group
+import com.suqi8.oshin.ui.mainscreen.about.about_references
+import com.suqi8.oshin.ui.mainscreen.about.about_setting
+import com.suqi8.oshin.ui.mainscreen.module.HideAppsNotice
 import com.suqi8.oshin.ui.activity.feature.featureScreen
 import com.suqi8.oshin.ui.activity.func.StatusBarLayout.StatusBarLayout
 import com.suqi8.oshin.ui.activity.func.cpu_freq

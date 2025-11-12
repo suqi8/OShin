@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.module
+package com.suqi8.oshin.ui.mainscreen.module
 
 import android.content.Context
 import androidx.compose.runtime.getValue

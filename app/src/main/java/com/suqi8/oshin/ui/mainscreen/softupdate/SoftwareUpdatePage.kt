@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.softupdate
+package com.suqi8.oshin.ui.mainscreen.softupdate
 
 import android.annotation.SuppressLint
 import android.content.Context

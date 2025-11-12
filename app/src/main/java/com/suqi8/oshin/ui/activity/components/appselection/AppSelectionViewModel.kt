@@ -11,7 +11,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.data.repository.AppInfoProvider
-import com.suqi8.oshin.ui.module.AppUiInfo
+import com.suqi8.oshin.ui.mainscreen.module.AppUiInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers

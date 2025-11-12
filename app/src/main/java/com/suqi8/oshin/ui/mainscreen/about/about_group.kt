@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.about
+package com.suqi8.oshin.ui.mainscreen.about
 
 import android.content.Intent
 import android.net.Uri
@@ -23,7 +23,7 @@ import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.FunPage
 import com.suqi8.oshin.ui.activity.components.addline
-import com.suqi8.oshin.ui.home.ModernSectionTitle
+import com.suqi8.oshin.ui.mainscreen.home.ModernSectionTitle
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.SmallTitle
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
