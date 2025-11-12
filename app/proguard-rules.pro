@@ -14,7 +14,7 @@
 
 # Uncomment this to preserve the line number information for
 # debugging stack traces.
-#-keepattributes SourceFile,LineNumberTable
+-keepattributes SourceFile,LineNumberTable
 
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
@@ -27,12 +27,6 @@
     public static *** throwUninitializedProperty(...);
     public static *** throwUninitializedPropertyAccessException(...);
 }
-
--keepclassmembers class * implements androidx.viewbinding.ViewBinding {
-    *** inflate(android.view.LayoutInflater);
-}
-
--keep class * extends android.app.Activity
 -keep class * implements androidx.viewbinding.ViewBinding {
     <init>();
     *** inflate(android.view.LayoutInflater);
@@ -57,10 +51,6 @@
 -dontwarn com.umeng.**
 -dontwarn org.repackage.**
 -keep class com.suqi8.oshin.ui.activity.func.StatusBarLayout.** { *; }
--keep class com.suqi8.oshin.hook.** { *; }
--keep class com.suqi8.oshin.ui.softupdate.** { *; }
--keep class com.suqi8.oshin.ui.activity.** { *; }
--keeppackagenames com.suqi8.oshin
 -keepattributes Signature, InnerClasses, EnclosingMethod
 -dontusemixedcaseclassnames
 
