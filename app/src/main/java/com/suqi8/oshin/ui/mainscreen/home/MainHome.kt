@@ -42,6 +42,7 @@ import androidx.compose.material.icons.filled.PhoneAndroid
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -57,6 +58,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -66,12 +68,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import coil3.compose.AsyncImage
 import com.highcapable.yukihookapi.YukiHookAPI
 import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.mainscreen.CarouselItem
+import com.suqi8.oshin.ui.mainscreen.CarouselContent
 import com.suqi8.oshin.ui.mainscreen.DeviceInfo
 import com.suqi8.oshin.ui.mainscreen.FridaStatus
 import com.suqi8.oshin.ui.mainscreen.HighlightFeature
@@ -80,6 +86,9 @@ import com.suqi8.oshin.ui.mainscreen.ModuleStatus
 import com.suqi8.oshin.ui.mainscreen.RootStatus
 import com.suqi8.oshin.ui.mainscreen.Status
 import com.suqi8.oshin.ui.mainscreen.lspVersion
+import com.umeng.union.UMNativeAD
+import com.umeng.union.widget.UMNativeLayout
+import com.umeng.union.widget.UMVideoView
 import kotlinx.coroutines.delay
 import top.yukonga.miuix.kmp.basic.Icon
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
@@ -121,7 +130,7 @@ fun MainHome(
             }
             // 轮播图
             item {
-                uiState.carouselItems?.let {
+                uiState.combinedCarouselItems.let {
                     FeaturedCollectionsSection(items = it)
                 }
             }
@@ -194,15 +203,22 @@ fun ModernSectionTitle(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun FeaturedCollectionsSection(items: List<CarouselItem>) {
+fun FeaturedCollectionsSection(items: List<CarouselContent>) {
+    // 如果列表为空，直接不显示这个区域，避免不必要的计算
+    if (items.isEmpty()) return
+
     val pagerState = rememberPagerState { items.size }
     val uriHandler = LocalUriHandler.current
 
+    // 自动轮播效果
     LaunchedEffect(pagerState.pageCount) {
         while (true) {
-            delay(5000)
-            val nextPage = (pagerState.currentPage + 1) % pagerState.pageCount
-            pagerState.animateScrollToPage(nextPage, animationSpec = tween(durationMillis = 800))
+            delay(5000) // 每5秒切换一次
+            // 确保页面数量大于1才轮播
+            if (pagerState.pageCount > 1) {
+                val nextPage = (pagerState.currentPage + 1) % pagerState.pageCount
+                pagerState.animateScrollToPage(nextPage, animationSpec = tween(durationMillis = 800))
+            }
         }
     }
 
@@ -224,126 +240,126 @@ fun FeaturedCollectionsSection(items: List<CarouselItem>) {
             contentPadding = PaddingValues(horizontal = 20.dp),
             pageSpacing = 16.dp
         ) { page ->
+            // 计算页面偏移量以实现缩放和透明度动画
             val pageOffset = (pagerState.currentPage - page) + pagerState.currentPageOffsetFraction
             val scale = lerp(1f, 0.88f, abs(pageOffset).coerceAtMost(1f))
             val alpha = lerp(1f, 0.6f, abs(pageOffset).coerceAtMost(1f))
 
-            val item = items[page]
-
-            Box(
-                modifier = Modifier
-                    .graphicsLayer {
-                        scaleX = scale
-                        scaleY = scale
-                        this.alpha = alpha
-                    }
-                    .fillMaxWidth()
-                    .aspectRatio(16f / 9f)
-                    .clip(RoundedCornerShape(24.dp))
-                    .background(
-                        Brush.linearGradient(
-                            colors = listOf(
-                                Color(0xFF6366F1),
-                                Color(0xFF8B5CF6),
-                                Color(0xFFEC4899)
-                            )
-                        )
+            // 根据内容类型动态渲染UI
+            when (val content = items[page]) {
+                is CarouselContent.Ad -> {
+                    // 渲染广告卡片
+                    UmengNativeBannerAd(
+                        modifier = Modifier
+                            .graphicsLayer {
+                                scaleX = scale
+                                scaleY = scale
+                                this.alpha = alpha
+                            }
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9f)
+                            .clip(RoundedCornerShape(24.dp)),
+                        nativeAd = content.ad
                     )
-                    .clickable(enabled = item.actionUrl != null) {
-                        item.actionUrl?.let { url ->
-                            try {
-                                uriHandler.openUri(url)
-                            } catch (e: Exception) {
-                                // 如果URI处理器失败，可以尝试其他方式
-                                // 这里可以添加自定义的Intent跳转逻辑
+                }
+                is CarouselContent.Promo -> {
+                    // 渲染原始的推广卡片
+                    val item = content.item
+                    Box(
+                        modifier = Modifier
+                            .graphicsLayer {
+                                scaleX = scale
+                                scaleY = scale
+                                this.alpha = alpha
+                            }
+                            .fillMaxWidth()
+                            .aspectRatio(16f / 9f)
+                            .clip(RoundedCornerShape(24.dp))
+                            .background(
+                                Brush.linearGradient(
+                                    colors = listOf(
+                                        Color(0xFF6366F1),
+                                        Color(0xFF8B5CF6),
+                                        Color(0xFFEC4899)
+                                    )
+                                )
+                            )
+                            .clickable(enabled = item.actionUrl != null) {
+                                item.actionUrl?.let { url ->
+                                    try {
+                                        uriHandler.openUri(url)
+                                    } catch (e: Exception) {
+                                        // 处理打开链接失败的情况
+                                    }
+                                }
+                            }
+                    ) {
+                        if (item.imageUrl != null) {
+                            AsyncImage(
+                                model = item.imageUrl,
+                                contentDescription = item.title,
+                                contentScale = ContentScale.Crop,
+                                modifier = Modifier.fillMaxSize()
+                            )
+                        }
+
+                        if (item.title != null || item.description != null) {
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(
+                                        Brush.verticalGradient(
+                                            colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.7f))
+                                        )
+                                    )
+                            )
+                            Column(
+                                modifier = Modifier
+                                    .align(Alignment.BottomStart)
+                                    .padding(20.dp)
+                            ) {
+                                item.title?.let {
+                                    Text(
+                                        text = it,
+                                        color = Color.White,
+                                        fontWeight = FontWeight.Bold,
+                                        fontSize = 20.sp,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                                item.description?.let {
+                                    Text(
+                                        text = it,
+                                        color = Color.White.copy(alpha = 0.9f),
+                                        fontSize = 14.sp,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.padding(top = 4.dp)
+                                    )
+                                }
                             }
                         }
-                    }
-            ) {
-                if (item.imageUrl != null) {
-                    AsyncImage(
-                        model = item.imageUrl,
-                        contentDescription = item.title,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
 
-                // 只有在有标题或简介时才显示渐变遮罩和内容
-                if (item.title != null || item.description != null) {
-                    // 渐变遮罩
-                    Box(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .background(
-                                Brush.verticalGradient(
-                                    colors = listOf(
-                                        Color.Transparent,
-                                        Color.Black.copy(alpha = 0.7f)
-                                    )
+                        if (item.actionUrl != null) {
+                            Box(
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(16.dp)
+                                    .size(32.dp)
+                                    .clip(CircleShape)
+                                    .background(Brush.radialGradient(colors = listOf(Color.White.copy(alpha = 0.9f), Color.White.copy(alpha = 0.7f))))
+                                    .border(width = 1.5.dp, color = Color.White.copy(alpha = 0.5f), shape = CircleShape),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Default.ChevronRight,
+                                    contentDescription = "可点击",
+                                    tint = MiuixTheme.colorScheme.primary,
+                                    modifier = Modifier.size(16.dp)
                                 )
-                            )
-                    )
-
-                    // 内容
-                    Column(
-                        modifier = Modifier
-                            .align(Alignment.BottomStart)
-                            .padding(20.dp)
-                    ) {
-                        item.title?.let {
-                            Text(
-                                text = it,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 20.sp,
-                                maxLines = 1,
-                                overflow = TextOverflow.Ellipsis
-                            )
+                            }
                         }
-
-                        item.description?.let {
-                            Text(
-                                text = it,
-                                color = Color.White.copy(alpha = 0.9f),
-                                fontSize = 14.sp,
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis,
-                                modifier = Modifier.padding(top = 4.dp)
-                            )
-                        }
-                    }
-                }
-
-                // 可点击提示 - 只有在有链接时显示
-                if (item.actionUrl != null) {
-                    Box(
-                        modifier = Modifier
-                            .align(Alignment.TopEnd)
-                            .padding(16.dp)
-                            .size(32.dp)
-                            .clip(CircleShape)
-                            .background(
-                                Brush.radialGradient(
-                                    colors = listOf(
-                                        Color.White.copy(alpha = 0.9f),
-                                        Color.White.copy(alpha = 0.7f)
-                                    )
-                                )
-                            )
-                            .border(
-                                width = 1.5.dp,
-                                color = Color.White.copy(alpha = 0.5f),
-                                shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.ChevronRight,
-                            contentDescription = "可点击",
-                            tint = MiuixTheme.colorScheme.primary,
-                            modifier = Modifier.size(16.dp)
-                        )
                     }
                 }
             }
@@ -361,14 +377,8 @@ fun FeaturedCollectionsSection(items: List<CarouselItem>) {
         ) {
             repeat(pagerState.pageCount) { iteration ->
                 val isSelected = pagerState.currentPage == iteration
-                val width by animateFloatAsState(
-                    targetValue = if (isSelected) 24f else 8f,
-                    animationSpec = tween(300)
-                )
-                val color = if (isSelected)
-                    MiuixTheme.colorScheme.primary
-                else
-                    MiuixTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+                val width by animateFloatAsState(targetValue = if (isSelected) 24f else 8f, animationSpec = tween(300), label = "IndicatorWidth")
+                val color = if (isSelected) MiuixTheme.colorScheme.primary else MiuixTheme.colorScheme.onBackground.copy(alpha = 0.3f)
 
                 Box(
                     modifier = Modifier
@@ -379,6 +389,133 @@ fun FeaturedCollectionsSection(items: List<CarouselItem>) {
                 )
             }
         }
+    }
+}
+
+/**
+ * 用于展示友盟原生Banner广告（包括视频）的 Composable。
+ * 包含了生命周期管理，以正确处理视频播放。
+ *
+ * @param modifier Modifier for this composable.
+ * @param nativeAd 从友盟SDK获取的广告对象。
+ */
+@Composable
+fun UmengNativeBannerAd(
+    modifier: Modifier = Modifier,
+    nativeAd: UMNativeAD
+) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+    DisposableEffect(lifecycleOwner, nativeAd) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (!nativeAd.isVideo) return@LifecycleEventObserver
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> nativeAd.videoPlayer?.start()
+                Lifecycle.Event.ON_PAUSE -> nativeAd.videoPlayer?.pause()
+                else -> {}
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+            nativeAd.destroy()
+        }
+    }
+
+    val context = LocalContext.current
+    val eventBinderLayout = remember { UMNativeLayout(context) }
+
+    Box(modifier = modifier) {
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.linearGradient(
+                        colors = listOf(
+                            Color(0xFF6366F1),
+                            Color(0xFF8B5CF6),
+                            Color(0xFFEC4899)
+                        )
+                    )
+                )
+        )
+
+        if (nativeAd.isVideo) {
+            AndroidView(
+                factory = { ctx -> UMVideoView(ctx) },
+                modifier = Modifier.fillMaxSize(),
+                update = { videoView ->
+                    nativeAd.bindVideoView(videoView)
+                    nativeAd.setVideoAutoplay(true)
+                }
+            )
+        } else {
+            AsyncImage(
+                model = nativeAd.imageUrl,
+                contentDescription = nativeAd.title,
+                contentScale = ContentScale.Crop,
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.7f))
+                    )
+                )
+        )
+
+        Column(
+            modifier = Modifier
+                .align(Alignment.BottomStart)
+                .padding(20.dp)
+        ) {
+            Text(
+                text = nativeAd.title ?: "",
+                color = Color.White,
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
+            Text(
+                text = nativeAd.content ?: "",
+                color = Color.White.copy(alpha = 0.9f),
+                fontSize = 14.sp,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.padding(top = 4.dp)
+            )
+        }
+
+        Box(
+            modifier = Modifier
+                .align(Alignment.TopEnd)
+                .padding(16.dp)
+                .size(32.dp)
+                .clip(CircleShape)
+                .background(Brush.radialGradient(colors = listOf(Color.White.copy(alpha = 0.9f), Color.White.copy(alpha = 0.7f))))
+                .border(width = 1.5.dp, color = Color.White.copy(alpha = 0.5f), shape = CircleShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = "广告详情",
+                tint = MiuixTheme.colorScheme.primary,
+                modifier = Modifier.size(16.dp)
+            )
+        }
+
+        AndroidView(
+            factory = { eventBinderLayout },
+            modifier = Modifier.fillMaxSize(),
+            update = { umNativeLayout ->
+                nativeAd.bindView(umNativeLayout.context, umNativeLayout, listOf(umNativeLayout))
+            }
+        )
     }
 }
 

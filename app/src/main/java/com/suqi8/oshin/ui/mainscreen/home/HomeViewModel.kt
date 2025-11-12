@@ -3,6 +3,8 @@ package com.suqi8.oshin.ui.mainscreen
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
+import android.util.Log
+import android.view.View
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.highcapable.yukihookapi.YukiHookAPI
@@ -10,6 +12,10 @@ import com.suqi8.oshin.R
 import com.suqi8.oshin.data.repository.FeatureRepository
 import com.suqi8.oshin.ui.mainscreen.module.SearchableItem
 import com.suqi8.oshin.utils.RouteFormatter
+import com.umeng.union.UMNativeAD
+import com.umeng.union.UMUnionSdk
+import com.umeng.union.api.UMAdConfig
+import com.umeng.union.api.UMUnionApi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -64,13 +70,28 @@ data class HomeUiState(
     val rootStatus: RootStatus = RootStatus(Status.LOADING),
     val fridaStatus: FridaStatus = FridaStatus(Status.ERROR, "未连接"),
     val deviceInfo: DeviceInfo? = null,
-    val randomFeatures: List<HighlightFeature> = emptyList()
+    val randomFeatures: List<HighlightFeature> = emptyList(),
+    val combinedCarouselItems: List<CarouselContent> = emptyList(),
+    val isCarouselLoading: Boolean = true
 )
 
 data class HighlightFeature(
     val searchableItem: SearchableItem, // 原始数据
     val formattedRoute: String          // 预先格式化好的路由
 )
+
+sealed interface CarouselContent {
+    // 为每个卡片提供一个唯一的 key，这对于 Pager 的性能和稳定性很重要
+    val key: Any
+
+    data class Promo(val item: CarouselItem) : CarouselContent {
+        override val key: Any = item.actionUrl ?: item.imageUrl ?: item.title ?: "promo_${item.hashCode()}"
+    }
+
+    data class Ad(val ad: UMNativeAD) : CarouselContent {
+        override val key: Any = ad // 广告对象本身就可以作为 key
+    }
+}
 
 // --- ViewModel ---
 
@@ -84,9 +105,107 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
+    private var tempPromoItems: List<CarouselItem>? = null
+    private var tempAd: UMNativeAD? = null
+
     init {
         loadAllData()
         loadRandomFeatures()
+        loadNativeBannerAd()
+    }
+
+    fun loadNativeBannerAd() {
+        Log.d("UmengAd", "loadNativeBannerAd: 开始请求广告...")
+        viewModelScope.launch {
+            _uiState.update { it.copy(isCarouselLoading = true) }
+
+            // 1. 创建广告请求配置
+            val config = UMAdConfig.Builder()
+                .setSlotId("100004273") // 请确保这是你的视频广告位ID
+                .build()
+
+            // 2. 创建广告加载监听器 (每次调用时都创建新的实例以避免潜在的内存问题)
+            val listener = object : UMUnionApi.AdLoadListener<UMNativeAD> {
+
+                override fun onSuccess(type: UMUnionApi.AdType, display: UMNativeAD) {
+                    Log.d("UmengAd", "onSuccess: 广告加载成功. Title: ${display.title}, isVideo: ${display.isVideo}")
+
+                    // 将获取到的广告对象暂存起来
+                    tempAd = display
+
+                    // 调用数据合并逻辑
+                    combineAdAndPromoItems()
+
+                    // 为广告对象设置曝光和点击监听
+                    display.setAdEventListener(object : UMUnionApi.AdEventListener {
+                        override fun onExposed() {
+                            Log.d("UmengAd", "Ad Event: 广告曝光成功")
+                        }
+                        override fun onClicked(view: View) {
+                            Log.d("UmengAd", "Ad Event: 广告点击成功")
+                        }
+                        override fun onError(code: Int, message: String) {
+                            Log.e("UmengAd", "Ad Event Error: code=$code, msg=$message")
+                        }
+                    })
+
+                    // 如果是视频广告，可以设置视频相关的监听
+                    if (display.isVideo) {
+                        display.setVideoListener(object : UMUnionApi.VideoListener {
+                            override fun onReady() { Log.d("UmengAd", "Video Event: onReady") }
+                            override fun onStart() { Log.d("UmengAd", "Video Event: onStart") }
+                            override fun onPause() { Log.d("UmengAd", "Video Event: onPause") }
+                            override fun onCompleted() { Log.d("UmengAd", "Video Event: onCompleted") }
+                            override fun onError(message: String) { Log.e("UmengAd", "Video Event Error: $message") }
+                        })
+                    }
+                }
+
+                override fun onFailure(type: UMUnionApi.AdType, message: String) {
+                    Log.e("UmengAd", "onFailure: 广告请求出错: $message")
+
+                    // 确保失败时广告对象为null
+                    tempAd = null
+
+                    // 即使广告失败，也要调用一次合并，以便显示轮播图
+                    combineAdAndPromoItems()
+                }
+            }
+
+            // 3. 发起广告加载请求
+            UMUnionSdk.loadNativeBannerAd(config, listener)
+        }
+    }
+
+    /**
+     * 合并推广内容和广告内容，并更新UI状态。
+     * 这个函数是线程安全的，可以在任何时候被调用。
+     */
+    private fun combineAdAndPromoItems() {
+        // 确保轮播图数据已经加载完成，否则等待下一次调用
+        val promos = tempPromoItems ?: return
+
+        // 1. 创建一个 mutableListOf<CarouselContent> 用于存放所有内容
+        val combinedList = mutableListOf<CarouselContent>()
+
+        // 2. 将普通推广项转换为 CarouselContent.Promo 并添加到列表中
+        val promoContent = promos.map { CarouselContent.Promo(it) }
+        combinedList.addAll(promoContent)
+
+        // 3. 检查是否有有效广告，如果有，也添加到列表中
+        val ad = tempAd
+        if (ad != null && ad.isValid) {
+            combinedList.add(CarouselContent.Ad(ad))
+            Log.d("UmengAd", "combine: 成功添加一个广告到待打乱列表")
+        } else {
+            Log.d("UmengAd", "combine: 没有有效广告可添加")
+        }
+
+        combinedList.shuffle()
+        Log.d("UmengAd", "combine: 列表已随机打乱，总数: ${combinedList.size}")
+
+        // 5. 更新UI State
+        _uiState.update { it.copy(combinedCarouselItems = combinedList, isCarouselLoading = false) }
     }
 
     private fun loadAllData() {
@@ -181,6 +300,10 @@ class HomeViewModel @Inject constructor(
                 )
             )
         }
+    }.also { fetchedItems ->
+        // 保存原始轮播数据，并调用合并函数
+        tempPromoItems = fetchedItems
+        combineAdAndPromoItems()
     }
 
     private suspend fun getModuleStatus(): ModuleStatus = withContext(Dispatchers.Default) {
@@ -212,15 +335,15 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun getDeviceInfo(): DeviceInfo = withContext(Dispatchers.IO) {
         val command = """
-        echo "charge_full=$(cat /sys/class/oplus_chg/battery/charge_full 2>/dev/null)"
-        echo "charge_counter=$(cat /sys/class/power_supply/battery/charge_counter 2>/dev/null)"
-        echo "fcc=$(cat /sys/class/oplus_chg/battery/battery_fcc 2>/dev/null)"
-        echo "soh=$(cat /sys/class/oplus_chg/battery/battery_soh 2>/dev/null)"
-        echo "cc=$(cat /sys/class/oplus_chg/battery/battery_cc 2>/dev/null)"
-        echo "charge_full_design=$(cat /sys/class/power_supply/battery/charge_full_design 2>/dev/null)"
-        echo "health=$(cat /sys/class/power_supply/battery/health 2>/dev/null)"
-        echo "chip_soc=$(cat /sys/class/oplus_chg/battery/chip_soc 2>/dev/null)"
-    """.trimIndent()
+            echo "charge_full=$(cat /sys/class/oplus_chg/battery/charge_full 2>/dev/null)"
+            echo "charge_counter=$(cat /sys/class/power_supply/battery/charge_counter 2>/dev/null)"
+            echo "fcc=$(cat /sys/class/oplus_chg/battery/battery_fcc 2>/dev/null)"
+            echo "soh=$(cat /sys/class/oplus_chg/battery/battery_soh 2>/dev/null)"
+            echo "cc=$(cat /sys/class/oplus_chg/battery/battery_cc 2>/dev/null)"
+            echo "charge_full_design=$(cat /sys/class/power_supply/battery/charge_full_design 2>/dev/null)"
+            echo "health=$(cat /sys/class/power_supply/battery/health 2>/dev/null)"
+            echo "chip_soc=$(cat /sys/class/oplus_chg/battery/chip_soc 2>/dev/null)"
+        """.trimIndent()
 
         val rawData = executeCommand(command)
 
