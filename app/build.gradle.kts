@@ -33,7 +33,7 @@ android {
     // 默认配置，应用于所有的构建变体（Build Variant）。
     defaultConfig {
         applicationId = "com.suqi8.oshin" // 应用程序在设备和应用商店上的唯一标识符。
-        minSdk = 36                       // 应用可以运行的最低 Android API 级别。
+        minSdk = 33                       // 应用可以运行的最低 Android API 级别。
         targetSdk = 36                    // 应用设计和测试所基于的目标 Android API 级别。
 
         // 动态设置版本信息。
