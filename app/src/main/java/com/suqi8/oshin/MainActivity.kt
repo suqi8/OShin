@@ -13,8 +13,8 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import com.highcapable.yukihookapi.hook.factory.prefs
-import com.suqi8.oshin.ui.main.AppNavHost
-import com.suqi8.oshin.ui.main.LocalColorMode
+import com.suqi8.oshin.ui.mainscreen.AppNavHost
+import com.suqi8.oshin.ui.mainscreen.LocalColorMode
 import com.suqi8.oshin.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Locale

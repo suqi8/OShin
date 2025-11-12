@@ -25,7 +25,7 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunPage
-import com.suqi8.oshin.ui.home.ModernSectionTitle
+import com.suqi8.oshin.ui.mainscreen.home.ModernSectionTitle
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.Text
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState

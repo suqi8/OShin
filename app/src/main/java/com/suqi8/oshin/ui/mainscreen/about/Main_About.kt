@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.about
+package com.suqi8.oshin.ui.mainscreen.about
 
 import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
@@ -96,7 +96,7 @@ import com.suqi8.oshin.ui.activity.components.CouiListItemPosition
 import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.SuperArrow
 import com.suqi8.oshin.ui.activity.components.addline
-import com.suqi8.oshin.ui.main.LocalColorMode
+import com.suqi8.oshin.ui.mainscreen.LocalColorMode
 import com.suqi8.oshin.ui.theme.BgEffectView
 import com.suqi8.oshin.utils.executeCommand
 import kotlinx.coroutines.Dispatchers

@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.about
+package com.suqi8.oshin.ui.mainscreen.about
 
 import android.annotation.SuppressLint
 import android.content.ComponentName
@@ -36,8 +36,8 @@ import com.suqi8.oshin.ui.activity.components.FunSwitch
 import com.suqi8.oshin.ui.activity.components.SuperDropdown
 import com.suqi8.oshin.ui.activity.components.SuperSwitch
 import com.suqi8.oshin.ui.activity.components.addline
-import com.suqi8.oshin.ui.home.ModernSectionTitle
-import com.suqi8.oshin.ui.main.LocalColorMode
+import com.suqi8.oshin.ui.mainscreen.home.ModernSectionTitle
+import com.suqi8.oshin.ui.mainscreen.LocalColorMode
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.utils.overScrollVertical

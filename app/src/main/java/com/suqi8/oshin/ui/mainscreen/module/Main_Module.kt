@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.module
+package com.suqi8.oshin.ui.mainscreen.module
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.AnimatedVisibilityScope
@@ -56,7 +56,7 @@ import com.suqi8.oshin.models.ModuleEntry
 import com.suqi8.oshin.ui.activity.components.BasicComponentDefaults
 import com.suqi8.oshin.ui.activity.components.SuperArrow
 import com.suqi8.oshin.ui.activity.components.addline
-import com.suqi8.oshin.ui.home.ModernSectionTitle
+import com.suqi8.oshin.ui.mainscreen.home.ModernSectionTitle
 import com.suqi8.oshin.utils.drawColoredShadow
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.CardDefaults

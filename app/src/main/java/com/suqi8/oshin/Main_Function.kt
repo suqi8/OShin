@@ -22,7 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.suqi8.oshin.ui.activity.components.FunArrow
 import com.suqi8.oshin.ui.activity.components.addline
-import com.suqi8.oshin.ui.home.ModernSectionTitle
+import com.suqi8.oshin.ui.mainscreen.home.ModernSectionTitle
 import top.yukonga.miuix.kmp.basic.Card
 import top.yukonga.miuix.kmp.basic.ScrollBehavior
 import top.yukonga.miuix.kmp.utils.overScrollVertical

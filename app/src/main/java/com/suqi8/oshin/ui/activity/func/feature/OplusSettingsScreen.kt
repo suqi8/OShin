@@ -25,7 +25,7 @@ import com.suqi8.oshin.hook.settings.SettingsFeature
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunDropdown
 import com.suqi8.oshin.ui.activity.components.FunPage
-import com.suqi8.oshin.ui.home.ModernSectionTitle
+import com.suqi8.oshin.ui.mainscreen.home.ModernSectionTitle
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior

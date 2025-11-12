@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.about
+package com.suqi8.oshin.ui.mainscreen.about
 
 import android.content.Context
 import android.net.Uri
@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import com.highcapable.yukihookapi.hook.factory.prefs
 import com.suqi8.oshin.R
 import com.suqi8.oshin.features.FeatureRegistry
@@ -63,10 +64,10 @@ class SettingsViewModel @Inject constructor(
                     BufferedReader(InputStreamReader(inputStream)).readText()
                 } ?: throw IllegalStateException("无法读取文件")
 
-                val type = com.google.gson.reflect.TypeToken.getParameterized(
+                val type = TypeToken.getParameterized(
                     Map::class.java,
                     String::class.java,
-                    com.google.gson.reflect.TypeToken.get(Map::class.java).type
+                    TypeToken.get(Map::class.java).type
                 ).type
                 val allSettings: Map<String, Map<String, *>> = gson.fromJson(jsonString, type)
 

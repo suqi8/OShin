@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.main
+package com.suqi8.oshin.ui.mainscreen
 
 import android.annotation.SuppressLint
 import androidx.activity.ComponentActivity
@@ -50,12 +50,12 @@ import com.kyant.backdrop.backdrops.layerBackdrop
 import com.kyant.backdrop.backdrops.rememberLayerBackdrop
 import com.suqi8.oshin.Main_Function
 import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.about.Main_About
+import com.suqi8.oshin.ui.mainscreen.about.Main_About
 import com.suqi8.oshin.ui.activity.components.BlurredTopBarBackground
 import com.suqi8.oshin.ui.activity.components.BottomTabs
-import com.suqi8.oshin.ui.home.MainHome
-import com.suqi8.oshin.ui.module.Main_Module
-import com.suqi8.oshin.ui.softupdate.UpdateViewModel
+import com.suqi8.oshin.ui.mainscreen.home.MainHome
+import com.suqi8.oshin.ui.mainscreen.module.Main_Module
+import com.suqi8.oshin.ui.mainscreen.softupdate.UpdateViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch

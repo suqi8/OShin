@@ -1,4 +1,4 @@
-package com.suqi8.oshin.ui.main
+package com.suqi8.oshin.ui.mainscreen
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -13,8 +13,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.suqi8.oshin.R
-import com.suqi8.oshin.ui.softupdate.GitHubRelease
-import com.suqi8.oshin.ui.softupdate.UpdateViewModel
+import com.suqi8.oshin.ui.mainscreen.softupdate.GitHubRelease
+import com.suqi8.oshin.ui.mainscreen.softupdate.UpdateViewModel
 import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.extra.SuperDialog
