@@ -51,6 +51,7 @@ ezxhelper = "2.2.1"
 gson = "2.13.2"
 miuix = "0.5.2"
 okhttp = "5.2.1"
+union = "1.8.0"
 xxpermissions = "25.2"
 
 # Umeng SDK
@@ -123,6 +124,7 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 luckypray-dexkit = { group = "org.luckypray", name = "dexkit", version.ref = "dexkit" }
 miuix = { group = "top.yukonga.miuix.kmp", name = "miuix-android", version.ref = "miuix" }
 squareup-okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+union = { module = "com.umeng.umsdk:union", version.ref = "union" }
 xxpermissions = { group = "com.github.getActivity", name = "XXPermissions", version.ref = "xxpermissions" }
 
 # Umeng (友盟) SDK

@@ -247,6 +247,7 @@ dependencies {
     implementation(libs.umeng.common)
     implementation(libs.umeng.asms)
     implementation(libs.umeng.uyumao)
+    implementation(libs.union)
 
     // ------------------- 测试相关库 -------------------
     testImplementation(libs.junit)
