@@ -155,7 +155,7 @@
 ## ✨ 贡献者 (Contributors)
 
 <div align="center">
-  <a href="https://github.com/suqi8/OShinPubilc/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=suqi8/OShinPubilc" alt="Contributors"/>
+  <a href="https://github.com/suqi8/OShin/graphs/contributors">
+    <img src="https://contrib.rocks/image?repo=suqi8/OShin" alt="Contributors"/>
   </a>
 </div>
