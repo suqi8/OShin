@@ -2,16 +2,16 @@
 
 # O神 - ColorOS 辅助模块 
 
-<img src="https://github.com/suqi8/OShinPubilc/blob/e9cb9e2af53b728e5e2d2d00429a90f10a3384dc/app/src/main/ic_launcher1-playstore.png?raw=true" width="160" height="160" style="display: block; margin: 0 auto;" alt="icon">
+<img src="https://github.com/suqi8/OShin/blob/e9cb9e2af53b728e5e2d2d00429a90f10a3384dc/app/src/main/ic_launcher1-playstore.png?raw=true" width="160" height="160" style="display: block; margin: 0 auto;" alt="icon">
 
 **简体中文** | [English](./README_EN.md) | [在线文档](https://oshin.mikusignal.top/)
 
 <div>
-  <a href="https://github.com/suqi8/OShinPubilc/stargazers">
-    <img alt="Stars" src="https://img.shields.io/github/stars/suqi8/OShinPubilc?style=for-the-badge&logo=github">
+  <a href="https://github.com/suqi8/OShin/stargazers">
+    <img alt="Stars" src="https://img.shields.io/github/stars/suqi8/OShin?style=for-the-badge&logo=github">
   </a>
-  <a href="https://github.com/suqi8/OShinPubilc/releases">
-    <img alt="GitHub Downloads" src="https://img.shields.io/github/downloads/suqi8/OShinPubilc/total?style=for-the-badge&logo=github&label=GitHub">
+  <a href="https://github.com/suqi8/OShin/releases">
+    <img alt="GitHub Downloads" src="https://img.shields.io/github/downloads/suqi8/OShin/total?style=for-the-badge&logo=github&label=GitHub">
   </a>
   <a href="https://modules.lsposed.org/module/com.suqi8.oshin">
     <img alt="Xposed Repo Downloads" src="https://img.shields.io/github/downloads/Xposed-Modules-Repo/com.suqi8.oshin/total?style=for-the-badge&label=Xposed%20Repo&color=orange">
@@ -20,7 +20,7 @@
 
 <p></p>
 
-![OShin Socialify Banner](https://socialify.git.ci/suqi8/OShinPubilc/image?font=Rokkitt&forks=1&issues=1&language=1&name=1&owner=1&pattern=Brick%20Wall&pulls=1&stargazers=1&theme=Auto)
+![OShin Socialify Banner](https://socialify.git.ci/suqi8/OShin/image?font=Rokkitt&forks=1&issues=1&language=1&name=1&owner=1&pattern=Brick%20Wall&pulls=1&stargazers=1&theme=Auto)
 
 </div>
 
@@ -53,7 +53,7 @@
       <h3>📥 下载</h3>
       <ol>
         <li><b>推荐</b>: 在 LSPosed 管理器中搜索 <b>O神</b></li>
-        <li><b>手动</b>: 从 <a href="https://github.com/suqi8/OShinPubilc/releases">GitHub Releases</a> 下载 APK</li>
+        <li><b>手动</b>: 从 <a href="https://github.com/suqi8/OShin/releases">GitHub Releases</a> 下载 APK</li>
       </ol>
     </td>
     <td width="50%" valign="top">
@@ -103,10 +103,10 @@
     </a>
   </p>
   <p>
-    <a href="https://github.com/suqi8/OShinPubilc/issues">
+    <a href="https://github.com/suqi8/OShin/issues">
       <img alt="GitHub Issues" src="https://img.shields.io/badge/提交反馈-181717?style=for-the-badge&logo=github&logoColor=white">
     </a>
-    <a href="https://github.com/suqi8/OShinPubilc/pulls">
+    <a href="https://github.com/suqi8/OShin/pulls">
       <img alt="Pull Requests" src="https://img.shields.io/badge/贡献代码-181717?style=for-the-badge&logo=github&logoColor=white">
     </a>
     <a href="https://zh.crowdin.com/project/opatch">
@@ -122,16 +122,16 @@
   <tr>
     <td width="50%" valign="top">
       <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/pin/?username=suqi8&repo=OShinPubilc&show_owner=true&theme=catppuccin_mocha&border_color=302D41&icon_color=cba6f7&title_color=cba6f7&text_color=cad3f5">
-        <source media="(prefers-color-scheme: light)" srcset="https://github-readme-stats.vercel.app/api/pin/?username=suqi8&repo=OShinPubilc&show_owner=true&theme=catppuccin_latte&border_color=e0e0e0&icon_color=8839ef&title_color=4c4f69&text_color=4c4f69">
-        <img alt="Repo Card" src="https://github-readme-stats.vercel.app/api/pin/?username=suqi8&repo=OShinPubilc&show_owner=true&theme=catppuccin_latte&border_color=e0e0e0&icon_color=8839ef&title_color=4c4f69&text_color=4c4f69">
+        <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/pin/?username=suqi8&repo=OShin&show_owner=true&theme=catppuccin_mocha&border_color=302D41&icon_color=cba6f7&title_color=cba6f7&text_color=cad3f5">
+        <source media="(prefers-color-scheme: light)" srcset="https://github-readme-stats.vercel.app/api/pin/?username=suqi8&repo=OShin&show_owner=true&theme=catppuccin_latte&border_color=e0e0e0&icon_color=8839ef&title_color=4c4f69&text_color=4c4f69">
+        <img alt="Repo Card" src="https://github-readme-stats.vercel.app/api/pin/?username=suqi8&repo=OShin&show_owner=true&theme=catppuccin_latte&border_color=e0e0e0&icon_color=8839ef&title_color=4c4f69&text_color=4c4f69">
       </picture>
     </td>
     <td width="50%" valign="top">
       <picture>
-        <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=suqi8&repo=OShinPubilc&layout=compact&theme=catppuccin_mocha&border_color=302D41&title_color=cba6f7&text_color=cad3f5">
-        <source media="(prefers-color-scheme: light)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=suqi8&repo=OShinPubilc&layout=compact&theme=catppuccin_latte&border_color=e0e0e0&title_color=4c4f69&text_color=4c4f69">
-        <img alt="Top Langs" src="https://github-readme-stats.vercel.app/api/top-langs/?username=suqi8&repo=OShinPubilc&layout=compact&theme=catppuccin_latte&border_color=e0e0e0&title_color=4c4f69&text_color=4c4f69">
+        <source media="(prefers-color-scheme: dark)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=suqi8&repo=OShin&layout=compact&theme=catppuccin_mocha&border_color=302D41&title_color=cba6f7&text_color=cad3f5">
+        <source media="(prefers-color-scheme: light)" srcset="https://github-readme-stats.vercel.app/api/top-langs/?username=suqi8&repo=OShin&layout=compact&theme=catppuccin_latte&border_color=e0e0e0&title_color=4c4f69&text_color=4c4f69">
+        <img alt="Top Langs" src="https://github-readme-stats.vercel.app/api/top-langs/?username=suqi8&repo=OShin&layout=compact&theme=catppuccin_latte&border_color=e0e0e0&title_color=4c4f69&text_color=4c4f69">
       </picture>
     </td>
   </tr>
@@ -146,9 +146,9 @@
   </tr>
 </table>
 
-<img src="https://repobeats.axiom.co/api/embed/7ab9b9f9133cc7bf964809ae07bf5cb52af6e625.svg" alt="Repobeats analytics image"/>
+<img src="https://repobeats.axiom.co/api/embed/c5f8bea89b98ecd36d99f79a1c00dcb9eeebb3cc.svg" alt="Repobeats analytics image"/>
 
-[![Star History Chart](https://api.star-history.com/svg?repos=suqi8/OShinPubilc&type=Date)](https://star-history.com/#suqi8/OShinPubilc&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=suqi8/OShin&type=Date)](https://star-history.com/#suqi8/OShin&Date)
 
 </div>
 
