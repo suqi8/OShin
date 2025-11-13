@@ -156,7 +156,7 @@ However, when modifying or redistributing this app, please **do not change** the
 ## ✨ Contributors
 
 <div align="center">
-  <a href="https://github.com/suqi8/OShinPubilc/graphs/contributors">
+  <a href="https://github.com/suqi8/OShin/graphs/contributors">
     <img src="https://contrib.rocks/image?repo=suqi8/OShinPubilc" alt="Contributors"/>
   </a>
 </div>
