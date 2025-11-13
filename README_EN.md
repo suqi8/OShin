@@ -157,6 +157,6 @@ However, when modifying or redistributing this app, please **do not change** the
 
 <div align="center">
   <a href="https://github.com/suqi8/OShin/graphs/contributors">
-    <img src="https://contrib.rocks/image?repo=suqi8/OShinPubilc" alt="Contributors"/>
+    <img src="https://contrib.rocks/image?repo=suqi8/OShin" alt="Contributors"/>
   </a>
 </div>
