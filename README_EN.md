@@ -1,10 +1,10 @@
 <div align="center">
 
-# OShin - ColorOS Assistant Module  
+# OShin - ColorOS Auxiliary Module 
 
 <img src="https://github.com/suqi8/OShin/blob/e9cb9e2af53b728e5e2d2d00429a90f10a3384dc/app/src/main/ic_launcher1-playstore.png?raw=true" width="160" height="160" style="display: block; margin: 0 auto;" alt="icon">
 
-[简体中文](./README.md) | **English** | [Documentation](https://oshin.mikusignal.top/)
+[简体中文](./README.md) | **English** | [Online Website](https://oshin.mikusignal.top/)
 
 <div>
   <a href="https://github.com/suqi8/OShin/stargazers">
@@ -67,24 +67,27 @@
   </tr>
 </table>
 
-> ⚠️ As of November 12, 2025, the main repository has been made private.  
-> This mirror remains available for reference only.  
->
-> - Future source code and feature updates will no longer be public.  
-> - To participate in OShin development, contact: 3383787570@qq.com  
-> - For the latest updates, see the “Community & Contribution” section below.  
-> - Issues remain open.  
-> - The remaining source code continues to comply with the open-source license and disclaimer below.  
+
+---
+
+### 🚫 Feature Updates and Code Availability Notice
+* **As of November 12, 2025, the main repository has been made private, and this mirror is retained for reference only.**
+* **Source code and feature implementation plans will no longer be made public subsequently.**
+* **How to participate in OShin development?** Please contact: `3383787570@qq.com`
+* **Latest developments?** Please refer to the "Community & Contribution" section below.
+* **Issues Status:** Still available for normal use.
+
+> **🔒 The code retained in the repository still adheres to the open-source protocol and the open-source disclaimer below.**
 
 ## 📜 Open Source Disclaimer
 
-This project is open-source and welcomes contributions.  
+This is an open-source project and contributions are welcome.
 
-However, when modifying or redistributing this app, please **do not change** the following:
+When you modify or distribute this program, **you must not alter** the following content:
 
-- The **Acknowledgements** and **Author Info** in the "About" page  
-- **Umeng SDK** related code  
-- **Chinese Region Launch Verification** module  
+- The **Acknowledgments** and **Author Information** in the "About" page
+- Code related to the **Umeng SDK**
+- The **China region startup verification** module
 
 ## 💬 Community & Contribution
 
@@ -94,13 +97,10 @@ However, when modifying or redistributing this app, please **do not change** the
       <img alt="Telegram Channel" src="https://img.shields.io/badge/Official%20Channel-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white">
     </a>
     <a href="https://t.me/OPatchB">
-      <img alt="Telegram Chat" src="https://img.shields.io/badge/Community%20Chat-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white">
+      <img alt="Telegram Chat" src="https://img.shields.io/badge/Chat%20Group-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white">
     </a>
     <a href="https://t.me/OPatchC">
       <img alt="Telegram Build" src="https://img.shields.io/badge/Auto%20Build-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white">
-    </a>
-    <a href="http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=dbP78P2qCYuR2RxGtwmwCrlMCsh2MB2N&authKey=uTkJAGf0gg7%2Fx%2B3OBPrf%2F%2FnyZY2ntPNvnz6%2BTUo%2BHa0Pe%2F%2FqtXvK%2BSJ3%2B4PS0zbO&noverify=0&group_code=740266099">
-      <img alt="QQ Group" src="https://img.shields.io/badge/QQ%20Group-740266099-blue?style=for-the-badge&logo=tencent-qq&logoColor=white">
     </a>
   </p>
   <p>
