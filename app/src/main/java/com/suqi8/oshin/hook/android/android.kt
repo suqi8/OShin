@@ -9,6 +9,7 @@ class android : YukiBaseHooker() {
         loadApp(hooker = DisablePinVerifyPer72h())
         loadApp(hooker = AllowUntrustedTouch())
         loadHooker(PackageManagerServices())
+        loadHooker(IgnoreAudioFocus())
         //loadApp(hooker = Package_Installer())
     }
 }
