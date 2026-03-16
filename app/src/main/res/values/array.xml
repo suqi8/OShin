@@ -74,6 +74,14 @@
         <item>@string/default_mode</item>
         <item>@string/upload_download</item>
     </string-array>
+    <string-array name="game_ui_skin_options">
+        <item>@string/default_mode</item>
+        <item>@string/game_ui_skin_genshin_keqing</item>
+        <item>@string/game_ui_skin_genshin_hutao</item>
+        <item>@string/game_ui_skin_genshin_shenlilinghua</item>
+        <item>@string/game_ui_skin_genshin_xiangling</item>
+        <item>@string/game_ui_skin_naruto</item>
+    </string-array>
     <string-array name="icon_indicator_options">
         <item>@string/no_icon</item>
         <item>△▽▲▼</item>

@@ -8,6 +8,28 @@ import java.lang.reflect.Modifier
 class games: YukiBaseHooker() {
     override fun onHook() {
         loadApp(name = "com.oplus.games") {
+            // 皮肤选项映射表
+            val skinMap = mapOf(
+                1 to "genshin-keqing",      // 原神 - 刻晴
+                2 to "genshin-hutao",       // 原神 - 胡桃
+                3 to "genshin-shenlilinghua", // 原神 - 神里绫华
+                4 to "genshin-xiangling",   // 原神 - 香菱
+                5 to "naruto"               // 火影忍者
+            )
+
+            val skin = prefs("games").getInt("game_ui_skin_options", 0)
+            if (skin in 1..5) {  // 检查是否是有效的选项
+                val skinValue = skinMap[skin] ?: "genshin-keqing"  // 默认使用刻晴
+                "com.coloros.gamespaceui.helper.c".toClass().resolve()
+                    .apply {
+                        firstMethod {
+                            name = "g"
+                        }.hook {
+                            replaceTo(skinValue)
+                        }
+                    }
+            }
+
             DexKitBridge.create(this.appInfo.sourceDir).use {
                 //游戏AI
                 it.findMethod {

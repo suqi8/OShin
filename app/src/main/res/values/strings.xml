@@ -230,6 +230,12 @@
     <string name="default_mode">默认</string>
     <string name="upload_download">上传/下载</string>
     <string name="network_speed_style">网速样式</string>
+    <string name="game_ui_skins">游戏助手皮肤</string>
+    <string name="game_ui_skin_genshin_keqing">原神-刻晴</string>
+    <string name="game_ui_skin_genshin_hutao">原神-胡桃</string>
+    <string name="game_ui_skin_genshin_xiangling">原神-香菱</string>
+    <string name="game_ui_skin_genshin_shenlilinghua">原神-神里绫华</string>
+    <string name="game_ui_skin_naruto">火影忍者</string>
     <string name="speed_font_size">速度字体大小</string>
     <string name="unit_font_size">单位字体大小</string>
     <string name="upload_font_size">上传字体大小</string>

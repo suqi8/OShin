@@ -3,6 +3,7 @@ package com.suqi8.oshin.features.games
 import com.suqi8.oshin.R
 import com.suqi8.oshin.models.AppName
 import com.suqi8.oshin.models.CardDefinition
+import com.suqi8.oshin.models.Dropdown
 import com.suqi8.oshin.models.PageDefinition
 import com.suqi8.oshin.models.StringResource
 import com.suqi8.oshin.models.Switch
@@ -35,6 +36,11 @@ object games {
                     Switch(
                         title = StringResource(R.string.remove_game_filter_root_detection),
                         key = "remove_game_filter_root_detection"
+                    ),
+                    Dropdown(
+                        key = "game_ui_skin_options",
+                        title = StringResource(R.string.game_ui_skins),
+                        optionsRes = R.array.game_ui_skin_options
                     ),
                     Switch(
                         title = StringResource(R.string.enable_mlbb_ai_god_assist),
