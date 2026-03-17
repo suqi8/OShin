@@ -49,6 +49,10 @@ object android {
                     Switch(
                         title = StringResource(R.string.allow_untrusted_touch),
                         key = "AllowUntrustedTouch"
+                    ),
+                    Switch(
+                        title = StringResource(R.string.ignore_audio_focus),
+                        key = "IgnoreAudioFocus"
                     )
                 )
             ),
