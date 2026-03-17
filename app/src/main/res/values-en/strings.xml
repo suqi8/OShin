@@ -110,7 +110,6 @@
     <string name="desktop_icon_and_text_size_multiplier">Desktop Icon &amp; Text Size Multiplier</string>
     <string name="icon_size_limit_note">When larger than 1x, the icon size will be limited to 1x. This will not be fixed for now.</string>
     <string name="nvid_CN">CN China 🇨🇳</string>
-    <string name="nvid_TW">TW Taiwan Province of China 🇨🇳</string>
     <string name="nvid_RU">RU Russia 🇷🇺</string>
     <string name="nvid_GDPR_EU">GDPR EU 🇪🇺</string>
     <string name="nvid_GDPR_Europe">GDPR Europe 🇪🇺</string>
@@ -158,6 +157,7 @@
     <string name="clock_format_example">Clock Format Example</string>
     <string name="recent_tasks">Recent Tasks</string>
     <string name="force_display_memory">Force Display RAM Usage</string>
+    <string name="hide_clear_all_button">Hide Close button</string>
     <string name="status_bar_notification">System Notification</string>
     <string name="remove_developer_options_notification">Remove Developer Options Notification</string>
     <string name="low_battery_fluid_cloud_off">Disable Fluid Cloud for low battery (&lt;20%)</string>
