@@ -110,7 +110,6 @@
     <string name="desktop_icon_and_text_size_multiplier">桌面图标和字儿放大多少倍</string>
     <string name="icon_size_limit_note">大于1倍图标会被系统淦飞，作者懒的修了(我猜的）😞。</string>
     <string name="nvid_CN">CN 中国 China 🇨🇳</string>
-    <string name="nvid_TW">TW 中国台湾省 Taiwan Province of China 🇨🇳</string>
     <string name="nvid_RU">RU 俄罗斯 Russia 🇷🇺</string>
     <string name="nvid_GDPR_EU">GDPR 欧盟 EU 🇪🇺</string>
     <string name="nvid_GDPR_Europe">GDPR 欧洲 Europe 🇪🇺</string>
