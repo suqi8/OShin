@@ -110,7 +110,6 @@
     <string name="desktop_icon_and_text_size_multiplier">홈 화면 아이콘 및 텍스트 크기 배율</string>
     <string name="icon_size_limit_note">1배보다 클 경우 아이콘 크기가 1배로 제한됩니다. 당분간 수정되지 않을 것입니다.</string>
     <string name="nvid_CN">CN 중국 🇨🇳</string>
-    <string name="nvid_TW">TW 중국 타이완성 🇨🇳</string>
     <string name="nvid_RU">RU 러시아 🇷🇺</string>
     <string name="nvid_GDPR_EU">GDPR 유럽 연합 EU 🇪🇺</string>
     <string name="nvid_GDPR_Europe">GDPR 유럽 🇪🇺</string>

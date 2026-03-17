@@ -110,7 +110,6 @@
     <string name="desktop_icon_and_text_size_multiplier">Множитель размера иконок и текста на рабочем столе</string>
     <string name="icon_size_limit_note">При значении больше 1x, размер иконки будет ограничен до 1x. Временно не будет исправлено.</string>
     <string name="nvid_CN">CN Китай China 🇨🇳</string>
-    <string name="nvid_TW">TW Провинция Тайвань, Китай Taiwan Province of China 🇨🇳</string>
     <string name="nvid_RU">RU Россия Russia 🇷🇺</string>
     <string name="nvid_GDPR_EU">GDPR Европейский Союз EU 🇪🇺</string>
     <string name="nvid_GDPR_Europe">GDPR Европа Europe 🇪🇺</string>
