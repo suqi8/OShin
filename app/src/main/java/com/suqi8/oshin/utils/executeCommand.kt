@@ -1,6 +1,7 @@
 package com.suqi8.oshin.utils
 
 import android.util.Log
+import com.suqi8.oshin.TAG
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.util.concurrent.TimeUnit
@@ -9,10 +10,10 @@ fun executeCommand(command: String): String {
     var process: Process? = null
     val outputStringBuilder = StringBuilder() // 用于收集标准输出 (stdout)
     val errorStringBuilder = StringBuilder()  // 用于收集标准错误 (stderr)
-    var exitCode = -1
+    var exitCode: Int
 
     try {
-        Log.d(com.suqi8.oshin.TAG, "Executing command with su: $command")
+        Log.d(TAG, "Executing command with su: $command")
         process = Runtime.getRuntime().exec(arrayOf("su", "-c", command))
 
         // 读取标准输出 (stdout)
@@ -30,28 +31,28 @@ fun executeCommand(command: String): String {
 
         if (finished) {
             exitCode = process.exitValue()
-            Log.d(com.suqi8.oshin.TAG, "Command finished with exit code: $exitCode")
+            Log.d(TAG, "Command finished with exit code: $exitCode")
 
             // --- 打印错误流（如果非空）---
             val errorOutput = errorStringBuilder.toString().trim()
             if (errorOutput.isNotEmpty()) {
-                Log.e(com.suqi8.oshin.TAG, "Command stderr:\n$errorOutput")
+                Log.e(TAG, "Command stderr:\n$errorOutput")
             }
             // --- 打印标准输出（如果非空，主要用于调试确认）---
             val standardOutput = outputStringBuilder.toString().trim()
             if (standardOutput.isNotEmpty()) {
-                Log.d(com.suqi8.oshin.TAG, "Command stdout:\n$standardOutput")
+                Log.d(TAG, "Command stdout:\n$standardOutput")
             }
 
         } else {
-            Log.e(com.suqi8.oshin.TAG, "Command timed out: $command")
+            Log.e(TAG, "Command timed out: $command")
             process.destroy() // 销毁超时的进程
             // 对于超时的旧行为是返回 "", 这里保持一致或记录错误后返回 ""
             return "" // 或者可以抛出异常，但为了兼容性返回 ""
         }
 
     } catch (e: Exception) {
-        Log.e(com.suqi8.oshin.TAG, "executeCommand failed for: $command", e)
+        Log.e(TAG, "executeCommand failed for: $command", e)
         process?.destroy()
         return "" // 保持原有错误行为：返回空字符串
     } finally {

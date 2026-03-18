@@ -299,19 +299,18 @@ fun ResetAppList(
     defaultColor: Color   // 接收默认颜色用于比较
 ) {
     if (appInfo != null)  {
-        val info = appInfo
-        val isLoadingColor = info.dominantColor == defaultColor // 检查是否仍在等待主色
+        val isLoadingColor = appInfo.dominantColor == defaultColor // 检查是否仍在等待主色
 
         Row(
             modifier = Modifier,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Card(
-                colors = CardDefaults.defaultColors(info.dominantColor),
+                colors = CardDefaults.defaultColors(appInfo.dominantColor),
                 modifier = Modifier
                     .padding(top = 16.dp, bottom = 16.dp)
                     .drawColoredShadow(
-                        color = info.dominantColor,
+                        color = appInfo.dominantColor,
                         alpha = if (isLoadingColor) 0f else 1f, // 颜色加载完成前不显示阴影
                         borderRadius = 13.dp,
                         shadowRadius = 7.dp,
@@ -319,13 +318,13 @@ fun ResetAppList(
                     )
             ) {
                 Image(
-                    bitmap = info.icon,
+                    bitmap = appInfo.icon,
                     contentDescription = "App Icon",
                     modifier = Modifier.size(45.dp)
                 )
             }
             Column(modifier = Modifier.padding(start = 16.dp)) {
-                Text(text = info.name)
+                Text(text = appInfo.name)
                 Text(
                     text = packageName,
                     fontSize = MiuixTheme.textStyles.subtitle.fontSize,

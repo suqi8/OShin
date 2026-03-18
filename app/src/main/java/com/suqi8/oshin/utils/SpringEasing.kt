@@ -176,7 +176,7 @@ class SpringEasing private constructor(
     }
 
     // --- 内部解算器类 ---
-    internal abstract inner class SpringSolution {
+    internal abstract class SpringSolution {
         abstract fun getPosition(time: Float): Double
         abstract fun getVelocity(time: Float): Double
         fun calculateEnergy(time: Double, stiffness: Double, acceleration: Double, equilibrium: Double): Double {
@@ -186,7 +186,7 @@ class SpringEasing private constructor(
         }
     }
 
-    internal inner class CriticallyDampedSolution(initialDisp: Double, p: Double, initialVel: Double, private val equilibriumPos: Double) : SpringSolution() {
+    internal class CriticallyDampedSolution(initialDisp: Double, p: Double, initialVel: Double, private val equilibriumPos: Double) : SpringSolution() {
         private val r: Double
         private val c1: Double
         private val c2: Double

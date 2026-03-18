@@ -1,17 +1,12 @@
 package com.suqi8.oshin.hook.ota
 
 import android.content.ContentResolver
-import android.os.Handler
-import android.os.Looper
 import android.provider.Settings
-import android.widget.Toast
 import com.highcapable.kavaref.KavaRef.Companion.resolve
 import com.highcapable.kavaref.condition.type.Modifiers
 import com.highcapable.yukihookapi.hook.entity.YukiBaseHooker
 import com.highcapable.yukihookapi.hook.factory.method
 import org.luckypray.dexkit.DexKitBridge
-import java.lang.reflect.Modifier
-import java.net.HttpURLConnection
 
 class ota : YukiBaseHooker() {
     override fun onHook() {

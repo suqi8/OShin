@@ -202,159 +202,157 @@ fun SoftwareUpdatePage(
         }
     }
 
-    with(sharedTransitionScope) {
-        FunPage(
-            title = stringResource(R.string.check_update),
-            navController = navController,
-            scrollBehavior = topAppBarScrollBehavior,
-            sharedTransitionScope = sharedTransitionScope,
-            animatedVisibilityScope = animatedVisibilityScope,
-            animationKey = "update_card_transition",
-            action = { backdrop ->
-                LiquidButton(
-                    onClick = { showTokenDialog.value = true },
-                    modifier = Modifier.size(40.dp),
-                    backdrop = backdrop
-                ) {
-                    Icon(
-                        imageVector = MiuixIcons.Other.GitHub,
-                        contentDescription = stringResource(R.string.update_page_github_token_desc),
-                        tint = MiuixTheme.colorScheme.onBackground
-                    )
-                }
+    FunPage(
+        title = stringResource(R.string.check_update),
+        navController = navController,
+        scrollBehavior = topAppBarScrollBehavior,
+        sharedTransitionScope = sharedTransitionScope,
+        animatedVisibilityScope = animatedVisibilityScope,
+        animationKey = "update_card_transition",
+        action = { backdrop ->
+            LiquidButton(
+                onClick = { showTokenDialog.value = true },
+                modifier = Modifier.size(40.dp),
+                backdrop = backdrop
+            ) {
+                Icon(
+                    imageVector = MiuixIcons.Other.GitHub,
+                    contentDescription = stringResource(R.string.update_page_github_token_desc),
+                    tint = MiuixTheme.colorScheme.onBackground
+                )
             }
-        ) { padding ->
-            var showHistory by remember { mutableStateOf(false) }
+        }
+    ) { padding ->
+        var showHistory by remember { mutableStateOf(false) }
 
-            Box(
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentAlignment = Alignment.BottomCenter
+        ) {
+            LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(padding),
-                contentAlignment = Alignment.BottomCenter
+                    .overScrollVertical()
+                    .scrollEndHaptic()
+                    .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
+                contentPadding = PaddingValues(bottom = UpdatePageDimens.LazyColumnBottomPadding)
             ) {
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .overScrollVertical()
-                        .scrollEndHaptic()
-                        .nestedScroll(topAppBarScrollBehavior.nestedScrollConnection),
-                    contentPadding = PaddingValues(bottom = UpdatePageDimens.LazyColumnBottomPadding)
-                ) {
-                    item {
-                        Spacer(modifier = Modifier
-                            .displayCutoutPadding()
-                            .height(0.dp))
-                    }
+                item {
+                    Spacer(modifier = Modifier
+                        .displayCutoutPadding()
+                        .height(0.dp))
+                }
 
-                    // TabRow
-                    item {
-                        Box(
-                            modifier = Modifier.padding(
-                                horizontal = UpdatePageDimens.TabRowPadding,
-                                vertical = 8.dp
-                            )
-                        ) {
-                            TabRow(
-                                tabs = listOf(
-                                    stringResource(R.string.update_page_tab_release),
-                                    stringResource(R.string.update_page_tab_ci)
-                                ),
-                                selectedTabIndex = releaseType,
-                                minWidth = UpdatePageDimens.TabRowMinWidth,
-                                maxWidth = UpdatePageDimens.TabRowMaxWidth,
-                                cornerRadius = UpdatePageDimens.TabRowCornerRadius,
-                                height = UpdatePageDimens.TabRowHeight,
-                                onTabSelected = { releaseType = it }
-                            )
-                        }
-                    }
-
-                    // 统一的信息卡片
-                    item {
-                        UnifiedUpdateInfoCard(
-                            release = latestRelease,
-                            releaseType = releaseType,
-                            error = viewModel.error,
-                            isLoading = viewModel.isLoading,
-                            hasNewVersion = hasNewVersion
+                // TabRow
+                item {
+                    Box(
+                        modifier = Modifier.padding(
+                            horizontal = UpdatePageDimens.TabRowPadding,
+                            vertical = 8.dp
                         )
-                    }
-
-                    // 历史记录
-                    item {
-                        UpdateInfoSection(
-                            release = latestRelease,
-                            hasNewVersion = hasNewVersion,
-                            showHistory = showHistory,
-                            onToggleHistory = { showHistory = !showHistory },
-                            context = context // 传入 context
+                    ) {
+                        TabRow(
+                            tabs = listOf(
+                                stringResource(R.string.update_page_tab_release),
+                                stringResource(R.string.update_page_tab_ci)
+                            ),
+                            selectedTabIndex = releaseType,
+                            minWidth = UpdatePageDimens.TabRowMinWidth,
+                            maxWidth = UpdatePageDimens.TabRowMaxWidth,
+                            cornerRadius = UpdatePageDimens.TabRowCornerRadius,
+                            height = UpdatePageDimens.TabRowHeight,
+                            onTabSelected = { releaseType = it }
                         )
-                    }
-
-                    // 历史版本列表
-                    if (!hasNewVersion && showHistory) {
-                        items(viewModel.releases) { release ->
-                            ReleaseHistoryItem(release = release)
-                        }
-                    }
-
-                    // 新版本详情
-                    item {
-                        if (hasNewVersion && latestRelease != null) {
-                            Column(modifier = Modifier.padding(UpdatePageDimens.ContentVerticalPadding)) {
-                                addline()
-                                Spacer(Modifier.height(20.dp))
-                                BaseMarkdown(
-                                    content = latestRelease.body,
-                                    typography = markdownTypography()
-                                )
-                            }
-                        }
                     }
                 }
 
-                // 下载按钮
-                if (hasNewVersion && latestApkAsset != null) {
-                    DownloadButtonSection(
-                        isDownloading = viewModel.isDownloading,
-                        downloadProgress = viewModel.downloadProgress.collectAsState().value,
-                        isEnabled = isDownloadActionEnabled,
-                        onDownloadClick = {
-                            scope.launch(Dispatchers.IO) {
-                                viewModel.error = null
-                                val file = viewModel.downloadApk(latestApkAsset.downloadUrl, context)
-                                withContext(Dispatchers.Main) {
-                                    if (file != null) {
-                                        Toast.makeText(context, context.getString(R.string.update_page_download_complete), Toast.LENGTH_SHORT).show()
-                                        installApk(context, file, installLauncher, scope)
-                                    } else {
-                                        val errorMsg = viewModel.error ?: ""
-                                        Toast.makeText(context, context.getString(R.string.update_page_download_failed, errorMsg), Toast.LENGTH_LONG).show()
-                                    }
+                // 统一的信息卡片
+                item {
+                    UnifiedUpdateInfoCard(
+                        release = latestRelease,
+                        releaseType = releaseType,
+                        error = viewModel.error,
+                        isLoading = viewModel.isLoading,
+                        hasNewVersion = hasNewVersion
+                    )
+                }
+
+                // 历史记录
+                item {
+                    UpdateInfoSection(
+                        release = latestRelease,
+                        hasNewVersion = hasNewVersion,
+                        showHistory = showHistory,
+                        onToggleHistory = { showHistory = !showHistory },
+                        context = context // 传入 context
+                    )
+                }
+
+                // 历史版本列表
+                if (!hasNewVersion && showHistory) {
+                    items(viewModel.releases) { release ->
+                        ReleaseHistoryItem(release = release)
+                    }
+                }
+
+                // 新版本详情
+                item {
+                    if (hasNewVersion && latestRelease != null) {
+                        Column(modifier = Modifier.padding(UpdatePageDimens.ContentVerticalPadding)) {
+                            addline()
+                            Spacer(Modifier.height(20.dp))
+                            BaseMarkdown(
+                                content = latestRelease.body,
+                                typography = markdownTypography()
+                            )
+                        }
+                    }
+                }
+            }
+
+            // 下载按钮
+            if (hasNewVersion && latestApkAsset != null) {
+                DownloadButtonSection(
+                    isDownloading = viewModel.isDownloading,
+                    downloadProgress = viewModel.downloadProgress.collectAsState().value,
+                    isEnabled = isDownloadActionEnabled,
+                    onDownloadClick = {
+                        scope.launch(Dispatchers.IO) {
+                            viewModel.error = null
+                            val file = viewModel.downloadApk(latestApkAsset.downloadUrl, context)
+                            withContext(Dispatchers.Main) {
+                                if (file != null) {
+                                    Toast.makeText(context, context.getString(R.string.update_page_download_complete), Toast.LENGTH_SHORT).show()
+                                    installApk(context, file, installLauncher, scope)
+                                } else {
+                                    val errorMsg = viewModel.error ?: ""
+                                    Toast.makeText(context, context.getString(R.string.update_page_download_failed, errorMsg), Toast.LENGTH_LONG).show()
                                 }
                             }
                         }
-                    )
-                }
+                    }
+                )
             }
-
-            // Token 输入对话框
-            TokenEntryDialog(
-                show = showTokenDialog,
-                currentToken = viewModel.currentToken,
-                onDismiss = { showTokenDialog.value = false },
-                onSave = { token ->
-                    viewModel.saveToken(token)
-                    showTokenDialog.value = false
-                    scope.launch { viewModel.fetchReleases(releaseType) }
-                },
-                onClear = {
-                    viewModel.clearToken()
-                    showTokenDialog.value = false
-                    scope.launch { viewModel.fetchReleases(releaseType) }
-                }
-            )
         }
+
+        // Token 输入对话框
+        TokenEntryDialog(
+            show = showTokenDialog,
+            currentToken = viewModel.currentToken,
+            onDismiss = { showTokenDialog.value = false },
+            onSave = { token ->
+                viewModel.saveToken(token)
+                showTokenDialog.value = false
+                scope.launch { viewModel.fetchReleases(releaseType) }
+            },
+            onClear = {
+                viewModel.clearToken()
+                showTokenDialog.value = false
+                scope.launch { viewModel.fetchReleases(releaseType) }
+            }
+        )
     }
 }
 

@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -25,9 +26,11 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.suqi8.oshin.R
 import com.suqi8.oshin.ui.activity.components.Card
 import com.suqi8.oshin.ui.activity.components.FunPage
+import com.suqi8.oshin.ui.mainscreen.about.openUrl
 import com.suqi8.oshin.ui.mainscreen.home.ModernSectionTitle
+import top.yukonga.miuix.kmp.basic.ButtonDefaults
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
-import top.yukonga.miuix.kmp.basic.Text
+import top.yukonga.miuix.kmp.basic.TextButton
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
 import top.yukonga.miuix.kmp.utils.overScrollVertical
 import top.yukonga.miuix.kmp.utils.scrollEndHaptic
@@ -41,7 +44,7 @@ fun RomWorkshop(
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
     val scrollBehavior = MiuixScrollBehavior(rememberTopAppBarState())
-
+    val context = LocalContext.current
     FunPage(
         navController = navController,
         scrollBehavior = scrollBehavior,
@@ -85,7 +88,7 @@ fun RomWorkshop(
                             progress = { progress.progress },
                             modifier = Modifier.padding(1.dp)
                         )
-                        Text(stringResource(R.string.coming_soon), modifier = Modifier.padding(6.dp))
+                        TextButton("立即体验", onClick = {openUrl(context, "https://github.com/suqi8/ImageStudio/releases/latest")}, modifier = Modifier.padding(6.dp).fillMaxWidth().padding(32.dp), colors = ButtonDefaults.textButtonColorsPrimary())
                     }
                 }
             }

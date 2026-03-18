@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
 import android.os.Environment
 import android.os.StatFs
 import android.os.storage.StorageManager
@@ -23,35 +22,11 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.snapshotFlow
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -118,6 +93,8 @@ import top.yukonga.miuix.kmp.utils.overScrollVertical
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import kotlin.math.log10
+import kotlin.math.pow
 
 @OptIn(ExperimentalSharedTransitionApi::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter", "UseKtx", "RestrictedApi",
@@ -437,6 +414,7 @@ fun Main_About(
         val buttonAlpha by derivedStateOf {
             if (scroll.firstVisibleItemIndex > 0) 0f else (1f - (scroll.firstVisibleItemScrollOffset.toFloat() / 300)).coerceIn(0f, 1f)
         }
+        // button of check update
         with(sharedTransitionScope) {
             Button(
                 modifier = Modifier
@@ -509,7 +487,7 @@ private fun CommunityCard(context: Context) {
         FunArrow(title = stringResource(R.string.go_to_his_homepage),
             position = CouiListItemPosition.Bottom,
             onClick = {
-            val coolApkUri = Uri.parse("coolmarket://u/894238")
+            val coolApkUri = "coolmarket://u/894238".toUri()
             val intent = Intent(Intent.ACTION_VIEW, coolApkUri)
             try {
                 context.startActivity(intent)
@@ -693,14 +671,16 @@ fun Button(onClick: () -> Unit, modifier: Modifier = Modifier, enabled: Boolean 
 }
 
 @SuppressLint("UseKtx")
-private fun openUrl(context: Context, url: String) {
+fun openUrl(context: Context, url: String) {
     val intent = Intent(Intent.ACTION_VIEW, url.toUri())
     context.startActivity(intent)
 }
 
 private fun openStorageSettings(context: Context) {
     try {
-        val intent = Intent().setClassName("com.android.settings", "com.android.settings.Settings\$StorageDashboardActivity")
+        val intent = Intent().setClassName("com.android.settings",
+            $$"com.android.settings.Settings$StorageDashboardActivity"
+        )
         context.startActivity(intent)
     } catch (e: Exception) {
         e.printStackTrace()
@@ -738,8 +718,8 @@ fun getPhysicalTotalStorage(context: Context): Long {
 fun formatSize(size: Long): String {
     if (size <= 0) return "0 B"
     val units = arrayOf("B", "KB", "MB", "GB", "TB")
-    val digitGroups = (Math.log10(size.toDouble()) / Math.log10(1024.0)).toInt()
-    return String.format("%.2f %s", size / Math.pow(1024.0, digitGroups.toDouble()), units[digitGroups])
+    val digitGroups = (log10(size.toDouble()) / log10(1024.0)).toInt()
+    return String.format("%.2f %s", size / 1024.0.pow(digitGroups.toDouble()), units[digitGroups])
 }
 
 fun getTotalStorage(): Long {

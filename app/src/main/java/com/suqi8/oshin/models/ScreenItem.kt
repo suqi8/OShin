@@ -2,8 +2,6 @@ package com.suqi8.oshin.models
 
 import androidx.annotation.ArrayRes
 import androidx.annotation.StringRes
-import com.suqi8.oshin.models.Operator.EQUALS
-import com.suqi8.oshin.models.Operator.NOT_EQUALS
 
 /**
  * 声明式 UI 的数据模型根接口。
