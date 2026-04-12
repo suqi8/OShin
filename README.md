@@ -30,6 +30,8 @@
   </p>
 </div>
 
+![Stone Badge](https://stone.professorlee.work/api/stone/suqi8/OShin)
+
 <table align="center" width="100%" style="border: none;">
   <tr>
     <td width="50%" valign="top">
