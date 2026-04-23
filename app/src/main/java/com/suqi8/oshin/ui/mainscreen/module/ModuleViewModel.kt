@@ -20,6 +20,7 @@ import com.suqi8.oshin.utils.getAutoColor
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -59,6 +60,9 @@ class ModuleViewModel @Inject constructor(
 
     // 缓存所有可搜索项的列表，避免重复构建
     private var allSearchableItems: List<SearchableItem> = emptyList()
+
+    // 追踪当前搜索任务，确保新查询能取消旧任务
+    private var searchJob: Job? = null
 
     // 滚动位置状态
     var scrollIndex by mutableStateOf(0)
@@ -166,8 +170,9 @@ class ModuleViewModel @Inject constructor(
         val isSearching = query.isNotBlank()
         _uiState.update { it.copy(searchQuery = query, isSearching = isSearching) }
 
+        searchJob?.cancel()
         if (isSearching) {
-            viewModelScope.launch {
+            searchJob = viewModelScope.launch {
                 val results = allSearchableItems.filter {
                     it.title.contains(query, ignoreCase = true) ||
                             it.summary.contains(query, ignoreCase = true)
