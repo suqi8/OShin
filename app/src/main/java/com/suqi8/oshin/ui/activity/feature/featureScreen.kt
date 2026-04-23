@@ -224,6 +224,7 @@ fun featureScreen(
 
                                                     RenderScreenItem(
                                                         item = item,
+                                                        itemStates = itemStates,
                                                         viewModel = viewModel,
                                                         navController = navController,
                                                         isHighlighted = isHighlighted,
@@ -276,6 +277,7 @@ fun featureScreen(
 @Composable
 private fun RenderScreenItem(
     item: ScreenItem,
+    itemStates: Map<String, Any>,
     viewModel: featureViewModel,
     navController: NavController,
     isHighlighted: Boolean,
@@ -283,7 +285,6 @@ private fun RenderScreenItem(
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope
 ) {
-    val itemStates by viewModel.uiState.collectAsState()
     val highlightColor = remember { Animatable(Color.Transparent) }
     val coroutineScope = rememberCoroutineScope()
     val highlightColorPrimary = MiuixTheme.colorScheme.primary.copy(alpha = 0.25f)
@@ -316,7 +317,7 @@ private fun RenderScreenItem(
     Column(modifier = Modifier.background(highlightColor.value)) {
         when (item) {
             is Switch -> {
-                val checked = itemStates.itemStates[item.key] as? Boolean ?: item.defaultValue
+                val checked = itemStates[item.key] as? Boolean ?: item.defaultValue
                 FunSwitch(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
@@ -327,7 +328,7 @@ private fun RenderScreenItem(
             }
 
             is Slider -> {
-                val value = itemStates.itemStates[item.key] as? Float ?: item.defaultValue
+                val value = itemStates[item.key] as? Float ?: item.defaultValue
                 FunSlider(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
@@ -341,7 +342,7 @@ private fun RenderScreenItem(
             }
 
             is Dropdown -> {
-                val selectedIndex = itemStates.itemStates[item.key] as? Int ?: item.defaultValue
+                val selectedIndex = itemStates[item.key] as? Int ?: item.defaultValue
                 FunDropdown(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
@@ -377,22 +378,20 @@ private fun RenderScreenItem(
             }
 
             is Picture -> {
-                // 从 itemStates 中获取当前显示的图片
-                val imageBitmap = itemStates.itemStates[item.key] as? ImageBitmap
+                val imageBitmap = itemStates[item.key] as? ImageBitmap
                 FunPicSele(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
                     imageBitmap = imageBitmap,
                     position = position,
                     onImageSelected = { uri ->
-                        // 当用户选择了新图片，通知 ViewModel 处理
                         viewModel.saveImageFromUri(item.key, item.targetPath, uri)
                     }
                 )
             }
 
             is StringInput -> {
-                val value = itemStates.itemStates[item.key] as? String ?: item.defaultValue
+                val value = itemStates[item.key] as? String ?: item.defaultValue
                 FunString(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
@@ -408,7 +407,7 @@ private fun RenderScreenItem(
                 FunArrow(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
-                    position = position, // 确保 URL Action 也传递位置
+                    position = position,
                     onClick = {
                         val intent = Intent(Intent.ACTION_VIEW, item.url.toUri())
                         context.startActivity(intent)
@@ -417,7 +416,7 @@ private fun RenderScreenItem(
             }
 
             is AppSelection -> {
-                val selectedApps = itemStates.itemStates[item.key] as? Set<String> ?: emptySet()
+                val selectedApps = itemStates[item.key] as? Set<String> ?: emptySet()
                 FunAppSele(
                     title = resolveTitle(title = item.title),
                     summary = item.summary?.let { stringResource(it) },
