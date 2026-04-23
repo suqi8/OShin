@@ -64,11 +64,7 @@ class SettingsViewModel @Inject constructor(
                     BufferedReader(InputStreamReader(inputStream)).readText()
                 } ?: throw IllegalStateException("无法读取文件")
 
-                val type = TypeToken.getParameterized(
-                    Map::class.java,
-                    String::class.java,
-                    TypeToken.get(Map::class.java).type
-                ).type
+                val type = object : TypeToken<Map<String, Map<String, Any>>>() {}.type
                 val allSettings: Map<String, Map<String, *>> = gson.fromJson(jsonString, type)
 
                 allSettings.forEach { (prefName, settings) ->
