@@ -14,6 +14,8 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -28,38 +30,43 @@ class FeatureRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context
 ) : FeatureRepository {
 
-    // 1. 缓存结果，初始为 null
+    // 互斥锁，防止多个协程同时执行耗时的首次构建操作
+    private val mutex = Mutex()
+
+    // 缓存结果，初始为 null
+    @Volatile
     private var cachedItems: List<SearchableItem>? = null
 
     override suspend fun getAllSearchableItems(): List<SearchableItem> {
-        // 2. 如果已有缓存，直接返回缓存，后续调用将非常快
+        // 快速路径：已有缓存，直接返回
         cachedItems?.let { return it }
 
-        // 3. 如果没有缓存，则在后台线程执行一次耗时计算
-        return withContext(Dispatchers.Default) {
-            val searchableItemsJobs = FeatureRegistry.screenMap.flatMap { (routeId, pageDef) ->
-                pageDef.items.filterIsInstance<CardDefinition>()
-                    .flatMap { it.items }
-                    .filterIsInstance<TitledScreenItem>()
-                    .map { item ->
-                        async {
-                            SearchableItem(
-                                title = resolveTitle(item.title),
-                                summary = item.summary?.let { context.getString(it) } ?: "",
-                                route = "feature/$routeId",
-                                key = item.key
-                            )
+        // 慢速路径：加锁后再次检查，防止多个协程重复构建
+        return mutex.withLock {
+            cachedItems?.let { return it }
+
+            withContext(Dispatchers.Default) {
+                val searchableItemsJobs = FeatureRegistry.screenMap.flatMap { (routeId, pageDef) ->
+                    pageDef.items.filterIsInstance<CardDefinition>()
+                        .flatMap { it.items }
+                        .filterIsInstance<TitledScreenItem>()
+                        .map { item ->
+                            async {
+                                SearchableItem(
+                                    title = resolveTitle(item.title),
+                                    summary = item.summary?.let { context.getString(it) } ?: "",
+                                    route = "feature/$routeId",
+                                    key = item.key
+                                )
+                            }
                         }
-                    }
+                }
+
+                val items = searchableItemsJobs.awaitAll()
+
+                cachedItems = items
+                items
             }
-
-            val items = searchableItemsJobs.awaitAll()
-
-            // 4. 将计算结果存入缓存
-            cachedItems = items
-
-            // 5. 返回结果
-            items
         }
     }
 

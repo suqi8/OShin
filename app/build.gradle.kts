@@ -155,7 +155,6 @@ android {
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
             excludes += "DebugProbesKt.bin"
             excludes += "kotlin-tooling-metadata.json"
         }
@@ -209,13 +208,12 @@ dependencies {
     //implementation(libs.accompanist.flowlayout)
     implementation(libs.airbnb.lottie.compose)
     implementation(libs.coil.compose)
+    implementation(libs.coil.network.okhttp)
     //implementation(libs.haze)
     //implementation(libs.shimmer.compose)
     //implementation(libs.toolbar.compose)
     //implementation(libs.expandablebottombar)
     //implementation(libs.neumorphism.compose)
-    implementation(libs.coil.compose)
-    implementation(libs.coil.network.okhttp)
     implementation(libs.capsule)
     implementation(libs.multiplatform.markdown.renderer.android)
     implementation(libs.multiplatform.markdown.renderer.coil3)
@@ -225,7 +223,6 @@ dependencies {
     implementation(libs.luckypray.dexkit)
     implementation(libs.xxpermissions)
     implementation(libs.squareup.okhttp)
-    implementation(libs.coil.network.okhttp)
     implementation(libs.gson)
     //implementation(libs.drawabletoolbox)
     implementation(libs.miuix)

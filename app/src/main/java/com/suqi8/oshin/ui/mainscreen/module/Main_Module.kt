@@ -452,9 +452,9 @@ private fun AppItemList(
         if (appUiInfo != null) {
             // 状态 1: 已加载
             AppItemListContent(
-                appName = appUiInfo!!.name,
-                icon = appUiInfo!!.icon,
-                dominantColor = appUiInfo!!.dominantColor,
+                appName = appUiInfo.name,
+                icon = appUiInfo.icon,
+                dominantColor = appUiInfo.dominantColor,
                 packageName = entry.packageName,
                 entry = entry,
                 onClick = onClick,
@@ -564,9 +564,9 @@ private fun AppItemFlow(
         if (appUiInfo != null) {
             // 状态 1: 已加载
             AppItemFlowContent(
-                appName = appUiInfo!!.name,
-                icon = appUiInfo!!.icon,
-                dominantColor = appUiInfo!!.dominantColor,
+                appName = appUiInfo.name,
+                icon = appUiInfo.icon,
+                dominantColor = appUiInfo.dominantColor,
                 entry = entry,
                 onClick = onClick,
                 sharedTransitionScope = sharedTransitionScope,

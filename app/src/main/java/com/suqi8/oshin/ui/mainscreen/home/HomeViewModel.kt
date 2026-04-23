@@ -105,8 +105,13 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
+    @Volatile
     private var tempPromoItems: List<CarouselItem>? = null
+    @Volatile
     private var tempAd: UMNativeAD? = null
+
+    // 复用单一 OkHttpClient 实例，避免每次请求都重新创建
+    private val httpClient = OkHttpClient.Builder().cache(null).build()
 
     init {
         loadAllData()
@@ -270,12 +275,11 @@ class HomeViewModel @Inject constructor(
 
     private suspend fun fetchCarouselData(): List<CarouselItem> = withContext(Dispatchers.IO) {
         try {
-            val client = OkHttpClient.Builder().cache(null).build()
             val request = Request.Builder()
                 .url("https://gitee.com/yo-gurt/OShin/raw/master/lunbo.json")
                 .header("Cache-Control", "no-cache")
                 .build()
-            client.newCall(request).execute().use { response ->
+            httpClient.newCall(request).execute().use { response ->
                 if (!response.isSuccessful) return@use emptyList()
                 val body = response.body.string()
                 val jsonArray = JSONArray(body)
