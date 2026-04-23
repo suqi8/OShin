@@ -22,19 +22,13 @@ import com.suqi8.oshin.ui.activity.func.StatusBarLayout.StatusBarLayout
 import com.suqi8.oshin.ui.activity.func.cpu_freq
 import com.suqi8.oshin.ui.activity.func.feature.OplusSettingsScreen
 import com.suqi8.oshin.ui.activity.func.romworkshop.RomWorkshop
-import com.suqi8.oshin.utils.SpringEasing
 import top.yukonga.miuix.kmp.basic.MiuixScrollBehavior
 import top.yukonga.miuix.kmp.basic.rememberTopAppBarState
-import top.yukonga.miuix.kmp.utils.getWindowSize
 
 @OptIn(ExperimentalAnimationApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun AppNavHost() {
     val navController = rememberNavController()
-    val windowWidth = getWindowSize().width
-
-    val easing = SpringEasing.stiff()
-    val duration = easing.durationMillis.toInt()
     VerifyDialog()
     PrivacyDialog()
 
@@ -43,10 +37,6 @@ fun AppNavHost() {
             NavHost(
                 navController = navController,
                 startDestination = "Main",
-                /*enterTransition = { slideInHorizontally(initialOffsetX = { windowWidth }, animationSpec = tween(duration, 0, easing = easing)) },
-                exitTransition = { slideOutHorizontally(targetOffsetX = { -windowWidth / 5 }, animationSpec = tween(duration, 0, easing = easing)) },
-                popEnterTransition = { slideInHorizontally(initialOffsetX = { -windowWidth / 5 }, animationSpec = tween(duration, 0, easing = easing)) },
-                popExitTransition = { slideOutHorizontally(targetOffsetX = { windowWidth }, animationSpec = tween(duration, 0, easing = easing)) },*/
                 sizeTransform = {
                     SizeTransform(clip = false)
                 }
