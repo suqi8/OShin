@@ -105,7 +105,9 @@ class HomeViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(HomeUiState())
     val uiState = _uiState.asStateFlow()
 
+    @Volatile
     private var tempPromoItems: List<CarouselItem>? = null
+    @Volatile
     private var tempAd: UMNativeAD? = null
 
     // 复用单一 OkHttpClient 实例，避免每次请求都重新创建

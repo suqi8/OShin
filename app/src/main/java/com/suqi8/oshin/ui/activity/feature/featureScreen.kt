@@ -442,15 +442,18 @@ private fun resolveTitle(title: Title): String {
 
 /**
  * 辅助 Composable，用于安全地获取应用名称。
+ * 使用 remember 缓存结果，避免在重组时重复查询 PackageManager。
  */
 @Composable
 private fun getAppName(packageName: String): String {
     val context = LocalContext.current
-    return try {
-        val pm = context.packageManager
-        val appInfo = pm.getApplicationInfo(packageName, 0)
-        pm.getApplicationLabel(appInfo).toString()
-    } catch (e: PackageManager.NameNotFoundException) {
-        packageName // 如果找不到应用，返回包名作为兜底
+    return remember(packageName) {
+        try {
+            val pm = context.packageManager
+            val appInfo = pm.getApplicationInfo(packageName, 0)
+            pm.getApplicationLabel(appInfo).toString()
+        } catch (e: PackageManager.NameNotFoundException) {
+            packageName // 如果找不到应用，返回包名作为兜底
+        }
     }
 }
