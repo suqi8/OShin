@@ -53,7 +53,9 @@ class featureViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(featureUiState())
     val uiState = _uiState.asStateFlow()
 
-    private val categoryId: String = savedStateHandle.get<String>("categoryId")!!
+    private val categoryId: String = checkNotNull(savedStateHandle.get<String>("categoryId")) {
+        "featureViewModel requires 'categoryId' navigation argument"
+    }
     private val highlightKey: String? = savedStateHandle.get<String>("highlightKey")
     private val pageDefinition: PageDefinition? = FeatureRegistry.screenMap[categoryId]
 
