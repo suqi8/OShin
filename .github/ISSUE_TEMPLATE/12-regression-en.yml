@@ -1,0 +1,103 @@
+name: 📉 Broken after an update
+description: A feature that used to work stopped working, or behaves differently, after a system, host app or OShin update. Requires the zip exported from OShin's Module logs.
+title: "[Regression] "
+labels: ["bug", "regression"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **A feature breaking after an update usually means the host app changed its code. Before submitting, export the logs from OShin:**
+
+        1. Open OShin → About → Settings → Developer → Module logs (模块日志) and wait for the logs to load.
+        2. In the Issues (问题) list, find the OShin error for the affected app (typically a class or method that can't be found) and tap "Error fingerprint OSH-…" (错误指纹) to copy it. If you don't see one, turn on Filter (筛选) → Show OShin warnings (显示 OShin 警告) and look again.
+        3. Tap Export (导出) under that issue, **tick Attach related app packages (附带相关应用的安装包)**, then Save to file (保存到文件) or Share (分享). The developer needs the new version's package to adapt to it.
+
+        The zip already contains your system and ColorOS version, versions and signatures of OShin and the related apps, root and Xposed framework, and the features you turned on. **You don't need to type any of these.**
+
+        If the feature never worked for you, please use the "🔌 Feature not taking effect" template instead.
+
+        The Module logs page is currently Chinese only, so the Chinese button names are given in brackets.
+
+  - type: checkboxes
+    id: precheck
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I'm on the [latest Preview build](https://t.me/OPatchC) and the problem still happens.
+          required: true
+        - label: I have [searched the issues](https://github.com/suqi8/OShin/issues?q=is%3Aissue) by fingerprint or feature name and found no duplicate (if there is one, please add to it instead).
+          required: true
+
+  - type: input
+    id: fingerprint
+    attributes:
+      label: Error fingerprint
+      description: |
+        `OSH-` followed by 12 digits and capital letters (0–9, A–F), shown in Module logs. Separate several with spaces, most relevant first.
+        If the affected app still shows no issue with Show OShin warnings turned on, enter `none`.
+      placeholder: OSH-3F9A0C12B7E4
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs-zip
+    attributes:
+      label: Log package
+      description: |
+        Drag the exported `OShin-OSH-….zip` (one issue) or `OShin-logs-….zip` (all logs) into this box and wait for the download link before submitting.
+        GitHub attachments are limited to 25 MB. If the packages make it larger, export again without them, upload that here, and share the packages through a cloud drive link.
+        Issues are public. Unless a developer asks for it, don't tick Attach full raw logs (附带完整原始日志): it includes other modules' logs, which may contain private data.
+      placeholder: Drop the zip here, or pick the file from the bar below this box. Put the cloud drive link for the packages here too.
+    validations:
+      required: true
+
+  - type: input
+    id: feature
+    attributes:
+      label: Broken feature
+      description: Give its location in OShin.
+      placeholder: "e.g. System UI → Status Bar → Dual-row mobile signal"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: what-updated
+    attributes:
+      label: What was updated before it broke
+      options:
+        - A host app (updated through the app store or as a system component, e.g. Game Assistant, Theme Store, Smart Sidebar)
+        - A system OTA (the ColorOS version changed)
+        - OShin
+        - Several of these at once
+        - Not sure
+    validations:
+      required: true
+
+  - type: input
+    id: last-good
+    attributes:
+      label: Last version that worked (optional)
+      description: If you know it, the developer can compare the two versions directly. If downgrading fixed it, include the version you downgraded to.
+      placeholder: "e.g. Game Assistant 10.42.2 works, broken since 10.42.6; or OShin 16.13.1722 works"
+
+  - type: textarea
+    id: now-behavior
+    attributes:
+      label: What it does now
+      description: Does turning the switch on change nothing at all, or does it behave differently? What was it like before?
+      placeholder: The two SIM signals used to be stacked into one icon. After the system update the switch is still on, but the signals are side by side again.
+    validations:
+      required: true
+
+  - type: input
+    id: other-modules
+    attributes:
+      label: Does the same feature in other modules still work (optional)
+      description: If it does, the new version can still be supported, which helps a lot.
+      placeholder: "e.g. the same feature in LuckyTool still works"
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Screenshots or screen recording (optional)
+      description: Before-and-after shots are the clearest. GitHub videos are limited to 10 MB; trim it or use a cloud drive if it's larger.

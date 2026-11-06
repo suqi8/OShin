@@ -1,0 +1,100 @@
+name: 🔌 Feature not taking effect
+description: A feature never worked after you turned it on, or doesn't do what its description says. Requires the zip exported from OShin's Module logs.
+title: "[Not working] "
+labels: ["bug", "not-working"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Many "not working" cases can be solved by yourself. Please go through these in order first:**
+
+        1. OShin's home page doesn't show a "Missing scope" notice. If it does, tap it to request the scopes; if "System Framework" is still missing afterwards, tick it manually in the LSPosed / Vector scope list.
+        2. Open About → Settings → Developer → Injection probe (注入状态探测) and check that the affected app shows as injected. If it doesn't, tap it to restart that app.
+        3. You restarted the app as the feature's description says. Most system-level features need a reboot.
+        4. The same kind of feature isn't turned on in LuckyTool or another module at the same time; see the [FAQ](https://oshin.mikusignal.top/en/guide/qa.html).
+
+        **If all of that checks out, export the logs**: go to Developer → Module logs (模块日志), turn on Filter (筛选) → Show OShin warnings (显示 OShin 警告), find the issue under the affected app, copy its "Error fingerprint OSH-…" (错误指纹) and tap Export (导出). If there is no related issue, tap the share button at the top right to export all logs (`OShin-logs-….zip`).
+
+        The zip already contains your system and ColorOS version, versions of OShin and the related apps, root and Xposed framework, and the features you turned on. **You don't need to type any of these.**
+
+        If it used to work and broke after an update, please use the "📉 Broken after an update" template instead.
+
+        The Module logs and Injection probe pages are currently Chinese only, so the Chinese names are given in brackets.
+
+  - type: checkboxes
+    id: precheck
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I'm on the [latest Preview build](https://t.me/OPatchC) and the problem still happens.
+          required: true
+        - label: I went through checks 1–4 above. Scopes are complete, the app is injected, I restarted it, and no other module has the same feature turned on.
+          required: true
+        - label: I have [searched the issues](https://github.com/suqi8/OShin/issues?q=is%3Aissue) by feature name or fingerprint and found no duplicate (if there is one, please add to it instead).
+          required: true
+
+  - type: input
+    id: fingerprint
+    attributes:
+      label: Error fingerprint
+      description: |
+        `OSH-` followed by 12 digits and capital letters (0–9, A–F), shown in Module logs. Separate several with spaces, most relevant first.
+        If the affected app still shows no issue with Show OShin warnings turned on, enter `none`.
+      placeholder: OSH-3F9A0C12B7E4
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs-zip
+    attributes:
+      label: Log package
+      description: |
+        Drag the exported `OShin-OSH-….zip` (one issue) or `OShin-logs-….zip` (all logs) into this box and wait for the download link before submitting.
+        GitHub attachments are limited to 25 MB. If Attach related app packages (附带相关应用的安装包) makes it larger, export again without the packages, upload that here, and share the packages through a cloud drive link.
+        Issues are public. Unless a developer asks for it, don't tick Attach full raw logs (附带完整原始日志): it includes other modules' logs, which may contain private data.
+      placeholder: Drop the zip here, or pick the file from the bar below this box
+    validations:
+      required: true
+
+  - type: input
+    id: feature
+    attributes:
+      label: Feature that doesn't take effect
+      description: Give its location in OShin.
+      placeholder: "e.g. System UI → Status Bar → Dual-row mobile signal"
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected result
+      description: According to the feature's description, what should happen once it's on.
+      placeholder: The two SIM signals are stacked into one icon.
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What you did and what actually happens
+      description: The steps after turning the feature on, and what you saw.
+      placeholder: |
+        1. Turn on "Enable dual-row mobile signal" with two SIM cards inserted
+        2. Reboot the phone
+        3. The status bar still shows two signal icons side by side
+    validations:
+      required: true
+
+  - type: input
+    id: other-modules
+    attributes:
+      label: Does the same feature in other modules work on your phone (optional)
+      description: If it does, your system can support it, which helps a lot.
+      placeholder: "e.g. the same feature in LuckyTool works"
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Screenshots or screen recording (optional)
+      description: A shot of the switch page and of the actual result is the clearest. GitHub videos are limited to 10 MB; trim it or use a cloud drive if it's larger.

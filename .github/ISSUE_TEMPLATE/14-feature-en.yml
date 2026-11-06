@@ -1,0 +1,79 @@
+name: ✨ Feature request
+description: A new feature, an improvement, a port from another module or system, or removing ads and restrictions.
+title: "[Feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for your suggestion! Before submitting, please search inside OShin to make sure the feature doesn't exist yet.
+
+        If an existing feature errors out, broke or doesn't take effect, please use one of the bug templates above. If the feature comes from an open-source project, a repository link greatly improves the chance of it being implemented.
+
+  - type: checkboxes
+    id: precheck
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I searched inside OShin and the feature doesn't exist yet.
+          required: true
+        - label: I have [searched the issues](https://github.com/suqi8/OShin/issues?q=is%3Aissue) and found no duplicate request (if there is one, please add to it instead).
+          required: true
+
+  - type: dropdown
+    id: request-kind
+    attributes:
+      label: Request type
+      options:
+        - A brand-new feature
+        - An improvement to an existing feature
+        - A port from another module or system
+        - Removing ads, pop-ups or restrictions
+    validations:
+      required: true
+
+  - type: input
+    id: target-app
+    attributes:
+      label: Which app it applies to
+      description: The package name and version help even more, so the developer can work from the same package. You can find the version in the app's details in system Settings.
+      placeholder: "e.g. Theme Store com.heytap.themestore 17.18.0, or System UI"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem it solves
+      description: What is inconvenient now, and in which situations you run into it.
+      placeholder: Every time I take a screenshot on the lock screen…, so I'd like…
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: How it should work
+      description: Which page it should be on, how to turn it on, and what happens once it's on. Include any adjustable settings.
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Reference (optional)
+      description: The same kind of feature in another module, system or app.
+      placeholder: "e.g. xx in LuckyTool, xx in Flyme, stock Android 16"
+
+  - type: input
+    id: source-repo
+    attributes:
+      label: Open-source implementation (optional)
+      description: A repository or a link to the code of a similar feature.
+      placeholder: https://github.com/user/repository
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Screenshots, recordings or mockups (optional)
+      description: How it looks on another system, or a sketch of your own.

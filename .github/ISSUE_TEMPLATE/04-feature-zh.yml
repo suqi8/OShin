@@ -1,0 +1,79 @@
+name: ✨ 功能建议
+description: 新功能、改进已有功能、移植其他模块或系统的功能、去广告或解除限制。
+title: "[建议] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢你的建议！提交前请在 OShin 里搜索一下，确认还没有这个功能。
+
+        已有的功能出错、失效或没生效，请改用上面的 Bug 模板。功能来自开源项目时，附上仓库地址能大大提高被实现的机会。
+
+  - type: checkboxes
+    id: precheck
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我已在 OShin 里搜索过，确认还没有这个功能。
+          required: true
+        - label: 我已 [搜索过 Issue](https://github.com/suqi8/OShin/issues?q=is%3Aissue)，没有相同的建议（有的话请到原 Issue 补充）。
+          required: true
+
+  - type: dropdown
+    id: request-kind
+    attributes:
+      label: 建议类型
+      options:
+        - 全新功能
+        - 改进已有功能
+        - 移植其他模块或系统的功能
+        - 去广告、去弹窗或解除限制
+    validations:
+      required: true
+
+  - type: input
+    id: target-app
+    attributes:
+      label: 作用在哪个应用上
+      description: 知道包名和版本更好，开发者可以拉同一份安装包来做。版本号在系统设置的应用详情里能看到。
+      placeholder: 例如：主题商店 com.heytap.themestore 17.18.0；或 系统界面
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: 想解决什么问题
+      description: 现在哪里不方便，什么场景下会遇到。
+      placeholder: 每次锁屏截图都会……，希望能……
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: 希望怎么实现
+      description: 希望放在哪个页面、怎么开启、开启后是什么效果。有可调的参数也写上。
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: 参考来源（选填）
+      description: 其他模块、系统或应用里的同类功能。
+      placeholder: 例如：LuckyTool 的 xx、Flyme 的 xx、原生 Android 16
+
+  - type: input
+    id: source-repo
+    attributes:
+      label: 开源实现地址（选填）
+      description: 同类功能的开源仓库或具体代码链接。
+      placeholder: https://github.com/user/repository
+
+  - type: textarea
+    id: media
+    attributes:
+      label: 截图、录屏或示意图（选填）
+      description: 其他系统里的效果图，或你画的示意图。

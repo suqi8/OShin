@@ -1,0 +1,115 @@
+name: 💥 崩溃、卡死或重启
+description: 应用闪退、系统界面反复重启、软重启、开机循环或卡死。需附上 OShin「模块日志」导出的 zip。
+title: "[崩溃] "
+labels: ["bug", "crash"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **提交前，先在 OShin 里导出日志（大约一分钟）：**
+
+        1. 打开 OShin →「关于」→「设置」→「开发者」→「模块日志」，等日志读完。
+        2. 在「问题」列表里找到这次崩溃，点「错误指纹 OSH-…」复制指纹。
+        3. 点这个问题下方的「导出」，选「保存到文件」或「分享」，得到 `OShin-OSH-…-时间.zip`。
+
+        zip 里已经带了设备型号、系统与 ColorOS 版本、Root 与 Xposed 框架、OShin 和相关应用的版本、你开启过的功能，**这些都不用再手填**。
+
+        - **OShin 自己闪退**：崩溃页上就有「错误指纹」，点「复制详情」粘到下面；之后能打开 OShin 的话，仍请按上面的步骤导出 zip。
+        - **开机循环、系统界面一直重启**：先按 [常见问题](https://oshin.mikusignal.top/guide/qa.html) 恢复开机，再进「模块日志」打开「包含历史日志」后导出，这样能读到出事那次开机的记录。
+        - 只是想问怎么用，请去 [Telegram 交流群](https://t.me/OShinB)。
+
+  - type: checkboxes
+    id: precheck
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我用的是 [最新预览版](https://t.me/OPatchC)，问题仍然存在。
+          required: true
+        - label: 我已用错误指纹或关键词 [搜索过 Issue](https://github.com/suqi8/OShin/issues?q=is%3Aissue)，没有相同的问题（有的话请到原 Issue 补充）。
+          required: true
+
+  - type: input
+    id: fingerprint
+    attributes:
+      label: 错误指纹
+      description: |
+        「模块日志」或 OShin 崩溃页上的 `OSH-` 加 12 位数字和大写字母（0–9、A–F）。有多个就用空格隔开，最相关的放前面。
+        日志里实在找不到这次崩溃，填 `none`，并在「发生了什么」里说明原因。
+      placeholder: OSH-3F9A0C12B7E4
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs-zip
+    attributes:
+      label: 日志包
+      description: |
+        把导出的 `OShin-OSH-….zip`（单个问题）或 `OShin-logs-….zip`（全部日志）拖进这个框，等出现下载链接后再提交。
+        GitHub 附件上限 25 MB。勾了「附带相关应用的安装包」超出时，去掉安装包重新导出传到这里，安装包放网盘贴链接。
+        Issue 是公开的。没有开发者要求时，请不要勾「附带完整原始日志」，它会带上其他模块的日志，可能有隐私。
+      placeholder: 把 zip 拖到这里，或从框下方选择文件上传
+    validations:
+      required: true
+
+  - type: dropdown
+    id: crash-kind
+    attributes:
+      label: 出了什么事
+      options:
+        - OShin 自己闪退或打不开
+        - 某个应用闪退（如桌面、设置、主题商店）
+        - 系统界面（状态栏、控制中心）反复重启、黑屏或闪屏
+        - 手机软重启或开机循环
+        - 卡死、无响应或明显变卡
+        - 其他（请在下面说明）
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: 发生了什么
+      description: 你当时在做什么、哪个应用出的事、出事后是什么样子。能复现的话按步骤写。
+      placeholder: |
+        开启「系统桌面 → 图标跟随重力」后，从负一屏滑回主屏时桌面闪退，回来后图标全部重新排列。
+        1. …
+        2. …
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: 出现频率
+      options:
+        - 每次都会
+        - 经常（一半以上）
+        - 偶尔
+        - 只出现过一次
+    validations:
+      required: true
+
+  - type: dropdown
+    id: other-modules
+    attributes:
+      label: 停用其他 Xposed 模块后还会出现吗
+      description: zip 里已列出日志中出现过的其他模块，这里只需要选结果。
+      options:
+        - 还会出现
+        - 不再出现
+        - 没试过
+    validations:
+      required: true
+
+  - type: input
+    id: narrowed-down
+    attributes:
+      label: 关掉哪个功能后不再出现（选填）
+      description: 「模块日志」里每个问题都列了「可能相关的功能」，逐个关掉试试。能缩小到一个功能，修起来最快。
+      placeholder: 例如：关掉「系统界面 → 系统通知 → 横幅动画」后不再重启
+
+  - type: textarea
+    id: media
+    attributes:
+      label: 截图或录屏（选填）
+      description: 卡死、闪屏这类问题，录屏比文字清楚。GitHub 视频上限 10 MB，太大可以剪短或放网盘。

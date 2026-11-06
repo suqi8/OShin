@@ -1,0 +1,117 @@
+name: 💥 Crash, freeze or reboot
+description: An app force-closes, System UI keeps restarting, the phone soft-reboots, bootloops or freezes. Requires the zip exported from OShin's Module logs.
+title: "[Crash] "
+labels: ["bug", "crash"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Before submitting, export the logs from OShin (about one minute):**
+
+        1. Open OShin → About → Settings → Developer → Module logs (模块日志) and wait for the logs to load.
+        2. In the Issues (问题) list, find this crash and tap "Error fingerprint OSH-…" (错误指纹) to copy it.
+        3. Tap Export (导出) under that issue, then Save to file (保存到文件) or Share (分享). You get `OShin-OSH-…-<time>.zip`.
+
+        The zip already contains your device model, system and ColorOS version, root and Xposed framework, versions of OShin and the related apps, and the features you turned on. **You don't need to type any of these.**
+
+        - **OShin itself crashed**: the crash page shows a Fingerprint. Tap Copy details and paste it below. If OShin opens again afterwards, please still export the zip as above.
+        - **Bootloop, or System UI keeps restarting**: recover first by following the [FAQ](https://oshin.mikusignal.top/en/guide/qa.html), then open Module logs, turn on Include history logs (包含历史日志) and export. This reads the logs of the boot where it went wrong.
+        - Just asking how to use something? Please use the [Telegram group](https://t.me/OShinB).
+
+        The Module logs page is currently Chinese only, so the Chinese button names are given in brackets.
+
+  - type: checkboxes
+    id: precheck
+    attributes:
+      label: Pre-submission checklist
+      options:
+        - label: I'm on the [latest Preview build](https://t.me/OPatchC) and the problem still happens.
+          required: true
+        - label: I have [searched the issues](https://github.com/suqi8/OShin/issues?q=is%3Aissue) by fingerprint or keyword and found no duplicate (if there is one, please add to it instead).
+          required: true
+
+  - type: input
+    id: fingerprint
+    attributes:
+      label: Error fingerprint
+      description: |
+        `OSH-` followed by 12 digits and capital letters (0–9, A–F), shown in Module logs or on OShin's crash page. Separate several with spaces, most relevant first.
+        If you really can't find this crash in the logs, enter `none` and explain why under "What happened".
+      placeholder: OSH-3F9A0C12B7E4
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs-zip
+    attributes:
+      label: Log package
+      description: |
+        Drag the exported `OShin-OSH-….zip` (one issue) or `OShin-logs-….zip` (all logs) into this box and wait for the download link before submitting.
+        GitHub attachments are limited to 25 MB. If Attach related app packages (附带相关应用的安装包) makes it larger, export again without the packages, upload that here, and share the packages through a cloud drive link.
+        Issues are public. Unless a developer asks for it, don't tick Attach full raw logs (附带完整原始日志): it includes other modules' logs, which may contain private data.
+      placeholder: Drop the zip here, or pick the file from the bar below this box
+    validations:
+      required: true
+
+  - type: dropdown
+    id: crash-kind
+    attributes:
+      label: What went wrong
+      options:
+        - OShin itself crashes or won't open
+        - Another app force-closes (e.g. Launcher, Settings, Theme Store)
+        - System UI (status bar, control center) keeps restarting, goes black or flickers
+        - The phone soft-reboots or bootloops
+        - Freezes, stops responding or becomes noticeably laggy
+        - Other (please explain below)
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened
+      description: What you were doing, which app went wrong, and what it looked like afterwards. If you can reproduce it, list the steps.
+      placeholder: |
+        With "System Launcher → Icons follow gravity" on, the launcher crashes when I swipe back from the leftmost screen, and all icons get rearranged.
+        1. …
+        2. …
+    validations:
+      required: true
+
+  - type: dropdown
+    id: frequency
+    attributes:
+      label: How often
+      options:
+        - Every time
+        - Often (more than half the time)
+        - Occasionally
+        - Only once
+    validations:
+      required: true
+
+  - type: dropdown
+    id: other-modules
+    attributes:
+      label: Does it still happen with other Xposed modules disabled
+      description: The zip already lists other modules seen in the logs; just pick the result here.
+      options:
+        - Still happens
+        - No longer happens
+        - Haven't tried
+    validations:
+      required: true
+
+  - type: input
+    id: narrowed-down
+    attributes:
+      label: Turning off which feature makes it stop (optional)
+      description: Each issue in Module logs lists Possibly related features (可能相关的功能). Turn them off one at a time. Narrowing it down to one feature gets it fixed fastest.
+      placeholder: "e.g. it stops rebooting after turning off System UI → System Notification → Heads-up animation"
+
+  - type: textarea
+    id: media
+    attributes:
+      label: Screenshots or screen recording (optional)
+      description: For freezes and flickering, a recording says more than words. GitHub videos are limited to 10 MB; trim it or use a cloud drive if it's larger.

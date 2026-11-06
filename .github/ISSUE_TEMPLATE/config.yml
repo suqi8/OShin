@@ -1,0 +1,20 @@
+# 关闭空白 Issue，只能从模板创建 / Blank issues are disabled; use a template.
+# 模板文件名前的数字决定选择页里的顺序：0x 中文，1x 英文。
+# The number prefix of each template file sets its order in the chooser: 0x Chinese, 1x English.
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 先看常见问题 / Read the FAQ first
+    url: https://oshin.mikusignal.top/guide/qa.html
+    about: 开机循环怎么救、功能开了不生效怎么查，多数答案都在这里。/ How to recover from a bootloop, what to check when a feature doesn't take effect, and more.
+  - name: 🔍 搜索已有 Issue / Search existing issues
+    url: https://github.com/suqi8/OShin/issues?q=is%3Aissue
+    about: 用错误指纹 OSH-… 或功能名搜索，有相同的就到原 Issue 补充。/ Search by error fingerprint OSH-… or feature name, and add to an existing issue if there is one.
+  - name: 📦 最新预览版 / Latest Preview build (Telegram)
+    url: https://t.me/OPatchC
+    about: 反馈前请先在最新预览版上复现。/ Please reproduce on the latest Preview build before reporting.
+  - name: 💬 Telegram 交流群 / Telegram group
+    url: https://t.me/OShinB
+    about: 使用方法和求助请到群里问，不要开 Issue。/ Ask usage questions and get help here, not in Issues.
+  - name: 🐧 QQ 交流群 / QQ group
+    url: http://qm.qq.com/cgi-bin/qm/qr?_wv=1027&k=dbP78P2qCYuR2RxGtwmwCrlMCsh2MB2N&authKey=uTkJAGf0gg7%2Fx%2B3OBPrf%2F%2FnyZY2ntPNvnz6%2BTUo%2BHa0Pe%2F%2FqtXvK%2BSJ3%2B4PS0zbO&noverify=0&group_code=740266099
+    about: 中文用户交流群 740266099。/ Chinese-speaking user community.

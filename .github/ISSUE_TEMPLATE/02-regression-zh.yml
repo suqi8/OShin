@@ -1,0 +1,101 @@
+name: 📉 更新后失效
+description: 以前能用的功能，在系统、宿主应用或 OShin 更新后不生效，或效果变了。需附上 OShin「模块日志」导出的 zip。
+title: "[失效] "
+labels: ["bug", "regression"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **更新后失效，多半是宿主应用改了代码。提交前先在 OShin 里导出日志：**
+
+        1. 打开 OShin →「关于」→「设置」→「开发者」→「模块日志」，等日志读完。
+        2. 在「问题」列表里找到出问题的应用下的 OShin 错误（常见是找不到类或方法），点「错误指纹 OSH-…」复制指纹。没看到的话，在「筛选」里打开「显示 OShin 警告」再找。
+        3. 点这个问题下方的「导出」，**勾上「附带相关应用的安装包」**，选「保存到文件」或「分享」。开发者要用新版本的安装包重新适配。
+
+        zip 里已经带了系统与 ColorOS 版本、OShin 和相关应用的版本号与签名、Root 与 Xposed 框架、你开启过的功能，**这些都不用再手填**。
+
+        从来没生效过的功能，请改用「🔌 功能没生效」模板。
+
+  - type: checkboxes
+    id: precheck
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我用的是 [最新预览版](https://t.me/OPatchC)，问题仍然存在。
+          required: true
+        - label: 我已用错误指纹或功能名 [搜索过 Issue](https://github.com/suqi8/OShin/issues?q=is%3Aissue)，没有相同的问题（有的话请到原 Issue 补充）。
+          required: true
+
+  - type: input
+    id: fingerprint
+    attributes:
+      label: 错误指纹
+      description: |
+        「模块日志」里的 `OSH-` 加 12 位数字和大写字母（0–9、A–F）。有多个就用空格隔开，最相关的放前面。
+        打开「显示 OShin 警告」后，出事的应用下仍然没有任何问题，填 `none`。
+      placeholder: OSH-3F9A0C12B7E4
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs-zip
+    attributes:
+      label: 日志包
+      description: |
+        把导出的 `OShin-OSH-….zip`（单个问题）或 `OShin-logs-….zip`（全部日志）拖进这个框，等出现下载链接后再提交。
+        GitHub 附件上限 25 MB。带安装包超出时，去掉安装包重新导出传到这里，安装包放网盘贴链接。
+        Issue 是公开的。没有开发者要求时，请不要勾「附带完整原始日志」，它会带上其他模块的日志，可能有隐私。
+      placeholder: 把 zip 拖到这里，或从框下方选择文件上传；安装包的网盘链接也贴在这里
+    validations:
+      required: true
+
+  - type: input
+    id: feature
+    attributes:
+      label: 失效的功能
+      description: 按 OShin 里的位置写。
+      placeholder: 例如：系统界面 → 状态栏 → 移动信号双排
+    validations:
+      required: true
+
+  - type: dropdown
+    id: what-updated
+    attributes:
+      label: 失效前更新了什么
+      options:
+        - 宿主应用（应用商店或系统组件更新，如游戏助手、主题商店、智能侧边栏）
+        - 系统 OTA（ColorOS 版本号变了）
+        - OShin
+        - 同时更新了好几样
+        - 不确定
+    validations:
+      required: true
+
+  - type: input
+    id: last-good
+    attributes:
+      label: 最后一次正常时的版本（选填）
+      description: 知道就写，开发者可以直接对比两个版本的差异。降级后恢复正常的，也写上降级到的版本。
+      placeholder: 例如：游戏助手 10.42.2 正常，10.42.6 起失效；或 OShin 16.13.1722 正常
+
+  - type: textarea
+    id: now-behavior
+    attributes:
+      label: 现在是什么样
+      description: 开关打开后完全没变化，还是效果变了？以前是什么样？
+      placeholder: 以前开启后两张卡的信号上下叠放；升级系统后开关仍是开的，但信号恢复成左右并排。
+    validations:
+      required: true
+
+  - type: input
+    id: other-modules
+    attributes:
+      label: 其他模块的同类功能现在还能用吗（选填）
+      description: 能用说明新版本仍可以适配，对排查很有帮助。
+      placeholder: 例如：LuckyTool 的同类功能仍然有效
+
+  - type: textarea
+    id: media
+    attributes:
+      label: 截图或录屏（选填）
+      description: 前后对比图最直观。GitHub 视频上限 10 MB，太大可以剪短或放网盘。

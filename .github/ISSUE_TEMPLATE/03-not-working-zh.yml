@@ -1,0 +1,98 @@
+name: 🔌 功能没生效
+description: 开启后从来没起过作用，或效果和说明不一样。需附上 OShin「模块日志」导出的 zip。
+title: "[没生效] "
+labels: ["bug", "not-working"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **很多「没生效」自查就能解决，提交前请先按顺序看一遍：**
+
+        1. OShin 首页没有「缺少作用域」提示。有的话点它补全；补全后仍缺「系统框架」，到 LSPosed / Vector 的作用域列表里手动勾选。
+        2. 打开「关于」→「设置」→「开发者」→「注入状态探测」，确认出问题的应用显示已注入；没注入就点它重启该应用。
+        3. 按功能说明重启了对应应用；系统级功能大多要重启手机。
+        4. 没有在 LuckyTool 等其他模块里同时开着同类功能，见 [常见问题](https://oshin.mikusignal.top/guide/qa.html)。
+
+        **都没问题，再导出日志**：进「开发者」→「模块日志」，在「筛选」里打开「显示 OShin 警告」，找出问题应用下的问题，复制「错误指纹 OSH-…」并点「导出」。没有相关问题时，点右上角的分享按钮导出全部日志（`OShin-logs-….zip`）。
+
+        zip 里已经带了系统与 ColorOS 版本、OShin 和相关应用的版本、Root 与 Xposed 框架、你开启过的功能，**这些都不用再手填**。
+
+        以前能用、更新后才失效的，请改用「📉 更新后失效」模板。
+
+  - type: checkboxes
+    id: precheck
+    attributes:
+      label: 提交前确认
+      options:
+        - label: 我用的是 [最新预览版](https://t.me/OPatchC)，问题仍然存在。
+          required: true
+        - label: 我已按上面的 1–4 自查过：作用域齐全、应用已注入、已重启、没有其他模块的同类功能同时开着。
+          required: true
+        - label: 我已用功能名或错误指纹 [搜索过 Issue](https://github.com/suqi8/OShin/issues?q=is%3Aissue)，没有相同的问题（有的话请到原 Issue 补充）。
+          required: true
+
+  - type: input
+    id: fingerprint
+    attributes:
+      label: 错误指纹
+      description: |
+        「模块日志」里的 `OSH-` 加 12 位数字和大写字母（0–9、A–F）。有多个就用空格隔开，最相关的放前面。
+        打开「显示 OShin 警告」后，出问题的应用下仍然没有任何问题，填 `none`。
+      placeholder: OSH-3F9A0C12B7E4
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs-zip
+    attributes:
+      label: 日志包
+      description: |
+        把导出的 `OShin-OSH-….zip`（单个问题）或 `OShin-logs-….zip`（全部日志）拖进这个框，等出现下载链接后再提交。
+        GitHub 附件上限 25 MB。勾了「附带相关应用的安装包」超出时，去掉安装包重新导出传到这里，安装包放网盘贴链接。
+        Issue 是公开的。没有开发者要求时，请不要勾「附带完整原始日志」，它会带上其他模块的日志，可能有隐私。
+      placeholder: 把 zip 拖到这里，或从框下方选择文件上传
+    validations:
+      required: true
+
+  - type: input
+    id: feature
+    attributes:
+      label: 没生效的功能
+      description: 按 OShin 里的位置写。
+      placeholder: 例如：系统界面 → 状态栏 → 移动信号双排
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望的效果
+      description: 照功能说明，开启后应该是什么样。
+      placeholder: 两张卡的信号上下叠放成一个图标。
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 怎么操作的，实际是什么样
+      description: 写出开启功能后的操作步骤，以及看到的结果。
+      placeholder: |
+        1. 开启「启用移动信号双排」，插着两张卡
+        2. 重启手机
+        3. 状态栏仍然是两个信号图标左右并排
+    validations:
+      required: true
+
+  - type: input
+    id: other-modules
+    attributes:
+      label: 其他模块的同类功能在你手机上能生效吗（选填）
+      description: 能生效说明你的系统可以实现，对排查很有帮助。
+      placeholder: 例如：LuckyTool 的同类功能可以生效
+
+  - type: textarea
+    id: media
+    attributes:
+      label: 截图或录屏（选填）
+      description: 开关页面和实际效果的截图最直观。GitHub 视频上限 10 MB，太大可以剪短或放网盘。
